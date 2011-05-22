@@ -1,0 +1,12 @@
+Mitwirkende
+===========
+
+SpaceMission wurde von Daniel Marschall aus einer Codevorlage von Hiroyuki Hori heraus erstellt. Das Original ist ein Codebeispiel für DelphiX 2000.
+
+Musik von Savage Peachers Software, Grafikquellen unbekannt.
+
+Levels von Daniel Marschall, Patrick Büssecker und Andreas Kübelsbeck.
+
+Entwickelt mit Borland Turbo Delphi.
+
+Verwendete Komponenten: DelphiX 2000, PJSoft VersionInfo.

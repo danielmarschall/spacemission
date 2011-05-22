@@ -1,0 +1,11 @@
+0.1		1.exe
+0.2		lev(); save(key/2lined); ini()
+0.3		lev(*OLD FORMAT*); save(1line); ini(1lined)
+
+2lined-files:
+
+Daniel Marschall Computersoftware - SpaceMission 0.x - SaveGame
+---------------------------------------------------------------
+
+CryptK: CODEX 2.2
+Key:	1 (?)

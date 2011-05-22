@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+  <PersonalityInfo>
+    <Option>
+      <Option Name="Personality">Default.Personality</Option>
+      <Option Name="ProjectType"></Option>
+      <Option Name="Version">1.0</Option>
+      <Option Name="GUID">{637A9A64-27A5-4C05-A11F-C60A2B40C1DB}</Option>
+    </Option>
+  </PersonalityInfo>
+  <Default.Personality>
+    
+    <Projects>
+      <Projects Name="LevEdit.exe">LevEdit.bdsproj</Projects>
+      <Projects Name="SpaceMission.exe">SpaceMission.bdsproj</Projects>
+      <Projects Name="Compiler.exe">Compiler.bdsproj</Projects>
+      <Projects Name="Targets">LevEdit.exe SpaceMission.exe Compiler.exe</Projects>
+    </Projects>
+    <Dependencies/>
+  </Default.Personality>
+</BorlandProject>

@@ -1,0 +1,7 @@
+Schriften
+=========
+
+Spiel1:		Arial West 36B
+Spiel2:		Arial West 12B
+Leveleditor1:	Arial West 20B
+Leveleditor2:	Arial West 20B
