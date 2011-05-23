@@ -1,10 +1,10 @@
-unit SplMain;
+unit GamMain;
 
 interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, MMSystem, Dialogs,
-  StdCtrls, ExtCtrls, Menus, SplInfo, DIB, DXClass, DXSprite, DXDraws, DXInput,
+  StdCtrls, ExtCtrls, Menus, DIB, DXClass, DXSprite, DXDraws, DXInput,
   DXSounds, INIFiles, ShellAPI, wininet;
 
 type
@@ -342,7 +342,7 @@ const
 implementation
 
 uses
-  SplSplash, SplSpeicherung, SplText, SplCheat, Global;
+  GamSplash, GamSpeicherung, ComInfo, ComText, GamCheat, Global;
 
 resourcestring
   FileError = 'Die Datei kann von SpaceMission nicht geöffnet werden!';
@@ -2356,7 +2356,10 @@ begin
   end;
 
   TextForm.memo1.lines.loadfromfile(FDirectory+MitwirkendeTxt);
+
+  dxtimer.enabled := false;
   TextForm.ShowModal;
+  if not mainform.gamepause.checked then mainform.dxtimer.enabled := true;
 end;
 
 procedure TEnemyMeteor.DoMove(MoveCount: Integer);

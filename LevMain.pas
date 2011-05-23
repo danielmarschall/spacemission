@@ -111,7 +111,7 @@ var
 implementation
 
 uses
-  Global, LevSplash, LevSpeicherung, LevText, SplInfo, LevSource, LevOptions;
+  Global, LevSplash, LevSpeicherung, ComText, ComInfo, LevSource, LevOptions;
 
 const
   FileError = 'Die Datei kann von SpaceMission nicht geöffnet werden!';
@@ -448,12 +448,13 @@ begin
   begin
     MessageDLG('Die Datei "Texte\Mitwirkende.txt" ist nicht mehr vorhanden. Die Aktion wird abgebrochen!',
       mtWarning, [mbOK], 0);
-  end
-  else
-  begin
-    TextForm.memo1.lines.loadfromfile(FDirectory+'Texte\Mitwirkende.txt');
-    TextForm.showmodal;
+    exit;
   end;
+
+  TextForm.memo1.lines.loadfromfile(FDirectory+'Texte\Mitwirkende.txt');
+  mainform.dxtimer.enabled := false;
+  TextForm.showmodal;
+  mainform.dxtimer.enabled := true;
 end;
 
 procedure TMainForm.LevelClick(Sender: TObject);
@@ -472,7 +473,9 @@ end;
 
 procedure TMainForm.InformationenClick(Sender: TObject);
 begin
+  mainform.dxtimer.enabled := false;
   InfoForm.showmodal;
+  mainform.dxtimer.enabled := true;
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);

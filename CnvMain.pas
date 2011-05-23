@@ -1,4 +1,4 @@
-unit ComMain;
+unit CnvMain;
 
 interface
 

@@ -8,12 +8,12 @@ uses
   Dialogs,
   SysUtils,
   MMSystem,
-  SplMain in 'SplMain.pas' {MainForm},
-  SplText in 'SplText.pas' {TextForm},
-  SplSplash in 'SplSplash.pas' {SplashForm},
-  SplSpeicherung in 'SplSpeicherung.pas' {SpeicherungForm},
-  SplInfo in 'SplInfo.pas' {InfoForm},
-  SplCheat in 'SplCheat.pas' {CheatForm},
+  GamMain in 'GamMain.pas' {MainForm},
+  ComText in 'ComText.pas' {TextForm},
+  GamSplash in 'GamSplash.pas' {SplashForm},
+  GamSpeicherung in 'GamSpeicherung.pas' {SpeicherungForm},
+  ComInfo in 'ComInfo.pas' {InfoForm},
+  GamCheat in 'GamCheat.pas' {CheatForm},
   Global in 'Global.pas';
 
 {$R *.RES}

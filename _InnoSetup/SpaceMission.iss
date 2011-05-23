@@ -1,4 +1,4 @@
-; SpaceMission Setup Script for InnoSetup 5.1.12
+; SpaceMission Setup Script for InnoSetup
 ; by Daniel Marschall
 
 ; http://www.daniel-marschall.de/
@@ -33,12 +33,12 @@ LanguageID=$0407
 [Tasks]
 Name: "desktopicon"; Description: "Erstelle eine Verknüpfung auf dem &Desktop"; GroupDescription: "Programmverknüpfungen:"; MinVersion: 4,4
 Name: "levedit"; Description: "Installiere den &Leveleditor"; GroupDescription: "Zusatzprogramme:"; MinVersion: 4,4
-Name: "compiler"; Description: "Installiere den Level&compiler"; GroupDescription: "Zusatzprogramme:"; MinVersion: 4,4
+Name: "converter"; Description: "Installiere den Level&converter"; GroupDescription: "Zusatzprogramme:"; MinVersion: 4,4; Flags: unchecked
 
 [Files]
 Source: "..\SpaceMission.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\LevEdit.exe"; DestDir: "{app}"; Flags: ignoreversion; Tasks: levedit
-Source: "..\Compiler.exe"; DestDir: "{app}"; Flags: ignoreversion; Tasks: compiler
+Source: "..\Converter.exe"; DestDir: "{app}"; Flags: ignoreversion; Tasks: converter
 Source: "..\Dokumentation.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Bilder\Auswahl.bmp"; DestDir: "{app}\Bilder"; Flags: ignoreversion; Tasks: levedit
 Source: "..\Bilder\Delphi.bmp"; DestDir: "{app}\Bilder"; Flags: ignoreversion
@@ -87,11 +87,11 @@ Source: "..\Texte\Mitwirkende.txt"; DestDir: "{app}\Texte"; Flags: ignoreversion
 [Dirs]
 Name: "{app}\Spielstände"
 Name: "{app}\Levels"
-Name: "{app}\Eingabe"; Tasks: compiler
-Name: "{app}\Ausgabe"; Tasks: compiler
-Name: "{app}\Temp"; Tasks: compiler
-Name: "{app}\Temp\1"; Tasks: compiler
-Name: "{app}\Temp\2"; Tasks: compiler
+Name: "{app}\Eingabe"; Tasks: converter
+Name: "{app}\Ausgabe"; Tasks: converter
+Name: "{app}\Temp"; Tasks: converter
+Name: "{app}\Temp\1"; Tasks: converter
+Name: "{app}\Temp\2"; Tasks: converter
 Name: "{group}\Webseiten"
 Name: "{group}\Ordner"
 
@@ -102,11 +102,11 @@ Name: "{group}\Webseiten\Projektseite auf ViaThinkSoft"; Filename: "http://www.v
 Name: "{group}\SpaceMission"; Filename: "{app}\SpaceMission.exe"
 Name: "{group}\Dokumentation"; Filename: "{app}\Dokumentation.pdf"
 Name: "{group}\Leveleditor"; Filename: "{app}\LevEdit.exe"; Tasks: levedit
-Name: "{group}\Levelcompiler"; Filename: "{app}\Compiler.exe"; Tasks: compiler
+Name: "{group}\Levelconverter"; Filename: "{app}\Converter.exe"; Tasks: converter
 Name: "{group}\Ordner\Levelordner"; Filename: "{app}\Levels\"
 Name: "{group}\Ordner\Spielstände"; Filename: "{app}\Spielstände\"
-Name: "{group}\Ordner\Compiler Eingabeordner"; Filename: "{app}\Eingabe\"; Tasks: compiler
-Name: "{group}\Ordner\Compiler Ausgabeordner"; Filename: "{app}\Ausgabe\"; Tasks: compiler
+Name: "{group}\Ordner\Converter Eingabeordner"; Filename: "{app}\Eingabe\"; Tasks: converter
+Name: "{group}\Ordner\Converter Ausgabeordner"; Filename: "{app}\Ausgabe\"; Tasks: converter
 Name: "{userdesktop}\SpaceMission"; Filename: "{app}\SpaceMission.exe"; MinVersion: 4,4; Tasks: desktopicon
 Name: "{group}\SpaceMission deinstallieren"; Filename: "{uninstallexe}"
 

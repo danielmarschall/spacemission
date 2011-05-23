@@ -3,20 +3,20 @@ object MainForm: TMainForm
   Top = 153
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
-  Caption = 'SpaceMission Levelcompiler'
+  Caption = 'SpaceMission Levelconverter'
   ClientHeight = 201
   ClientWidth = 345
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -12
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
   Position = poDesktopCenter
   OnClose = FormClose
   OnCreate = FormCreate
-  PixelsPerInch = 96
+  PixelsPerInch = 106
   TextHeight = 13
   object Bevel1: TBevel
     Left = 8
@@ -28,11 +28,11 @@ object MainForm: TMainForm
   object Label1: TLabel
     Left = 8
     Top = 8
-    Width = 295
+    Width = 301
     Height = 26
     Caption = 
-      'Der SpaceMission Levelcompiler wandelt die Levels Ihrer alten'#13#10'S' +
-      'paceMission-Version in die aktuelle Version 1.0 / 1.1 um.'
+      'Der SpaceMission Levelconverter wandelt die Levels Ihrer alten'#13#10 +
+      'SpaceMission-Version in die aktuelle Version 1.0 / 1.1 um.'
     Transparent = True
   end
   object Label2: TLabel
@@ -55,7 +55,7 @@ object MainForm: TMainForm
     Top = 96
     Width = 161
     Height = 25
-    Caption = 'Compiler starten'
+    Caption = 'Converter starten'
     Default = True
     TabOrder = 0
     OnClick = RunClick

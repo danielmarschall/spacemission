@@ -1,4 +1,4 @@
-unit SplText;
+unit ComText;
 
 interface
 
@@ -11,8 +11,6 @@ type
     OKBtn: TButton;
     Memo1: TMemo;
     procedure Button1Click(Sender: TObject);
-    procedure FormShow(Sender: TObject);
-    procedure FormHide(Sender: TObject);
   end;
 
 var
@@ -20,24 +18,11 @@ var
 
 implementation
 
-uses
-  SplMain;
-
 {$R *.DFM}
 
 procedure TTextForm.Button1Click(Sender: TObject);
 begin
   close;
-end;
-
-procedure TTextForm.FormShow(Sender: TObject);
-begin
-  mainform.dxtimer.enabled := false;
-end;
-
-procedure TTextForm.FormHide(Sender: TObject);
-begin
-  mainform.dxtimer.enabled := true;
 end;
 
 end.

@@ -4,7 +4,7 @@ object MainForm: TMainForm
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Leveleditor'
-  ClientHeight = 536
+  ClientHeight = 558
   ClientWidth = 753
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -265,7 +265,7 @@ object MainForm: TMainForm
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 517
+    Top = 539
     Width = 753
     Height = 19
     Panels = <>

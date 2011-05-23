@@ -1,4 +1,4 @@
-unit SplCheat;
+unit GamCheat;
 
 interface
 
@@ -32,7 +32,8 @@ var
 
 implementation
 
-uses SplMain, Global;
+uses
+  GamMain, Global;
 
 {$R *.DFM}
 

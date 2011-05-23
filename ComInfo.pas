@@ -1,4 +1,4 @@
-unit SplInfo;
+unit ComInfo;
                                         
 interface
 

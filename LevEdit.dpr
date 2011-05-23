@@ -11,10 +11,10 @@ uses
   SysUtils,
   MMSystem,
   LevMain in 'LevMain.pas' {MainForm},
-  LevText in 'LevText.pas' {TextForm},
+  ComText in 'ComText.pas' {TextForm},
   LevSplash in 'LevSplash.pas' {SplashForm},
   LevSpeicherung in 'LevSpeicherung.pas' {SpeicherungForm},
-  SplInfo in 'SplInfo.pas' {InfoForm},
+  ComInfo in 'ComInfo.pas' {InfoForm},
   LevSource in 'LevSource.pas' {SourceForm},
   LevOptions in 'LevOptions.pas' {LevelForm},
   Global in 'Global.pas';

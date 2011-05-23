@@ -1,4 +1,4 @@
-unit SplSpeicherung;
+unit GamSpeicherung;
 
 interface
 
@@ -50,7 +50,7 @@ var
 implementation
 
 uses
-  Global, SplMain;
+  Global, GamMain;
 
 {$R *.DFM}
 

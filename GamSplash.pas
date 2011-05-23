@@ -1,4 +1,4 @@
-unit SplSplash;
+unit GamSplash;
 
 interface
 
@@ -16,9 +16,6 @@ var
   SplashForm: TSplashForm;
 
 implementation
-
-uses
-  SplMain;
 
 {$R *.DFM}
 
