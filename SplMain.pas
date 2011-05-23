@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, MMSystem, Dialogs,
   StdCtrls, ExtCtrls, Menus, SplInfo, DIB, DXClass, DXSprite, DXDraws, DXInput,
-  DXSounds, PJVersionInfo, INIFiles, shellapi, wininet;
+  DXSounds, INIFiles, ShellAPI, wininet;
 
 type
   TGameScene = (
@@ -20,7 +20,8 @@ type
   TGameInterval = (
     giMittel,
     giLeicht,
-    giSchwer
+    giSchwer,
+    giMaster
   );
 
   TMusicTrack = (
@@ -42,158 +43,6 @@ type
     sfFrage,
     sfLevIntro
   );}
-
-  TMainForm = class(TDXForm)
-    MainMenu: TMainMenu;
-    Spiel: TMenuItem;
-    GameStart: TMenuItem;
-    GamePause: TMenuItem;
-    Beenden: TMenuItem;
-    Einstellungen: TMenuItem;
-    OptionFullScreen: TMenuItem;
-    OptionMusic: TMenuItem;
-    Leer2: TMenuItem;
-    Leer4: TMenuItem;
-    Hilfe: TMenuItem;
-    OptionSound: TMenuItem;
-    Mitarbeiter: TMenuItem;
-    Leer3: TMenuItem;
-    Spielstand: TMenuItem;
-    Leer5: TMenuItem;
-    Neustart: TMenuItem;
-    OptionBreitbild: TMenuItem;
-    Spielgeschwindigkeit: TMenuItem;
-    Leicht: TMenuItem;
-    Mittel: TMenuItem;
-    Schwer: TMenuItem;
-    Informationen: TMenuItem;
-    Leer6: TMenuItem;
-    Leer1: TMenuItem;
-    Cheat: TMenuItem;
-    AufUpdatesprfen1: TMenuItem;
-    procedure DXDrawFinalize(Sender: TObject);
-    procedure DXDrawInitialize(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
-    procedure DXTimerTimer(Sender: TObject; LagCount: Integer);
-    procedure DXTimerActivate(Sender: TObject);
-    procedure DXTimerDeactivate(Sender: TObject);
-    procedure OptionFullScreenClick(Sender: TObject);
-    procedure DXDrawInitializing(Sender: TObject);
-    procedure GameStartClick(Sender: TObject);
-    procedure GamePauseClick(Sender: TObject);
-    procedure BeendenClick(Sender: TObject);
-    procedure OptionSoundClick(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure OptionMusicClick(Sender: TObject);
-    procedure MitarbeiterClick(Sender: TObject);
-    procedure SpielstandClick(Sender: TObject);
-    procedure NeustartClick(Sender: TObject);
-    procedure OptionBreitbildClick(Sender: TObject);
-    procedure LeichtClick(Sender: TObject);
-    procedure MittelClick(Sender: TObject);
-    procedure SchwerClick(Sender: TObject);
-    procedure FormShow(Sender: TObject);
-    procedure InformationenClick(Sender: TObject);
-    procedure CheatClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure FormDestroy(Sender: TObject);
-    procedure AufUpdatesprfen1Click(Sender: TObject);
-  private
-    FInterval: TGameInterval;
-    FScene: TGameScene;
-    FMusic: TMusicTrack;
-    FBlink: DWORD;
-    FBlinkTime: DWORD;
-    FFrame, FAngle, FCounter, FEnemyAdventPos: Integer;
-    procedure StartScene(Scene: TGameScene);
-    procedure EndScene;
-    procedure BlinkStart;
-    procedure BlinkUpdate;
-    procedure StartSceneTitle;
-    procedure SceneTitle;
-    procedure EndSceneTitle;
-    procedure StartSceneMain;
-    procedure SceneMain;
-    procedure EndSceneMain;
-    procedure StartSceneGameOver;
-    procedure SceneGameOver;
-    procedure EndSceneGameOver;
-    procedure StartSceneWin;
-    procedure SceneWin;
-    procedure EndSceneWin;
-    procedure StartSceneNewLevel;
-    procedure SceneNewLevel;
-    procedure EndSceneNewLevel;
-  public
-    FDirectory: string;
-    FEngineVersion: string;
-    FNextScene: TGameScene;
-    FScore: Integer;
-    FNotSave: boolean;
-    FLife: integer;
-    FLevel: integer;
-    FMenuItem: integer;
-    FBossLife: integer;
-    FRestEnemys: integer;
-    FCheat: boolean;
-    { VCL-Ersatz }
-    dxdraw: TDxDraw;
-    imagelist: TDxImageList;
-    spriteengine: tdxspriteengine;
-    dxsound: tdxsound;
-    wavelist: tdxwavelist;
-    dxinput: tdxinput;
-    dxtimer: tdxtimer;
-    versioninfo: tpjversioninfo;
-    { Level-Routinen }
-    procedure NewLevel(lev: integer);
-    procedure DeleteArray;
-    { MCI-Routinen }
-    function StatusMusic(Name: TMusicTrack): string;
-    procedure PlayMusic(Name: TMusicTrack);
-    //procedure StopMusic(Name: TMusicTrack);
-    procedure PauseMusic(Name: TMusicTrack);
-    procedure ResumeMusic(Name: TMusicTrack);
-    procedure DestroyMusic(Name: TMusicTrack);
-    procedure OpenMusic(Name: TMusicTrack);
-    { Sound-Routinen }
-    function SoundKarte: boolean;
-    procedure PlaySound(Name: string; Wait: Boolean);
-    { Initialisiations-Routinen }
-    procedure DXInit;
-    procedure SoundInit;
-    procedure MusicInit;
-    { Einstellungs-Routinen }
-    procedure LoadOptions;
-    procedure WriteOptions;
-    { Farb-Routinen }
-    function ComposeColor(Dest, Src: TRGBQuad; Percent: Integer): TRGBQuad;
-    procedure PalleteAnim(Col: TRGBQuad; Time: Integer);
-  end;
-
-var
-  MainForm: TMainForm;
-
-const
-  conleicht = 650 div 60;
-  conmittel = 1000 div 60;
-  conschwer = 1350 div 60;
-  lives = 6;
-  FCompVersion = '1.0';
-
-implementation
-
-uses
-  SplSplash, SplSpeicherung, SplText, SplCheat;
-
-const
-  FileError = 'Die Datei kann von SpaceMission nicht geöffnet werden!';
-
-{$R *.DFM}
-
-{$R WindowsXP.res}
-
-type
 
   TBackground = class(TBackgroundSprite)
   private
@@ -229,6 +78,7 @@ type
     procedure DoMove(MoveCount: Integer); override;
   public
     constructor Create(AParent: TSprite); override;
+    procedure FlyAway;
   end;
 
   TTamaSprite = class(TImageSprite)
@@ -249,7 +99,7 @@ type
     FMode: Integer;
     procedure Hit; virtual;
   protected
-    procedure HitEnemy(Deaded: Boolean); virtual;
+    procedure HitEnemy(ADead: Boolean); virtual;
   public
     constructor Create(AParent: TSprite); override;
     destructor Destroy; override;
@@ -264,10 +114,10 @@ type
     constructor Create(AParent: TSprite); override;
   end;
 
-  TEnemyMeteor= class(TEnemy)
+  TEnemyMeteor = class(TEnemy)
   protected
     procedure DoMove(MoveCount: Integer); override;
-    procedure HitEnemy(Deaded: Boolean); override;
+    procedure HitEnemy(ADead: Boolean); override;
   public
     constructor Create(AParent: TSprite); override;
   end;
@@ -275,7 +125,7 @@ type
   TEnemyUFO = class(TEnemy)
   protected
     procedure DoMove(MoveCount: Integer); override;
-    procedure HitEnemy(Deaded: Boolean); override;
+    procedure HitEnemy(ADead: Boolean); override;
   public
     constructor Create(AParent: TSprite); override;
   end;
@@ -287,7 +137,7 @@ type
     FOldTamaTime: Integer;
   protected
     procedure DoMove(MoveCount: Integer); override;
-    procedure HitEnemy(Deaded: Boolean); override;
+    procedure HitEnemy(ADead: Boolean); override;
   public
     constructor Create(AParent: TSprite); override;
   end;
@@ -295,7 +145,7 @@ type
   TEnemyAttacker = class(TEnemy)
   protected
     procedure DoMove(MoveCount: Integer); override;
-    procedure HitEnemy(Deaded: Boolean); override;
+    procedure HitEnemy(ADead: Boolean); override;
   public
     constructor Create(AParent: TSprite); override;
   end;
@@ -308,7 +158,7 @@ type
     FPutTama: Boolean;
   protected
     procedure DoMove(MoveCount: Integer); override;
-    procedure HitEnemy(Deaded: Boolean); override;
+    procedure HitEnemy(ADead: Boolean); override;
   public
     constructor Create(AParent: TSprite); override;
   end;
@@ -320,7 +170,7 @@ type
     FOldTamaTime: Integer;
   protected
     procedure DoMove(MoveCount: Integer); override;
-    procedure HitEnemy(Deaded: Boolean); override;
+    procedure HitEnemy(ADead: Boolean); override;
   public
     constructor Create(AParent: TSprite); override;
   end;
@@ -334,28 +184,180 @@ type
     waiter1, waiter2: integer;
   protected
     procedure DoMove(MoveCount: Integer); override;
-    procedure HitEnemy(Deaded: Boolean); override;
+    procedure HitEnemy(ADead: Boolean); override;
   public
     constructor Create(AParent: TSprite); override;
   end;
 
-  TNoting = class(TImageSprite);
+  TNothing = class(TImageSprite);
 
   TSpriteClass = class of TSprite;
 
   TEnemyAdvent = record
-    c: TSpriteClass;
+    spriteClass: TSpriteClass;
     x: extended;
     y: extended;
-    l: integer;
+    lifes: integer;
+  end;
+
+  TMainForm = class(TDXForm)
+    MainMenu: TMainMenu;
+    Spiel: TMenuItem;
+    GameStart: TMenuItem;
+    GamePause: TMenuItem;
+    Beenden: TMenuItem;
+    Einstellungen: TMenuItem;
+    OptionFullScreen: TMenuItem;
+    OptionMusic: TMenuItem;
+    Leer2: TMenuItem;
+    Leer4: TMenuItem;
+    Hilfe: TMenuItem;
+    OptionSound: TMenuItem;
+    Mitarbeiter: TMenuItem;
+    Leer3: TMenuItem;
+    Spielstand: TMenuItem;
+    Leer5: TMenuItem;
+    Neustart: TMenuItem;
+    OptionBreitbild: TMenuItem;
+    Spielgeschwindigkeit: TMenuItem;
+    Leicht: TMenuItem;
+    Mittel: TMenuItem;
+    Schwer: TMenuItem;
+    Informationen: TMenuItem;
+    Leer6: TMenuItem;
+    Leer1: TMenuItem;
+    Cheat: TMenuItem;
+    CheckUpdates: TMenuItem;
+    Master: TMenuItem;
+    procedure DXDrawFinalize(Sender: TObject);
+    procedure DXDrawInitialize(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure DXTimerTimer(Sender: TObject; LagCount: Integer);
+    procedure DXTimerActivate(Sender: TObject);
+    procedure DXTimerDeactivate(Sender: TObject);
+    procedure OptionFullScreenClick(Sender: TObject);
+    procedure DXDrawInitializing(Sender: TObject);
+    procedure GameStartClick(Sender: TObject);
+    procedure GamePauseClick(Sender: TObject);
+    procedure BeendenClick(Sender: TObject);
+    procedure OptionSoundClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure OptionMusicClick(Sender: TObject);
+    procedure MitarbeiterClick(Sender: TObject);
+    procedure SpielstandClick(Sender: TObject);
+    procedure NeustartClick(Sender: TObject);
+    procedure OptionBreitbildClick(Sender: TObject);
+    procedure LeichtClick(Sender: TObject);
+    procedure MittelClick(Sender: TObject);
+    procedure SchwerClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure InformationenClick(Sender: TObject);
+    procedure CheatClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormDestroy(Sender: TObject);
+    procedure CheckUpdatesClick(Sender: TObject);
+    procedure MasterClick(Sender: TObject);
+  private
+    ProgrammGestartet: boolean;
+    FInterval: TGameInterval;
+    FScene: TGameScene;
+    FMusic: TMusicTrack;
+    FBlink: DWORD;
+    FBlinkTime: DWORD;
+    FFrame, FAngle, FCounter, FEnemyAdventPos: Integer;
+    PlayerSprite: TPlayerSprite;
+    procedure StartScene(Scene: TGameScene);
+    procedure EndScene;
+    procedure BlinkStart;
+    procedure BlinkUpdate;
+    procedure StartSceneTitle;
+    procedure SceneTitle;
+    procedure EndSceneTitle;
+    procedure StartSceneMain;
+    procedure SceneMain;
+    procedure EndSceneMain;
+    procedure StartSceneGameOver;
+    procedure SceneGameOver;
+    procedure EndSceneGameOver;
+    procedure StartSceneWin;
+    procedure SceneWin;
+    procedure EndSceneWin;
+    procedure StartSceneNewLevel;
+    procedure SceneNewLevel;
+    procedure EndSceneNewLevel;
+  public
+    FNextScene: TGameScene;
+    FScore: Integer;
+    FNotSave: boolean;
+    FLife: integer;
+    FLevel: integer;
+    FMenuItem: integer;
+    FBossLife: integer;
+    FRestEnemys: integer;
+    FCheat: boolean;
+    { VCL-Ersatz }
+    dxdraw: TDxDraw;
+    imagelist: TDxImageList;
+    spriteengine: tdxspriteengine;
+    dxsound: tdxsound;
+    wavelist: tdxwavelist;
+    dxinput: tdxinput;
+    dxtimer: tdxtimer;
+    { Level-Routinen }
+    procedure NewLevel(lev: integer);
+    procedure DeleteArray;
+    { MCI-Routinen }
+    function StatusMusic(Name: TMusicTrack): string;
+    procedure PlayMusic(Name: TMusicTrack);
+    //procedure StopMusic(Name: TMusicTrack);
+    procedure PauseMusic(Name: TMusicTrack);
+    procedure ResumeMusic(Name: TMusicTrack);
+    procedure DestroyMusic(Name: TMusicTrack);
+    procedure OpenMusic(Name: TMusicTrack);
+    { Sound-Routinen }
+    function SoundKarte: boolean;
+    procedure PlaySound(Name: string; Wait: Boolean);
+    { Initialisiations-Routinen }
+    procedure DXInit;
+    procedure SoundInit;
+    procedure MusicInit;
+    { Einstellungs-Routinen }
+    procedure LoadOptions;
+    procedure WriteOptions;
+    { Farb-Routinen }
+    function ComposeColor(Dest, Src: TRGBQuad; Percent: Integer): TRGBQuad;
+    procedure PalleteAnim(Col: TRGBQuad; Time: Integer);
   end;
 
 var
-  EnemyAdventTable: array[0..9999] of TEnemyAdvent;
+  MainForm: TMainForm;
+
+const
+  conleicht = 650 div 60; // 10
+  conmittel = 1000 div 60; // 16
+  conschwer = 1350 div 60; // 22
+  conmaster = 2000 div 60; // 33
+  lives = 6;
+
+implementation
+
+uses
+  SplSplash, SplSpeicherung, SplText, SplCheat, Global;
+
+resourcestring
+  FileError = 'Die Datei kann von SpaceMission nicht geöffnet werden!';
+
+{$R *.DFM}
+
+{$R WindowsXP.res}
+
+var // TODO: irgendwo hinpacken. irgendwo!!!
+  EnemyAdventTable: array[0..9999] of TEnemyAdvent; // TODO: dyn
   Crash2, ec: integer;
-  BossExists, Crash, crashsound, SpielerFliegtFort: boolean;
+  BossExists, Crash, crashsound: boolean;
   pos: array[1..4] of integer;
   enemys: array[1..27] of TSpriteClass;
+  levact: integer;
 
 const
   DXInputButton = [isButton1, isButton2, isButton3,
@@ -363,6 +365,15 @@ const
     isButton12, isButton13, isButton14, isButton15, isButton16, isButton17, isButton18,
     isButton19, isButton20, isButton21, isButton22, isButton23, isButton24, isButton25,
     isButton26, isButton27, isButton28, isButton29, isButton30, isButton31, isButton32];
+
+const // TODO: Auch für Enemies
+  PLAYER_MODE_NORMAL = 0;
+  PLAYER_MODE_DEAD = 1;
+  PLAYER_MODE_DEAD_VANISHED = 2;
+  PLAYER_MODE_FLYAWAY = 3;
+  PLAYER_MODE_ENTER = 4;
+
+// TODO: Code komplett überarbeiten. Bessere Ableitungen machen
 
 constructor TPlayerSprite.Create(AParent: TSprite);
 begin
@@ -376,7 +387,7 @@ begin
   AnimCount := Image.PatternCount;
   AnimLooped := True;
   AnimSpeed := 15/1000;
-  FMode := 4;
+  FMode := PLAYER_MODE_ENTER;
 end;
 
 procedure TPlayerSprite.DoCollision(Sprite: TSprite; var Done: Boolean);
@@ -393,7 +404,7 @@ begin
         MainForm.PlaySound('Explosion', false);
         Collisioned := false;
         FCounter := 0;
-        FMode := 1;
+        FMode := PLAYER_MODE_DEAD;
         Done := false;
         Image := MainForm.ImageList.Items.Find('Explosion');
         Width := Image.Width;
@@ -416,10 +427,11 @@ begin
 end;
 
 procedure TPlayerSprite.DoMove(MoveCount: Integer);
+const
+  WegduesKonstante = 1.75;
 begin
   inherited DoMove(MoveCount);
-  if SpielerFliegtFort then FMode := 3;
-  if FMode=0 then
+  if FMode=PLAYER_MODE_NORMAL then
   begin
     if isUp in MainForm.DXInput.States then Y := Y - (250/1000)*MoveCount;
     if isDown in MainForm.DXInput.States then Y := Y + (250/1000)*MoveCount;
@@ -445,15 +457,15 @@ begin
       end;
     end;
     Collision;
-  end else if FMode=1 then
+  end else if FMode=PLAYER_MODE_DEAD then
   begin
     if FCounter>200 then
     begin
       FCounter := 0;
-      FMode := 2;
+      FMode := PLAYER_MODE_DEAD_VANISHED;
       Visible := false;
     end;
-  end else if FMode=2 then
+  end else if FMode=PLAYER_MODE_DEAD_VANISHED then
   begin
     if FCounter>1500 then
     begin
@@ -462,9 +474,10 @@ begin
       MainForm.PalleteAnim(RGBQuad(0, 0, 0), 300);
       Sleep(200);
     end;
-  end else if FMode=3 then
+  end else if FMode=PLAYER_MODE_FLYAWAY then
   begin
-    X := X + MoveCount*(300/1000);
+    // FUT: "Wusch" sound?
+    X := X + MoveCount*(300/1000) * (X/MainForm.DXDraw.Width + WegduesKonstante);
     if X > MainForm.DXDraw.Width+Width then
     begin
       Dead;
@@ -473,12 +486,17 @@ begin
       MainForm.PlaySound('SceneMov', false);
       MainForm.PalleteAnim(RGBQuad(0, 0, 0), 300);
     end;
-  end else if FMode=4 then
+  end else if FMode = PLAYER_MODE_ENTER then
   begin
     X := X + MoveCount*(300/1000);
-    if X > 19 then FMode := 0;
+    if X > 19 then FMode := PLAYER_MODE_NORMAL;
   end;
   inc(FCounter, MoveCount);
+end;
+
+procedure TPlayerSprite.FlyAway;
+begin
+  FMode := PLAYER_MODE_FLYAWAY;
 end;
 
 procedure TMainForm.DXInit;
@@ -691,9 +709,9 @@ begin
     HitEnemy(False);
 end;
 
-procedure TEnemy.HitEnemy(Deaded: Boolean);
+procedure TEnemy.HitEnemy(ADead: Boolean);
 begin
-  if Deaded then MainForm.PlaySound('Explosion', False);
+  if ADead then MainForm.PlaySound('Explosion', False);
 end;
 
 constructor TEnemyUFO.Create(AParent: TSprite);
@@ -705,7 +723,7 @@ begin
   AnimCount := Image.PatternCount;
   AnimLooped := True;
   AnimSpeed := 15/1000;
-  FLife := EnemyAdventTable[mainform.FEnemyAdventPos].l;
+  FLife := EnemyAdventTable[mainform.FEnemyAdventPos].lifes;
 end;
 
 constructor TEnemy.Create(AParent: TSprite);
@@ -721,9 +739,9 @@ begin
   dec(ec);
 end;
 
-procedure TEnemyUFO.HitEnemy(Deaded: Boolean);
+procedure TEnemyUFO.HitEnemy(ADead: Boolean);
 begin
-  if Deaded then
+  if ADead then
   begin
     MainForm.PlaySound('Explosion', False);
     FMode := 2;
@@ -771,9 +789,9 @@ begin
   inc(FCounter, MoveCount);
 end;
 
-procedure TEnemyUFO2.HitEnemy(Deaded: Boolean);
+procedure TEnemyUFO2.HitEnemy(ADead: Boolean);
 begin
-  if Deaded then
+  if ADead then
   begin
     MainForm.PlaySound('Explosion', False);
     FMode := 2;
@@ -802,7 +820,7 @@ begin
   AnimCount := Image.PatternCount;
   AnimLooped := True;
   AnimSpeed := 15/1000;
-  FLife := EnemyAdventTable[mainform.FEnemyAdventPos].l;
+  FLife := EnemyAdventTable[mainform.FEnemyAdventPos].lifes;
 end;
 
 procedure TEnemyUFO.DoMove(MoveCount: Integer);
@@ -831,12 +849,12 @@ begin
   AnimLooped := True;
   AnimSpeed := 15/1000;
   PixelCheck := True;
-  FLife := EnemyAdventTable[mainform.FEnemyAdventPos].l;
+  FLife := EnemyAdventTable[mainform.FEnemyAdventPos].lifes;
 end;
 
-procedure TEnemyAttacker.HitEnemy(Deaded: Boolean);
+procedure TEnemyAttacker.HitEnemy(ADead: Boolean);
 begin
-  if Deaded then
+  if ADead then
   begin
     MainForm.PlaySound('Explosion', False);
     FMode := 2;
@@ -884,15 +902,15 @@ begin
   AnimSpeed := 15/1000;
   PixelCheck := True;
   Collisioned := False;
-  FLife := EnemyAdventTable[mainform.FEnemyAdventPos].l;
+  FLife := EnemyAdventTable[mainform.FEnemyAdventPos].lifes;
   MainForm.FBossLife := FLife;
   waiter1 := 0;
   waiter2 := 0;
 end;
 
-procedure TEnemyBoss.HitEnemy(Deaded: Boolean);
+procedure TEnemyBoss.HitEnemy(ADead: Boolean);
 begin
-  if Deaded then
+  if ADead then
   begin
     MainForm.PlaySound('Explosion', False);
     FMode := 2;
@@ -990,12 +1008,12 @@ begin
   AnimLooped := True;
   AnimSpeed := 15/1000;
   PixelCheck := True;
-  FLife := EnemyAdventTable[mainform.FEnemyAdventPos].l;
+  FLife := EnemyAdventTable[mainform.FEnemyAdventPos].lifes;
 end;
 
-procedure TEnemyAttacker2.HitEnemy(Deaded: Boolean);
+procedure TEnemyAttacker2.HitEnemy(ADead: Boolean);
 begin
-  if Deaded then
+  if ADead then
   begin
     MainForm.PlaySound('Explosion', False);
     FMode := 2;
@@ -1065,9 +1083,9 @@ begin
   inc(FCounter, MoveCount);
 end;
 
-procedure TEnemyAttacker3.HitEnemy(Deaded: Boolean);
+procedure TEnemyAttacker3.HitEnemy(ADead: Boolean);
 begin
-  if Deaded then
+  if ADead then
   begin
     MainForm.PlaySound('Explosion', False);
     FMode := 1;
@@ -1123,7 +1141,7 @@ begin
   AnimLooped := True;
   AnimSpeed := 15/1000;
   PixelCheck := True;
-  FLife := EnemyAdventTable[mainform.FEnemyAdventPos].l;
+  FLife := EnemyAdventTable[mainform.FEnemyAdventPos].lifes;
 end;
 
 function TMainForm.SoundKarte: boolean;
@@ -1135,13 +1153,9 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var
   Ergebnis: string;
   daten: textfile;
-  i: integer;
-  punkt: integer;
   ok: boolean;
 begin
   { Beginne VCL-Ersatz }
-  versioninfo := tpjversioninfo.Create(self);
-
   dxtimer := tdxtimer.Create(self);
   dxtimer.Interval := 33;
   dxtimer.OnActivate := DXTimerActivate;
@@ -1191,15 +1205,7 @@ begin
 
   { Ende VCL-Ersatz }
 
-  punkt := 0;
-  FDirectory := extractfilepath(paramstr(0));
-  versioninfo.filename := paramstr(0);
-  for i := 1 to length(versioninfo.ProductVersion) do
-  begin
-    if copy(versioninfo.ProductVersion, i, 1) = '.' then inc(punkt);
-    if punkt < 2 then fengineversion := fengineversion+copy(versioninfo.ProductVersion, i, 1);
-  end;
-  Application.Title := 'SpaceMission '+FEngineVersion;
+  Application.Title := 'SpaceMission '+ProgramVersion;
   LoadOptions;
   DXInit;
   SoundInit;
@@ -1211,7 +1217,7 @@ begin
     Reset(daten);
     ok := true;
     ReadLN(daten, Ergebnis);
-    if Ergebnis <> '; SpaceMission '+mainform.FEngineVersion then ok := false;
+    if Ergebnis <> '; SpaceMission '+ProgramVersion then ok := false;
     ReadLN(daten, Ergebnis);
     if ergebnis <> '; SAV-File' then ok := false;
     if not ok then
@@ -1331,7 +1337,7 @@ begin
   Result := resStr; 
 end;
 
-procedure TMainForm.AufUpdatesprfen1Click(Sender: TObject);
+procedure TMainForm.CheckUpdatesClick(Sender: TObject);
 var
   temp: string;
 begin
@@ -1342,7 +1348,7 @@ begin
   end
   else
   begin
-    if GetHTML('http://www.viathinksoft.de/update/?id=spacemission') <> '1.1d' then
+    if GetHTML('http://www.viathinksoft.de/update/?id=spacemission') <> ProgramVersion then
     begin
       if Application.MessageBox('Eine neue Programmversion ist vorhanden. Möchten Sie diese jetzt herunterladen?', 'Information', MB_YESNO + MB_ICONASTERISK) = ID_YES then
         shellexecute(application.handle, 'open', pchar('http://www.viathinksoft.de/update/?id=@spacemission'), '', '', sw_normal);
@@ -1468,9 +1474,6 @@ begin
   DXTimer.Enabled := False;
 end;
 
-var
-  ProgrammGestartet: boolean;
-
 procedure TMainForm.DXTimerActivate(Sender: TObject);
 begin
   Caption := Application.Title;
@@ -1557,6 +1560,7 @@ begin
   if FInterval = giLeicht then INIDatei.WriteInteger('Settings', 'Speed', 1);
   if FInterval = giMittel then INIDatei.WriteInteger('Settings', 'Speed', 2);
   if FInterval = giSchwer then INIDatei.WriteInteger('Settings', 'Speed', 3);
+  if FInterval = giMaster then INIDatei.WriteInteger('Settings', 'Speed', 4);
   INIDatei.Free;
 end;
 
@@ -1583,6 +1587,11 @@ begin
   begin
     FInterval := giSchwer;
     Schwer.checked := true;
+  end;
+  if INIDatei.ReadInteger('Settings', 'Speed', 2) = 4 then
+  begin
+    FInterval := giMaster;
+    Master.checked := true;
   end;
   INIDatei.Free;
   WriteOptions;
@@ -1704,14 +1713,13 @@ procedure TMainForm.StartSceneMain;
   i, j: Integer;}
 begin
   sleep(500);
-  SpielerFliegtFort := false;
   FCounter := 0;
   NewLevel(FLevel);
   BossExists := false;
   PlayMusic(mtGame);
   FEnemyAdventPos := 1;
   FFrame := -4;
-  TPlayerSprite.Create(SpriteEngine.Engine);
+  PlayerSprite := TPlayerSprite.Create(SpriteEngine.Engine);
   with TBackground.Create(SpriteEngine.Engine) do
   begin
     SetMapSize(1, 1);
@@ -1854,20 +1862,19 @@ procedure TMainForm.DeleteArray();
 var
   i: integer;
 begin
-  for i := 1 to 9999 do
+  for i := Low(EnemyAdventTable) to High(EnemyAdventTable) do
   begin
-    EnemyAdventTable[i].c := tnoting;
+    EnemyAdventTable[i].spriteClass := TNothing;
     EnemyAdventTable[i].x := 0;
     EnemyAdventTable[i].y := 0;
-    EnemyAdventTable[i].l := 0;
+    EnemyAdventTable[i].lifes := 0;
   end;
   FRestEnemys := 0;
 end;
 
-var
-  levact: integer;
-
 procedure TMainForm.NewLevel(lev: integer);
+resourcestring
+  LNG_LEVEL_INVALID = 'Das Level Nr. %d ist ungültig!'+#13#10+'Das Programm wird beendet.';
 var
   act: integer;
   filex: textfile;
@@ -1907,17 +1914,17 @@ begin
     for act := 1 to lev*75-1 do
     begin
       inc(FRestEnemys);
-      EnemyAdventTable[act].c := enemys[random(lev+2)+1];
-      if EnemyAdventTable[act].c = TEnemyAttacker2 then EnemyAdventTable[act].c := enemys[random(lev+2)+1]; {O_o}
+      EnemyAdventTable[act].spriteClass := enemys[random(lev+2)+1];
+      if EnemyAdventTable[act].spriteClass = TEnemyAttacker2 then EnemyAdventTable[act].spriteClass := enemys[random(lev+2)+1]; {O_o}
       EnemyAdventTable[act].x := act*30 + random(85-(lev+(random(lev))*2)){O_o};
       EnemyAdventTable[act].y := random(dxdraw.surfaceheight);
-      if (EnemyAdventTable[act].c <> TEnemyMeteor) and (EnemyAdventTable[act].c <> TEnemyAttacker2) then EnemyAdventTable[act].l := random(lev)+1;
-      if EnemyAdventTable[act].c = TEnemyAttacker2 then EnemyAdventTable[act].l := random(6)+1{O_o};
+      if (EnemyAdventTable[act].spriteClass <> TEnemyMeteor) and (EnemyAdventTable[act].spriteClass <> TEnemyAttacker2) then EnemyAdventTable[act].lifes := random(lev)+1;
+      if EnemyAdventTable[act].spriteClass = TEnemyAttacker2 then EnemyAdventTable[act].lifes := random(6)+1{O_o};
     end;
-    EnemyAdventTable[lev*75].c := TEnemyBoss;
+    EnemyAdventTable[lev*75].spriteClass := TEnemyBoss;
     EnemyAdventTable[lev*75].x := lev*75*30{O_o} div lev;
     EnemyAdventTable[lev*75].y := (dxdraw.surfaceheight div 2) - (MainForm.ImageList.Items.Find('Enemy-boss').height div 2);
-    EnemyAdventTable[lev*75].l := lev*5;
+    EnemyAdventTable[lev*75].lifes := lev*5;
     inc(FRestEnemys);
   end
   else
@@ -1941,14 +1948,14 @@ begin
           readln(filex, ergebniss);
           if ergebniss <> '; SpaceMission '+FCompVersion then
           begin
-            showmessage('Das Level '+inttostr(lev)+' ist ungültig!'+#13#10+'Das Programm wird beendet.');
+            showmessage(Format(LNG_LEVEL_INVALID, [lev]));
             application.terminate;
             exit;
           end;
           readln(filex, ergebniss);
           if ergebniss <> '; LEV-File' then
           begin
-            showmessage('Das Level '+inttostr(lev)+' ist ungültig!'+#13#10+'Das Programm wird beendet.');
+            showmessage(Format(LNG_LEVEL_INVALID, [lev]));
             application.terminate;
             exit;
           end;
@@ -1961,7 +1968,7 @@ begin
         begin
           inc(pos[levact]);
           inc(FRestEnemys);
-          EnemyAdventTable[pos[levact]].c := enemys[strtoint(ergebniss)];
+          EnemyAdventTable[pos[levact]].spriteClass := enemys[strtoint(ergebniss)];
         end;
         if levact = 2 then
         begin
@@ -1976,7 +1983,7 @@ begin
         if levact = 4 then
         begin
           inc(pos[levact]);
-          EnemyAdventTable[pos[levact]].l := strtoint(ergebniss);
+          EnemyAdventTable[pos[levact]].lifes := strtoint(ergebniss);
         end;
       end;
       closefile(filex);
@@ -2027,17 +2034,18 @@ begin
       Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2), 'Zufallslevel');
       Textout((dxdraw.surfaceWidth div 2)-185, (dxdraw.surfaceheight div 2), '>');
     end;
-    if (FBlink div 300) mod 2=0 then
+    { if (FBlink div 300) mod 2=0 then
     begin
       Font.Color := clGreen;
       Textout((dxdraw.surfaceWidth div 2)-187, dxdraw.surfaceheight-117, 'Weiter mit Leertaste');
       Font.Color := clLime;
       Textout((dxdraw.surfaceWidth div 2)-185, dxdraw.surfaceheight-115, 'Weiter mit Leertaste');
-    end;
+    end; }
     BlinkUpdate;
     Release;
   end;
-  if isButton1 in DXInput.States then
+  // Weiter mit Leertaste oder Enter
+  if (isButton1 in DXInput.States) or (isButton2 in DXInput.States) then
   begin
     FLevel := 1;
     if ((FMenuItem=1) and (fileexists(FDirectory+'Levels\Level '+inttostr(FLevel)+'.lev')=false)) or ((FMenuItem=2) and (FLevel > 20)) then
@@ -2060,17 +2068,18 @@ begin
   if FInterval = giLeicht then SpriteEngine.Move(conleicht);
   if FInterval = giMittel then SpriteEngine.Move(conmittel);
   if FInterval = giSchwer then SpriteEngine.Move(conschwer);
+  if FInterval = giMaster then SpriteEngine.Move(conmaster);
   SpriteEngine.Dead;
   while (Low(EnemyAdventTable)<=FEnemyAdventPos) and
     (FEnemyAdventPos<=High(EnemyAdventTable)) and
     ((EnemyAdventTable[FEnemyAdventPos].x / 4)<=FFrame) and
     (FRestEnemys>0) do
   begin
-    if EnemyAdventTable[FEnemyAdventPos].c <> TNoting then
+    if EnemyAdventTable[FEnemyAdventPos].spriteClass <> TNothing then
     begin
       with EnemyAdventTable[FEnemyAdventPos] do
       begin
-        Enemy := c.Create(SpriteEngine.Engine);
+        Enemy := spriteClass.Create(SpriteEngine.Engine);
         Enemy.x := dxdraw.surfacewidth;
         //Enemy.y := y;
         if y <> 0 then Enemy.y := dxdraw.surfaceheight / (480{maximale Bandbreite im alten Format} / y)
@@ -2132,23 +2141,26 @@ begin
             Font.Color := clFuchsia;
             Textout(450, 440, 'Einheiten: ' + IntToStr(RestlicheEinheiten));
           end;}
-        if BossExists and (FBossLife>0) and (FRestEnemys>0) then
+        if BossExists and (FBossLife>0) then
         begin
-          Font.Color := clGreen;
-          Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-81, 'Boss: ' + IntToStr(FBossLife));
-          Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Einheiten: ' + IntToStr(FRestEnemys));
-          Font.Color := clLime;
-          Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-80, 'Boss: ' + IntToStr(FBossLife));
-          Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Einheiten: ' + IntToStr(FRestEnemys));
+          if (FRestEnemys>0) then
+          begin
+            Font.Color := clGreen;
+            Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-81, 'Boss: ' + IntToStr(FBossLife));
+            Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Einheiten: ' + IntToStr(FRestEnemys));
+            Font.Color := clLime;
+            Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-80, 'Boss: ' + IntToStr(FBossLife));
+            Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Einheiten: ' + IntToStr(FRestEnemys));
+          end;
+          if (FRestEnemys<1) then
+          begin
+            Font.Color := clGreen;
+            Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Boss: ' + IntToStr(FBossLife));
+            Font.Color := clLime;
+            Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Boss: ' + IntToStr(FBossLife));
+          end;
         end;
-        if BossExists and (FBossLife>0) and (FRestEnemys<1) then
-        begin
-          Font.Color := clGreen;
-          Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Boss: ' + IntToStr(FBossLife));
-          Font.Color := clLime;
-          Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Boss: ' + IntToStr(FBossLife));
-        end;
-        if (FRestEnemys>0) and (Bossexists=false) then
+        if (FRestEnemys>0) and not Bossexists then
         begin
           Font.Color := clGreen;
           Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Einheiten: ' + IntToStr(FRestEnemys));
@@ -2160,14 +2172,15 @@ begin
     end
     else
     begin
-      DXDraw.Surface.Canvas.Font.Color := clGreen;
+      DXDraw.Surface.Canvas.Font.Color := clGreen; // Grüne schrift bei gescheitert? FIXME
       DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-251, dxdraw.surfaceheight-41, 'Mission gescheitert!');
       DXDraw.Surface.Canvas.Font.Color := clLime;
       DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-250, dxdraw.surfaceheight-40, 'Mission gescheitert!');
       DXDraw.Surface.Canvas.Release;
     end;
     if FRestEnemys<0 then FRestEnemys := 0; //Muss das sein?
-    if (Ec=0) and (FRestEnemys=0){ and (SpielerFliegtFort = false)} then
+    if (Ec=0) and (FRestEnemys=0){ and (SpielerFliegtFort = false)}
+    and ((BossExists and (FBossLife=0)) or not BossExists) then
     begin
       DXDraw.Surface.Canvas.Font.Color := clGreen;
       DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-251, dxdraw.surfaceheight-41, 'Mission erfolgreich!');
@@ -2176,7 +2189,7 @@ begin
       DXDraw.Surface.Canvas.Release;
       Sleep(1);
       inc(FCounter);
-      if FCounter>150{200} then SpielerFliegtFort := true;
+      if FCounter>150{200} then PlayerSprite.FlyAway;
     end;
   end;
 end;
@@ -2312,23 +2325,38 @@ end;
 procedure TMainForm.OptionMusicClick(Sender: TObject);
 begin
   OptionMusic.Checked := not OptionMusic.Checked;
-  if OptionMusic.Checked then PlayMusic(FMusic)
-    else DestroyMusic(FMusic);
-  WriteOptions;
-end;
-
-procedure TMainForm.MitarbeiterClick(Sender: TObject);
-begin
-  if not fileexists(mainform.fdirectory+'Texte\Mitwirkende.txt') then
+  if OptionMusic.Checked then
   begin
-    MessageDLG('Die Datei "Texte\Mitwirkende.txt" ist nicht mehr vorhanden. Die Aktion wird abgebrochen!',
-      mtWarning, [mbOK], 0);
+    PlayMusic(FMusic)
   end
   else
   begin
-    TextForm.memo1.lines.loadfromfile(mainform.FDirectory+'Texte\Mitwirkende.txt');
-    TextForm.showmodal;
+    DestroyMusic(FMusic);
   end;
+  WriteOptions;
+end;
+
+procedure TMainForm.MasterClick(Sender: TObject);
+begin
+  master.checked := true;
+  FInterval := giMaster;
+  writeoptions;
+end;
+
+procedure TMainForm.MitarbeiterClick(Sender: TObject);
+resourcestring
+  LNG_NOTFOUND = 'Die Datei "Texte\Mitwirkende.txt" ist nicht mehr vorhanden. Die Aktion wird abgebrochen!';
+const
+  MitwirkendeTxt = 'Texte\Mitwirkende.txt';
+begin
+  if not fileexists(fdirectory+MitwirkendeTxt) then
+  begin
+    MessageDLG(Format(LNG_NOTFOUND, [MitwirkendeTxt]), mtWarning, [mbOK], 0);
+    Exit;
+  end;
+
+  TextForm.memo1.lines.loadfromfile(FDirectory+MitwirkendeTxt);
+  TextForm.ShowModal;
 end;
 
 procedure TEnemyMeteor.DoMove(MoveCount: Integer);
@@ -2337,9 +2365,9 @@ begin
   if X < -Width then Dead;
 end;
 
-procedure TEnemyMeteor.HitEnemy(Deaded: Boolean);
+procedure TEnemyMeteor.HitEnemy(ADead: Boolean);
 begin
-  if deaded then Collisioned := True;
+  if ADead then Collisioned := True;
   MainForm.PlaySound('Hit', False);
 end;
 
@@ -2431,7 +2459,9 @@ end;
 
 procedure TMainForm.InformationenClick(Sender: TObject);
 begin
+  dxtimer.enabled := false;
   InfoForm.showmodal;
+  if not mainform.gamepause.checked then mainform.dxtimer.enabled := true;
 end;
 
 procedure TMainForm.CheatClick(Sender: TObject);
@@ -2450,7 +2480,6 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
-  versioninfo.free;
   imagelist.free;
   spriteengine.free;
   dxdraw.Free;

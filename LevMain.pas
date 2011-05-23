@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, MMSystem,
   Dialogs, StdCtrls, ExtCtrls, Menus, DIB, DXClass, DXSprite, DXDraws,
-  DXSounds, Spin, ComCtrls, PjVersionInfo;
+  DXSounds, Spin, ComCtrls;
 
 type
   TMainForm = class(TDXForm)
@@ -78,13 +78,10 @@ type
   public
     { VCL-Ersatz }
     spriteengine: tdxspriteengine;
-    versioninfo: tpjversioninfo;
     dxtimer: tdxtimer;
     imagelist: tdximagelist;
     dxdraw: tdxdraw;
     { Variablen }
-    FDirectory: string;
-    FEngineVersion: string;
     FMenuItem: integer;
     Enemys: TStrings;
     ArtChecked: integer;
@@ -111,13 +108,10 @@ type
 var
   MainForm: TMainForm;
 
-const
-  FCompVersion = '1.0';
-
 implementation
 
 uses
-  LevSplash, LevSpeicherung, LevText, LevInfo, LevSource, LevOptions;
+  Global, LevSplash, LevSpeicherung, LevText, SplInfo, LevSource, LevOptions;
 
 const
   FileError = 'Die Datei kann von SpaceMission nicht geöffnet werden!';
@@ -197,14 +191,9 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var
   Ergebnis: string;
   daten: textfile;
-  i: integer;
-  punkt: integer;
   ok: boolean;
 begin
   { VCL-Ersatz start }
-
-  versioninfo := tpjversioninfo.create(self);
-
   dxtimer := tdxtimer.create(self);
   dxtimer.Interval := 100;
   dxtimer.ActiveOnly := false;
@@ -247,17 +236,9 @@ begin
   LiveEdit := 1;
   // Leeres Level am Anfang braucht keine Beenden-Bestätigung.
   // LevChanged := true;
-  punkt := 0;
-  FDirectory := extractfilepath(paramstr(0));
-  versioninfo.filename := paramstr(0);
-  for i := 1 to length(versioninfo.ProductVersion) do
-  begin
-    if copy(versioninfo.ProductVersion, i, 1) = '.' then inc(punkt);
-    if punkt < 2 then fengineversion :=
-      fengineversion+copy(versioninfo.ProductVersion, i, 1);
-  end;
-  //Application.Title := 'SpaceMission '+FEngineVersion+' - Leveleditor';
-  Caption := 'SpaceMission '+FEngineVersion+' - Leveleditor';
+
+  //Application.Title := 'SpaceMission '+ProgramVersion+' - Leveleditor';
+  Caption := 'SpaceMission '+ProgramVersion+' - Leveleditor';
   DXInit;
   if (paramcount > 0) and (fileexists(paramstr(1))) then
   begin
@@ -290,7 +271,6 @@ procedure TMainForm.FormDestroy(Sender: TObject);
 begin
   Enemys.Free;
   //spriteengine.Free;
-  versioninfo.free;
   dxtimer.Free;
   imagelist.Free;
   dxdraw.free;
@@ -464,14 +444,14 @@ end;
 
 procedure TMainForm.MitarbeiterClick(Sender: TObject);
 begin
-  if not fileexists(mainform.fdirectory+'Texte\Mitwirkende.txt') then
+  if not fileexists(fdirectory+'Texte\Mitwirkende.txt') then
   begin
     MessageDLG('Die Datei "Texte\Mitwirkende.txt" ist nicht mehr vorhanden. Die Aktion wird abgebrochen!',
       mtWarning, [mbOK], 0);
   end
   else
   begin
-    TextForm.memo1.lines.loadfromfile(mainform.FDirectory+'Texte\Mitwirkende.txt');
+    TextForm.memo1.lines.loadfromfile(FDirectory+'Texte\Mitwirkende.txt');
     TextForm.showmodal;
   end;
 end;

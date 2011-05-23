@@ -9,4 +9,4 @@ Levels von Daniel Marschall, Patrick Büssecker und Andreas Kübelsbeck.
 
 Entwickelt mit Borland Turbo Delphi.
 
-Verwendete Komponenten: DelphiX 2000, PJSoft VersionInfo.
+Verwendete Komponenten: DelphiX 2000.

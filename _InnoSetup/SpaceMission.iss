@@ -9,7 +9,7 @@
 AppName=SpaceMission
 AppVerName=SpaceMission 1.1
 AppVersion=1.1
-AppCopyright=© Copyright 2001 - 2007 ViaThinkSoft.
+AppCopyright=© Copyright 2001 - 2011 ViaThinkSoft.
 AppPublisher=ViaThinkSoft
 AppPublisherURL=http://www.viathinksoft.de/
 AppSupportURL=http://www.daniel-marschall.de/
@@ -17,7 +17,7 @@ AppUpdatesURL=http://www.viathinksoft.de/
 DefaultDirName={pf}\SpaceMission
 DefaultGroupName=SpaceMission
 VersionInfoCompany=ViaThinkSoft
-VersionInfoCopyright=© Copyright 2001 - 2007 ViaThinkSoft.
+VersionInfoCopyright=© Copyright 2001 - 2011 ViaThinkSoft.
 VersionInfoDescription=SpraceMission Setup
 VersionInfoTextVersion=1.0.0.0
 VersionInfoVersion=1.1

@@ -47,13 +47,10 @@ type
 var
   SpeicherungForm: TSpeicherungForm;
 
-const
-  FCompVersion = '1.0';
-
 implementation
 
 uses
-  SplMain;
+  Global, SplMain;
 
 {$R *.DFM}
 
@@ -79,7 +76,7 @@ begin
   li4b.caption := 'n/a';
   LadenBtn.enabled := false;
   LoeschenBtn.enabled := false;
-  res := FindFirst(mainform.fdirectory+'Spielstände\*.sav', 0, sr);
+  res := FindFirst(fdirectory+'Spielstände\*.sav', 0, sr);
   try
     while (res = 0) do
     begin
@@ -121,7 +118,7 @@ begin
     li4b.caption := 'n/a';
     LadenBtn.enabled := false;
     LoeschenBtn.enabled := false;
-    deletefile(mainform.FDirectory+'Spielstände\'+LevelListBox.Items.strings[LevelListBox.itemindex]+'.sav');
+    deletefile(FDirectory+'Spielstände\'+LevelListBox.Items.strings[LevelListBox.itemindex]+'.sav');
     searchsaves;
   end;
 end;
@@ -158,7 +155,7 @@ begin
   end;
   {if liu.visible or (LevelListBox.items.count=0) then
     exit;}
-  AssignFile(SavGame, mainform.FDirectory+'Spielstände\'+LevelListBox.Items.strings[LevelListBox.itemindex]+'.sav');
+  AssignFile(SavGame, FDirectory+'Spielstände\'+LevelListBox.Items.strings[LevelListBox.itemindex]+'.sav');
   Reset(SavGame);
   ReadLN(SavGame);
   ReadLN(SavGame);
@@ -206,7 +203,7 @@ begin
     if MessageDlg('Spielstand ist bereits vorhanden. Ersetzen?', mtConfirmation, [mbYes, mbNo], 0) = mrNo then
       exit;
   end;
-  AssignFile(SavGame, mainform.FDirectory+'Spielstände\'+LevelName.text+'.sav');
+  AssignFile(SavGame, FDirectory+'Spielstände\'+LevelName.text+'.sav');
   Rewrite(SavGame);
   WriteLN(SavGame, '; SpaceMission '+FCompVersion);
   WriteLN(SavGame, '; SAV-File');
@@ -247,7 +244,7 @@ begin
     exit;
   end;
   LevelName.Text := LevelListBox.Items.strings[LevelListBox.itemindex];
-  AssignFile(SavGame, mainform.FDirectory+'Spielstände\'+LevelListBox.Items.strings[LevelListBox.itemindex]+'.sav');
+  AssignFile(SavGame, FDirectory+'Spielstände\'+LevelListBox.Items.strings[LevelListBox.itemindex]+'.sav');
   Reset(SavGame);
   ReadLN(SavGame, Ergebniss);
   if Ergebniss <> '; SpaceMission '+FCompVersion then

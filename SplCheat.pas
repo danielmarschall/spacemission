@@ -32,7 +32,7 @@ var
 
 implementation
 
-uses SplMain, SplInfo;
+uses SplMain, Global;
 
 {$R *.DFM}
 
@@ -43,7 +43,7 @@ const
 
 procedure TCheatForm.AbbBtnClick(Sender: TObject);
 begin
-  close;  
+  close;
 end;
 
 procedure TCheatForm.SearchCheats;
@@ -125,7 +125,7 @@ end;
 
 procedure TCheatForm.Label3Click(Sender: TObject);
 begin
-  shellexecute(handle, 'open', pchar('mailto:daniel.marschall@surfeu.de?subject=Cheats für SpaceMission '+MainForm.FEngineVersion), '', '', 1);
+  shellexecute(handle, 'open', pchar('mailto:daniel-marschall@viathinksoft.de?subject=Cheats für SpaceMission '+ProgramVersion), '', '', 1);
 end;
 
 end.

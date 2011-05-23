@@ -1,0 +1,4 @@
+CapiCom muss installiert werden
+
+http://www.microsoft.com/downloads/de-de/details.aspx?FamilyID=860ee43a-a843-462f-abb5-ff88ea5896f6
+http://www.microsoft.com/downloads/en/details.aspx?FamilyId=CA930018-4A66-4DA6-A6C5-206DF13AF316&displaylang=en

@@ -14,9 +14,10 @@ uses
   LevText in 'LevText.pas' {TextForm},
   LevSplash in 'LevSplash.pas' {SplashForm},
   LevSpeicherung in 'LevSpeicherung.pas' {SpeicherungForm},
-  LevInfo in 'LevInfo.pas' {InfoForm},
+  SplInfo in 'SplInfo.pas' {InfoForm},
   LevSource in 'LevSource.pas' {SourceForm},
-  LevOptions in 'LevOptions.pas' {LevelForm};
+  LevOptions in 'LevOptions.pas' {LevelForm},
+  Global in 'Global.pas';
 
 {$R *.RES}
 

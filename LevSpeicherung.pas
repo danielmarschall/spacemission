@@ -52,13 +52,10 @@ type
 var
   SpeicherungForm: TSpeicherungForm;
 
-const
-  FCompVersion = '1.0';
-
 implementation
 
 uses
-  LevMain;
+  Global, LevMain;
 
 {$R *.DFM}
 
@@ -92,7 +89,7 @@ begin
   end;}
   for i := 1 to 9999 do
   begin
-    if fileexists(mainform.fdirectory+'Levels\Level '+inttostr(i)+'.lev') then
+    if fileexists(fdirectory+'Levels\Level '+inttostr(i)+'.lev') then
       LevelListBox.items.Add('Level ' + inttostr(i));
   end;
 end;
@@ -120,7 +117,7 @@ begin
     liw.visible := true;
     LadenBtn.enabled := false;
     LoeschenBtn.enabled := false;
-    deletefile(mainform.FDirectory+'Levels\'+
+    deletefile(FDirectory+'Levels\'+
       LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
     SearchLevels;
   end;
@@ -158,7 +155,7 @@ begin
   MainForm.DestroyLevel;
   MainForm.LevChanged := false;
   // Öffnen
-  AssignFile(SavGame, mainform.FDirectory+'Levels\'+
+  AssignFile(SavGame, FDirectory+'Levels\'+
     LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
   Reset(SavGame);
   // Laden
@@ -286,7 +283,7 @@ begin
       exit;
   end;
   // Öffnen oder erstellen
-  AssignFile(SavGame, mainform.FDirectory+'Levels\Level '+inttostr(SpinEdit.Position)+'.lev');
+  AssignFile(SavGame, FDirectory+'Levels\Level '+inttostr(SpinEdit.Position)+'.lev');
   Rewrite(SavGame);
   // Sortierung
   for j := 0 to mainform.enemys.Count - 2 do
@@ -343,7 +340,7 @@ begin
   end;
   temp := LevelListBox.Items.strings[LevelListBox.itemindex];
   SpinEdit.Position := strtoint(RightStr(temp, length(temp)-6));
-  AssignFile(SavGame, mainform.FDirectory+'Levels\'+
+  AssignFile(SavGame, FDirectory+'Levels\'+
     LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
   Reset(SavGame);
   ReadLN(SavGame, Ergebnis);

@@ -26,13 +26,10 @@ type
 var
   SourceForm: TSourceForm;
 
-const
-  FCompVersion = '1.0';
-
 implementation
 
 uses
-  LevMain, LevSpeicherung;
+  Global, LevMain, LevSpeicherung;
 
 {$R *.DFM}
 
@@ -84,13 +81,13 @@ end;
 
 procedure TSourceForm.Label1Click(Sender: TObject);
 begin
-  if not fileexists(mainform.fdirectory+'Dokumentation.pdf') then
+  if not fileexists(Fdirectory+'Dokumentation.pdf') then
   begin
     MessageDLG('Die Datei "Dokumentation.pdf" ist nicht mehr vorhanden. Die Aktion wird abgebrochen!',
       mtWarning, [mbOK], 0);
   end
   else
-    shellexecute(handle, 'open', pchar(mainform.fdirectory+'Dokumentation.pdf'), '', '', 1);
+    shellexecute(handle, 'open', pchar(fdirectory+'Dokumentation.pdf'), '', '', 1);
 end;
 
 end.

@@ -13,7 +13,8 @@ uses
   SplSplash in 'SplSplash.pas' {SplashForm},
   SplSpeicherung in 'SplSpeicherung.pas' {SpeicherungForm},
   SplInfo in 'SplInfo.pas' {InfoForm},
-  SplCheat in 'SplCheat.pas' {CheatForm};
+  SplCheat in 'SplCheat.pas' {CheatForm},
+  Global in 'Global.pas';
 
 {$R *.RES}
 

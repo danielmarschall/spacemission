@@ -9,14 +9,14 @@ object CheatForm: TCheatForm
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -12
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
   OnHide = FormHide
   OnShow = FormShow
-  PixelsPerInch = 96
+  PixelsPerInch = 106
   TextHeight = 13
   object Label1: TLabel
     Left = 8
@@ -30,6 +30,7 @@ object CheatForm: TCheatForm
     Top = 8
     Width = 106
     Height = 13
+    Cursor = crHandPoint
     Caption = 'Herausgeber anfragen'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlue
@@ -81,6 +82,7 @@ object CheatForm: TCheatForm
       Top = 104
       Width = 83
       Height = 13
+      Cursor = crHandPoint
       Caption = 'Cheat deaktiviren'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlue

@@ -9,15 +9,13 @@ object InfoForm: TInfoForm
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -12
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
-  OnHide = FormHide
-  OnShow = FormShow
-  PixelsPerInch = 96
+  PixelsPerInch = 106
   TextHeight = 13
   object HomeLbl: TLabel
     Left = 32
@@ -38,9 +36,9 @@ object InfoForm: TInfoForm
   object FirmaLbl: TLabel
     Left = 88
     Top = 8
-    Width = 31
+    Width = 74
     Height = 13
-    Caption = 'Firma'
+    Caption = 'ViaThinkSoft'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
@@ -52,9 +50,9 @@ object InfoForm: TInfoForm
   object NameLbl: TLabel
     Left = 104
     Top = 24
-    Width = 28
+    Width = 66
     Height = 13
-    Caption = 'Name'
+    Caption = 'SpaceMission'
     Transparent = True
   end
   object VersionLbl: TLabel
@@ -76,9 +74,9 @@ object InfoForm: TInfoForm
   object CopyrightLbl: TLabel
     Left = 8
     Top = 80
-    Width = 44
+    Width = 137
     Height = 13
-    Caption = 'Copyright'
+    Caption = '(C) 2001 - 2011 ViaThinkSoft'
     Transparent = True
   end
   object Copyright2Lbl: TLabel
@@ -108,10 +106,10 @@ object InfoForm: TInfoForm
   object URL1: TLabel
     Left = 152
     Top = 120
-    Width = 118
+    Width = 155
     Height = 13
     Cursor = crHandPoint
-    Caption = 'info@daniel-marschall.de'
+    Caption = 'daniel-marschall@viathinksoft.de'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlue
     Font.Height = -11
@@ -121,13 +119,13 @@ object InfoForm: TInfoForm
     Transparent = True
     OnClick = URL1Click
   end
-  object ElPopupButton1: TButton
+  object OkBtn: TButton
     Left = 208
     Top = 160
     Width = 107
     Height = 25
     Caption = 'OK'
     TabOrder = 0
-    OnClick = ElPopupButton1Click
+    OnClick = OkBtnClick
   end
 end
