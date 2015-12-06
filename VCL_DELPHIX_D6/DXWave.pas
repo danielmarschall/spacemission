@@ -1,4 +1,4 @@
-unit Wave;
+unit DXWave;
 
 interface
 
@@ -74,7 +74,7 @@ type
     function GetFilledSize: Integer; virtual;
     function GetFormat: PWaveFormatEx; virtual; abstract;
     function GetFormatSize: Integer; virtual;
-    function GetSize: Integer; virtual;
+    function GetSize: Integer; {$IFDEF VER5UP} reintroduce;{$ENDIF} virtual;
     function ReadWave(var Buffer; Count: Integer): Integer; virtual;
     procedure SetFormatSize(Value: Integer); virtual; abstract;
     procedure SetSize(Value: Integer); override;

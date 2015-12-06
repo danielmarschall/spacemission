@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, Spin, ComCtrls;
+  StdCtrls, ExtCtrls, Spin, ComCtrls, System.UITypes;
 
 type
   TSpeicherungForm = class(TForm)

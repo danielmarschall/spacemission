@@ -19,10 +19,11 @@ type
     Copyright2Lbl: TLabel;
     URL2: TLabel;
     URL1: TLabel;
+    MemoMitwirkende: TMemo;
     procedure OkBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure URL2Click(Sender: TObject);
-    procedure URL1Click(Sender: TObject);
+    procedure WebsiteClick(Sender: TObject);
+    procedure EMailClick(Sender: TObject);
   end;
 
 var
@@ -46,14 +47,14 @@ begin
   image.picture.loadfromfile(FDirectory + 'Bilder\Delphi.bmp');
 end;
 
-procedure TInfoForm.URL2Click(Sender: TObject);
+procedure TInfoForm.WebsiteClick(Sender: TObject);
 begin
-  shellexecute(application.Handle, 'open', pchar('http://'+url2.caption+'/'), nil, nil, SW_SHOW);
+  ShellExecute(application.Handle, 'open', pchar('http://'+url2.caption+'/'), nil, nil, SW_SHOW);
 end;
 
-procedure TInfoForm.URL1Click(Sender: TObject);
+procedure TInfoForm.EMailClick(Sender: TObject);
 begin
-  shellexecute(application.Handle, 'open', pchar('mailto:'+url1.Caption+'?subject=SpaceMission ' + ProgramVersion), nil, nil, SW_SHOW);
+  ShellExecute(application.Handle, 'open', pchar('mailto:'+url1.Caption+'?subject=SpaceMission ' + ProgramVersion), nil, nil, SW_SHOW);
 end;
 
 end.

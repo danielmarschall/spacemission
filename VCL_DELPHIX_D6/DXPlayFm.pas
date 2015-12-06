@@ -1,10 +1,15 @@
 unit DXPlayFm;
 
 interface
-
+{$INCLUDE DelphiXcfg.inc}
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, DirectX, DXPlay, ActiveX, DXETable, DIB;
+  StdCtrls, ExtCtrls, DXPlay, ActiveX, DXETable, DIB, 
+{$IfDef StandardDX}
+  DirectDraw, DirectPlay;
+{$Else}
+  DirectX;
+{$EndIf}
 
 type
   TDelphiXDXPlayForm = class(TForm)
@@ -54,7 +59,9 @@ type
   private
     FProviderGUID: TGUID;
   public
-    DPlay: IDirectPlay4A;
+    DPlay: //{$IfDef DX7}
+      IDirectPlay4A;
+      //{$Else}IDirectPlay8Address{$EndIf};
     DXPlay: TCustomDXPlay;
     PlayerName: string;
     ProviderName: string;
@@ -104,12 +111,15 @@ procedure TDelphiXDXPlayForm.NextButtonClick(Sender: TObject);
 
   procedure InitDirectPlay;
   var
-    DPlay1: IDirectPlay;
+    DPlay1: //{$IfDef DX7}
+      IDirectPlay;
+      //{$Else}IDirectPlay8Server{$EndIf};
   begin
     if DXDirectPlayCreate(FProviderGUID, DPlay1, nil)<>0 then
       raise EDXPlayError.CreateFmt(SCannotInitialized, [SDirectPlay]);
 
-    DPlay := DPlay1 as IDirectPlay4A;
+    DPlay := DPlay1 as //{$IfDef DX7}
+      IDirectPlay4A//{$Else}IDirectPlay8Address{$EndIf}
   end;
 
   function EnumSessionsCallback(const lpThisSD: TDPSessionDesc2;
@@ -125,8 +135,11 @@ procedure TDelphiXDXPlayForm.NextButtonClick(Sender: TObject);
 
     Guid := New(PGUID);
     Move(lpThisSD.guidInstance, Guid^, SizeOf(TGUID));
+    {$IFDEF UNICODE}
+    TDelphiXDXPlayForm(lpContext).JoinGameSessionList.Items.AddObject(lpThisSD.lpszSessionNameW, Pointer(Guid));
+    {$ELSE}
     TDelphiXDXPlayForm(lpContext).JoinGameSessionList.Items.AddObject(lpThisSD.lpszSessionNameA, Pointer(Guid));
-
+    {$ENDIF}
     Result := True;
   end;
 
@@ -232,7 +245,11 @@ procedure TDelphiXDXPlayForm.JoinGameGetPlayerListTimerTimer(
     with lpName do
     begin
       if lpszShortNameA<>nil then
+        {$IFDEF UNICODE}
+        TDelphiXDXPlayForm(lpContext).JoinGamePlayerList.Items.Add(lpszShortNameW);
+        {$ELSE}
         TDelphiXDXPlayForm(lpContext).JoinGamePlayerList.Items.Add(lpszShortNameA);
+        {$ENDIF}
     end;
 
     Result := True;
@@ -264,7 +281,7 @@ begin
     hr := TempDPlay.Open(dpDesc, DPOPEN_JOIN);
     if hr<>0 then Exit;
     try
-      TempDPlay.EnumPlayers(PGUID(nil)^, @EnumPlayersCallback2, Self, DPENUMPLAYERS_REMOTE);
+      TempDPlay.EnumPlayers(PGUID(nil), @EnumPlayersCallback2, Self, DPENUMPLAYERS_REMOTE);
     finally
       TempDPlay.Close;
     end;

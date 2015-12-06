@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, SysUtils, Classes, Forms, Dialogs, Controls, StdCtrls, ExtCtrls,
-  Buttons, ComCtrls, DXSounds, Wave, Graphics;
+  Buttons, ComCtrls, DXSounds, DXWave, Graphics;
 
 type
 

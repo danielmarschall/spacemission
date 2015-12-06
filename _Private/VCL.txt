@@ -1,0 +1,5 @@
+
+
+VCL_DELPHIX_D6
+	delphix_all_in_one_15, 1. Sep 2015: http://www.micrel.cz/Dx/
+	TODO: umbenennen bzw testen ob mit D6 kompatibel

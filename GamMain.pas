@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, MMSystem, Dialogs,
   StdCtrls, ExtCtrls, Menus, DIB, DXClass, DXSprite, DXDraws, DXInput,
-  DXSounds, INIFiles, ShellAPI, wininet;
+  DXSounds, INIFiles, ShellAPI, wininet, Winapi.DirectDraw, System.UITypes;
 
 type
   TGameScene = (
@@ -213,7 +213,6 @@ type
     Leer4: TMenuItem;
     Hilfe: TMenuItem;
     OptionSound: TMenuItem;
-    Mitarbeiter: TMenuItem;
     Leer3: TMenuItem;
     Spielstand: TMenuItem;
     Leer5: TMenuItem;
@@ -243,7 +242,6 @@ type
     procedure OptionSoundClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure OptionMusicClick(Sender: TObject);
-    procedure MitarbeiterClick(Sender: TObject);
     procedure SpielstandClick(Sender: TObject);
     procedure NeustartClick(Sender: TObject);
     procedure OptionBreitbildClick(Sender: TObject);
@@ -333,6 +331,7 @@ var
   MainForm: TMainForm;
 
 const
+  // TODO: ini file
   conleicht = 650 div 60; // 10
   conmittel = 1000 div 60; // 16
   conschwer = 1350 div 60; // 22
@@ -342,14 +341,12 @@ const
 implementation
 
 uses
-  GamSplash, GamSpeicherung, ComInfo, ComText, GamCheat, Global;
+  GamSplash, GamSpeicherung, ComInfo, GamCheat, Global;
 
 resourcestring
   FileError = 'Die Datei kann von SpaceMission nicht geöffnet werden!';
 
 {$R *.DFM}
-
-{$R WindowsXP.res}
 
 var // TODO: irgendwo hinpacken. irgendwo!!!
   EnemyAdventTable: array[0..9999] of TEnemyAdvent; // TODO: dyn
@@ -373,6 +370,8 @@ const // TODO: Auch für Enemies
   PLAYER_MODE_FLYAWAY = 3;
   PLAYER_MODE_ENTER = 4;
 
+  DEFAULT_ANIMSPEED = 15/1000;
+
 // TODO: Code komplett überarbeiten. Bessere Ableitungen machen
 
 constructor TPlayerSprite.Create(AParent: TSprite);
@@ -386,7 +385,7 @@ begin
   Z := 2;
   AnimCount := Image.PatternCount;
   AnimLooped := True;
-  AnimSpeed := 15/1000;
+  AnimSpeed := DEFAULT_ANIMSPEED;
   FMode := PLAYER_MODE_ENTER;
 end;
 
@@ -411,7 +410,7 @@ begin
         Height := Image.Height;
         AnimCount := Image.PatternCount;
         AnimLooped := False;
-        AnimSpeed := 15/1000;
+        AnimSpeed := DEFAULT_ANIMSPEED;
         AnimPos := 0;
       end;
     end
@@ -523,7 +522,7 @@ begin
       dxdraw.autosize := false;
       dxdraw.Top := 0;
       dxdraw.Left := 0;
-      dxdraw.width := 640;
+      dxdraw.width := 640;    // TODO: besser die dimensionen des fensters
       dxdraw.height := 480;
       dxdraw.surfacewidth := 640;
       dxdraw.surfaceheight := 480;
@@ -545,7 +544,7 @@ begin
   Height := Image.Height;
   AnimCount := Image.PatternCount;
   AnimLooped := True;
-  AnimSpeed := 15/1000;
+  AnimSpeed := DEFAULT_ANIMSPEED;
   MainForm.PlaySound('Shoot', False);
 end;
 
@@ -667,7 +666,7 @@ begin
   Height := Image.Height;
   AnimCount := Image.PatternCount;
   AnimLooped := True;
-  AnimSpeed := 15/1000;
+  AnimSpeed := DEFAULT_ANIMSPEED;
   AnimPos := Random(AnimCount);
 end;
 
@@ -686,7 +685,7 @@ begin
   Height := Image.Height;
   AnimCount := Image.PatternCount;
   AnimLooped := True;
-  AnimSpeed := 15/1000;
+  AnimSpeed := DEFAULT_ANIMSPEED;
   MainForm.PlaySound('Shoot', False);
 end;
 
@@ -722,7 +721,7 @@ begin
   Height := Image.Height;
   AnimCount := Image.PatternCount;
   AnimLooped := True;
-  AnimSpeed := 15/1000;
+  AnimSpeed := DEFAULT_ANIMSPEED;
   FLife := EnemyAdventTable[mainform.FEnemyAdventPos].lifes;
 end;
 
@@ -752,7 +751,7 @@ begin
     Height := Image.Height;
     AnimCount := Image.PatternCount;
     AnimLooped := False;
-    AnimSpeed := 15/1000;
+    AnimSpeed := DEFAULT_ANIMSPEED;
     AnimPos := 0;
   end else
   begin
@@ -802,7 +801,7 @@ begin
     Height := Image.Height;
     AnimCount := Image.PatternCount;
     AnimLooped := False;
-    AnimSpeed := 15/1000;
+    AnimSpeed := DEFAULT_ANIMSPEED;
     AnimPos := 0;
   end else
   begin
@@ -819,7 +818,7 @@ begin
   Height := Image.Height;
   AnimCount := Image.PatternCount;
   AnimLooped := True;
-  AnimSpeed := 15/1000;
+  AnimSpeed := DEFAULT_ANIMSPEED;
   FLife := EnemyAdventTable[mainform.FEnemyAdventPos].lifes;
 end;
 
@@ -847,7 +846,7 @@ begin
   Height := Image.Height;
   AnimCount := Image.PatternCount;
   AnimLooped := True;
-  AnimSpeed := 15/1000;
+  AnimSpeed := DEFAULT_ANIMSPEED;
   PixelCheck := True;
   FLife := EnemyAdventTable[mainform.FEnemyAdventPos].lifes;
 end;
@@ -865,7 +864,7 @@ begin
     Height := Image.Height;
     AnimCount := Image.PatternCount;
     AnimLooped := False;
-    AnimSpeed := 15/1000;
+    AnimSpeed := DEFAULT_ANIMSPEED;
     AnimPos := 0;
   end else
   begin
@@ -899,7 +898,7 @@ begin
   MainForm.PlayMusic(mtBoss);
   AnimCount := Image.PatternCount;
   AnimLooped := True;
-  AnimSpeed := 15/1000;
+  AnimSpeed := DEFAULT_ANIMSPEED;
   PixelCheck := True;
   Collisioned := False;
   FLife := EnemyAdventTable[mainform.FEnemyAdventPos].lifes;
@@ -1006,7 +1005,7 @@ begin
   Height := Image.Height;
   AnimCount := Image.PatternCount;
   AnimLooped := True;
-  AnimSpeed := 15/1000;
+  AnimSpeed := DEFAULT_ANIMSPEED;
   PixelCheck := True;
   FLife := EnemyAdventTable[mainform.FEnemyAdventPos].lifes;
 end;
@@ -1024,7 +1023,7 @@ begin
     Height := Image.Height;
     AnimCount := Image.PatternCount;
     AnimLooped := False;
-    AnimSpeed := 15/1000;
+    AnimSpeed := DEFAULT_ANIMSPEED;
     AnimPos := 0;
   end else
   begin
@@ -1096,7 +1095,7 @@ begin
     Height := Image.Height;
     AnimCount := Image.PatternCount;
     AnimLooped := False;
-    AnimSpeed := 15/1000;
+    AnimSpeed := DEFAULT_ANIMSPEED;
     AnimPos := 0;
   end else
   begin
@@ -1139,7 +1138,7 @@ begin
   Height := Image.Height;
   AnimCount := Image.PatternCount;
   AnimLooped := True;
-  AnimSpeed := 15/1000;
+  AnimSpeed := DEFAULT_ANIMSPEED;
   PixelCheck := True;
   FLife := EnemyAdventTable[mainform.FEnemyAdventPos].lifes;
 end;
@@ -1180,7 +1179,7 @@ begin
   dxdraw.Display.FixedSize := False;
   dxdraw.Display.Height := 600;
   dxdraw.Display.Width := 800;
-  dxdraw.Options := [doAllowReboot, doWaitVBlank, doAllowPalette256, doCenter, doRetainedMode, doHardware, doSelectDriver];
+  dxdraw.Options := [doAllowReboot, doWaitVBlank, doAllowPalette256, doCenter, {doRetainedMode,} doHardware, doSelectDriver];
   dxdraw.TabOrder := 0;
   dxdraw.Visible := true;
   dxdraw.OnFinalize := DXDrawFinalize;
@@ -2343,25 +2342,6 @@ begin
   writeoptions;
 end;
 
-procedure TMainForm.MitarbeiterClick(Sender: TObject);
-resourcestring
-  LNG_NOTFOUND = 'Die Datei "Texte\Mitwirkende.txt" ist nicht mehr vorhanden. Die Aktion wird abgebrochen!';
-const
-  MitwirkendeTxt = 'Texte\Mitwirkende.txt';
-begin
-  if not fileexists(fdirectory+MitwirkendeTxt) then
-  begin
-    MessageDLG(Format(LNG_NOTFOUND, [MitwirkendeTxt]), mtWarning, [mbOK], 0);
-    Exit;
-  end;
-
-  TextForm.memo1.lines.loadfromfile(FDirectory+MitwirkendeTxt);
-
-  dxtimer.enabled := false;
-  TextForm.ShowModal;
-  if not mainform.gamepause.checked then mainform.dxtimer.enabled := true;
-end;
-
 procedure TEnemyMeteor.DoMove(MoveCount: Integer);
 begin
   X := X - MoveCount*(250/1000);
@@ -2404,7 +2384,7 @@ begin
   Height := Image.Height;
   AnimCount := Image.PatternCount;
   AnimLooped := True;
-  AnimSpeed := 15/1000;
+  AnimSpeed := DEFAULT_ANIMSPEED;
   PixelCheck := True;
 end;
 

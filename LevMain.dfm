@@ -167,9 +167,9 @@ object MainForm: TMainForm
   object Enemy1: TRadioButton
     Left = 652
     Top = 24
-    Width = 73
+    Width = 93
     Height = 17
-    Caption = 'Attackierer'
+    Caption = 'Angreifer Typ 1'
     Checked = True
     TabOrder = 0
     TabStop = True
@@ -179,9 +179,9 @@ object MainForm: TMainForm
   object Enemy2: TRadioButton
     Left = 652
     Top = 48
-    Width = 82
+    Width = 93
     Height = 17
-    Caption = 'Attackierer 2'
+    Caption = 'Angreifer Typ 2'
     TabOrder = 1
     OnClick = EnemyClick
     OnMouseMove = DXDrawMouseMove
@@ -189,9 +189,9 @@ object MainForm: TMainForm
   object Enemy3: TRadioButton
     Left = 652
     Top = 72
-    Width = 82
+    Width = 93
     Height = 17
-    Caption = 'Attackierer 3'
+    Caption = 'Angreifer Typ 3'
     TabOrder = 2
     OnClick = EnemyClick
     OnMouseMove = DXDrawMouseMove
@@ -298,8 +298,8 @@ object MainForm: TMainForm
     OnMouseMove = DXDrawMouseMove
   end
   object MainMenu: TMainMenu
-    Left = 8
-    Top = 8
+    Left = 32
+    Top = 16
     object Spiel: TMenuItem
       Caption = '&Datei'
       object Level: TMenuItem
@@ -336,19 +336,9 @@ object MainForm: TMainForm
     end
     object Hilfe: TMenuItem
       Caption = '&Hilfe'
-      object Mitarbeiter: TMenuItem
-        Caption = '&Mitwirkende...'
-        ShortCut = 120
-        OnClick = MitarbeiterClick
-      end
-      object Leer2: TMenuItem
-        Caption = '-'
-        GroupIndex = 1
-      end
       object Informationen: TMenuItem
         Caption = '&Informationen...'
         GroupIndex = 1
-        ShortCut = 121
         OnClick = InformationenClick
       end
     end

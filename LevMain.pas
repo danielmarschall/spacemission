@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, MMSystem,
   Dialogs, StdCtrls, ExtCtrls, Menus, DIB, DXClass, DXSprite, DXDraws,
-  DXSounds, Spin, ComCtrls;
+  DXSounds, Spin, ComCtrls, System.UITypes, WinAPI.DirectDraw;
 
 type
   TMainForm = class(TDXForm)
@@ -13,11 +13,9 @@ type
     Spiel: TMenuItem;
     Beenden: TMenuItem;
     Hilfe: TMenuItem;
-    Mitarbeiter: TMenuItem;
     Leer1: TMenuItem;
     Level: TMenuItem;
     Informationen: TMenuItem;
-    Leer2: TMenuItem;
     Enemy1: TRadioButton;
     Enemy2: TRadioButton;
     Enemy3: TRadioButton;
@@ -55,7 +53,6 @@ type
     procedure DXTimerTimer(Sender: TObject; LagCount: Integer);
     procedure BeendenClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure MitarbeiterClick(Sender: TObject);
     procedure LevelClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure InformationenClick(Sender: TObject);
@@ -111,7 +108,7 @@ var
 implementation
 
 uses
-  Global, LevSplash, LevSpeicherung, ComText, ComInfo, LevSource, LevOptions;
+  Global, LevSplash, LevSpeicherung, ComInfo, LevSource, LevOptions;
 
 const
   FileError = 'Die Datei kann von SpaceMission nicht geöffnet werden!';
@@ -122,8 +119,6 @@ const
   RasterH = 32;
 
 {$R *.DFM}
-
-{$R WindowsXP.res}
 
 type
   TBackground = class(TBackgroundSprite)
@@ -215,7 +210,7 @@ begin
   dxdraw.Display.FixedSize := False;
   dxdraw.Display.Height := 600;
   dxdraw.Display.Width := 800;
-  dxdraw.Options := [doAllowReboot, doWaitVBlank, doAllowPalette256, doCenter, doRetainedMode, doHardware, doSelectDriver];
+  dxdraw.Options := [doAllowReboot, doWaitVBlank, doAllowPalette256, doCenter, {doRetainedMode,} doHardware, doSelectDriver];
   dxdraw.OnFinalize := DXDrawFinalize;
   dxdraw.OnInitialize := DXDrawInitialize;
   dxdraw.ParentShowHint := False;
@@ -440,21 +435,6 @@ begin
   end;}
   PalleteAnim(RGBQuad(0, 0, 0), 300);
   mainform.Visible := true;
-end;
-
-procedure TMainForm.MitarbeiterClick(Sender: TObject);
-begin
-  if not fileexists(fdirectory+'Texte\Mitwirkende.txt') then
-  begin
-    MessageDLG('Die Datei "Texte\Mitwirkende.txt" ist nicht mehr vorhanden. Die Aktion wird abgebrochen!',
-      mtWarning, [mbOK], 0);
-    exit;
-  end;
-
-  TextForm.memo1.lines.loadfromfile(FDirectory+'Texte\Mitwirkende.txt');
-  mainform.dxtimer.enabled := false;
-  TextForm.showmodal;
-  mainform.dxtimer.enabled := true;
 end;
 
 procedure TMainForm.LevelClick(Sender: TObject);

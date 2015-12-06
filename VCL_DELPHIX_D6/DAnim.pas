@@ -22,7 +22,9 @@ interface
 
 {$Z4}
 {$A+}
+{$IfNDef D7UP}
 {$WEAKPACKAGEUNIT}
+{$EndIf}
 
 uses Windows, ActiveX, DirectX, DShow;
 
@@ -1109,18 +1111,18 @@ type
         out lplpDDClipper: IDirectDrawClipper; pUnkOuter: IUnknown): HResult; stdcall;
     function CreatePalette(dwFlags: DWORD; lpColorTable: PPaletteEntry;
         out lplpDDPalette: IDirectDrawPalette; pUnkOuter: IUnknown): HResult;stdcall;
-    function CreateSurface(const lpDDSurfaceDesc: DDSURFACEDESC;
+    function CreateSurface(const lpDDSurfaceDesc: TDDSURFACEDESC;
         out lplpDDSurface: IDirectDrawSurface; pUnkOuter: IUnknown): HResult; stdcall;
     function DuplicateSurface(lpDDSurface: IDirectDrawSurface;
         out lplpDupDDSurface: IDirectDrawSurface): HResult; stdcall;
     function EnumDisplayModes(dwFlags: DWORD;
-        const lpDDSurfaceDesc: DDSURFACEDESC; lpContext: Pointer;
-        lpEnumModesCallback: LPDDENUMMODESCALLBACK): HResult; stdcall;
-    function EnumSurfaces(dwFlags: DWORD; const lpDDSD: DDSURFACEDESC;
-        lpContext: Pointer; lpEnumCallback: LPDDENUMSURFACESCALLBACK): HResult; stdcall;
+        const lpDDSurfaceDesc: TDDSURFACEDESC; lpContext: Pointer;
+        lpEnumModesCallback: {LPDDENUMMODESCALLBACK}TDDEnumModesCallback): HResult; stdcall;
+    function EnumSurfaces(dwFlags: DWORD; const lpDDSD: TDDSURFACEDESC;
+        lpContext: Pointer; lpEnumCallback: {LPDDENUMSURFACESCALLBACK}TDDEnumSurfacesCallback): HResult; stdcall;
     function FlipToGDISurface: HResult; stdcall;
-    function GetCaps(var lpDDDriverCaps: DDCAPS; var lpDDHELCaps: DDCAPS): HResult; stdcall;
-    function GetDisplayMode(var lpDDSurfaceDesc: DDSURFACEDESC): HResult; stdcall;
+    function GetCaps(var lpDDDriverCaps: TDDCAPS; var lpDDHELCaps: TDDCAPS): HResult; stdcall;
+    function GetDisplayMode(var lpDDSurfaceDesc: TDDSURFACEDESC): HResult; stdcall;
     function GetFourCCCodes(var lpNumCodes, lpCodes: DWORD): HResult; stdcall;
     function GetGDISurface(out lplpGDIDDSSurface: IDirectDrawSurface): HResult; stdcall;
     function GetMonitorFrequency(var lpdwFrequency: DWORD): HResult; stdcall;
@@ -1133,7 +1135,7 @@ type
         dwFlags: DWORD): HResult; stdcall;
     function WaitForVerticalBlank(dwFlags: DWORD; hEvent: THandle): HResult; stdcall;
     // IDirectDraw2 methods
-    function GetAvailableVidMem(var lpDDSCaps: DDSCAPS;
+    function GetAvailableVidMem(var lpDDSCaps: TDDSCAPS;
         var lpdwTotal, lpdwFree: DWORD): HResult; stdcall;
     // IDirectDraw3 methods
     function GetSurfaceFromDC(hdc: HDC; out ppSurface: IDirectDrawSurface): HResult; stdcall;

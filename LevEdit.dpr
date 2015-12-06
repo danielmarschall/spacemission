@@ -2,7 +2,7 @@ program LevEdit;
 
 {$Description 'SpaceMission Leveleditor 1.1'}
 
-{%ToDo 'LevEdit.todo'}
+
 
 uses
   Windows,
@@ -11,13 +11,13 @@ uses
   SysUtils,
   MMSystem,
   LevMain in 'LevMain.pas' {MainForm},
-  ComText in 'ComText.pas' {TextForm},
   LevSplash in 'LevSplash.pas' {SplashForm},
   LevSpeicherung in 'LevSpeicherung.pas' {SpeicherungForm},
   ComInfo in 'ComInfo.pas' {InfoForm},
   LevSource in 'LevSource.pas' {SourceForm},
   LevOptions in 'LevOptions.pas' {LevelForm},
-  Global in 'Global.pas';
+  Global in 'Global.pas',
+  System.UITypes;
 
 {$R *.RES}
 
@@ -55,7 +55,6 @@ begin
     exit;
   end;
   Application.CreateForm(TMainForm, MainForm);
-  Application.CreateForm(TTextForm, TextForm);
   Application.CreateForm(TSpeicherungForm, SpeicherungForm);
   Application.CreateForm(TInfoForm, InfoForm);
   Application.CreateForm(TSourceForm, SourceForm);

@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, Gauges, ShellAPI, ExtCtrls, ComCtrls;
+  StdCtrls, Gauges, ShellAPI, ExtCtrls, ComCtrls, System.UITypes;
 
 type
   TMainForm = class(TForm)
@@ -37,8 +37,6 @@ var
 implementation
 
 {$R *.DFM}
-
-{$R WindowsXP.res}
 
 procedure TMainForm.RunClick(Sender: TObject);
 var

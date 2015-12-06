@@ -22,7 +22,9 @@ interface
 
 {$Z4}
 {$A+}
+{$IfNDef D7UP}
 {$WEAKPACKAGEUNIT}
+{$EndIf}
 
 uses Windows, ActiveX, DirectX, MMSystem;
 
@@ -1887,10 +1889,10 @@ type
 
   IDirectDrawMediaStream = interface(IMediaStream)
     ['{F4104FCE-9A70-11d0-8FDE-00C04FD9189D}']
-    function GetFormat(var pDDSDCurrent: DDSURFACEDESC;
+    function GetFormat(var pDDSDCurrent: TDDSURFACEDESC;
         out ppDirectDrawPalette: IDirectDrawPalette;
-        var pDDSDDesired: DDSURFACEDESC; var pdwFlags: DWORD): HResult; stdcall;
-    function SetFormat(const pDDSurfaceDesc: DDSURFACEDESC;
+        var pDDSDDesired: TDDSURFACEDESC; var pdwFlags: DWORD): HResult; stdcall;
+    function SetFormat(const pDDSurfaceDesc: TDDSURFACEDESC;
         pDirectDrawPalette: IDirectDrawPalette): HResult; stdcall;
     function GetDirectDraw(out ppDirectDraw: IDirectDraw): HResult; stdcall;
     function SetDirectDraw(pDirectDraw: IDirectDraw): HResult; stdcall;
@@ -2620,9 +2622,9 @@ type
     // IDirectDrawVideo methods
     function GetSwitches(var pSwitches: DWORD): HResult; stdcall;
     function SetSwitches(pSwitches: DWORD): HResult; stdcall;
-    function GetCaps(var pCaps: DDCAPS): HResult; stdcall;
-    function GetEmulatedCaps(var pCaps: DDCAPS): HResult; stdcall;
-    function GetSurfaceDesc(var pSurfaceDesc: DDSURFACEDESC): HResult; stdcall;
+    function GetCaps(var pCaps: TDDCAPS): HResult; stdcall;
+    function GetEmulatedCaps(var pCaps: TDDCAPS): HResult; stdcall;
+    function GetSurfaceDesc(var pSurfaceDesc: TDDSURFACEDESC): HResult; stdcall;
     function GetFourCCCodes(var pCount, pCodes: DWORD): HResult; stdcall;
     function SetDirectDraw(pDirectDraw: IDirectDraw): HResult; stdcall;
     function GetDirectDraw(out ppDirectDraw: IDirectDraw): HResult; stdcall;
@@ -3001,23 +3003,23 @@ type
     // of structures. If the pointer to the array is NULL, first parameter
     // returns the total number of formats supported.
     function GetVideoFormats(var lpNumFormats: DWORD;
-        const lpddpfFormats: DDPIXELFORMAT): HResult; stdcall;
+        const lpddpfFormats: TDDPIXELFORMAT): HResult; stdcall;
 
     // retrives maximum pixels per second rate expected for a given
     // format and a given scaling factor. If decoder does not support
     // those scaling factors, then it gives the rate and the nearest
     // scaling factors.
-    function GetMaxPixelRate(const ddpfFormat: DDPIXELFORMAT;
+    function GetMaxPixelRate(const ddpfFormat: TDDPIXELFORMAT;
         lpdwZoomHeight, lpdwZoomWidth: DWORD;
         var lpdwMaxPixelsPerSecond: DWORD): HResult; stdcall;
 
     // retrives various properties of the decoder for a given format
-    function GetVideoSignalInfo(const ddpfFormat: DDPIXELFORMAT;
+    function GetVideoSignalInfo(const ddpfFormat: TDDPIXELFORMAT;
         var lpAMVideoSignalInfo: TAMVideoSignalInfo): HResult; stdcall;
 
     // asks the decoder to ouput in this format. Return value should give
     // appropriate error code
-    function SetVideoFormat(const ddpfFormat: DDPIXELFORMAT): HResult; stdcall;
+    function SetVideoFormat(const ddpfFormat: TDDPIXELFORMAT): HResult; stdcall;
 
     // asks the decoder to treat even fields like odd fields and visa versa
     function SetInvertPolarity: HResult; stdcall;
@@ -3185,13 +3187,13 @@ type
 
     // informs the callee of the videoformats supported by the videoport
     function InformVPInputFormats(dwNumFormats: DWORD;
-      const  pDDPixelFormats: DDPIXELFORMAT): HResult; stdcall;
+      const  pDDPixelFormats: TDDPIXELFORMAT): HResult; stdcall;
 
     // gets the various formats supported by the decoder in an array
     // of structures. If the pointer to the array is NULL, first parameter
     // returns the total number of formats supported.
     function GetVideoFormats(var pdwNumFormats: DWORD;
-      var pddPixelFormats: DDPIXELFORMAT): HResult; stdcall;
+      var pddPixelFormats: TDDPIXELFORMAT): HResult; stdcall;
 
     // sets the format entry chosen (0, 1, .. ,(dwNumProposedEntries-1))
     function SetVideoFormat(dwChosenEntry: DWORD): HResult; stdcall;
@@ -3269,10 +3271,10 @@ type
     // this function gets the overlay surface that the mixer is using
     function GetOverlaySurface(out ppOverlaySurface: IDirectDrawSurface): HResult; stdcall;
     // this functions sets the color-controls, if the chip supports it.
-    function SetColorControls(const pColorControl: DDCOLORCONTROL): HResult; stdcall;
+    function SetColorControls(const pColorControl: TDDCOLORCONTROL): HResult; stdcall;
     // this functions also returns the capability of the hardware in the dwFlags
     // value of the struct.
-    function GetColorControls(var pColorControl: DDCOLORCONTROL): HResult; stdcall;
+    function GetColorControls(var pColorControl: TDDCOLORCONTROL): HResult; stdcall;
   end;
 
 // interface IVPVBINotify

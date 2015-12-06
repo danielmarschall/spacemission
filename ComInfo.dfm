@@ -4,8 +4,8 @@ object InfoForm: TInfoForm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Informationen'
-  ClientHeight = 193
-  ClientWidth = 321
+  ClientHeight = 337
+  ClientWidth = 385
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -74,9 +74,9 @@ object InfoForm: TInfoForm
   object CopyrightLbl: TLabel
     Left = 8
     Top = 80
-    Width = 137
+    Width = 264
     Height = 13
-    Caption = '(C) 2001 - 2011 ViaThinkSoft'
+    Caption = #169' Copyright 2001 - 2015 Daniel Marschall, ViaThinkSoft'
     Transparent = True
   end
   object Copyright2Lbl: TLabel
@@ -101,15 +101,15 @@ object InfoForm: TInfoForm
     Font.Style = [fsUnderline]
     ParentFont = False
     Transparent = True
-    OnClick = URL2Click
+    OnClick = WebsiteClick
   end
   object URL1: TLabel
     Left = 152
     Top = 120
-    Width = 155
+    Width = 118
     Height = 13
     Cursor = crHandPoint
-    Caption = 'daniel-marschall@viathinksoft.de'
+    Caption = 'info@daniel-marschall.de'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlue
     Font.Height = -11
@@ -117,15 +117,43 @@ object InfoForm: TInfoForm
     Font.Style = [fsUnderline]
     ParentFont = False
     Transparent = True
-    OnClick = URL1Click
+    OnClick = EMailClick
   end
   object OkBtn: TButton
-    Left = 208
-    Top = 160
+    Left = 270
+    Top = 303
     Width = 107
     Height = 25
+    Cancel = True
     Caption = 'OK'
+    Default = True
     TabOrder = 0
     OnClick = OkBtnClick
+  end
+  object MemoMitwirkende: TMemo
+    Left = 8
+    Top = 168
+    Width = 369
+    Height = 121
+    Lines.Strings = (
+      
+        'SpaceMission wurde von Daniel Marschall aus einer Codevorlage vo' +
+        'n '
+      
+        'Hiroyuki Hori heraus erstellt. Das Original ist ein Codebeispiel' +
+        ' f'#252'r DelphiX '
+      '2000.'
+      ''
+      'Musik von Savage Peachers Software, Grafikquellen unbekannt.'
+      ''
+      'Levels von Daniel Marschall, Patrick B'#252'ssecker und Andreas '
+      'K'#252'belsbeck.'
+      ''
+      'Entwickelt mit Borland Turbo Delphi.'
+      ''
+      'Verwendete Komponenten: DelphiX 2000.')
+    ReadOnly = True
+    ScrollBars = ssVertical
+    TabOrder = 1
   end
 end

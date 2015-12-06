@@ -6,7 +6,20 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Controls, Forms, MMSystem,
-  DirectX, DXClass;
+  DXClass, {$IFDEF VER17UP} Types, {$ENDIF}
+{$IfDef StandardDX}
+  {$IfDef DX9}
+  DirectInput;
+  {$Else}
+    {$IfDef DX81}
+  DirectInput8;
+    {$Else}
+  DirectInput;
+    {$EndIf}
+  {$EndIf}
+{$Else}
+  DirectX;
+{$EndIf}
 
 type
 
@@ -765,7 +778,7 @@ procedure TForceFeedbackEffect.CreateEffect;
       FFindEffectGUID := pdei.guid;
     end;
 
-    Result := DIENUM_STOP;
+    Result := Integer(DIENUM_STOP);
   end;
 
   procedure CreateIEffectGuid(const GUID: TGUID;
@@ -774,7 +787,7 @@ procedure TForceFeedbackEffect.CreateEffect;
     if EffectObject.Feff.dwSize=0 then Exit;
 
     if FRoot.FInput.FDevice2<>nil then
-      FRoot.FInput.FDevice2.CreateEffect(GUID, EffectObject.Feff, EffectObject.FEffect, nil);
+      FRoot.FInput.FDevice2.CreateEffect(GUID, @EffectObject.Feff, EffectObject.FEffect, nil);
   end;
 
   procedure CreateIEffect(dwFlags: DWORD;
@@ -1405,11 +1418,11 @@ begin
 
   if FDevice<>nil then
   begin
-    hr := FDevice.GetDeviceState(dwSize, Data);
+    hr := FDevice.GetDeviceState(dwSize, @Data);
     if (hr=DIERR_INPUTLOST) or (hr=DIERR_NOTACQUIRED) then
     begin
       FDevice.Acquire;
-      hr := FDevice.GetDeviceState(dwSize, Data);
+      hr := FDevice.GetDeviceState(dwSize, @Data);
     end;
     Result := hr=DI_OK;
   end else
@@ -1421,7 +1434,7 @@ function TCustomInput.SetDataFormat: Boolean;
   function DIEnumDeviceObjectsProc(const peff: TDIDeviceObjectInstanceA;
     pvRef: Pointer): HRESULT; stdcall;
   begin
-    Result := DIENUM_CONTINUE;
+    Result := Integer(DIENUM_CONTINUE);
 
     if CompareMem(@peff.guidType, @GUID_Unknown, SizeOf(TGUID)) then Exit;
 
@@ -1646,8 +1659,11 @@ procedure TKeyboard.Update;
       DIK_APPS         : Result := VK_APPS;
     end;
   end;
-
-var       
+{$IFDEF StandardDX}
+type
+  TDIKeyboardState = array[0..255] of Byte;
+{$ENDIF}
+var
   j: Integer;
   i: TDXInputState;
   dikb: TDIKeyboardState;
@@ -1848,7 +1864,7 @@ end;
 function TJoystick_EnumJoysticksCallback(const lpddi: TDIDeviceInstanceA;
   pvRef: Pointer): HRESULT; stdcall;
 begin
-  Result := DIENUM_CONTINUE;
+  Result := Integer(DIENUM_CONTINUE);
 
   with TJoystick(pvRef) do
   begin
@@ -1856,7 +1872,7 @@ begin
     begin
       FDeviceGUID := lpddi.guidInstance;
       FEnumFlag := True;
-      Result := DIENUM_STOP;
+      Result := Integer(DIENUM_STOP);
       Exit;
     end;
     Inc(FEnumIndex);
@@ -1880,7 +1896,7 @@ begin
         FEnumFlag := False;
         FEnumIndex := 0;
 
-        FDXInput.FDInput.EnumDevices(DIDEVTYPE_JOYSTICK, @TJoystick_EnumJoysticksCallback,
+        FDXInput.FDInput.EnumDevices({DIDEVTYPE_JOYSTICK}4, @TJoystick_EnumJoysticksCallback,
           Self, DIEDFL_ATTACHEDONLY);
 
         if not FEnumFlag then Exit;
@@ -1896,7 +1912,7 @@ begin
             FForceFeedbackDevice := True;
         end;
 
-        if FDXInput.FDInput.CreateDevice(GUID_Joystick, FDevice, nil)<>DI_OK then Exit;
+        //if FDXInput.FDInput.CreateDevice(GUID_Joystick, FDevice, nil)<>DI_OK then Exit;   get out by Paul van Dinther
 
         {  Device data format (TDIDataFormat) making.  }
 
@@ -2122,7 +2138,7 @@ var
 procedure InitDirectInput(out DI: IDirectInput);
 type
   TDirectInputCreate = function(hinst: THandle; dwVersion: DWORD;
-    out ppDI: IDirectInputA; punkOuter: IUnknown): HRESULT; stdcall;
+    out ppDI: {$IFDEF UNICODE}IDirectInputW{$ELSE}IDirectInputA{$ENDIF}; punkOuter: IUnknown): HRESULT; stdcall;
 begin
   if FDirectInput=nil then
   begin

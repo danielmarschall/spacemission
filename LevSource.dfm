@@ -21,9 +21,9 @@ object SourceForm: TSourceForm
   object ElLabel1: TLabel
     Left = 8
     Top = 8
-    Width = 82
+    Width = 85
     Height = 13
-    Caption = 'Tempo'#228'rer Code:'
+    Caption = 'Tempor'#228'rer Code:'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11

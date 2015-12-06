@@ -93,7 +93,6 @@ object MainForm: TMainForm
     Width = 161
     Height = 21
     Style = csDropDownList
-    ItemHeight = 13
     TabOrder = 4
     Items.Strings = (
       'Version 0.2 --> Version 0.3'

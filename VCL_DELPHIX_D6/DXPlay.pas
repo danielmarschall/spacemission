@@ -5,9 +5,23 @@ interface
 {$INCLUDE DelphiXcfg.inc}
 
 uses
-  Windows, SysUtils, Classes, Forms, DXClass, ActiveX, DirectX, DXETable;
-                                                                        
+  Windows, SysUtils, Classes, Forms, DXClass, ActiveX, DXETable,  
+{$IfDef StandardDX}
+  DirectDraw,
+// Delphi 2010 cannot be use DirectPlay8 because structure was not rewriten
+//  {$IfDef DX9}
+//  DirectPlay8, DX7toDX8;
+//  {$Else}
+  DirectPlay; //old wersion, current in directory
+//  {$EndIf}
+{$Else}
+  DirectX;
+{$EndIf}
+
 type
+  {$IfDef DX9}
+  TDPID = DWORD;
+  {$EndIf}
 
   {  TDXPlayPlayer  }
 
@@ -88,7 +102,8 @@ type
 
   TCustomDXPlay = class(TComponent)
   private
-    FDPlay: IDirectPlay4A;
+    FDPlay: //{$IfDef DX7}
+      IDirectPlay4A;//{$Else}IDirectPlay8Address{$EndIf};
     FGUID: string;
     FIsHost: Boolean;
     FLocalPlayer: TDXPlayPlayer;
@@ -116,7 +131,11 @@ type
     FAsync: Boolean;
     FAsyncSupported: Boolean;
     procedure ChangeDPlay;
-    procedure CreateDPlayWithoutDialog(out DPlay: IDirectPlay4A; const ProviderName: string);
+    procedure CreateDPlayWithoutDialog(out DPlay:
+     //{$IfDef DX7}
+     IDirectPlay4A;
+     //{$Else}IDirectPlay8Address{$EndIf};
+      const ProviderName: string);
     function OpenDPlayWithLobby(out Name: string): Boolean;
     function OpenDPlayWithoutLobby(out Name: string): Boolean;
     function OpenDPlayWithoutLobby2(const NewSession: Boolean; const ProviderName, SessionName, PlayerName: string): Boolean;
@@ -191,7 +210,10 @@ type
 function DXPlayMessageType(P: Pointer): DWORD;
 
 function DXPlayStringToGUID(const S: string): TGUID;
-function DXDirectPlayCreate(const lpGUID: TGUID; out lplpDP: IDirectPlay;
+function DXDirectPlayCreate(const lpGUID: TGUID; out lplpDP:
+  //{$IfDef DX7}
+  IDirectPlay;
+  //{$Else}IDirectPlay8Server{$EndIf};
   pUnk: IUnknown): HRESULT;
 
 implementation
@@ -224,7 +246,10 @@ begin
   CoTaskMemFree(P);
 end;
 
-function DXDirectPlayCreate(const lpGUID: TGUID; out lplpDP: IDirectPlay;
+function DXDirectPlayCreate(const lpGUID: TGUID; out lplpDP:
+  //{$IfDef DX7}
+  IDirectPlay;
+  //{$Else}IDirectPlay8Server{$EndIf};
   pUnk: IUnknown): HRESULT;
 type
   TDirectPlayCreate= function(const lpGUID: TGUID; out lplpDP: IDirectPlay; pUnk: IUnknown): HRESULT; stdcall;
@@ -232,8 +257,26 @@ begin
   Result := TDirectPlayCreate(DXLoadLibrary('DPlayX.dll', 'DirectPlayCreate'))
     (lpGUID, lplpDP, pUnk);
 end;
+{$IFDEF UNICODE}
+function DXDirectPlayEnumerate(lpEnumDPCallback: TDPEnumDPCallbackW; lpContext: Pointer): HRESULT;
+type
+  TDirectPlayEnumerateW= function(lpEnumDPCallback: TDPEnumDPCallbackW; lpContext: Pointer): HRESULT; stdcall;
+begin
+  Result := TDirectPlayEnumerateW(DXLoadLibrary('DPlayX.dll', 'DirectPlayEnumerateW'))
+    (lpEnumDPCallback, lpContext);
+end;
 
-function DXDirectPlayEnumerateA(lpEnumDPCallback: TDPEnumDPCallbackA; lpContext: Pointer): HRESULT;
+function DXDirectPlayLobbyCreate(const lpguidSP: TGUID; out lplpDPL: IDirectPlayLobbyW;
+  lpUnk: IUnknown; lpData: Pointer; dwDataSize: DWORD): HRESULT;
+type
+  TDirectPlayLobbyCreateW = function(const lpguidSP: TGUID; out lplpDPL: IDirectPlayLobbyW;
+    lpUnk: IUnknown; lpData: Pointer; dwDataSize: DWORD): HRESULT; stdcall;
+begin
+  Result := TDirectPlayLobbyCreateW(DXLoadLibrary('DPlayX.dll', 'DirectPlayLobbyCreateW'))
+    (lpguidSP, lplpDPL, lpUnk, lpData, dwDataSize);
+end;
+{$ELSE}
+function DXDirectPlayEnumerate(lpEnumDPCallback: TDPEnumDPCallbackA; lpContext: Pointer): HRESULT;
 type
   TDirectPlayEnumerateA= function(lpEnumDPCallback: TDPEnumDPCallbackA; lpContext: Pointer): HRESULT; stdcall;
 begin
@@ -241,7 +284,7 @@ begin
     (lpEnumDPCallback, lpContext);
 end;
 
-function DXDirectPlayLobbyCreateA(const lpguidSP: TGUID; out lplpDPL: IDirectPlayLobbyA;
+function DXDirectPlayLobbyCreate(const lpguidSP: TGUID; out lplpDPL: IDirectPlayLobbyA;
   lpUnk: IUnknown; lpData: Pointer; dwDataSize: DWORD): HRESULT;
 type
   TDirectPlayLobbyCreateA = function(const lpguidSP: TGUID; out lplpDPL: IDirectPlayLobbyA;
@@ -250,7 +293,7 @@ begin
   Result := TDirectPlayLobbyCreateA(DXLoadLibrary('DPlayX.dll', 'DirectPlayLobbyCreateA'))
     (lpguidSP, lplpDPL, lpUnk, lpData, dwDataSize);
 end;
-
+{$ENDIF}
 {  TDXPlayPlayers  }
 
 constructor TDXPlayPlayers.Create;
@@ -316,10 +359,16 @@ function TDXPlayModemSetting.GetModemNames: TStrings;
   end;
 
 var
+  {$IFDEF UNICODE}
+  Lobby1: IDirectPlayLobbyW;
+  Lobby: IDirectPlayLobby2W;
+  DPlay: IDirectPlay4W;
+  {$ELSE}
   Lobby1: IDirectPlayLobbyA;
   Lobby: IDirectPlayLobby2A;
-  DPlay1: IDirectPlay;
   DPlay: IDirectPlay4A;
+  {$ENDIF}
+  DPlay1: IDirectPlay;
   lpAddress: Pointer;
   dwAddressSize: DWORD;
 begin
@@ -327,16 +376,16 @@ begin
   begin
     FModemNames := TStringList.Create;
     try
-      if DXDirectPlayLobbyCreateA(PGUID(nil)^, Lobby1, nil, nil, 0)<>0 then
+      if DXDirectPlayLobbyCreate(PGUID(nil)^, Lobby1, nil, nil, 0)<>0 then
         raise EDXPlayError.CreateFmt(SCannotInitialized, [SDirectPlay]);
-      Lobby := Lobby1 as IDirectPlayLobby2A;
+      Lobby := Lobby1 as {$IFDEF UNICODE}IDirectPlayLobby2W{$ELSE}IDirectPlayLobby2A{$ENDIF};
 
       if DXDirectPlayCreate(DPSPGUID_MODEM, DPlay1, nil)<>0 then
         raise EDXPlayError.CreateFmt(SCannotInitialized, [SDirectPlay]);
-      DPlay := DPlay1 as IDirectPlay4A;
+      DPlay := DPlay1 as {$IFDEF UNICODE}IDirectPlay4W{$ELSE}IDirectPlay4A{$ENDIF};
 
       {  get size of player address for all players  }
-      if DPlay.GetPlayerAddress(DPID_ALLPLAYERS, nil^, dwAddressSize)<>DPERR_BUFFERTOOSMALL then
+      if DPlay.GetPlayerAddress(DPID_ALLPLAYERS, nil, dwAddressSize)<>DPERR_BUFFERTOOSMALL then
         raise EDXPlayError.Create(SDXPlayModemListCannotBeAcquired);
 
       GetMem(lpAddress, dwAddressSize);
@@ -344,7 +393,7 @@ begin
         FillChar(lpAddress^, dwAddressSize, 0);
 
         {  get the address  }
-        if DPlay.GetPlayerAddress(DPID_ALLPLAYERS, lpAddress^, dwAddressSize)<>0 then
+        if DPlay.GetPlayerAddress(DPID_ALLPLAYERS, lpAddress, dwAddressSize)<>0 then
           raise EDXPlayError.Create(SDXPlayModemListCannotBeAcquired);
 
         {  get modem strings from address and put them in the combo box  }
@@ -470,12 +519,12 @@ begin
 
       try
         repeat
-          hr := FDPlay.Receive(idFrom, idTo, DPRECEIVE_ALL, lpvMsgBuffer^, dwMsgBufferSize);
+          hr := FDPlay.Receive(idFrom, idTo, DPRECEIVE_ALL, lpvMsgBuffer, dwMsgBufferSize);
 
           if hr=DPERR_BUFFERTOOSMALL then
           begin
             ReAllocMem(lpvMsgBuffer, dwMsgBufferSize);
-            hr := FDPlay.Receive(idFrom, idTo, DPRECEIVE_ALL, lpvMsgBuffer^, dwMsgBufferSize);
+            hr := FDPlay.Receive(idFrom, idTo, DPRECEIVE_ALL, lpvMsgBuffer, dwMsgBufferSize);
           end;
 
           if (hr=0) and (dwMsgBufferSize>=SizeOf(TDPMSG_GENERIC)) then
@@ -497,8 +546,13 @@ begin
 
                       with Msg_CreatePlayerOrGroup.dpnName do
                       begin
+                        {$IFDEF UNICODE}
+                        if lpszShortNameW<>nil then
+                          Player.FName := lpszShortNameW;
+                        {$ELSE}
                         if lpszShortNameA<>nil then
                           Player.FName := lpszShortNameA;
+                        {$ENDIF}
                       end;
 
                       DoAddPlayer(Player);
@@ -513,7 +567,7 @@ begin
                     begin
                       i := Players.IndexOf(Msg_DeletePlayerOrGroup.DPID);
                       if i<>-1 then
-                      begin   
+                      begin
                         Player := Players[i];
                         DoDeletePlayer(Player);
                         Player.Free;
@@ -604,7 +658,7 @@ end;
 
 function TCustomDXPlay.GetProviders: TStrings;
 
-  function EnumProviderCallback(const lpguidSP: TGUID; lpSPName: LPSTR;
+  function EnumProviderCallback(const lpguidSP: TGUID; lpSPName: {$IFDEF UNICODE}LPCTSTR{$ELSE}LPSTR{$ENDIF};
       dwMajorVersion: DWORD; dwMinorVersion: DWORD; lpContext: Pointer):
       BOOL; stdcall;
   var
@@ -621,7 +675,7 @@ begin
   begin
     FProviders := TStringList.Create;
     try
-      DXDirectPlayEnumerateA(@EnumProviderCallback, FProviders);
+      DXDirectPlayEnumerate(@EnumProviderCallback, FProviders);
     except
       FProviders.Free; FProviders := nil;
       raise;
@@ -646,8 +700,11 @@ procedure TCustomDXPlay.GetSessions;
 
     Guid := New(PGUID);
     Move(lpThisSD.guidInstance, Guid^, SizeOf(TGUID));
+    {$IFDEF UNICODE}
+    TStrings(lpContext).AddObject(lpThisSD.lpszSessionNameW, TObject(Guid));
+    {$ELSE}
     TStrings(lpContext).AddObject(lpThisSD.lpszSessionNameA, TObject(Guid));
-
+    {$ENDIF}
     Result := True;
   end;
 
@@ -698,8 +755,13 @@ var
   ProviderGUID: TGUID;
   addressElements: array[0..15] of TDPCompoundAddressElement;
   dwElementCount: Integer;
+  {$IFDEF UNICODE}
+  Lobby1: IDirectPlayLobbyW;
+  Lobby: IDirectPlayLobby2W;
+  {$ELSE}
   Lobby1: IDirectPlayLobbyA;
   Lobby: IDirectPlayLobby2A;
+  {$ENDIF}
   lpAddress: Pointer;
   dwAddressSize: DWORD;
 begin
@@ -709,9 +771,9 @@ begin
   ProviderGUID := PGUID(Providers.Objects[i])^;
 
   {  DirectPlay address making  }
-  if DXDirectPlayLobbyCreateA(PGUID(nil)^, Lobby1, nil, nil, 0)<>0 then
+  if DXDirectPlayLobbyCreate(PGUID(nil)^, Lobby1, nil, nil, 0)<>0 then
     raise EDXPlayError.CreateFmt(SCannotInitialized, [SDirectPlay]);
-  Lobby := Lobby1 as IDirectPlayLobby2A;
+  Lobby := Lobby1 as {$IFDEF UNICODE}IDirectPlayLobby2W{$ELSE}IDirectPlayLobby2A{$ENDIF};
 
   FillChar(addressElements, SizeOf(addressElements), 0);
   dwElementCount := 0;
@@ -752,22 +814,22 @@ begin
     end;
 
     if TCPIPSetting.Port<>0 then
-    begin                                                           
+    begin
       addressElements[dwElementCount].guidDataType := DPAID_INetPort;
       addressElements[dwElementCount].dwDataSize := SizeOf(TCPIPSetting.FPort);
       addressElements[dwElementCount].lpData := @TCPIPSetting.FPort;
-      Inc(dwElementCount);                                         
+      Inc(dwElementCount);
     end;
   end;
 
-  if Lobby.CreateCompoundAddress(addressElements[0], dwElementCount, nil^, dwAddressSize)<>DPERR_BUFFERTOOSMALL then
+  if Lobby.CreateCompoundAddress(addressElements[0], dwElementCount, nil, dwAddressSize)<>DPERR_BUFFERTOOSMALL then
     raise EDXPlayError.CreateFmt(SCannotInitialized, [SDirectPlay]);
 
   GetMem(lpAddress, dwAddressSize);
   try
     FillChar(lpAddress^, dwAddressSize, 0);
 
-    if Lobby.CreateCompoundAddress(addressElements[0], dwElementCount, lpAddress^, dwAddressSize)<>0 then
+    if Lobby.CreateCompoundAddress(addressElements[0], dwElementCount, lpAddress, dwAddressSize)<>0 then
       raise EDXPlayError.CreateFmt(SCannotInitialized, [SDirectPlay]);
 
     {  DirectPlay initialization  }
@@ -828,7 +890,7 @@ procedure TCustomDXPlay.Open_(NameS: string);
   function EnumPlayersCallback2(TDPID: TDPID; dwPlayerType: DWORD;
     const lpName: TDPName; dwFlags: DWORD; lpContext: Pointer): BOOL;
     stdcall;
-  var                   
+  var
     Player: TDXPlayPlayer;
   begin
     Player := TDXPlayPlayer.Create(TCustomDXPlay(lpContext).Players);
@@ -837,8 +899,13 @@ procedure TCustomDXPlay.Open_(NameS: string);
 
     with lpName do
     begin
+      {$IFDEF UNICODE}
+      if lpszShortNameW<>nil then
+        Player.FName := lpszShortNameW;
+      {$ELSE}
       if lpszShortNameA<>nil then
         Player.FName := lpszShortNameA;
+      {$ENDIF}
     end;
 
     Result := True;
@@ -862,11 +929,11 @@ begin
     FLocalPlayer := TDXPlayPlayer.Create(FPlayers);
     FLocalPlayer.FName := NameS;
 
-    if FDPlay.CreatePlayer(FLocalPlayer.FID, Name, FRecvEvent[0], nil^, 0, 0)<>DP_OK then
+    if FDPlay.CreatePlayer(FLocalPlayer.FID, @Name, FRecvEvent[0], nil, 0, 0)<>DP_OK then
       raise EDXPlayError.CreateFmt(SCannotOpened, [FSessionName]);
 
     {  Player enumeration  }
-    FDPlay.EnumPlayers(PGUID(nil)^, @EnumPlayersCallback2, Self, DPENUMPLAYERS_REMOTE);
+    FDPlay.EnumPlayers(PGUID(nil), @EnumPlayersCallback2, Self, DPENUMPLAYERS_REMOTE);
 
     FIsHost := FPlayers.Count=1;
 
@@ -900,21 +967,25 @@ end;
 function TCustomDXPlay.OpenDPlayWithLobby(out Name: string): Boolean;
 var
   DPlay1: IDirectPlay2;
+  {$IFDEF UNICODE}
+  Lobby: IDirectPlayLobbyW;
+  {$ELSE}
   Lobby: IDirectPlayLobbyA;
+  {$ENDIF}
   dwSize: DWORD;
   ConnectionSettings: PDPLConnection;
 begin
   Result := False;
 
-  if DXDirectPlayLobbyCreateA(PGUID(nil)^, Lobby, nil, nil, 0)<>0 then
+  if DXDirectPlayLobbyCreate(PGUID(nil)^, Lobby, nil, nil, 0)<>0 then
     Exit;
 
-  if Lobby.GetConnectionSettings(0, PDPLConnection(nil)^, dwSize)<>DPERR_BUFFERTOOSMALL then
+  if Lobby.GetConnectionSettings(0, PDPLConnection(nil), dwSize)<>DPERR_BUFFERTOOSMALL then
     Exit;
 
   GetMem(ConnectionSettings, dwSize);
   try
-    if Lobby.GetConnectionSettings(0, ConnectionSettings^, dwSize)<>0 then
+    if Lobby.GetConnectionSettings(0, ConnectionSettings, dwSize)<>0 then
       Exit;
 
     with ConnectionSettings^.lpSessionDesc^ do
@@ -933,14 +1004,24 @@ begin
 
     with ConnectionSettings.lpSessionDesc^ do
     begin
+      {$IFDEF UNICODE}
+      if lpszSessionNameW<>nil then
+        FSessionName := lpszSessionNameW;
+      {$ELSE}
       if lpszSessionNameA<>nil then
         FSessionName := lpszSessionNameA;
+      {$ENDIF}
     end;
 
     with ConnectionSettings.lpPlayerName^ do
     begin
+      {$IFDEF UNICODE}
+      if lpszShortNameW<>nil then
+        Name := lpszShortNameW;
+      {$ELSE}
       if lpszShortNameA<>nil then
         Name := lpszShortNameA;
+      {$ENDIF}
     end;
   finally
     FreeMem(ConnectionSettings);
@@ -995,7 +1076,11 @@ begin
     FillChar(dpDesc, SizeOf(dpDesc), 0);
     dpDesc.dwSize := SizeOf(dpDesc);
     dpDesc.dwFlags := DPSESSION_MIGRATEHOST or DPSESSION_KEEPALIVE;
-    dpDesc.lpszSessionNameA := PChar(SessionName);
+    {$IFDEF UNICODE}
+    dpDesc.lpszSessionNameW := {$IFDEF VER12UP}PChar{$ELSE}PWideChar{$ENDIF}(SessionName);
+    {$ELSE}
+    dpDesc.lpszSessionNameA := PAnsiChar(SessionName);
+    {$ENDIF}
     dpDesc.guidApplication := DXPlayStringToGUID(GUID);
     dpDesc.dwMaxPlayers := MaxPlayers;
 
@@ -1047,7 +1132,7 @@ begin
     FProviderName := '';
     FSessionName := '';
     FAsyncSupported := False;
-    
+
     ClearSessionList;
 
     FDPlay := nil;
@@ -1057,7 +1142,7 @@ begin
       SetEvent(FRecvEvent[1])
     else
       FRecvThread.Free;
-    
+
     CloseHandle(FRecvEvent[0]); FRecvEvent[0] := 0;
 
     FPlayers.Clear;
@@ -1079,7 +1164,7 @@ begin
     DoMessage(FLocalPlayer, Data, DataSize);
   end else
   if FAsync and FAsyncSupported then
-    FDPlay.SendEx(FLocalPlayer.ID, ToID, DPSEND_GUARANTEED or DPSEND_ASYNC, Data^, DataSize, 0, 0, nil, nil)
+    FDPlay.SendEx(FLocalPlayer.ID, ToID, DPSEND_GUARANTEED or DPSEND_ASYNC, Data, DataSize, 0, 0, nil, nil)
   else
     FDPlay.Send(FLocalPlayer.ID, ToID, DPSEND_GUARANTEED, Data^, DataSize);
 end;
@@ -1098,7 +1183,7 @@ begin
     {  自分宛のメッセージ  }
     DoMessage(FLocalPlayer, Data, DataSize);
   end else
-    FDPlay.SendEx(FLocalPlayer.ID, ToID, dwFlags, Data^, DataSize,
+    FDPlay.SendEx(FLocalPlayer.ID, ToID, dwFlags, Data, DataSize,
       0, 0, nil, @Result); // 0 以外はサポートしないデバイスあるので使わない
 end;
 

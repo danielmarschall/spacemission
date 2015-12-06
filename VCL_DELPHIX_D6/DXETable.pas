@@ -5,12 +5,31 @@ interface
 {$INCLUDE DelphiXcfg.inc}
 
 uses
-  Windows, SysUtils, DirectX;
+  Windows, SysUtils, 
+{$IfDef StandardDX}
+  {$ifdef DX7}
+  DirectDraw, Direct3D,DirectInput,DirectPlay,DirectSound;
+  {$else}
+  {$IfDef DX9}
+  DirectDraw, Direct3D9, Direct3D, D3DX9, {Direct3D8,} DX7toDX8, DirectInput, DirectPlay8, DirectSound;
+//  {$Else}
+//  {$IfDef DX81}
+//  D3DX8, Direct3D8, DirectInput8, DirectXGraphics, DX7toDX8, DirectPlay8;
+//  {$Else}
+//  DirectInput, Direct3D, Direct3DRM, DirectPlay;
+  {$EndIf}
+  {$EndIf}
+{$Else}
+  DirectX;
+{$EndIf}
+
 
 function WindowsErrorMsg(ErrorCode: HRESULT): string;
 function DDrawErrorMsg(ErrorCode: HRESULT): string;
 function D3DErrorMsg(ErrorCode: HRESULT): string;
+{$IFDEF D3DRM}
 function D3DRMErrorMsg(ErrorCode: HRESULT): string;
+{$ENDIF}
 function DSoundErrorMsg(ErrorCode: HRESULT): string;
 function DInputErrorMsg(ErrorCode: HRESULT): string;
 function DPlayErrorMsg(ErrorCode: HRESULT): string;
@@ -204,7 +223,7 @@ begin
     Result := WindowsErrorMsg(ErrorCode);                                                          
   end;
 end;
-
+{$IFDEF D3DRM}
 function D3DRMErrorMsg(ErrorCode: HRESULT): string;
 begin
   case ErrorCode of
@@ -226,7 +245,7 @@ begin
     Result := WindowsErrorMsg(ErrorCode);
   end;
 end;
-
+{$ENDIF}
 function DSoundErrorMsg(ErrorCode: HRESULT): string;
 begin
   case ErrorCode of
@@ -271,12 +290,78 @@ begin
     DIERR_INPUTLOST                     : Result := 'DIERR_INPUTLOST';
     DIERR_ACQUIRED                      : Result := 'DIERR_ACQUIRED';
     DIERR_NOTACQUIRED                   : Result := 'DIERR_NOTACQUIRED';
-    E_PENDING                           : Result := 'E_PENDING';
+    HRESULT(E_PENDING)                  : Result := 'E_PENDING';
   else
     Result := WindowsErrorMsg(ErrorCode);
   end;
 end;
-
+{$IfDef DX9}
+function DPlayErrorMsg(ErrorCode: HRESULT): string;
+begin
+  case ErrorCode of
+    DPN_OK                               : Result := 'DPN_OK';
+    DPNERR_ALREADYINITIALIZED            : Result := 'DPNERR_ALREADYINITIALIZED';
+    //DPNERR_ACCESSDENIED                  : Result := 'DPNERR_ACCESSDENIED';
+    //DPNERR_ACTIVEPLAYERS                 : Result := 'DPNERR_ACTIVEPLAYERS';
+    DPNERR_BUFFERTOOSMALL                : Result := 'DPNERR_BUFFERTOOSMALL';
+    //DPNERR_CANTADDPLAYER                 : Result := 'DPNERR_CANTADDPLAYER';
+    DPNERR_CANTCREATEGROUP               : Result := 'DPNERR_CANTCREATEGROUP';
+    DPNERR_CANTCREATEPLAYER              : Result := 'DPNERR_CANTCREATEPLAYER';
+    //DPNERR_CANTCREATESESSION             : Result := 'DPNERR_CANTCREATESESSION';
+    //DPNERR_CAPSNOTAVAILABLEYET           : Result := 'DPNERR_CAPSNOTAVAILABLEYET';
+    DPNERR_EXCEPTION                     : Result := 'DPNERR_EXCEPTION';
+    DPNERR_GENERIC                       : Result := 'DPNERR_GENERIC';
+    DPNERR_INVALIDFLAGS                  : Result := 'DPNERR_INVALIDFLAGS';
+    DPNERR_INVALIDOBJECT                 : Result := 'DPNERR_INVALIDOBJECT';
+    DPNERR_INVALIDPARAM                  : Result := 'DPNERR_INVALIDPARAM, DPNERR_INVALIDPARAMS';
+    DPNERR_INVALIDPLAYER                 : Result := 'DPNERR_INVALIDPLAYER';
+    DPNERR_INVALIDGROUP                  : Result := 'DPNERR_INVALIDGROUP';
+    DPNERR_NOCAPS                        : Result := 'DPNERR_NOCAPS';
+    DPNERR_NOCONNECTION                  : Result := 'DPNERR_NOCONNECTION';
+    //DPNERR_NOMEMORY                      : Result := 'DPNERR_NOMEMORY, DPNERR_OUTOFMEMORY';
+    //DPNERR_NOMESSAGES                    : Result := 'DPNERR_NOMESSAGES';
+    //DPNERR_NONAMESERVERFOUND             : Result := 'DPNERR_NONAMESERVERFOUND';
+    //DPNERR_NOPLAYERS                     : Result := 'DPNERR_NOPLAYERS';
+    //DPNERR_NOSESSIONS                    : Result := 'DPNERR_NOSESSIONS';
+    DPNERR_PENDING                       : Result := 'DPNERR_PENDING';
+    //DPNERR_SENDTOOBIG                    : Result := 'DPNERR_SENDTOOBIG';
+    //DPNERR_TIMEOUT                       : Result := 'DPNERR_TIMEOUT';
+    //DPNERR_UNAVAILABLE                   : Result := 'DPNERR_UNAVAILABLE';
+    DPNERR_UNSUPPORTED                   : Result := 'DPNERR_UNSUPPORTED';
+    //DPNERR_BUSY                          : Result := 'DPNERR_BUSY';
+    DPNERR_USERCANCEL                    : Result := 'DPNERR_USERCANCEL';
+    DPNERR_NOINTERFACE                   : Result := 'DPNERR_NOINTERFACE';
+    //DPNERR_CANNOTCREATESERVER            : Result := 'DPNERR_CANNOTCREATESERVER';
+    DPNERR_PLAYERLOST                    : Result := 'DPNERR_PLAYERLOST';
+    //DPNERR_SESSIONLOST                   : Result := 'DPNERR_SESSIONLOST';
+    DPNERR_UNINITIALIZED                 : Result := 'DPNERR_UNINITIALIZED';
+    //DPNERR_NONEWPLAYERS                  : Result := 'DPNERR_NONEWPLAYERS';
+    DPNERR_INVALIDPASSWORD               : Result := 'DPNERR_INVALIDPASSWORD';
+    DPNERR_CONNECTING                    : Result := 'DPNERR_CONNECTING';
+    //DPNERR_BUFFERTOOLARGE                : Result := 'DPNERR_BUFFERTOOLARGE';
+    //DPNERR_CANTCREATEPROCESS             : Result := 'DPNERR_CANTCREATEPROCESS';
+    //DPNERR_APPNOTSTARTED                 : Result := 'DPNERR_APPNOTSTARTED';
+    DPNERR_INVALIDINTERFACE              : Result := 'DPNERR_INVALIDINTERFACE';
+    //DPNERR_NOSERVICEPROVIDER             : Result := 'DPNERR_NOSERVICEPROVIDER';
+    //DPNERR_UNKNOWNAPPLICATION            : Result := 'DPNERR_UNKNOWNAPPLICATION';
+    //DPNERR_NOTLOBBIED                    : Result := 'DPNERR_NOTLOBBIED';
+    //DPNERR_SERVICEPROVIDERLOADED         : Result := 'DPNERR_SERVICEPROVIDERLOADED';
+    DPNERR_NOTREGISTERED                 : Result := 'DPNERR_NOTREGISTERED';
+// Security related errors
+    //DPNERR_AUTHENTICATIONFAILED          : Result := 'DPNERR_AUTHENTICATIONFAILED';
+    //DPNERR_CANTLOADSSPI                  : Result := 'DPNERR_CANTLOADSSPI';
+    //DPNERR_ENCRYPTIONFAILED              : Result := 'DPNERR_ENCRYPTIONFAILED';
+    //DPNERR_SIGNFAILED                    : Result := 'DPNERR_SIGNFAILED';
+    //DPNERR_CANTLOADSECURITYPACKAGE       : Result := 'DPNERR_CANTLOADSECURITYPACKAGE';
+    //DPNERR_ENCRYPTIONNOTSUPPORTED        : Result := 'DPNERR_ENCRYPTIONNOTSUPPORTED';
+    //DPNERR_CANTLOADCAPI                  : Result := 'DPNERR_CANTLOADCAPI';
+    //DPNERR_NOTLOGGEDIN                   : Result := 'DPNERR_NOTLOGGEDIN';
+    //DPNERR_LOGONDENIED                   : Result := 'DPNERR_LOGONDENIED';
+  else
+    Result := WindowsErrorMsg(ErrorCode);
+  end;
+end;
+{$Else}
 function DPlayErrorMsg(ErrorCode: HRESULT): string;
 begin
   case ErrorCode of
@@ -342,5 +427,5 @@ begin
     Result := WindowsErrorMsg(ErrorCode);
   end;
 end;
-
+{$EndIf}
 end.
