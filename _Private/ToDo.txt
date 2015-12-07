@@ -1,15 +1,16 @@
 
 2015 TODO
 
+- weniger startmenüeinträge wegen windows 10
+- versioninfo
 - Bug: 2 Taskleisteneinträge
 - Multilingual
-- Delphi XE4 Kompatibel machen, Abwärtskompatibel bis Turbo Delphi oder ggf Delphi 6
 - SplashScreens: als BMP
 - ESC : Pause
 - Intro : Enter anstelle Leertaste
 - Pause : Bildschirm soll grau werden
 - Hintergrund besser und Abwechslungsreicher
-- Neues DX: FPS-Limiter für Sprite-Animationen
+- Neues DX: FPS-Limiter für Sprite-Animationen -- not a bug: liegt an spielgeschwindigkeit
 - Verschiedene Schwierigkeitsstufen (Geschwindigkeiten)
 - Boss schwieriger machen
 - Neues UFO das im Kreis fliegt

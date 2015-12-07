@@ -23,7 +23,7 @@ object MainForm: TMainForm
   OnDestroy = FormDestroy
   OnMouseMove = DXDrawMouseMove
   OnShow = FormShow
-  PixelsPerInch = 106
+  PixelsPerInch = 96
   TextHeight = 13
   object Bevel1: TBevel
     Left = 648

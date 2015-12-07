@@ -4,8 +4,9 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, MMSystem, Dialogs,
-  StdCtrls, ExtCtrls, Menus, DIB, DXClass, DXSprite, DXDraws, DXInput,
-  DXSounds, INIFiles, ShellAPI, wininet, Winapi.DirectDraw, System.UITypes;
+  StdCtrls, ExtCtrls, Menus, DIB, DXClass, DXSprite, DXDraws, DXInput, DXSounds,
+  INIFiles, ShellAPI, wininet{$IF CompilerVersion >= 23.0}, Winapi.DirectDraw,
+  System.UITypes{$ELSE}, DirectX{$IFEND};
 
 type
   TGameScene = (

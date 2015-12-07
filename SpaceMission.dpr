@@ -13,8 +13,8 @@ uses
   GamSpeicherung in 'GamSpeicherung.pas' {SpeicherungForm},
   ComInfo in 'ComInfo.pas' {InfoForm},
   GamCheat in 'GamCheat.pas' {CheatForm},
-  Global in 'Global.pas',
-  System.UITypes;
+  Global in 'Global.pas'{$IF CompilerVersion >= 23.0},
+  System.UITypes{$IFEND};
 
 {$R *.RES}
 

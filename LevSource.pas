@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ShellAPI, System.UITypes;
+  StdCtrls, ShellAPI{$IF CompilerVersion >= 23.0}, System.UITypes{$IFEND};
 
 type
   TSourceForm = class(TForm)        

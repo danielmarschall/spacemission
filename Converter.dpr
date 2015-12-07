@@ -5,8 +5,8 @@ uses
   Windows,
   Forms,
   Dialogs,
-  CnvMain in 'CnvMain.pas' {MainForm},
-  System.UITypes;
+  CnvMain in 'CnvMain.pas' {MainForm}{$IF CompilerVersion >= 23.0},
+  System.UITypes{$IFEND};
 
 {$Description 'SpaceMission 1.1 Converter'}
 

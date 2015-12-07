@@ -2334,7 +2334,9 @@ begin
     case Value of
       stSprite: tmpSprite := TSprite.Create(TSpriteEngine(FOwnerItem));
       stImageSprite: TImageSprite(tmpSprite) := TImageSprite.Create(TSpriteEngine(FOwnerItem));
+      {$WARN SYMBOL_DEPRECATED OFF} // Added by ViaThinkSoft [2015-12-07]
       stImageSpriteEx: TImageSpriteEx(tmpSprite) := TImageSpriteEx.Create(TSpriteEngine(FOwnerItem));
+      {$WARN SYMBOL_DEPRECATED ON} // Added by ViaThinkSoft [2015-12-07]
       stBackgroundSprite: TBackgroundSprite(tmpSprite) := TBackgroundSprite.Create(TSpriteEngine(FOwnerItem));
     else
       tmpSprite := nil

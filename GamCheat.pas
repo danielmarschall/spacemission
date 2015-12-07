@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, ShellAPI, System.UITypes;
+  StdCtrls, ExtCtrls, ShellAPI{$IF CompilerVersion >= 23.0}, System.UITypes{$IFEND};
 
 type
   TCheatForm = class(TForm)                                                                    

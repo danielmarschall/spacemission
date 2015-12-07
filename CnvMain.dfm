@@ -9,14 +9,14 @@ object MainForm: TMainForm
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -12
+  Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
   Position = poDesktopCenter
   OnClose = FormClose
   OnCreate = FormCreate
-  PixelsPerInch = 106
+  PixelsPerInch = 96
   TextHeight = 13
   object Bevel1: TBevel
     Left = 8
@@ -93,6 +93,7 @@ object MainForm: TMainForm
     Width = 161
     Height = 21
     Style = csDropDownList
+    ItemHeight = 13
     TabOrder = 4
     Items.Strings = (
       'Version 0.2 --> Version 0.3'

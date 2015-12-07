@@ -5,7 +5,8 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, MMSystem,
   Dialogs, StdCtrls, ExtCtrls, Menus, DIB, DXClass, DXSprite, DXDraws,
-  DXSounds, Spin, ComCtrls, System.UITypes, WinAPI.DirectDraw;
+  DXSounds, Spin, ComCtrls{$IF CompilerVersion >= 23.0}, System.UITypes,
+  WinAPI.DirectDraw{$ELSE}, DirectX{$IFEND};
 
 type
   TMainForm = class(TDXForm)
