@@ -93,16 +93,17 @@ type
     destructor Destroy; override;
   end;
 
+  TEnemyClass = class of TEnemy;
   TEnemy = class(TImageSprite)
   private
     FCounter: Integer;
     FLife: integer;
     FMode: Integer;
-    procedure Hit; virtual;
   protected
     procedure HitEnemy(ADead: Boolean); virtual;
   public
-    constructor Create(AParent: TSprite); override;
+    procedure Hit(AHitStrength: integer = 1);
+    constructor Create(AParent: TSprite; ALifes: integer); virtual;
     destructor Destroy; override;
   end;
 
@@ -120,7 +121,7 @@ type
     procedure DoMove(MoveCount: Integer); override;
     procedure HitEnemy(ADead: Boolean); override;
   public
-    constructor Create(AParent: TSprite); override;
+    constructor Create(AParent: TSprite; ALifes: integer); override;
   end;
 
   TEnemyUFO = class(TEnemy)
@@ -128,7 +129,7 @@ type
     procedure DoMove(MoveCount: Integer); override;
     procedure HitEnemy(ADead: Boolean); override;
   public
-    constructor Create(AParent: TSprite); override;
+    constructor Create(AParent: TSprite; ALifes: integer); override;
   end;
 
   TEnemyUFO2 = class(TEnemy)
@@ -140,7 +141,7 @@ type
     procedure DoMove(MoveCount: Integer); override;
     procedure HitEnemy(ADead: Boolean); override;
   public
-    constructor Create(AParent: TSprite); override;
+    constructor Create(AParent: TSprite; ALifes: integer); override;
   end;
 
   TEnemyAttacker = class(TEnemy)
@@ -148,7 +149,7 @@ type
     procedure DoMove(MoveCount: Integer); override;
     procedure HitEnemy(ADead: Boolean); override;
   public
-    constructor Create(AParent: TSprite); override;
+    constructor Create(AParent: TSprite; ALifes: integer); override;
   end;
 
   TEnemyAttacker2 = class(TEnemy)
@@ -161,7 +162,7 @@ type
     procedure DoMove(MoveCount: Integer); override;
     procedure HitEnemy(ADead: Boolean); override;
   public
-    constructor Create(AParent: TSprite); override;
+    constructor Create(AParent: TSprite; ALifes: integer); override;
   end;
 
   TEnemyAttacker3 = class(TEnemy)
@@ -173,7 +174,7 @@ type
     procedure DoMove(MoveCount: Integer); override;
     procedure HitEnemy(ADead: Boolean); override;
   public
-    constructor Create(AParent: TSprite); override;
+    constructor Create(AParent: TSprite; ALifes: integer); override;
   end;
 
   TEnemyBoss = class(TEnemy)
@@ -187,15 +188,11 @@ type
     procedure DoMove(MoveCount: Integer); override;
     procedure HitEnemy(ADead: Boolean); override;
   public
-    constructor Create(AParent: TSprite); override;
+    constructor Create(AParent: TSprite; ALifes: integer); override;
   end;
 
-  TNothing = class(TImageSprite);
-
-  TSpriteClass = class of TSprite;
-
   TEnemyAdvent = record
-    spriteClass: TSpriteClass;
+    spriteClass: TEnemyClass;
     x: extended;
     y: extended;
     lifes: integer;
@@ -265,6 +262,7 @@ type
     FBlinkTime: DWORD;
     FFrame, FAngle, FCounter, FEnemyAdventPos: Integer;
     PlayerSprite: TPlayerSprite;
+    TimerCS: TRTLCriticalSection;
     procedure StartScene(Scene: TGameScene);
     procedure EndScene;
     procedure BlinkStart;
@@ -292,7 +290,7 @@ type
     FLevel: integer;
     FMenuItem: integer;
     FBossLife: integer;
-    FRestEnemys: integer;
+    FRestEnemies: integer;
     FCheat: boolean;
     { VCL-Ersatz }
     dxdraw: TDxDraw;
@@ -331,6 +329,11 @@ type
 var
   MainForm: TMainForm;
 
+implementation
+
+uses
+  GamSplash, GamSpeicherung, ComInfo, GamCheat, Global;
+
 const
   // TODO: ini file
   conleicht = 650 div 60; // 10
@@ -339,32 +342,7 @@ const
   conmaster = 2000 div 60; // 33
   lives = 6;
 
-implementation
-
-uses
-  GamSplash, GamSpeicherung, ComInfo, GamCheat, Global;
-
-resourcestring
-  FileError = 'Die Datei kann von SpaceMission nicht geöffnet werden!';
-
-{$R *.DFM}
-
-var // TODO: irgendwo hinpacken. irgendwo!!!
-  EnemyAdventTable: array[0..9999] of TEnemyAdvent; // TODO: dyn
-  Crash2, ec: integer;
-  BossExists, Crash, crashsound: boolean;
-  pos: array[1..4] of integer;
-  enemys: array[1..27] of TSpriteClass;
-  levact: integer;
-
-const
-  DXInputButton = [isButton1, isButton2, isButton3,
-    isButton4, isButton5, isButton6, isButton7, isButton8, isButton9, isButton10, isButton11,
-    isButton12, isButton13, isButton14, isButton15, isButton16, isButton17, isButton18,
-    isButton19, isButton20, isButton21, isButton22, isButton23, isButton24, isButton25,
-    isButton26, isButton27, isButton28, isButton29, isButton30, isButton31, isButton32];
-
-const // TODO: Auch für Enemies
+  // TODO: Auch für Enemies
   PLAYER_MODE_NORMAL = 0;
   PLAYER_MODE_DEAD = 1;
   PLAYER_MODE_DEAD_VANISHED = 2;
@@ -372,6 +350,23 @@ const // TODO: Auch für Enemies
   PLAYER_MODE_ENTER = 4;
 
   DEFAULT_ANIMSPEED = 15/1000;
+
+resourcestring
+  FileError = 'Die Datei kann von SpaceMission nicht geöffnet werden!';
+
+{$R *.DFM}
+
+var // TODO: irgendwo hinpacken. irgendwo!!!
+  EnemyAdventTable: array of TEnemyAdvent;
+  Crash2, EnemyCounter: integer;
+  BossExists, Crash, crashsound: boolean;
+
+const
+  DXInputButton = [isButton1, isButton2, isButton3,
+    isButton4, isButton5, isButton6, isButton7, isButton8, isButton9, isButton10, isButton11,
+    isButton12, isButton13, isButton14, isButton15, isButton16, isButton17, isButton18,
+    isButton19, isButton20, isButton21, isButton22, isButton23, isButton24, isButton25,
+    isButton26, isButton27, isButton28, isButton29, isButton30, isButton31, isButton32];
 
 // TODO: Code komplett überarbeiten. Bessere Ableitungen machen
 
@@ -457,7 +452,8 @@ begin
       end;
     end;
     Collision;
-  end else if FMode=PLAYER_MODE_DEAD then
+  end
+  else if FMode=PLAYER_MODE_DEAD then
   begin
     if FCounter>200 then
     begin
@@ -465,7 +461,8 @@ begin
       FMode := PLAYER_MODE_DEAD_VANISHED;
       Visible := false;
     end;
-  end else if FMode=PLAYER_MODE_DEAD_VANISHED then
+  end
+  else if FMode=PLAYER_MODE_DEAD_VANISHED then
   begin
     if FCounter>1500 then
     begin
@@ -474,7 +471,8 @@ begin
       MainForm.PalleteAnim(RGBQuad(0, 0, 0), 300);
       Sleep(200);
     end;
-  end else if FMode=PLAYER_MODE_FLYAWAY then
+  end
+  else if FMode=PLAYER_MODE_FLYAWAY then
   begin
     // FUT: "Wusch" sound?
     X := X + MoveCount*(300/1000) * (X/MainForm.DXDraw.Width + WegduesKonstante);
@@ -486,7 +484,8 @@ begin
       MainForm.PlaySound('SceneMov', false);
       MainForm.PalleteAnim(RGBQuad(0, 0, 0), 300);
     end;
-  end else if FMode = PLAYER_MODE_ENTER then
+  end
+  else if FMode = PLAYER_MODE_ENTER then
   begin
     X := X + MoveCount*(300/1000);
     if X > 19 then FMode := PLAYER_MODE_NORMAL;
@@ -513,7 +512,8 @@ begin
     begin
       if not (doFullScreen in DXDraw.Options) then StoreWindow;
       DXDraw.Options := DXDraw.Options + [doFullScreen];
-    end else
+    end
+    else
     begin
       if doFullScreen in DXDraw.Options then RestoreWindow;
       DXDraw.Options := DXDraw.Options - [doFullScreen];
@@ -557,7 +557,7 @@ end;
 
 procedure TTamaSprite.DoCollision(Sprite: TSprite; var Done: Boolean);
 begin
-  if (Sprite is TEnemy) and (not (Sprite is TEnemyTama)) then
+  if (Sprite is TEnemy) and not (Sprite is TEnemyTama) then
   begin
     TEnemy(Sprite).Hit;
     Dead;
@@ -697,9 +697,9 @@ begin
   if X<-Width then Dead;
 end;
 
-procedure TEnemy.Hit;
+procedure TEnemy.Hit(AHitStrength: integer = 1);
 begin
-  Dec(FLife);
+  Dec(FLife, AHitStrength);
   if FLife<=0 then
   begin
     Collisioned := False;
@@ -711,39 +711,42 @@ end;
 
 procedure TEnemy.HitEnemy(ADead: Boolean);
 begin
-  if ADead then MainForm.PlaySound('Explosion', False);
+  if ADead then
+    MainForm.PlaySound('Explosion', False)
+  else
+    MainForm.PlaySound('Hit', False);
 end;
 
-constructor TEnemyUFO.Create(AParent: TSprite);
+constructor TEnemyUFO.Create(AParent: TSprite; ALifes: integer);
 begin
-  inherited Create(AParent);
+  inherited Create(AParent, ALifes);
   Image := MainForm.ImageList.Items.Find('Enemy-disk');
   Width := Image.Width;
   Height := Image.Height;
   AnimCount := Image.PatternCount;
   AnimLooped := True;
   AnimSpeed := DEFAULT_ANIMSPEED;
-  FLife := EnemyAdventTable[mainform.FEnemyAdventPos].lifes;
 end;
 
-constructor TEnemy.Create(AParent: TSprite);
+constructor TEnemy.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent);
-  dec(mainform.FRestEnemys);
-  inc(ec);
+  FLife := ALifes;
+  inc(EnemyCounter);
 end;
 
 destructor TEnemy.Destroy;
 begin
   inherited Destroy;
-  dec(ec);
+  dec(EnemyCounter);
 end;
 
 procedure TEnemyUFO.HitEnemy(ADead: Boolean);
 begin
+  inherited HitEnemy(ADead);
+
   if ADead then
   begin
-    MainForm.PlaySound('Explosion', False);
     FMode := 2;
     FCounter := 0;
     Inc(MainForm.FScore, 1000);
@@ -754,9 +757,9 @@ begin
     AnimLooped := False;
     AnimSpeed := DEFAULT_ANIMSPEED;
     AnimPos := 0;
-  end else
+  end
+  else
   begin
-    MainForm.PlaySound('Hit', False);
     Inc(MainForm.FScore, 100);
   end;
 end;
@@ -781,7 +784,8 @@ begin
       end;
       FOldTamaTime := FCounter;
     end;
-  end else if FMode=2 then
+  end
+  else if FMode=2 then
   begin
     X := X - MoveCount*(300/1000);
     if FCounter>200 then Dead;
@@ -791,9 +795,10 @@ end;
 
 procedure TEnemyUFO2.HitEnemy(ADead: Boolean);
 begin
+  inherited HitEnemy(ADead);
+
   if ADead then
   begin
-    MainForm.PlaySound('Explosion', False);
     FMode := 2;
     FCounter := 0;
     Inc(MainForm.FScore, 1000);
@@ -804,23 +809,22 @@ begin
     AnimLooped := False;
     AnimSpeed := DEFAULT_ANIMSPEED;
     AnimPos := 0;
-  end else
+  end
+  else
   begin
-    MainForm.PlaySound('Hit', False);
     Inc(MainForm.FScore, 100);
   end;
 end;
 
-constructor TEnemyUFO2.Create(AParent: TSprite);
+constructor TEnemyUFO2.Create(AParent: TSprite; ALifes: integer);
 begin
-  inherited Create(AParent);
+  inherited Create(AParent, ALifes);
   Image := MainForm.ImageList.Items.Find('Enemy-disk2');
   Width := Image.Width;
   Height := Image.Height;
   AnimCount := Image.PatternCount;
   AnimLooped := True;
   AnimSpeed := DEFAULT_ANIMSPEED;
-  FLife := EnemyAdventTable[mainform.FEnemyAdventPos].lifes;
 end;
 
 procedure TEnemyUFO.DoMove(MoveCount: Integer);
@@ -831,7 +835,8 @@ begin
     X := X - MoveCount*(300/1000);
     Y := Y + Cos256(FCounter div 15)*2;
     if X<-Width then Dead;
-  end else if FMode=2 then
+  end
+  else if FMode=2 then
   begin
     X := X - MoveCount*(300/1000);
     if FCounter>200 then Dead;
@@ -839,9 +844,9 @@ begin
   inc(FCounter, MoveCount);
 end;
 
-constructor TEnemyAttacker.Create(AParent: TSprite);
+constructor TEnemyAttacker.Create(AParent: TSprite; ALifes: integer);
 begin
-  inherited Create(AParent);
+  inherited Create(AParent, ALifes);
   Image := MainForm.ImageList.Items.Find('Enemy-Attacker');
   Width := Image.Width;
   Height := Image.Height;
@@ -849,14 +854,14 @@ begin
   AnimLooped := True;
   AnimSpeed := DEFAULT_ANIMSPEED;
   PixelCheck := True;
-  FLife := EnemyAdventTable[mainform.FEnemyAdventPos].lifes;
 end;
 
 procedure TEnemyAttacker.HitEnemy(ADead: Boolean);
 begin
+  inherited HitEnemy(ADead);
+
   if ADead then
   begin
-    MainForm.PlaySound('Explosion', False);
     FMode := 2;
     FCounter := 0;
     Inc(MainForm.FScore, 1000);
@@ -867,9 +872,9 @@ begin
     AnimLooped := False;
     AnimSpeed := DEFAULT_ANIMSPEED;
     AnimPos := 0;
-  end else
+  end
+  else
   begin
-    MainForm.PlaySound('Hit', False);
     Inc(MainForm.FScore, 100);
   end;
 end;
@@ -881,7 +886,8 @@ begin
   begin
     X := X - MoveCount*(300/1000)-FCounter div 128;
     if X < -Width then Dead;
-  end else if FMode=2 then
+  end
+  else if FMode=2 then
   begin
     X := X - MoveCount*(300/1000);
     if FCounter>200 then Dead;
@@ -889,9 +895,9 @@ begin
   inc(FCounter, MoveCount);
 end;
 
-constructor TEnemyBoss.Create(AParent: TSprite);
+constructor TEnemyBoss.Create(AParent: TSprite; ALifes: integer);
 begin
-  inherited Create(AParent);
+  inherited Create(AParent, ALifes);
   Image := MainForm.ImageList.Items.Find('Enemy-boss');
   Width := Image.Width;
   Height := Image.Height;
@@ -902,7 +908,6 @@ begin
   AnimSpeed := DEFAULT_ANIMSPEED;
   PixelCheck := True;
   Collisioned := False;
-  FLife := EnemyAdventTable[mainform.FEnemyAdventPos].lifes;
   MainForm.FBossLife := FLife;
   waiter1 := 0;
   waiter2 := 0;
@@ -910,17 +915,18 @@ end;
 
 procedure TEnemyBoss.HitEnemy(ADead: Boolean);
 begin
+  inherited HitEnemy(ADead);
+
   if ADead then
   begin
-    MainForm.PlaySound('Explosion', False);
     FMode := 2;
     FCounter := 0;
     Inc(MainForm.FScore, 100000);
     BossExists := false;
     dec(MainForm.FBossLife);
-  end else
+  end
+  else
   begin
-    MainForm.PlaySound('Hit', False);
     Inc(MainForm.FScore, 100);
     dec(MainForm.FBossLife);
   end;
@@ -940,7 +946,8 @@ begin
       FPutTama := True;
     end;
     Y := Y + Cos256(FCounter div 15)*5;
-  end else if FMode=1 then
+  end
+  else if FMode=1 then
   begin
     Y := Y + Cos256(FCounter div 15)*5;
     if FPutTama then
@@ -959,7 +966,8 @@ begin
         FTamaT := 0;
       end;
       FTamaT := FTamaT + MoveCount;
-    end else
+    end
+    else
     begin
       FTamaT := FTamaT + MoveCount;
       if FTamaT>2000+Random(500) then
@@ -969,7 +977,8 @@ begin
         FTamaT := 0;
       end;
     end;
-  end else if FMode=2 then
+  end
+  else if FMode=2 then
   begin
     inc(waiter1);
     if waiter1 = 3 then
@@ -991,16 +1000,17 @@ begin
         FMode := 3;
       end;
     end;
-  end else if FMode=3 then
+  end
+  else if FMode=3 then
   begin
-    if FCounter>4000 then dead;
+    if FCounter>4000 then Dead;
   end;
   inc(FCounter, MoveCount);
 end;
 
-constructor TEnemyAttacker2.Create(AParent: TSprite);
+constructor TEnemyAttacker2.Create(AParent: TSprite; ALifes: integer);
 begin
-  inherited Create(AParent);
+  inherited Create(AParent, ALifes);
   Image := MainForm.ImageList.Items.Find('Enemy-Attacker2');
   Width := Image.Width;
   Height := Image.Height;
@@ -1008,14 +1018,14 @@ begin
   AnimLooped := True;
   AnimSpeed := DEFAULT_ANIMSPEED;
   PixelCheck := True;
-  FLife := EnemyAdventTable[mainform.FEnemyAdventPos].lifes;
 end;
 
 procedure TEnemyAttacker2.HitEnemy(ADead: Boolean);
 begin
+  inherited HitEnemy(ADead);
+
   if ADead then
   begin
-    MainForm.PlaySound('Explosion', False);
     FMode := 2;
     FCounter := 0;
     Inc(MainForm.FScore, 5000);
@@ -1026,9 +1036,9 @@ begin
     AnimLooped := False;
     AnimSpeed := DEFAULT_ANIMSPEED;
     AnimPos := 0;
-  end else
+  end
+  else
   begin
-    MainForm.PlaySound('Hit', False);
     Inc(MainForm.FScore, 100);
   end;
 end;
@@ -1047,7 +1057,8 @@ begin
       FPutTama := True;
     end;
     Y := Y + Cos256(FCounter div 15)*5;
-  end else if FMode=1 then
+  end
+  else if FMode=1 then
   begin
     Y := Y + Cos256(FCounter div 15)*5;
     if FPutTama then
@@ -1066,7 +1077,8 @@ begin
         FTamaT := 0;
       end;
       FTamaT := FTamaT + MoveCount;
-    end else
+    end
+    else
     begin
       FTamaT := FTamaT + MoveCount;
       if FTamaT>2000+Random(500) then
@@ -1076,7 +1088,8 @@ begin
         FTamaT := 0;
       end;
     end;
-  end else if FMode=2 then
+  end
+  else if FMode=2 then
   begin
     if FCounter>200 then Dead;
   end;
@@ -1085,9 +1098,10 @@ end;
 
 procedure TEnemyAttacker3.HitEnemy(ADead: Boolean);
 begin
+  inherited HitEnemy(ADead);
+
   if ADead then
   begin
-    MainForm.PlaySound('Explosion', False);
     FMode := 1;
     FCounter := 0;
     Inc(MainForm.FScore, 5000);
@@ -1098,9 +1112,9 @@ begin
     AnimLooped := False;
     AnimSpeed := DEFAULT_ANIMSPEED;
     AnimPos := 0;
-  end else
+  end
+  else
   begin
-    MainForm.PlaySound('Hit', False);
     Inc(MainForm.FScore, 100);
   end;
 end;
@@ -1124,16 +1138,17 @@ begin
       end;
       FOldTamaTime := FCounter;
      end;
-  end else if FMode=1 then
+  end
+  else if FMode=1 then
   begin
     if FCounter>200 then Dead;
   end;
   inc(FCounter, MoveCount);
 end;
 
-constructor TEnemyAttacker3.Create(AParent: TSprite);
+constructor TEnemyAttacker3.Create(AParent: TSprite; ALifes: integer);
 begin
-  inherited Create(AParent);
+  inherited Create(AParent, ALifes);
   Image := MainForm.ImageList.Items.Find('Enemy-Attacker3');
   Width := Image.Width;
   Height := Image.Height;
@@ -1141,7 +1156,6 @@ begin
   AnimLooped := True;
   AnimSpeed := DEFAULT_ANIMSPEED;
   PixelCheck := True;
-  FLife := EnemyAdventTable[mainform.FEnemyAdventPos].lifes;
 end;
 
 function TMainForm.SoundKarte: boolean;
@@ -1203,6 +1217,8 @@ begin
   spriteengine := tdxspriteengine.create(self);
   spriteengine.DXDraw := dxdraw;
 
+  InitializeCriticalSection(TimerCS);
+
   { Ende VCL-Ersatz }
 
   Application.Title := 'SpaceMission '+ProgramVersion;
@@ -1254,7 +1270,9 @@ procedure TMainForm.GamePauseClick(Sender: TObject);
 begin
   GamePause.Checked := not GamePause.Checked;
   DXTimer.Enabled := not GamePause.Checked;
-  if GamePause.Checked then PauseMusic(FMusic) else
+  if GamePause.Checked then
+    PauseMusic(FMusic)
+  else
     ResumeMusic(FMusic);
 end;
 
@@ -1457,7 +1475,8 @@ begin
   begin
     BorderStyle := bsNone;
     DXDraw.Cursor := crNone;
-  end else
+  end
+  else
   begin
     BorderStyle := bsSingle;
     DXDraw.Cursor := crDefault;
@@ -1509,33 +1528,38 @@ end;
 
 procedure TMainForm.DXTimerTimer(Sender: TObject; LagCount: Integer);
 begin
-  if StatusMusic(FMusic) = 'stopped' then
-    PlayMusic(FMusic); {...}
-  if crash then
-  begin
-    inc(Crash2);
-    if crash2=30 then
+  EnterCriticalSection(TimerCS);
+  try
+    if StatusMusic(FMusic) = 'stopped' then
+      PlayMusic(FMusic); {...}
+    if crash then
     begin
-      Crash2 := 0;
-      crash := false;
-      crashsound := false;
+      inc(Crash2);
+      if crash2 = 30 then
+      begin
+        Crash2 := 0;
+        crash := false;
+        crashsound := false;
+      end;
     end;
+    if not DXDraw.CanDraw then exit;
+    DXInput.Update;
+    case FScene of
+      gsTitle   : SceneTitle;
+      gsMain    : SceneMain;
+      gsGameOver: SceneGameOver;
+      gsWin     : SceneWin;
+      gsNewLevel: SceneNewLevel;
+    end;
+    if FNextScene<>gsNone then
+    begin
+      StartScene(FNextScene);
+      FNextScene := gsNone;
+    end;
+    DXDraw.Flip;
+  finally
+    LeaveCriticalSection(TimerCS);
   end;
-  if not DXDraw.CanDraw then exit;
-  DXInput.Update;
-  case FScene of
-    gsTitle   : SceneTitle;
-    gsMain    : SceneMain;
-    gsGameOver: SceneGameOver;
-    gsWin     : SceneWin;
-    gsNewLevel: SceneNewLevel;
-  end;
-  if FNextScene<>gsNone then
-  begin
-    StartScene(FNextScene);
-    FNextScene := gsNone;
-  end;
-  DXDraw.Flip;
 end;
 
 procedure TMainForm.BlinkStart;
@@ -1549,19 +1573,22 @@ var
   INIDatei: TIniFile;
 begin
   INIDatei := TIniFile.Create(FDirectory+'Einstellungen\SpaceMission.ini');
-  if OptionMusic.checked then INIDatei.WriteBool('Settings', 'Music', true)
-    else INIDatei.WriteBool('Settings', 'Music', false);
-  if OptionSound.checked then INIDatei.WriteBool('Settings', 'Sound', true)
-    else INIDatei.WriteBool('Settings', 'Sound', false);
-  if OptionFullScreen.checked then INIDatei.WriteBool('Settings', 'FullScreen', true)
-    else INIDatei.WriteBool('Settings', 'FullScreen', false);
-  if OptionBreitbild.checked then INIDatei.WriteBool('Settings', 'ScreenAutoSize', true)
-    else INIDatei.WriteBool('Settings', 'ScreenAutoSize', false);
-  if FInterval = giLeicht then INIDatei.WriteInteger('Settings', 'Speed', 1);
-  if FInterval = giMittel then INIDatei.WriteInteger('Settings', 'Speed', 2);
-  if FInterval = giSchwer then INIDatei.WriteInteger('Settings', 'Speed', 3);
-  if FInterval = giMaster then INIDatei.WriteInteger('Settings', 'Speed', 4);
-  INIDatei.Free;
+  try
+    if OptionMusic.checked then INIDatei.WriteBool('Settings', 'Music', true)
+      else INIDatei.WriteBool('Settings', 'Music', false);
+    if OptionSound.checked then INIDatei.WriteBool('Settings', 'Sound', true)
+      else INIDatei.WriteBool('Settings', 'Sound', false);
+    if OptionFullScreen.checked then INIDatei.WriteBool('Settings', 'FullScreen', true)
+      else INIDatei.WriteBool('Settings', 'FullScreen', false);
+    if OptionBreitbild.checked then INIDatei.WriteBool('Settings', 'ScreenAutoSize', true)
+      else INIDatei.WriteBool('Settings', 'ScreenAutoSize', false);
+    if FInterval = giLeicht then INIDatei.WriteInteger('Settings', 'Speed', 1);
+    if FInterval = giMittel then INIDatei.WriteInteger('Settings', 'Speed', 2);
+    if FInterval = giSchwer then INIDatei.WriteInteger('Settings', 'Speed', 3);
+    if FInterval = giMaster then INIDatei.WriteInteger('Settings', 'Speed', 4);
+  finally
+    INIDatei.Free;
+  end;
 end;
 
 procedure TMainForm.LoadOptions;
@@ -1569,31 +1596,34 @@ var
   INIDatei: TIniFile;
 begin
   INIDatei := TIniFile.Create(FDirectory+'Einstellungen\SpaceMission.ini');
-  optionmusic.checked := INIDatei.ReadBool('Settings', 'Music', true);
-  optionsound.checked := INIDatei.ReadBool('Settings', 'Sound', true);
-  optionfullscreen.checked := INIDatei.ReadBool('Settings', 'fullscreen', false);
-  OptionBreitBild.checked := INIDatei.ReadBool('Settings', 'ScreenAutoSize', true);
-  if INIDatei.ReadInteger('Settings', 'Speed', 2) = 1 then
-  begin
-    FInterval := giLeicht;
-    Leicht.checked := true;
+  try
+    optionmusic.checked := INIDatei.ReadBool('Settings', 'Music', true);
+    optionsound.checked := INIDatei.ReadBool('Settings', 'Sound', true);
+    optionfullscreen.checked := INIDatei.ReadBool('Settings', 'fullscreen', false);
+    OptionBreitBild.checked := INIDatei.ReadBool('Settings', 'ScreenAutoSize', true);
+    if INIDatei.ReadInteger('Settings', 'Speed', 2) = 1 then
+    begin
+      FInterval := giLeicht;
+      Leicht.checked := true;
+    end;
+    if INIDatei.ReadInteger('Settings', 'Speed', 2) = 2 then
+    begin
+      FInterval := giMittel;
+      Mittel.checked := true;
+    end;
+    if INIDatei.ReadInteger('Settings', 'Speed', 2) = 3 then
+    begin
+      FInterval := giSchwer;
+      Schwer.checked := true;
+    end;
+    if INIDatei.ReadInteger('Settings', 'Speed', 2) = 4 then
+    begin
+      FInterval := giMaster;
+      Master.checked := true;
+    end;
+  finally
+    INIDatei.Free;
   end;
-  if INIDatei.ReadInteger('Settings', 'Speed', 2) = 2 then
-  begin
-    FInterval := giMittel;
-    Mittel.checked := true;
-  end;
-  if INIDatei.ReadInteger('Settings', 'Speed', 2) = 3 then
-  begin
-    FInterval := giSchwer;
-    Schwer.checked := true;
-  end;
-  if INIDatei.ReadInteger('Settings', 'Speed', 2) = 4 then
-  begin
-    FInterval := giMaster;
-    Master.checked := true;
-  end;
-  INIDatei.Free;
   WriteOptions;
 end;
 
@@ -1658,8 +1688,11 @@ begin
         DXDraw.UpdatePalette;
         ChangePalette := True;
       end;
-    end else
+    end
+    else
+    begin
       Sleep(Time);
+    end;
     for i := 0 to 4 do
     begin
       DXDraw.Surface.Fill(c);
@@ -1717,7 +1750,7 @@ begin
   NewLevel(FLevel);
   BossExists := false;
   PlayMusic(mtGame);
-  FEnemyAdventPos := 1;
+  FEnemyAdventPos := 0;
   FFrame := -4;
   PlayerSprite := TPlayerSprite.Create(SpriteEngine.Engine);
   with TBackground.Create(SpriteEngine.Engine) do
@@ -1859,17 +1892,17 @@ begin
 end;
 
 procedure TMainForm.DeleteArray();
-var
-  i: integer;
 begin
-  for i := Low(EnemyAdventTable) to High(EnemyAdventTable) do
-  begin
-    EnemyAdventTable[i].spriteClass := TNothing;
-    EnemyAdventTable[i].x := 0;
-    EnemyAdventTable[i].y := 0;
-    EnemyAdventTable[i].lifes := 0;
-  end;
-  FRestEnemys := 0;
+  SetLength(EnemyAdventTable, 0);
+  FRestEnemies := 0;
+end;
+
+const
+  ADDITIONAL_ENEMIES_PER_LEVEL = 75;
+
+function GetLevelFileName(lev: integer): string;
+begin
+  result := FDirectory+'Levels\Level '+inttostr(lev)+'.lev';
 end;
 
 procedure TMainForm.NewLevel(lev: integer);
@@ -1879,116 +1912,112 @@ var
   act: integer;
   filex: textfile;
   ergebniss: string;
+  Enemies: array[1..27] of TEnemyClass;
+  e: TEnemyAdvent;
 begin
   DeleteArray;
   if FMenuItem = 2 then
   begin
-    enemys[1] := TEnemyAttacker;
-    enemys[2] := TEnemyMeteor;
-    enemys[3] := TEnemyUFO;
-    enemys[4] := TEnemyAttacker;
-    enemys[5] := TEnemyMeteor;
-    enemys[6] := TEnemyUFO;
-    enemys[7] := TEnemyAttacker;
-    enemys[8] := TEnemyMeteor;
-    enemys[9] := TEnemyUFO;
-    enemys[10] := TEnemyAttacker;
-    enemys[11] := TEnemyMeteor;
-    enemys[12] := TEnemyUFO;
-    enemys[13] := TEnemyAttacker;
-    enemys[14] := TEnemyMeteor;
-    enemys[15] := TEnemyUFO;
-    enemys[16] := TEnemyAttacker3;
-    enemys[17] := TEnemyAttacker;
-    enemys[18] := TEnemyMeteor;
-    enemys[19] := TEnemyUFO;
-    enemys[20] := TEnemyUFO2;
-    enemys[21] := TEnemyAttacker;
-    enemys[22] := TEnemyMeteor;
-    enemys[23] := TEnemyUFO;
-    enemys[24] := TEnemyAttacker2;
-    enemys[25] := TEnemyMeteor;
-    enemys[26] := TEnemyUFO;
-    enemys[27] := TEnemyAttacker;
+    Enemies[1] := TEnemyAttacker;
+    Enemies[2] := TEnemyMeteor;
+    Enemies[3] := TEnemyUFO;
+    Enemies[4] := TEnemyAttacker;
+    Enemies[5] := TEnemyMeteor;
+    Enemies[6] := TEnemyUFO;
+    Enemies[7] := TEnemyAttacker;
+    Enemies[8] := TEnemyMeteor;
+    Enemies[9] := TEnemyUFO;
+    Enemies[10] := TEnemyAttacker;
+    Enemies[11] := TEnemyMeteor;
+    Enemies[12] := TEnemyUFO;
+    Enemies[13] := TEnemyAttacker;
+    Enemies[14] := TEnemyMeteor;
+    Enemies[15] := TEnemyUFO;
+    Enemies[16] := TEnemyAttacker3;
+    Enemies[17] := TEnemyAttacker;
+    Enemies[18] := TEnemyMeteor;
+    Enemies[19] := TEnemyUFO;
+    Enemies[20] := TEnemyUFO2;
+    Enemies[21] := TEnemyAttacker;
+    Enemies[22] := TEnemyMeteor;
+    Enemies[23] := TEnemyUFO;
+    Enemies[24] := TEnemyAttacker2;
+    Enemies[25] := TEnemyMeteor;
+    Enemies[26] := TEnemyUFO;
+    Enemies[27] := TEnemyAttacker;
     randomize;
-    for act := 1 to lev*75-1 do
+    FRestEnemies := lev*ADDITIONAL_ENEMIES_PER_LEVEL+1;
+    SetLength(EnemyAdventTable, FRestEnemies);
+    for act := 0 to lev*ADDITIONAL_ENEMIES_PER_LEVEL-1 do
     begin
-      inc(FRestEnemys);
-      EnemyAdventTable[act].spriteClass := enemys[random(lev+2)+1];
-      if EnemyAdventTable[act].spriteClass = TEnemyAttacker2 then EnemyAdventTable[act].spriteClass := enemys[random(lev+2)+1]; {O_o}
-      EnemyAdventTable[act].x := act*30 + random(85-(lev+(random(lev))*2)){O_o};
-      EnemyAdventTable[act].y := random(dxdraw.surfaceheight);
-      if (EnemyAdventTable[act].spriteClass <> TEnemyMeteor) and (EnemyAdventTable[act].spriteClass <> TEnemyAttacker2) then EnemyAdventTable[act].lifes := random(lev)+1;
-      if EnemyAdventTable[act].spriteClass = TEnemyAttacker2 then EnemyAdventTable[act].lifes := random(6)+1{O_o};
+      e.spriteClass := Enemies[min(random(lev+2)+1, High(Enemies))];
+      if e.spriteClass = TEnemyAttacker2 then
+      begin
+        e.spriteClass := Enemies[min(random(lev+2)+1, High(Enemies))]; {O_o}
+      end;
+      e.x := act*30 + random(85-(lev+(random(lev))*2)){O_o};
+      e.y := random(dxdraw.surfaceheight);
+      if e.spriteClass = TEnemyAttacker2 then
+      begin
+        e.lifes := random(6)+1{O_o};
+      end
+      else
+      begin
+        e.lifes := random(lev)+1;
+      end;
+
+      EnemyAdventTable[act] := e;
     end;
-    EnemyAdventTable[lev*75].spriteClass := TEnemyBoss;
-    EnemyAdventTable[lev*75].x := lev*75*30{O_o} div lev;
-    EnemyAdventTable[lev*75].y := (dxdraw.surfaceheight div 2) - (MainForm.ImageList.Items.Find('Enemy-boss').height div 2);
-    EnemyAdventTable[lev*75].lifes := lev*5;
-    inc(FRestEnemys);
+    e.spriteClass := TEnemyBoss;
+    e.x := lev*75*30{O_o} div lev;
+    e.y := (dxdraw.surfaceheight div 2) - (MainForm.ImageList.Items.Find('Enemy-boss').height div 2);
+    e.lifes := lev*5;
+    EnemyAdventTable[lev*ADDITIONAL_ENEMIES_PER_LEVEL] := e;
   end
   else
   begin
-    enemys[1] := TEnemyAttacker;
-    enemys[2] := TEnemyAttacker2;
-    enemys[3] := TEnemyAttacker3;
-    enemys[4] := TEnemyMeteor;
-    enemys[5] := TEnemyUFO;
-    enemys[6] := TEnemyUFO2;
-    enemys[7] := TEnemyBoss;
-    if fileexists(FDirectory+'Levels\Level '+inttostr(lev)+'.lev') then
+    Enemies[1] := TEnemyAttacker;
+    Enemies[2] := TEnemyAttacker2;
+    Enemies[3] := TEnemyAttacker3;
+    Enemies[4] := TEnemyMeteor;
+    Enemies[5] := TEnemyUFO;
+    Enemies[6] := TEnemyUFO2;
+    Enemies[7] := TEnemyBoss;
+    if fileexists(GetLevelFileName(lev)) then
     begin
-      levact := 0;
-      assignfile(filex, FDirectory+'Levels\Level '+inttostr(lev)+'.lev');
+      assignfile(filex, GetLevelFileName(lev));
       reset(filex);
-      while not seekEoF(filex) do
-      begin
-        if levact = 0 then
-        begin
-          readln(filex, ergebniss);
-          if ergebniss <> '; SpaceMission '+FCompVersion then
-          begin
-            showmessage(Format(LNG_LEVEL_INVALID, [lev]));
-            application.terminate;
-            exit;
-          end;
-          readln(filex, ergebniss);
-          if ergebniss <> '; LEV-File' then
-          begin
-            showmessage(Format(LNG_LEVEL_INVALID, [lev]));
-            application.terminate;
-            exit;
-          end;
-          readln(filex);
-        end;
-        inc(levact);
+      try
         readln(filex, ergebniss);
-        if levact = 5 then levact := 1;
-        if levact = 1 then
+        Assert(ergebniss = '; SpaceMission '+FCompVersion);
+        readln(filex, ergebniss);
+        Assert(ergebniss = '; LEV-File');
+
+        readln(filex); // Länge der Karte
+
+        while not seekEoF(filex) do
         begin
-          inc(pos[levact]);
-          inc(FRestEnemys);
-          EnemyAdventTable[pos[levact]].spriteClass := enemys[strtoint(ergebniss)];
+          readln(filex, ergebniss);
+          e.spriteClass := Enemies[strtoint(ergebniss)];
+          readln(filex, ergebniss);
+          e.x := strtoint(ergebniss);
+          readln(filex, ergebniss);
+          e.y := strtoint(ergebniss);
+          readln(filex, ergebniss);
+          e.lifes := strtoint(ergebniss);
+
+          inc(FRestEnemies);
+          SetLength(EnemyAdventTable, FRestEnemies);
+          EnemyAdventTable[FRestEnemies-1] := e;
         end;
-        if levact = 2 then
-        begin
-          inc(pos[levact]);
-          EnemyAdventTable[pos[levact]].x := strtoint(ergebniss);
-        end;
-        if levact = 3 then
-        begin
-          inc(pos[levact]);
-          EnemyAdventTable[pos[levact]].y := strtoint(ergebniss);
-        end;
-        if levact = 4 then
-        begin
-          inc(pos[levact]);
-          EnemyAdventTable[pos[levact]].lifes := strtoint(ergebniss);
-        end;
+      except
+        showmessage(Format(LNG_LEVEL_INVALID, [lev]));
+        DeleteArray;
       end;
       closefile(filex);
     end;
   end;
+  Assert(FRestEnemies = Length(EnemyAdventTable));
 end;
 
 procedure TMainForm.SceneTitle;
@@ -2048,7 +2077,7 @@ begin
   if (isButton1 in DXInput.States) or (isButton2 in DXInput.States) then
   begin
     FLevel := 1;
-    if ((FMenuItem=1) and (fileexists(FDirectory+'Levels\Level '+inttostr(FLevel)+'.lev')=false)) or ((FMenuItem=2) and (FLevel > 20)) then
+    if ((FMenuItem=1) and not fileexists(GetLevelFileName(FLevel))) or ((FMenuItem=2) and (FLevel > 20)) then
     begin
       //PlaySound('Frage', False);
       exit;
@@ -2065,26 +2094,28 @@ procedure TMainForm.SceneMain;
 var
   Enemy: TSprite;
 begin
-  if FInterval = giLeicht then SpriteEngine.Move(conleicht);
-  if FInterval = giMittel then SpriteEngine.Move(conmittel);
-  if FInterval = giSchwer then SpriteEngine.Move(conschwer);
-  if FInterval = giMaster then SpriteEngine.Move(conmaster);
+  case FInterval of
+    giMittel: SpriteEngine.Move(conleicht);
+    giLeicht: SpriteEngine.Move(conmittel);
+    giSchwer: SpriteEngine.Move(conschwer);
+    giMaster: SpriteEngine.Move(conmaster);
+  end;
   SpriteEngine.Dead;
-  while (Low(EnemyAdventTable)<=FEnemyAdventPos) and
-    (FEnemyAdventPos<=High(EnemyAdventTable)) and
-    ((EnemyAdventTable[FEnemyAdventPos].x / 4)<=FFrame) and
-    (FRestEnemys>0) do
+  while (FEnemyAdventPos >= Low(EnemyAdventTable)) and
+    (FEnemyAdventPos <= High(EnemyAdventTable)) and
+    ((EnemyAdventTable[FEnemyAdventPos].x / 4) <= FFrame) and
+    (FRestEnemies > 0) do
   begin
-    if EnemyAdventTable[FEnemyAdventPos].spriteClass <> TNothing then
+    Dec(FRestEnemies);
+    with EnemyAdventTable[FEnemyAdventPos] do
     begin
-      with EnemyAdventTable[FEnemyAdventPos] do
-      begin
-        Enemy := spriteClass.Create(SpriteEngine.Engine);
-        Enemy.x := dxdraw.surfacewidth;
-        //Enemy.y := y;
-        if y <> 0 then Enemy.y := dxdraw.surfaceheight / (480{maximale Bandbreite im alten Format} / y)
-          else Enemy.y := 0;
-      end;
+      Enemy := spriteClass.Create(SpriteEngine.Engine, lifes);
+      Enemy.x := dxdraw.surfacewidth;
+      //Enemy.y := y;
+      if y <> 0 then
+        Enemy.y := dxdraw.surfaceheight / (480{maximale Bandbreite im alten Format} / y)
+      else
+        Enemy.y := 0;
     end;
     Inc(FEnemyAdventPos);
   end;
@@ -2143,16 +2174,16 @@ begin
           end;}
         if BossExists and (FBossLife>0) then
         begin
-          if (FRestEnemys>0) then
+          if (FRestEnemies>0) then
           begin
             Font.Color := clGreen;
             Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-81, 'Boss: ' + IntToStr(FBossLife));
-            Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Einheiten: ' + IntToStr(FRestEnemys));
+            Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Einheiten: ' + IntToStr(FRestEnemies));
             Font.Color := clLime;
             Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-80, 'Boss: ' + IntToStr(FBossLife));
-            Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Einheiten: ' + IntToStr(FRestEnemys));
+            Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Einheiten: ' + IntToStr(FRestEnemies));
           end;
-          if (FRestEnemys<1) then
+          if (FRestEnemies<1) then
           begin
             Font.Color := clGreen;
             Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Boss: ' + IntToStr(FBossLife));
@@ -2160,12 +2191,12 @@ begin
             Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Boss: ' + IntToStr(FBossLife));
           end;
         end;
-        if (FRestEnemys>0) and not Bossexists then
+        if (FRestEnemies>0) and not Bossexists then
         begin
           Font.Color := clGreen;
-          Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Einheiten: ' + IntToStr(FRestEnemys));
+          Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Einheiten: ' + IntToStr(FRestEnemies));
           Font.Color := clLime;
-          Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Einheiten: ' + IntToStr(FRestEnemys));
+          Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Einheiten: ' + IntToStr(FRestEnemies));
         end;
         Release;
       end;
@@ -2178,8 +2209,7 @@ begin
       DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-250, dxdraw.surfaceheight-40, 'Mission gescheitert!');
       DXDraw.Surface.Canvas.Release;
     end;
-    if FRestEnemys<0 then FRestEnemys := 0; //Muss das sein?
-    if (Ec=0) and (FRestEnemys=0){ and (SpielerFliegtFort = false)}
+    if (EnemyCounter=0) and (FRestEnemies=0){ and (SpielerFliegtFort = false)}
     and ((BossExists and (FBossLife=0)) or not BossExists) then
     begin
       DXDraw.Surface.Canvas.Font.Color := clGreen;
@@ -2351,8 +2381,9 @@ end;
 
 procedure TEnemyMeteor.HitEnemy(ADead: Boolean);
 begin
+  inherited HitEnemy(False);
+
   if ADead then Collisioned := True;
-  MainForm.PlaySound('Hit', False);
 end;
 
 {procedure TMainForm.StopMusic;
@@ -2377,9 +2408,9 @@ begin
     MCISendString(pchar('play "'+FDirectory+'Musik\Title.mid"'), nil, 255, 0);
 end;
 
-constructor TEnemyMeteor.Create(AParent: TSprite);
+constructor TEnemyMeteor.Create(AParent: TSprite; ALifes: integer);
 begin
-  inherited Create(AParent);
+  inherited Create(AParent, ALifes);
   Image := MainForm.ImageList.Items.Find('Enemy-Meteor');
   Width := Image.Width;
   Height := Image.Height;
@@ -2399,7 +2430,7 @@ begin
   FLife := Lives;
   FLevel := 1; // ???
   FScore := 0;
-  ec := 0;
+  EnemyCounter := 0;
   StartScene(gsMain);
   PlayMusic(mtGame);
 end;
@@ -2434,8 +2465,11 @@ end;
 
 procedure TMainForm.FormShow(Sender: TObject);
 begin
-  SplashForm.Hide;
-  SplashForm.Free;
+  if Assigned(SplashForm) then
+  begin
+    SplashForm.Hide;
+    FreeAndNil(SplashForm);
+  end;
 
   dxtimer.Enabled := true;
   dxtimer.ActiveOnly := true;
@@ -2464,13 +2498,14 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
-  imagelist.free;
-  spriteengine.free;
+  imagelist.Free;
+  spriteengine.Free;
   dxdraw.Free;
-  wavelist.free;
-  dxsound.free;
-  //dxinput.free;
+  wavelist.Free;
+  dxsound.Free;
+  //dxinput.Free;
   dxtimer.Free;
+  DeleteCriticalSection(TimerCS);
 end;
 
 end.

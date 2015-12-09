@@ -1,6 +1,10 @@
 
 2015 TODO
 
+- (siehe NOT): MCI hat Längenbegrenzung
+- (siehe NOT): weitere Änderungen?
+- bewegungsunschärfe wegen TFT
+- "Throwback" nach einem hit
 - weniger startmenüeinträge wegen windows 10
 - versioninfo
 - Bug: 2 Taskleisteneinträge

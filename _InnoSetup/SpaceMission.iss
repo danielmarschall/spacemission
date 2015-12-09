@@ -46,7 +46,7 @@ Source: "..\Bilder\LevSplash.jpg"; DestDir: "{app}\Bilder"; Flags: ignoreversion
 Source: "..\Bilder\SplSplash.jpg"; DestDir: "{app}\Bilder"; Flags: ignoreversion
 Source: "..\DirectX\Sound.dxw"; DestDir: "{app}\DirectX"; Flags: ignoreversion
 Source: "..\DirectX\Graphic.dxg"; DestDir: "{app}\DirectX"; Flags: ignoreversion
-Source: "..\Einstellungen\SpaceMission.ini"; DestDir: "{app}\Einstellungen"; Flags: ignoreversion
+Source: "..\Einstellungen\SpaceMission_Default.ini"; DestName: "SpaceMission.ini"; DestDir: "{app}\Einstellungen"; Flags: ignoreversion
 Source: "..\Levels\*.lev"; DestDir: "{app}\Levels"; Flags: ignoreversion
 Source: "..\Musik\*.mid"; DestDir: "{app}\Musik"; Flags: ignoreversion
 
