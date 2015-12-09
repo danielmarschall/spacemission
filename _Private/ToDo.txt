@@ -44,3 +44,6 @@ SPIEL
 LEVELEDITOR
 - Kartengröße bleibt bei "Neu"
 - "Beenden ohne Speichern?" bei leerem Level
+- Langsam, manchmal sogar Deadlock
+- ggf. auch Autor in LVL Datei packen und Kommentare in Datei erlauben
+- Delphi IDE: Form Height ändern sich automatisch, es wird immer größer.

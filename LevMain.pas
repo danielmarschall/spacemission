@@ -595,7 +595,8 @@ end;
 
 procedure TMainForm.DestroyLevel;
 begin
-  ScrollBar.Position := 0;
+  ScrollBar.Position := 0; // this doesn't call ScrollBarScroll()
+  ScrollP := 0;
   Enemys.Clear;
   NumEnemys := 0;
   Boss := false;

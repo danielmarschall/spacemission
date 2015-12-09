@@ -75,12 +75,12 @@ object LevelForm: TLevelForm
       object ElLabel2: TLabel
         Left = 80
         Top = 10
-        Width = 225
+        Width = 228
         Height = 39
         Caption = 
-          'Die Spielfeldgr'#246#223'e wird nur von dem Leveleditor'#13#10'ben'#246'tigt. Das '#228 +
-          'ndern dieser Gr'#246#223'e wirkt sich'#13#10'nicht auf die Gr'#246#223'e der Levels au' +
-          's.'
+          'Die Spielfeldgr'#246#223'e wird nur von dem Leveleditor '#13#10'ben'#246'tigt. Das ' +
+          #196'ndern dieser Gr'#246#223'e wirkt sich '#13#10'nicht auf die Gr'#246#223'e der Levels ' +
+          'aus.'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
