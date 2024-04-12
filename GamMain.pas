@@ -1,29 +1,34 @@
 unit GamMain;
 
-// TODO: 2024 Quellcode optimieren und klassen-namen überdenken
-// TODO: 2024 Form Screen center anstelle Desktop Center => OK!
-// TODO: 2024 Vollbild entf.
-// TODO: 2024 DPlayX.dll auskommentieren => OK!
-// TODO: 2024 Software-Update routine prüfen
-// TODO: 2024 EV CodeSign
-// TODO: 2024 Spielstände usw. "Spiele" Ordner speichern, Config in Registry sichern, etc.
-// TODO: 2024 Neue Einheiten => Medikit, Ufo das im Kreis fliegt und nicht weggeht
-// TODO: 2024 Bei Pause => Entweder alles grau werden lassen, oder irgendwo "Pause" hinschreiben (nur Not in die Form Caption)
-// TODO: 2024 Alle Notizen durchschauen
-// TODO: 2024 Boss schwieriger machen: Er soll auch nach links und rechts gehen?
-// TODO: 2024 Cooldown für Laser?
-// TODO: 2024 Musik und Sounds optimieren
-// TODO: 2024 Pausiertes Spiel: Fenster bewegen lässt das Spiel wieder starten
-// TODO: 2024 Zwei Fenster in Taskleiste
-// TODO: 2024 "Doku" in Hilfemenü einbinden, ggf. auch den Leveleditor ins Menü machen
-// TODO: 2024 Highscore Liste
+// TODO 2024 Review
+// ----------------
+//              Quellcode optimieren und klassen-namen überdenken
+// [OK SVN 12]  Form Screen center anstelle Desktop Center
+//              Vollbild entf.
+// [OK SVN 10]  DPlayX.dll auskommentieren => OK!
+//              EV CodeSign
+//              Spielstände usw. "Spiele" Ordner speichern, Config in Registry sichern, etc.
+//              Neue Einheiten => Medikit, Ufo das im Kreis fliegt und nicht weggeht
+//              Bei Pause => Entweder alles grau werden lassen, oder irgendwo "Pause" hinschreiben (nur Not in die Form Caption)
+//              Alle Notizen durchschauen
+//              Boss schwieriger machen: Er soll auch nach links und rechts gehen?
+//              Cooldown für Laser?
+//              Musik und Sounds optimieren
+//              Pausiertes Spiel: Fenster bewegen lässt das Spiel wieder starten
+//              Zwei Fenster in Taskleiste
+//              "Doku" in Hilfemenü einbinden, ggf. auch den Leveleditor ins Menü machen
+//              Highscore Liste
+//              Multilingual
+//              Levelconverter entfernen, stattdessen einlesen abwärtskompatibel machen
+//              hintergrundmusik als WAV anstelle MIDI
 
 interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, MMSystem, Dialogs,
   StdCtrls, ExtCtrls, Menus, DIB, DXClass, DXSprite, DXDraws, DXInput, DXSounds,
-  INIFiles, ShellAPI, wininet, DirectX;
+  INIFiles, ShellAPI, wininet, DirectX{$IF CompilerVersion >= 23.0},
+  System.UITypes{$IFEND}, ComLevelReader;
 
 type
   TGameScene = (
@@ -208,13 +213,6 @@ type
     constructor Create(AParent: TSprite; ALifes: integer); override;
   end;
 
-  TEnemyAdvent = record
-    spriteClass: TEnemyClass;
-    x: extended;
-    y: extended;
-    lifes: integer;
-  end;
-
   TMainForm = class(TDXForm)
     MainMenu: TMainMenu;
     Spiel: TMenuItem;
@@ -280,6 +278,7 @@ type
     FFrame, FAngle, FCounter, FEnemyAdventPos: Integer;
     PlayerSprite: TPlayerSprite;
     TimerCS: TRTLCriticalSection;
+    LevelData: TLevelData;
     procedure StartScene(Scene: TGameScene);
     procedure EndScene;
     procedure BlinkStart;
@@ -299,6 +298,7 @@ type
     procedure StartSceneNewLevel;
     procedure SceneNewLevel;
     procedure EndSceneNewLevel;
+    function GetLevelFileName(lev: integer): string;
   public
     FNextScene: TGameScene;
     FScore: Integer;
@@ -319,7 +319,7 @@ type
     dxtimer: tdxtimer;
     { Level-Routinen }
     procedure NewLevel(lev: integer);
-    procedure DeleteArray;
+    procedure ResetLevelData;
     { MCI-Routinen }
     function StatusMusic(Name: TMusicTrack): string;
     procedure PlayMusic(Name: TMusicTrack);
@@ -374,7 +374,6 @@ resourcestring
 {$R *.DFM}
 
 var // TODO: irgendwo hinpacken. irgendwo!!!
-  EnemyAdventTable: array of TEnemyAdvent;
   Crash2, EnemyCounter: integer;
   BossExists, Crash, crashsound: boolean;
 
@@ -1186,6 +1185,8 @@ var
   daten: textfile;
   ok: boolean;
 begin
+  LevelData := TLevelData.Create;
+  
   { Beginne VCL-Ersatz }
   dxtimer := tdxtimer.Create(self);
   dxtimer.Interval := 33;
@@ -1243,9 +1244,10 @@ begin
   DXInit;
   SoundInit;
   MusicInit;
-  DeleteArray;
+  ResetLevelData;
   if (paramcount = 0) and (fileexists(paramstr(1))) then // (paramcount > 0)
   begin
+    // TODO: In "ComSavegameReader.pas" auslagern, so wie bei "ComLevelReader.pas" 
     AssignFile(daten, paramstr(1));
     Reset(daten);
     ok := true;
@@ -1374,12 +1376,12 @@ end;
 
 procedure TMainForm.CheckUpdatesClick(Sender: TObject);
 var
-  temp: string;
+  cont: string;
 begin
-  temp := GetHTML('http://www.viathinksoft.de/update/?id=spacemission');
-  if copy(temp, 0, 7) = 'Status:' then
+  cont := GetHTML('http://www.viathinksoft.de/update/?id=spacemission');
+  if copy(cont, 0, 7) = 'Status:' then
   begin
-    Application.MessageBox('Ein Fehler ist aufgetreten. Wahrscheinlich ist keine Internetverbindung aufgebaut, oder der der ViaThinkSoft-Server temporär offline.', 'Fehler', MB_OK + MB_ICONERROR)
+    Application.MessageBox('Ein Fehler ist aufgetreten. Wahrscheinlich ist keine Internetverbindung aufgebaut, oder der der ViaThinkSoft-Server vorübergehend offline.', 'Fehler', MB_OK + MB_ICONERROR)
   end
   else
   begin
@@ -1908,16 +1910,16 @@ begin
   {  Ende Win  }
 end;
 
-procedure TMainForm.DeleteArray();
+procedure TMainForm.ResetLevelData;
 begin
-  SetLength(EnemyAdventTable, 0);
+  LevelData.Clear;
   FRestEnemies := 0;
 end;
 
 const
   ADDITIONAL_ENEMIES_PER_LEVEL = 75;
 
-function GetLevelFileName(lev: integer): string;
+function TMainForm.GetLevelFileName(lev: integer): string;
 begin
   result := FDirectory+'Levels\Level '+inttostr(lev)+'.lev';
 end;
@@ -1927,54 +1929,53 @@ resourcestring
   LNG_LEVEL_INVALID = 'Das Level Nr. %d ist ungültig!'+#13#10+'Das Programm wird beendet.';
 var
   act: integer;
-  filex: textfile;
-  ergebniss: string;
-  Enemies: array[1..27] of TEnemyClass;
+  Enemies: array[1..27] of TEnemyType;
   e: TEnemyAdvent;
 begin
-  DeleteArray;
+  ResetLevelData;
   if FMenuItem = 2 then
   begin
-    Enemies[1] := TEnemyAttacker;
-    Enemies[2] := TEnemyMeteor;
-    Enemies[3] := TEnemyUFO;
-    Enemies[4] := TEnemyAttacker;
-    Enemies[5] := TEnemyMeteor;
-    Enemies[6] := TEnemyUFO;
-    Enemies[7] := TEnemyAttacker;
-    Enemies[8] := TEnemyMeteor;
-    Enemies[9] := TEnemyUFO;
-    Enemies[10] := TEnemyAttacker;
-    Enemies[11] := TEnemyMeteor;
-    Enemies[12] := TEnemyUFO;
-    Enemies[13] := TEnemyAttacker;
-    Enemies[14] := TEnemyMeteor;
-    Enemies[15] := TEnemyUFO;
-    Enemies[16] := TEnemyAttacker3;
-    Enemies[17] := TEnemyAttacker;
-    Enemies[18] := TEnemyMeteor;
-    Enemies[19] := TEnemyUFO;
-    Enemies[20] := TEnemyUFO2;
-    Enemies[21] := TEnemyAttacker;
-    Enemies[22] := TEnemyMeteor;
-    Enemies[23] := TEnemyUFO;
-    Enemies[24] := TEnemyAttacker2;
-    Enemies[25] := TEnemyMeteor;
-    Enemies[26] := TEnemyUFO;
-    Enemies[27] := TEnemyAttacker;
+    {$REGION 'Random game'}
+    Enemies[1] := etEnemyAttacker;
+    Enemies[2] := etEnemyMeteor;
+    Enemies[3] := etEnemyUFO;
+    Enemies[4] := etEnemyAttacker;
+    Enemies[5] := etEnemyMeteor;
+    Enemies[6] := etEnemyUFO;
+    Enemies[7] := etEnemyAttacker;
+    Enemies[8] := etEnemyMeteor;
+    Enemies[9] := etEnemyUFO;
+    Enemies[10] := etEnemyAttacker;
+    Enemies[11] := etEnemyMeteor;
+    Enemies[12] := etEnemyUFO;
+    Enemies[13] := etEnemyAttacker;
+    Enemies[14] := etEnemyMeteor;
+    Enemies[15] := etEnemyUFO;
+    Enemies[16] := etEnemyAttacker3;
+    Enemies[17] := etEnemyAttacker;
+    Enemies[18] := etEnemyMeteor;
+    Enemies[19] := etEnemyUFO;
+    Enemies[20] := etEnemyUFO2;
+    Enemies[21] := etEnemyAttacker;
+    Enemies[22] := etEnemyMeteor;
+    Enemies[23] := etEnemyUFO;
+    Enemies[24] := etEnemyAttacker2;
+    Enemies[25] := etEnemyMeteor;
+    Enemies[26] := etEnemyUFO;
+    Enemies[27] := etEnemyAttacker;
     randomize;
     FRestEnemies := lev*ADDITIONAL_ENEMIES_PER_LEVEL+1;
-    SetLength(EnemyAdventTable, FRestEnemies);
+    SetLength(LevelData.EnemyAdventTable, FRestEnemies);
     for act := 0 to lev*ADDITIONAL_ENEMIES_PER_LEVEL-1 do
     begin
-      e.spriteClass := Enemies[min(random(lev+2)+1, High(Enemies))];
-      if e.spriteClass = TEnemyAttacker2 then
+      e.enemyType := Enemies[min(random(lev+2)+1, High(Enemies))];
+      if e.enemyType = etEnemyAttacker2 then
       begin
-        e.spriteClass := Enemies[min(random(lev+2)+1, High(Enemies))]; {O_o}
+        e.enemyType := Enemies[min(random(lev+2)+1, High(Enemies))]; {O_o}
       end;
       e.x := act*30 + random(85-(lev+(random(lev))*2)){O_o};
       e.y := random(dxdraw.surfaceheight);
-      if e.spriteClass = TEnemyAttacker2 then
+      if e.enemyType = etEnemyAttacker2 then
       begin
         e.lifes := random(6)+1{O_o};
       end
@@ -1983,58 +1984,31 @@ begin
         e.lifes := random(lev)+1;
       end;
 
-      EnemyAdventTable[act] := e;
+      LevelData.EnemyAdventTable[act] := e;
     end;
-    e.spriteClass := TEnemyBoss;
+    e.enemyType := etEnemyBoss;
     e.x := lev*75*30{O_o} div lev;
     e.y := (dxdraw.surfaceheight div 2) - (MainForm.ImageList.Items.Find('Enemy-boss').height div 2);
     e.lifes := lev*5;
-    EnemyAdventTable[lev*ADDITIONAL_ENEMIES_PER_LEVEL] := e;
+    LevelData.EnemyAdventTable[lev*ADDITIONAL_ENEMIES_PER_LEVEL] := e;
+    Assert(FRestEnemies = Length(LevelData.EnemyAdventTable));
+    {$ENDREGION}
   end
   else
   begin
-    Enemies[1] := TEnemyAttacker;
-    Enemies[2] := TEnemyAttacker2;
-    Enemies[3] := TEnemyAttacker3;
-    Enemies[4] := TEnemyMeteor;
-    Enemies[5] := TEnemyUFO;
-    Enemies[6] := TEnemyUFO2;
-    Enemies[7] := TEnemyBoss;
+    {$REGION 'Normal game'}
     if fileexists(GetLevelFileName(lev)) then
     begin
-      assignfile(filex, GetLevelFileName(lev));
-      reset(filex);
       try
-        readln(filex, ergebniss);
-        Assert(ergebniss = '; SpaceMission '+FCompVersion);
-        readln(filex, ergebniss);
-        Assert(ergebniss = '; LEV-File');
-
-        readln(filex); // Länge der Karte
-
-        while not seekEoF(filex) do
-        begin
-          readln(filex, ergebniss);
-          e.spriteClass := Enemies[strtoint(ergebniss)];
-          readln(filex, ergebniss);
-          e.x := strtoint(ergebniss);
-          readln(filex, ergebniss);
-          e.y := strtoint(ergebniss);
-          readln(filex, ergebniss);
-          e.lifes := strtoint(ergebniss);
-
-          inc(FRestEnemies);
-          SetLength(EnemyAdventTable, FRestEnemies);
-          EnemyAdventTable[FRestEnemies-1] := e;
-        end;
+        LevelData.Load(GetLevelFileName(lev));
+        FRestEnemies := Length(LevelData.EnemyAdventTable);
       except
         showmessage(Format(LNG_LEVEL_INVALID, [lev]));
-        DeleteArray;
+        ResetLevelData;
       end;
-      closefile(filex);
     end;
+    {$ENDREGION}
   end;
-  Assert(FRestEnemies = Length(EnemyAdventTable));
 end;
 
 procedure TMainForm.SceneTitle;
@@ -2110,6 +2084,7 @@ end;
 procedure TMainForm.SceneMain;
 var
   Enemy: TSprite;
+  spriteClass: TEnemyClass;
 begin
   case FInterval of
     giMittel: SpriteEngine.Move(conleicht);
@@ -2118,21 +2093,35 @@ begin
     giMaster: SpriteEngine.Move(conmaster);
   end;
   SpriteEngine.Dead;
-  while (FEnemyAdventPos >= Low(EnemyAdventTable)) and
-    (FEnemyAdventPos <= High(EnemyAdventTable)) and
-    ((EnemyAdventTable[FEnemyAdventPos].x / 4) <= FFrame) and
+  while (FEnemyAdventPos >= Low(LevelData.EnemyAdventTable)) and
+    (FEnemyAdventPos <= High(LevelData.EnemyAdventTable)) and
+    ((LevelData.EnemyAdventTable[FEnemyAdventPos].x / 4) <= FFrame) and
     (FRestEnemies > 0) do
   begin
     Dec(FRestEnemies);
-    with EnemyAdventTable[FEnemyAdventPos] do
+    with LevelData.EnemyAdventTable[FEnemyAdventPos] do
     begin
-      Enemy := spriteClass.Create(SpriteEngine.Engine, lifes);
-      Enemy.x := dxdraw.surfacewidth;
-      //Enemy.y := y;
-      if y <> 0 then
-        Enemy.y := dxdraw.surfaceheight / (480{maximale Bandbreite im alten Format} / y)
-      else
-        Enemy.y := 0;
+      spriteClass := nil;
+      case enemyType of
+        //etUnknown: ;
+        etEnemyAttacker:  spriteClass := TEnemyAttacker;
+        etEnemyAttacker2: spriteClass := TEnemyAttacker2;
+        etEnemyAttacker3: spriteClass := TEnemyAttacker3;
+        etEnemyMeteor:    spriteClass := TEnemyMeteor;
+        etEnemyUFO:       spriteClass := TEnemyUFO;
+        etEnemyUFO2:      spriteClass := TEnemyUFO2;
+        etEnemyBoss:      spriteClass := TEnemyBoss;
+      end;
+      if spriteClass <> nil then
+      begin
+        Enemy := spriteClass.Create(SpriteEngine.Engine, lifes);
+        Enemy.x := dxdraw.surfacewidth;
+        //Enemy.y := y;
+        if y <> 0 then
+          Enemy.y := dxdraw.surfaceheight / (480{maximale Bandbreite im alten Format} / y)
+        else
+          Enemy.y := 0;
+      end;
     end;
     Inc(FEnemyAdventPos);
   end;
@@ -2322,7 +2311,7 @@ begin
   Spielgeschwindigkeit.enabled := false;
   BossExists := false;
   Spielgeschwindigkeit.enabled := false;
-  if ((FMenuItem=1) and (not fileexists(FDirectory+'Levels\Level '+inttostr(FLevel)+'.lev'))) or ((FMenuItem=2) and (FLevel > 25)) then
+  if ((FMenuItem=1) and (not fileexists(GetLevelFileName(FLevel)))) or ((FMenuItem=2) and (FLevel > 25)) then
   begin
     //PlaySound('SceneMov', False);
     PalleteAnim(RGBQuad(0, 0, 0), 300);
@@ -2523,6 +2512,7 @@ begin
   //dxinput.Free;
   dxtimer.Free;
   DeleteCriticalSection(TimerCS);
+  LevelData.Free;
 end;
 
 end.

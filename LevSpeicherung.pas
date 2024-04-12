@@ -55,7 +55,7 @@ var
 implementation
 
 uses
-  Global, LevMain;
+  Global, LevMain, ComLevelReader;
 
 {$R *.DFM}
 
@@ -127,8 +127,7 @@ procedure TSpeicherungForm.LadenBtnClick(Sender: TObject);
 var
   Markiert: boolean;
   i, TempArtMain, TempLiveMain: integer;
-  SavGame: textfile;
-  Ergebnis: array[1..5] of string;
+  LevelData: TLevelData;
 begin
   Markiert := false;
   for i := 0 to LevelListBox.items.Count-1 do
@@ -154,35 +153,36 @@ begin
   // Vorbereiten
   MainForm.DestroyLevel;
   MainForm.LevChanged := false;
-  // ÷ffnen
-  AssignFile(SavGame, FDirectory+'Levels\'+
-    LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
-  Reset(SavGame);
-  // Laden
-  ReadLN(SavGame); // --> Copyrightinfo
-  ReadLN(SavGame); // --> Copyrightinfo
-  ReadLN(SavGame, Ergebnis[5]); // --> L‰nge der Karte
-  MainForm.ScrollBar.Max := strtoint(Ergebnis[5]);
-  MainForm.Enemys.Clear;
-  TempArtMain := MainForm.ArtChecked;
-  TempLiveMain := MainForm.LiveEdit;
-  while not seekEoF(SavGame) do
-  begin
-    ReadLN(SavGame, Ergebnis[3]);
-    ReadLN(SavGame, Ergebnis[1]);
-    ReadLN(SavGame, Ergebnis[2]);
-    ReadLN(SavGame, Ergebnis[4]);
-    MainForm.EnemyAdd(strtoint(Ergebnis[1]), strtoint(Ergebnis[2]), strtoint(Ergebnis[3]), strtoint(Ergebnis[4]));
-    MainForm.ArtChecked := strtoint(Ergebnis[3]);
-    MainForm.LiveEdit := strtoint(Ergebnis[4]);
-    MainForm.EnemyCreate(strtoint(Ergebnis[1]), strtoint(Ergebnis[2]));
-    inc(MainForm.NumEnemys);
-    if Ergebnis[3] = '7' then MainForm.Boss := true;
+
+  LevelData := TLevelData.Create;
+  try
+    LevelData.Load(FDirectory+'Levels\'+LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
+    MainForm.ScrollBar.Max := LevelData.LevelEditorLength;
+    MainForm.Enemys.Clear;
+    TempArtMain := MainForm.ArtChecked;
+    TempLiveMain := MainForm.LiveEdit;
+    MainForm.NumEnemys := Length(LevelData.EnemyAdventTable);
+    for i := 0 to MainForm.NumEnemys-1 do
+    begin
+      MainForm.EnemyAdd(
+        LevelData.EnemyAdventTable[i].x,
+        LevelData.EnemyAdventTable[i].y,
+        Ord(LevelData.EnemyAdventTable[i].enemyType),
+        LevelData.EnemyAdventTable[i].lifes
+      );
+      MainForm.ArtChecked := Ord(LevelData.EnemyAdventTable[i].enemyType);
+      MainForm.LiveEdit := LevelData.EnemyAdventTable[i].lifes;
+      MainForm.EnemyCreate(
+        LevelData.EnemyAdventTable[i].x,
+        LevelData.EnemyAdventTable[i].y
+      );
+      if LevelData.EnemyAdventTable[i].enemyType = etEnemyBoss then MainForm.Boss := true;
+    end;
+  finally
+    FreeAndNil(LevelData);
   end;
   MainForm.LiveEdit := TempLiveMain;
   MainForm.ArtChecked := TempArtMain;
-  // Schlieﬂen
-  CloseFile(SavGame);
   // Nacharbeiten
   MainForm.AnzeigeAct;
   close;
@@ -319,9 +319,11 @@ end;
 
 procedure TSpeicherungForm.LevelListBoxClick(Sender: TObject);
 var
-  Ergebnis, boss, l, temp: string;
-  SavGame: textfile;
-  x, a: integer;
+  LevelData: TLevelData;
+  boss: boolean;
+  i: Integer;
+  temp: string;
+  anzahlEinheiten: integer;
 begin
   li1a.visible := false;
   li2a.visible := false;
@@ -340,45 +342,26 @@ begin
   end;
   temp := LevelListBox.Items.strings[LevelListBox.itemindex];
   SpinEdit.Position := strtoint(RightStr(temp, length(temp)-6));
-  AssignFile(SavGame, FDirectory+'Levels\'+
-    LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
-  Reset(SavGame);
-  ReadLN(SavGame, Ergebnis);
-  if Ergebnis <> '; SpaceMission '+FCompVersion then
-  begin
-    liu.visible := true;
-    LadenBtn.enabled := false;
-    CloseFile(SavGame);
-    exit;
-  end;
-  ReadLN(SavGame, Ergebnis);
-  if Ergebnis <> '; LEV-File' then
-  begin
-    liu.visible := true;
-    LadenBtn.enabled := false;
-    CloseFile(SavGame);
-    exit;
-  end;
-  ReadLN(SavGame, l);
-  x := 0;
-  a := 0;
-  boss := 'Nein';
-  while not SeekEOF(SavGame) do
-  begin
-    ReadLN(SavGame, Ergebnis);
-    inc(a);
-    if a = 5 then a := 1;
-    if (a = 1) and (Ergebnis = '7') then boss := 'Ja';
-    inc(x);
-  end;
-  CloseFile(SavGame);
-  if a <> 4 then
-  begin
-    liu.visible := true;
-    LadenBtn.enabled := false;
-  end
-  else
-  begin
+
+  LevelData := TLevelData.Create;
+  try
+    try
+      LevelData.Load(FDirectory+'Levels\'+LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
+    except
+      liu.visible := true;
+      LadenBtn.enabled := false;
+    end;
+
+    boss := false;
+    anzahlEinheiten := Length(LevelData.EnemyAdventTable);
+    for i := 0 to anzahlEinheiten - 1 do
+    begin
+      if LevelData.EnemyAdventTable[i].enemyType = etEnemyBoss then
+      begin
+        boss := true;
+      end;
+    end;
+
     li1a.visible := true;
     li2a.visible := true;
     li3a.visible := true;
@@ -387,9 +370,14 @@ begin
     li3b.visible := true;
     LadenBtn.enabled := true;
     LoeschenBtn.enabled := true;
-    li1b.caption := inttostr(trunc(x / 4));
-    li2b.caption := boss;
-    li3b.caption := l + ' Felder';
+    li1b.caption := inttostr(anzahlEinheiten);
+    if boss then
+      li2b.caption := 'Ja'
+    else
+      li2b.caption := 'Nein';
+    li3b.caption := IntToStr(LevelData.LevelEditorLength) + ' Felder';
+  finally
+    FreeAndNil(LevelData);
   end;
 end;
 

@@ -4,6 +4,7 @@ program SpaceMission;
 
 uses
   Windows,
+  {$IF CompilerVersion >= 23.0}System.UITypes,{$IFEND}
   Forms,
   Dialogs,
   SysUtils,
@@ -13,8 +14,8 @@ uses
   GamSpeicherung in 'GamSpeicherung.pas' {SpeicherungForm},
   ComInfo in 'ComInfo.pas' {InfoForm},
   GamCheat in 'GamCheat.pas' {CheatForm},
-  Global in 'Global.pas'{$IF CompilerVersion >= 23.0},
-  System.UITypes{$IFEND};
+  ComLevelReader in 'ComLevelReader.pas',
+  Global in 'Global.pas';
 
 {$R *.RES}
 

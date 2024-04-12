@@ -89,13 +89,13 @@ object MainForm: TMainForm
         GroupIndex = 1
       end
       object OptionSound: TMenuItem
-        Caption = '&Ger'#228'usche'
+        Caption = '&Soundeffekte'
         Checked = True
         GroupIndex = 1
         OnClick = OptionSoundClick
       end
       object OptionMusic: TMenuItem
-        Caption = '&Musik'
+        Caption = '&Hintergrundmusik'
         Checked = True
         GroupIndex = 1
         OnClick = OptionMusicClick

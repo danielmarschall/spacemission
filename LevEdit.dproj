@@ -34,45 +34,9 @@
     <Borland.Personality>Delphi.Personality</Borland.Personality>
     <Borland.ProjectType>VCLApplication</Borland.ProjectType>
     <BorlandProject>
-<BorlandProject xmlns=""> <Delphi.Personality>   <Parameters>
-      <Parameters Name="UseLauncher">False</Parameters>
-      <Parameters Name="LoadAllSymbols">True</Parameters>
-      <Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
-    </Parameters>
-    <VersionInfo>
-      <VersionInfo Name="IncludeVerInfo">True</VersionInfo>
-      <VersionInfo Name="AutoIncBuild">False</VersionInfo>
-      <VersionInfo Name="MajorVer">1</VersionInfo>
-      <VersionInfo Name="MinorVer">1</VersionInfo>
-      <VersionInfo Name="Release">0</VersionInfo>
-      <VersionInfo Name="Build">0</VersionInfo>
-      <VersionInfo Name="Debug">False</VersionInfo>
-      <VersionInfo Name="PreRelease">False</VersionInfo>
-      <VersionInfo Name="Special">False</VersionInfo>
-      <VersionInfo Name="Private">False</VersionInfo>
-      <VersionInfo Name="DLL">False</VersionInfo>
-      <VersionInfo Name="Locale">1031</VersionInfo>
-      <VersionInfo Name="CodePage">1252</VersionInfo>
-    </VersionInfo>
-    <VersionInfoKeys>
-      <VersionInfoKeys Name="CompanyName">ViaThinkSoft</VersionInfoKeys>
-      <VersionInfoKeys Name="FileDescription">Der Leveleditor zu SpaceMission...</VersionInfoKeys>
-      <VersionInfoKeys Name="FileVersion">1.1.0.0</VersionInfoKeys>
-      <VersionInfoKeys Name="InternalName">SpaceMisson 1.1 - Leveleditor</VersionInfoKeys>
-      <VersionInfoKeys Name="LegalCopyright">© Copyright 2001 - 2006 ViaThinkSoft</VersionInfoKeys>
-      <VersionInfoKeys Name="LegalTrademarks">Keine</VersionInfoKeys>
-      <VersionInfoKeys Name="OriginalFilename">LevEdit.exe</VersionInfoKeys>
-      <VersionInfoKeys Name="ProductName">SpaceMission 1.1</VersionInfoKeys>
-      <VersionInfoKeys Name="ProductVersion">1.1.0.0</VersionInfoKeys>
-      <VersionInfoKeys Name="Webseite">www.viathinksoft.de</VersionInfoKeys>
-      <VersionInfoKeys Name="Projektleiter">Daniel Marschall - www.daniel-marschall.de</VersionInfoKeys>
-    </VersionInfoKeys>
-    <Source>
-      <Source Name="MainSource">LevEdit.dpr</Source>
-    </Source>
-  </Delphi.Personality> </BorlandProject></BorlandProject>
+<BorlandProject><Delphi.Personality><Parameters><Parameters Name="UseLauncher">False</Parameters><Parameters Name="LoadAllSymbols">True</Parameters><Parameters Name="LoadUnspecifiedSymbols">False</Parameters></Parameters><VersionInfo><VersionInfo Name="IncludeVerInfo">True</VersionInfo><VersionInfo Name="AutoIncBuild">False</VersionInfo><VersionInfo Name="MajorVer">1</VersionInfo><VersionInfo Name="MinorVer">1</VersionInfo><VersionInfo Name="Release">0</VersionInfo><VersionInfo Name="Build">0</VersionInfo><VersionInfo Name="Debug">False</VersionInfo><VersionInfo Name="PreRelease">False</VersionInfo><VersionInfo Name="Special">False</VersionInfo><VersionInfo Name="Private">False</VersionInfo><VersionInfo Name="DLL">False</VersionInfo><VersionInfo Name="Locale">1031</VersionInfo><VersionInfo Name="CodePage">1252</VersionInfo></VersionInfo><VersionInfoKeys><VersionInfoKeys Name="CompanyName">ViaThinkSoft</VersionInfoKeys><VersionInfoKeys Name="FileDescription">Der Leveleditor zu SpaceMission...</VersionInfoKeys><VersionInfoKeys Name="FileVersion">1.1.0.0</VersionInfoKeys><VersionInfoKeys Name="InternalName">SpaceMisson 1.1 - Leveleditor</VersionInfoKeys><VersionInfoKeys Name="LegalCopyright">© Copyright 2001 - 2006 ViaThinkSoft</VersionInfoKeys><VersionInfoKeys Name="LegalTrademarks">Keine</VersionInfoKeys><VersionInfoKeys Name="OriginalFilename">LevEdit.exe</VersionInfoKeys><VersionInfoKeys Name="ProductName">SpaceMission 1.1</VersionInfoKeys><VersionInfoKeys Name="ProductVersion">1.1.0.0</VersionInfoKeys><VersionInfoKeys Name="Webseite">www.viathinksoft.de</VersionInfoKeys><VersionInfoKeys Name="Projektleiter">Daniel Marschall - www.daniel-marschall.de</VersionInfoKeys></VersionInfoKeys><Source><Source Name="MainSource">LevEdit.dpr</Source></Source></Delphi.Personality></BorlandProject></BorlandProject>
   </ProjectExtensions>
-  <ItemGroup />
+  <Import Project="$(MSBuildBinPath)\Borland.Delphi.Targets" />
   <ItemGroup>
     <DelphiCompile Include="LevEdit.dpr">
       <MainSource>MainSource</MainSource>
@@ -80,9 +44,8 @@
     <DCCReference Include="ComInfo.pas">
       <Form>InfoForm</Form>
     </DCCReference>
-    <DCCReference Include="Global.pas">
-      <Form>$IFEND</Form>
-    </DCCReference>
+    <DCCReference Include="ComLevelReader.pas" />
+    <DCCReference Include="Global.pas" />
     <DCCReference Include="LevMain.pas">
       <Form>MainForm</Form>
     </DCCReference>
@@ -99,5 +62,4 @@
       <Form>SplashForm</Form>
     </DCCReference>
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Borland.Delphi.Targets" />
 </Project>

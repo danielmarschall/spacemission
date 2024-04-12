@@ -6,6 +6,7 @@ program LevEdit;
 
 uses
   Windows,
+  {$IF CompilerVersion >= 23.0}System.UITypes,{$IFEND}
   Forms,
   Dialogs,
   SysUtils,
@@ -16,8 +17,8 @@ uses
   ComInfo in 'ComInfo.pas' {InfoForm},
   LevSource in 'LevSource.pas' {SourceForm},
   LevOptions in 'LevOptions.pas' {LevelForm},
-  Global in 'Global.pas'{$IF CompilerVersion >= 23.0},
-  System.UITypes{$IFEND};
+  ComLevelReader in 'ComLevelReader.pas',
+  Global in 'Global.pas';
 
 {$R *.RES}
 

@@ -109,7 +109,8 @@ var
 implementation
 
 uses
-  Global, LevSplash, LevSpeicherung, ComInfo, LevSource, LevOptions;
+  Global, LevSplash, LevSpeicherung, ComInfo, LevSource, LevOptions,
+  ComLevelReader;
 
 const
   FileError = 'Die Datei kann von SpaceMission nicht geöffnet werden!';
@@ -185,9 +186,7 @@ end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 var
-  Ergebnis: string;
-  daten: textfile;
-  ok: boolean;
+  LevelData: TLevelData;
 begin
   { VCL-Ersatz start }
   dxtimer := tdxtimer.create(self);
@@ -238,22 +237,19 @@ begin
   DXInit;
   if (paramcount > 0) and (fileexists(paramstr(1))) then
   begin
-    AssignFile(daten, paramstr(1));
-    Reset(daten);
-    ok := true;
-    ReadLN(daten, Ergebnis);
-    if Ergebnis <> '; SpaceMission '+FCompVersion then ok := false;
-    ReadLN(daten, Ergebnis);
-    if ergebnis <> '; LEV-File' then ok := false;
-    if not ok then
-    begin
-      showmessage(FileError);
-      CloseFile(daten);
-      ProgramInit;
-      exit;
+    LevelData := TLevelData.Create;
+    try
+      try
+        LevelData.Load(paramstr(1));
+      except
+        showmessage(FileError);
+        ProgramInit;
+        exit;
+      end;
+    finally
+      FreeAndNil(LevelData);
     end;
     { Laden }
-    CloseFile(daten);
     exit;
   end;
   if fileexists(fdirectory+'Bilder\Auswahl.bmp') then
