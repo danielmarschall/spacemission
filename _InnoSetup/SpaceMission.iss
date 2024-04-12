@@ -11,9 +11,9 @@ AppVerName=SpaceMission 1.1e
 AppVersion=1.1.5       
 AppCopyright=© Copyright 2001 - 2024 ViaThinkSoft.
 AppPublisher=ViaThinkSoft
-AppPublisherURL=http://www.viathinksoft.de/
-AppSupportURL=http://www.daniel-marschall.de/
-AppUpdatesURL=http://www.viathinksoft.de/
+AppPublisherURL=https://www.viathinksoft.de/
+AppSupportURL=https://www.daniel-marschall.de/
+AppUpdatesURL=https://www.viathinksoft.de/
 DefaultDirName={pf}\SpaceMission
 DefaultGroupName=SpaceMission
 VersionInfoCompany=ViaThinkSoft
@@ -47,11 +47,11 @@ Source: "..\Bilder\Auswahl.bmp"; DestDir: "{app}\Bilder"; Flags: ignoreversion; 
 Source: "..\Bilder\Delphi.bmp"; DestDir: "{app}\Bilder"; Flags: ignoreversion
 Source: "..\Bilder\LevSplash.jpg"; DestDir: "{app}\Bilder"; Flags: ignoreversion; Tasks: levedit
 Source: "..\Bilder\SplSplash.jpg"; DestDir: "{app}\Bilder"; Flags: ignoreversion
-Source: "..\DirectX\Sound.dxw"; DestDir: "{app}\DirectX"; Flags: ignoreversion
 Source: "..\DirectX\Graphic.dxg"; DestDir: "{app}\DirectX"; Flags: ignoreversion
+Source: "..\DirectX\Music.dxm"; DestDir: "{app}\DirectX"; Flags: ignoreversion
+Source: "..\DirectX\Sound.dxw"; DestDir: "{app}\DirectX"; Flags: ignoreversion
 Source: "..\Einstellungen\SpaceMission_Default.ini"; DestName: "SpaceMission.ini"; DestDir: "{app}\Einstellungen"; Flags: ignoreversion
 Source: "..\Levels\*.lev"; DestDir: "{app}\Levels"; Flags: ignoreversion
-Source: "..\Musik\*.mid"; DestDir: "{app}\Musik"; Flags: ignoreversion
 
 [Dirs]
 Name: "{app}\Spielstände"
@@ -60,9 +60,9 @@ Name: "{group}\Webseiten"
 Name: "{group}\Ordner"
 
 [Icons]
-Name: "{group}\Webseiten\Daniel Marschall"; Filename: "http://www.daniel-marschall.de/"
-Name: "{group}\Webseiten\ViaThinkSoft"; Filename: "http://www.viathinksoft.de/"
-Name: "{group}\Webseiten\Projektseite auf ViaThinkSoft"; Filename: "http://www.viathinksoft.de/index.php?page=projektanzeige&seite=projekt-19"
+Name: "{group}\Webseiten\Daniel Marschall"; Filename: "https://www.daniel-marschall.de/"
+Name: "{group}\Webseiten\ViaThinkSoft"; Filename: "https://www.viathinksoft.de/"
+Name: "{group}\Webseiten\Projektseite auf ViaThinkSoft"; Filename: "https://www.viathinksoft.de/index.php?page=projektanzeige&seite=projekt-19"
 Name: "{group}\SpaceMission"; Filename: "{app}\SpaceMission.exe"
 Name: "{group}\Dokumentation"; Filename: "{app}\Dokumentation.pdf"
 Name: "{group}\Leveleditor"; Filename: "{app}\LevEdit.exe"; Tasks: levedit

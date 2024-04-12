@@ -36,7 +36,6 @@
 
 SPIEL
 - Nach Treffer, zurückgeschleudert werden
-- Übelster Hänger bei MIDI-Wechsel
 - Vollbildwechsel geht nicht
 - Tastenspeere bei runter+links+shot
 - Schutzverletzung bei Spielstände aufr

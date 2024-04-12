@@ -13,8 +13,8 @@ unit GamMain;
 //              Alle Notizen durchschauen
 //              Boss schwieriger machen: Er soll auch nach links und rechts gehen?
 //              Cooldown für Laser?
-//              Musik und Sounds optimieren
-//              hintergrundmusik als WAV anstelle MIDI ... new unDelphiX contains DXMusic component for MIDI?
+//              Improve Sound effects
+// [OK SVN 18]  MCI hangs a lot! Use new unDelphiX DXMusic component for MIDI!
 //              Pausiertes Spiel: Fenster bewegen lässt das Spiel wieder starten
 //              Zwei Fenster in Taskleiste
 //              "Doku" in Hilfemenü einbinden, ggf. auch den Leveleditor ins Menü machen
@@ -26,10 +26,10 @@ unit GamMain;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, MMSystem, Dialogs,
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, ExtCtrls, Menus, DIB, DXClass, DXSprite, DXDraws, DXInput, DXSounds,
   INIFiles, ShellAPI, wininet, DirectX{$IF CompilerVersion >= 23.0},
-  System.UITypes{$IFEND}, ComLevelReader, ComSaveGameReader;
+  System.UITypes{$IFEND}, ComLevelReader, ComSaveGameReader, DirectMusic;
 
 type
   TGameScene = (
@@ -50,9 +50,9 @@ type
 
   TMusicTrack = (
     mtNone,
-    mtGame,
-    mtBoss,
-    mtScene,
+    mtBoss,   // dxmusic.Midi[0]
+    mtGame,   // dxmusic.Midi[1]
+    mtScene,  // ...
     mtTitle
   );
 
@@ -314,6 +314,7 @@ type
     imagelist: TDxImageList;
     spriteengine: tdxspriteengine;
     dxsound: tdxsound;
+    dxmusic: tdxmusic;
     wavelist: tdxwavelist;
     dxinput: tdxinput;
     dxtimer: tdxtimer;
@@ -321,7 +322,6 @@ type
     procedure NewLevel(lev: integer);
     procedure ResetLevelData;
     { MCI-Routinen }
-    function StatusMusic(Name: TMusicTrack): string;
     procedure PlayMusic(Name: TMusicTrack);
     //procedure StopMusic(Name: TMusicTrack);
     procedure PauseMusic(Name: TMusicTrack);
@@ -329,7 +329,6 @@ type
     procedure DestroyMusic(Name: TMusicTrack);
     procedure OpenMusic(Name: TMusicTrack);
     { Sound-Routinen }
-    function SoundKarte: boolean;
     procedure PlaySound(Name: string; Wait: Boolean);
     { Initialisiations-Routinen }
     procedure DXInit;
@@ -1174,11 +1173,6 @@ begin
   PixelCheck := True;
 end;
 
-function TMainForm.SoundKarte: boolean;
-begin
-  result := WaveOutGetNumDevs > 0;
-end;
-
 procedure TMainForm.FormCreate(Sender: TObject);
 var
   SavGame: TSaveData;
@@ -1219,6 +1213,9 @@ begin
 
   dxsound := tdxsound.Create(self);
   dxsound.AutoInitialize := false;
+
+  dxmusic := TDXMusic.Create(self);
+  dxmusic.DXSound := dxsound;
 
   dxinput := tdxinput.Create(self);
   dxinput.Joystick.ForceFeedback := true;
@@ -1430,56 +1427,28 @@ end;
 
 procedure TMainForm.MusicInit;
 begin
-  optionmusic.enabled := SoundKarte;
+  try
+    dxmusic.Midis.LoadFromFile(FDirectory+'DirectX\Music.dxm');
+  except
+    optionmusic.enabled := false;
+  end;
 end;
 
 procedure TMainForm.DestroyMusic(Name: TMusicTrack);
 begin
-  if Name = mtBoss then
-  begin
-    MCISendString(pchar('stop "'+FDirectory+'Musik\Boss.mid"'), nil, 255, 0);
-    MCISendString(pchar('close "'+FDirectory+'Musik\Boss.mid"'), nil, 255, 0);
-  end;
-  if Name = mtGame then
-  begin
-    MCISendString(pchar('stop "'+FDirectory+'Musik\Game.mid"'), nil, 255, 0);
-    MCISendString(pchar('close "'+FDirectory+'Musik\Game.mid"'), nil, 255, 0);
-  end;
-  if Name = mtScene then
-  begin
-    MCISendString(pchar('stop "'+FDirectory+'Musik\Scene.mid"'), nil, 255, 0);
-    MCISendString(pchar('close "'+FDirectory+'Musik\Scene.mid"'), nil, 255, 0);
-  end;
-  if Name = mtTitle then
-  begin
-    MCISendString(pchar('stop "'+FDirectory+'Musik\Title.mid"'), nil, 255, 0);
-    MCISendString(pchar('close "'+FDirectory+'Musik\Title.mid"'), nil, 255, 0);
-  end;
+  if Name = mtNone then exit;
+  dxmusic.Midis.Items[Ord(Name)-1].Stop;
 end;
 
 procedure TMainForm.OpenMusic(Name: TMusicTrack);
 begin
-  if Name = mtBoss then
-    MCISendString(pchar('open "'+FDirectory+'Musik\Boss.mid"'), nil, 255, 0);
-  if Name = mtGame then
-    MCISendString(pchar('open "'+FDirectory+'Musik\Game.mid"'), nil, 255, 0);
-  if Name = mtScene then
-    MCISendString(pchar('open "'+FDirectory+'Musik\Scene.mid"'), nil, 255, 0);
-  if Name = mtTitle then
-    MCISendString(pchar('open "'+FDirectory+'Musik\Title.mid"'), nil, 255, 0);
+  // Nothing to do
 end;
 
 procedure TMainForm.PauseMusic(Name: TMusicTrack);
 begin
-  if not OptionMusic.checked then exit;
-  if Name = mtBoss then
-    MCISendString(pchar('stop "'+FDirectory+'Musik\Boss.mid"'), nil, 255, 0);
-  if Name = mtGame then
-    MCISendString(pchar('stop "'+FDirectory+'Musik\Game.mid"'), nil, 255, 0);
-  if Name = mtScene then
-    MCISendString(pchar('stop "'+FDirectory+'Musik\Scene.mid"'), nil, 255, 0);
-  if Name = mtTitle then
-    MCISendString(pchar('stop "'+FDirectory+'Musik\Title.mid"'), nil, 255, 0);
+  if Name = mtNone then exit;
+  dxmusic.Midis.Items[Ord(Name)-1].Stop;
 end;
 
 procedure TMainForm.DXDrawInitializing(Sender: TObject);
@@ -1523,28 +1492,10 @@ begin
   PauseMusic(FMusic);
 end;
 
-function TMainForm.StatusMusic(Name: TMusicTrack): string;
-var
-  MCIStatus: array[0..255] of char;
-begin
-  if not OptionMusic.checked then exit;
-  if FMusic = mtGame then
-    MCISendString(pchar('status "'+FDirectory+'Musik\Game.mid" mode'), MCIStatus, 255, 0);
-  if FMusic = mtBoss then
-    MCISendString(pchar('status "'+FDirectory+'Musik\Boss.mid" mode'), MCIStatus, 255, 0);
-  if FMusic = mtScene then
-    MCISendString(pchar('status "'+FDirectory+'Musik\Scene.mid" mode'), MCIStatus, 255, 0);
-  if FMusic = mtTitle then
-    MCISendString(pchar('status "'+FDirectory+'Musik\Title.mid" mode'), MCIStatus, 255, 0);
-  result := MCIStatus;
-end;
-
 procedure TMainForm.DXTimerTimer(Sender: TObject; LagCount: Integer);
 begin
   EnterCriticalSection(TimerCS);
   try
-    if StatusMusic(FMusic) = 'stopped' then
-      PlayMusic(FMusic); {...}
     if crash then
     begin
       inc(Crash2);
@@ -2393,14 +2344,7 @@ end;}
 procedure TMainForm.ResumeMusic(Name: TMusicTrack);
 begin
   if not OptionMusic.checked then exit;
-  if Name = mtBoss then
-    MCISendString(pchar('play "'+FDirectory+'Musik\Boss.mid"'), nil, 255, 0);
-  if Name = mtGame then
-    MCISendString(pchar('play "'+FDirectory+'Musik\Game.mid"'), nil, 255, 0);
-  if Name = mtScene then
-    MCISendString(pchar('play "'+FDirectory+'Musik\Scene.mid"'), nil, 255, 0);
-  if Name = mtTitle then
-    MCISendString(pchar('play "'+FDirectory+'Musik\Title.mid"'), nil, 255, 0);
+  dxmusic.Midis.Items[Ord(Name)-1].Play;
 end;
 
 constructor TEnemyMeteor.Create(AParent: TSprite; ALifes: integer);
@@ -2500,6 +2444,7 @@ begin
   dxsound.Free;
   //dxinput.Free;
   dxtimer.Free;
+  dxmusic.Free;
   DeleteCriticalSection(TimerCS);
   LevelData.Free;
 end;
