@@ -28,7 +28,9 @@ interface
 
 uses
   Windows, SysUtils, Classes, Graphics, Controls,
-  {$IFDEF VER17UP} Types, UITypes,{$ENDIF}
+  {$IFDEF VER7UP} Types, {$ENDIF}
+  {$IFDEF VER9UP} GraphUtil, {$ENDIF}
+  {$IFDEF VER17UP} UITypes,{$ENDIF}
   Math;
 
 type
@@ -38,6 +40,13 @@ type
   TRGBQuads = array[0..255] of TRGBQuad;
 
   TPaletteEntries = array[0..255] of TPaletteEntry;
+
+  PBGRA = ^TBGRA;
+  TBGRA = packed record
+    B, G, R, A: Byte;
+  end;
+  TLinesA = array[0..0] of TBGRA;
+  PLinesA = ^TLinesA;
 
   PBGR = ^TBGR;
   TBGR = packed record
@@ -55,16 +64,16 @@ type
   {   End of type's   }
 
   PArrayBGR = ^TArrayBGR;
-  TArrayBGR = array[0..10000] of TBGR;
+  TArrayBGR = array[0..0] of TBGR;
 
   PArrayByte = ^TArrayByte;
-  TArrayByte = array[0..10000] of Byte;
+  TArrayByte = array[0..0] of Byte;
 
   PArrayWord = ^TArrayWord;
-  TArrayWord = array[0..10000] of Word;
+  TArrayWord = array[0..0] of Word;
 
   PArrayDWord = ^TArrayDWord;
-  TArrayDWord = array[0..10000] of DWord;
+  TArrayDWord = array[0..0] of DWord;
 
   {  TDIBPixelFormat  }
 
@@ -134,7 +143,7 @@ type
 
   {  TLightArray  }
 
-  TLightArray = array{$IFNDEF VER4UP} [0..0]{$ENDIF} of TLightsource;
+  TLightArray = array{$IFNDEF VER4UP}[0..0]{$ENDIF} of TLightsource;
 
   {  TMatrixSetting  }
 
@@ -214,6 +223,10 @@ type
     procedure SetPalette(Value: HPalette); override;
     procedure SetWidth(Value: Integer); override;
     procedure WriteData(Stream: TStream); override;
+    {$IFDEF VER16UP}
+    function GetSupportsPartialTransparency: Boolean; override;
+    {$ENDIF}
+    function GetTransparent: Boolean; override;
   public
     ColorTable: TRGBQuads;
     PixelFormat: TDIBPixelFormat;
@@ -239,7 +252,7 @@ type
     procedure Blur(ABitCount: Integer; Radius: Integer);
     procedure Greyscale(ABitCount: Integer);
     procedure Mirror(MirrorX, MirrorY: Boolean);
-    procedure Negative;
+    procedure Negative; {$IFDEF VER9UP}inline;{$ENDIF}
 
     {   Added New Special Effect   }
     procedure Spray(Amount: Integer);
@@ -306,7 +319,7 @@ type
     procedure DoSmoothRotate(Src: TDIB; cx, cy: Integer; Angle: Extended);
     procedure DoColorize(ForeColor, BackColor: TColor);
     {Simple explosion spoke effect}
-    procedure DoNovaEffect(sr, sg, sb, cx, cy, radius,
+    procedure DoNovaEffect(const sr, sg, sb, cx, cy, radius,
       nspokes, randomhue, randomspok, randgauss: Integer; onProgress: TProgressEvent);
 
     {Simple Mandelbrot-set drawing}
@@ -379,11 +392,11 @@ type
     //
     // effect for special purpose
     //
-    procedure FadeOut(DIB2: TDIB; Step: Byte);
+    procedure FadeOut(DIB2: TDIB; Step: Byte); {$IFDEF VER9UP} inline; {$ENDIF}
     procedure DoZoom(DIB2: TDIB; ZoomRatio: Real);
     procedure DoBlur(DIB2: TDIB);
-    procedure FadeIn(DIB2: TDIB; Step: Byte);
-    procedure FillDIB8(Color: Byte);
+    procedure FadeIn(DIB2: TDIB; Step: Byte); {$IFDEF VER9UP} inline; {$ENDIF}
+    procedure FillDIB8(Color: Byte);  {$IFDEF VER9UP} inline; {$ENDIF}
     procedure DoRotate(DIB1: TDIB; cX, cY, Angle: Integer);
     procedure Distort(DIB1: TDIB; dt: TDistortType; cX, cY, Angle: Integer; Factor: Real);
     function Ink(DIB: TDIB; const SprayInit: Boolean; const AmountSpray: Integer): Boolean;
@@ -565,10 +578,45 @@ function GetScale(SourceWidth, SourceHeight, TargetWidth, TargetHeight: Integer)
 
 procedure MakeDib(out DIB: TDIB; const iWidth, iHeight, iBitCount: Integer; iFillColor: TColor{$IFDEF VER4UP} = clBlack{$ENDIF}); {$IFDEF VER4UP}overload; {$ENDIF}
 procedure{$IFDEF VER4UP}MakeDib{$ELSE}MakeDIB2{$ENDIF}(out DIB: TDIB; iBitmap: TBitmap); {$IFDEF VER4UP}overload; {$ENDIF}
+procedure MakeDIB32MaskByColor(var D: TDIB; const MaskColor: TColor{$IFDEF VER4UP} = clWhite{$ENDIF});
+
+function BGR(B, G, R: Byte): Integer; {$IFDEF VER9UP}inline;{$ENDIF}
 
 implementation
 
 uses DXConsts, {$IFDEF PNG_GRAPHICS}pngimage,{$ENDIF} jpeg;
+
+function BGR(B, G, R: Byte): Integer; {$IFDEF VER9UP}inline;{$ENDIF}
+begin
+  Result := (B shl 16) or (G shl 8) or R;
+end;
+
+procedure MakeDIB32MaskByColor(var D: TDIB; const MaskColor: TColor{$IFDEF VER4UP} = clWhite{$ENDIF});
+type
+  PRGBA = ^TRGBA;
+  TRGBA = array[0..0] of Windows.TRGBQuad;
+var
+  p: PRGBA;
+  y: Integer;
+  x: Integer;
+  B: TDIB;
+begin
+  MakeDib(B, D.Width, D.Height, 32, $FFFFFF);
+  B.RGBChannel := D.RGBChannel;
+  if B.BitCount = 32 then
+    for Y := 0 to B.Height - 1 do
+    begin
+      p := B.ScanLine[Y];
+      for X := 0 to B.Width - 1 do
+      begin
+        if (p[X].rgbBlue = GetBValue(MaskColor)) and (p[X].rgbGreen = GetGValue(MaskColor)) and (p[X].rgbRed = GetRValue(MaskColor)) then
+          p[X].rgbReserved := 0
+        else
+          p[X].rgbReserved := $FF
+      end
+    end;
+  d.Assign(B);
+end;
 
 function GetScale(SourceWidth, SourceHeight, TargetWidth, TargetHeight: Integer): Single;
 var
@@ -985,12 +1033,14 @@ begin
       biCompression := BI_BITFIELDS
     else
     begin
+      biCompression := 0; //none
       if (FBitCount = 4) and (Compressed) then
         biCompression := BI_RLE4
       else if (FBitCount = 8) and (Compressed) then
         biCompression := BI_RLE8
       else
-        biCompression := BI_RGB;
+        if FBitCount = 24 then
+          biCompression := BI_RGB;
     end;
     biSizeImage := FSize;
     biXPelsPerMeter := 0;
@@ -1712,8 +1762,10 @@ begin
   try
     D := TDIB(FFreeList[0]);
     FFreeList.Remove(D);
-    D.Free;
+    if (D <> nil) and (D.Height > 0) and (D.Width > 0) then //is really pointed to image?
+      D.Free;
   except
+    // it is silent exception, but it can through outer (abstract) exception
   end;
   FFreeList.Free;
 
@@ -2133,7 +2185,7 @@ var
   X, Y: Integer;
 begin
   oDIB := nil;
-  if not HasAlphaChannel then exit;
+  if not HasAlphaChannel then Exit;
   oDIB := TDIB.Create;
   oDIB.SetSize(Width, Height, 8);
   for Y := 0 to Height - 1 do
@@ -2233,6 +2285,13 @@ begin
   Result := Pointer(Integer(FTopPBits) + Y * FNextLine);
 end;
 
+{$IFDEF VER16UP}
+function TDIB.GetSupportsPartialTransparency: Boolean;
+begin
+  Result := (FBitCount = 32) and HasAlphaChannel;
+end;
+{$ENDIF}
+
 function TDIB.GetTopPBits: Pointer;
 begin
   Changing(True);
@@ -2247,6 +2306,11 @@ begin
   if not FImage.FMemoryImage then
     GDIFlush;
   Result := FTopPBits;
+end;
+
+function TDIB.GetTransparent: Boolean;
+begin
+  Result := (FBitCount = 32) and HasAlphaChannel;
 end;
 
 function TDIB.GetWidth: Integer;
@@ -2483,7 +2547,9 @@ begin
     bfSize := bfOffBits + FImage.FBitmapInfo^.bmiHeader.biSizeImage;
     bfReserved1 := 0;
     bfReserved2 := 0;
+    if (FBitCount = 32) and (FImage.FBitmapInfo^.bmiHeader.biCompression <> 0) then FImage.FBitmapInfo^.bmiHeader.biCompression := 0; //corrext RGB error to RGBA
   end;
+
   Stream.WriteBuffer(BF, SizeOf(TBitmapFileHeader));
 
   WriteData(Stream);
@@ -3545,7 +3611,7 @@ begin
     EndProgress;
   end;
 end;
-
+(*
 procedure TDIB.Negative;
 var
   i, i2: Integer;
@@ -3600,6 +3666,36 @@ begin
       jnl @@loop_byte
 
     @@byte_skip:
+    end;
+  end;
+end;
+*)
+procedure TDIB.Negative;
+var
+  i: Integer;
+  P: Pointer;
+  i2: Integer;
+begin
+  if Empty then Exit;
+
+  if BitCount <= 8 then
+  begin
+    for i := 0 to 255 do
+      with ColorTable[i] do
+      begin
+        rgbRed := 255 - rgbRed;
+        rgbGreen := 255 - rgbGreen;
+        rgbBlue := 255 - rgbBlue;
+      end;
+    UpdatePalette;
+  end
+  else
+  begin
+    P := PBits;
+    i2 := Size;
+    for i := 0 to i2-1 do
+    begin
+      PByteArray(P)^[i] := not PByteArray(P)^[i];
     end;
   end;
 end;
@@ -4763,7 +4859,7 @@ var
   weight_x, weight_y: array[0..1] of Double;
   total_red, total_green, total_blue: Double;
   sli, slo: PLines;
-  D: Pointer;
+  //D: Pointer;
 begin
   Result := True;
   case BitCount of
@@ -5282,8 +5378,15 @@ end;
 //--------------------------------------------------------------------------------------------------
 
 function TDIB.GetAlphaChannel: TDIB;
+var
+  I: Integer;
 begin
   RetAlphaChannel(Result);
+  if Result = nil then Exit;
+
+  if FFreeList.Count > 0 then
+    for I := 0 to FFreeList.Count - 1 do
+      if FFreeList[I] = Result then Exit;
 
   FFreeList.Add(Result);
 end;
@@ -5295,9 +5398,25 @@ begin
 end;
 
 procedure TDIB.Fill(aColor: TColor);
+var
+  p: PRGBA;
+  y: Integer;
+  x: Integer;
 begin
   Canvas.Brush.Color := aColor;
   Canvas.FillRect(ClientRect);
+  if Self.BitCount = 32 then
+  begin
+    //fill alpha chanell too with $FF
+    for Y := 0 to Self.Height - 1 do
+    begin
+      p := Self.ScanLine[Y];
+      for X := 0 to Self.Width - 1 do
+      begin
+        p[X].rgbReserved := $FF
+      end;
+    end;
+  end;
 end;
 
 function TDIB.GetClientRect: TRect;
@@ -5527,32 +5646,69 @@ end;
 procedure TDIB.CreateDIBFromBitmap(const Bitmap: TBitmap);
 var
   pf: Integer;
+  X, Y: Integer;
+  P: PLinesA;
+  q: PRGBA;
 begin
   if Bitmap.PixelFormat = pf32bit then pf := 32 else pf := 24;
   SetSize(Bitmap.Width, Bitmap.Height, pf); {always >=24}
+  Canvas.Brush.Color := clWhite;
+  Canvas.FillRect(Bounds(0, 0, Width, Height));
   Canvas.Draw(0, 0, Bitmap);
+  //Note. Transparent background from bitmap is not drawed when is alphalayer active
+  if (pf = 32) {and (Bitmap.AlphaFormat <> afIgnored)} then
+  begin
+    for y := 0 to Bitmap.Height-1 do
+    begin
+      p := Bitmap.ScanLine[y]; //BGRA
+      q := Self.ScanLine[y]; //ARGB
+      for x := 0 to Width-1 do //copy only alphachannel
+        q[x].rgbReserved := P[x].A;
+    end;
+  end;
 end;
 
 function TDIB.CreateBitmapFromDIB: TBitmap;
-//var
-//  X, Y: Integer;
+var
+  ach: Boolean;
+  X, Y: Integer;
+  P: PLinesA;
+  q: PRGBA;
 begin
+  ach := False;
   Result := TBitmap.Create;
-  if BitCount = 32 then
-    Result.PixelFormat := pf32bit
-  else if BitCount = 24 then
-    Result.PixelFormat := pf24bit
-  else if BitCount = 16 then
-    Result.PixelFormat := pf16bit
-  else if BitCount = 8 then
-    Result.PixelFormat := pf8bit
-  else Result.PixelFormat := pf24bit;
+  case BitCount of
+    32:
+      begin
+        Result.PixelFormat := pf32bit;
+        ach := HasAlphaChannel;
+      end;
+    24: Result.PixelFormat := pf24bit;
+    15: Result.PixelFormat := pf16bit;
+     8: Result.PixelFormat := pf8bit;
+  else
+    Result.PixelFormat := pf24bit;
+  end;
+
   Result.Width := Width;
   Result.Height := Height;
   Result.Canvas.Draw(0, 0, Self);
-//  for Y := 0 to Height - 1 do
-//    for X := 0 to Width - 1 do
-//      Result.Canvas.Pixels[X, Y] := Canvas.Pixels[X, Y];
+  if (BitCount = 32)  then
+  begin
+    if ach then
+    begin
+      {$IFDEF VER16UP}
+      Result.AlphaFormat := afDefined;
+      {$ENDIF}
+      for y := 0 to Height-1 do
+      begin
+        p := Result.ScanLine[y]; //BGRA
+        q := Self.ScanLine[y]; //ARGB
+        for x := 0 to Width-1 do //copy only alphachannel
+          P[x].A := q[x].rgbReserved;
+      end;
+    end;
+  end;
 end;
 
 procedure TDIB.DrawTo(SrcDIB: TDIB; X, Y, Width, Height,
@@ -6504,7 +6660,7 @@ end;
 
 procedure TDIB.DoSmoothRotate(Src: TDIB; cx, cy: Integer; Angle: Extended);
 var
-  Top, Bottom, Left, Right, eww, nsw, fx, fy, wx, wy: Extended;
+  Top, Bottom, eww, nsw, fx, fy: Extended;
   cAngle, sAngle: Double;
   xDiff, yDiff, ifx, ify, px, py, ix, iy, x, y: Integer;
   nw, ne, sw, se: TBGR;
@@ -7726,7 +7882,7 @@ procedure TDIB.DoResample(AmountX, AmountY: Integer; TypeResample: TFilterTypeRe
   // -----------------------------------------------------------------------------
 
   // Hermite filter
-    function HermiteFilter(Value: Single): Single;
+    function HermiteFilter(Value: Single): Single; {$IFDEF VER9UP}inline;{$ENDIF}
     begin
     // f(t) = 2|t|^3 - 3|t|^2 + 1, -1 <= t <= 1
       if (Value < 0.0) then
@@ -7741,7 +7897,7 @@ procedure TDIB.DoResample(AmountX, AmountY: Integer; TypeResample: TFilterTypeRe
     // a.k.a. "Nearest Neighbour" filter
     // anme: I have not been able to get acceptable
     //       results with this filter for subsampling.
-    function BoxFilter(Value: Single): Single;
+    function BoxFilter(Value: Single): Single; {$IFDEF VER9UP}inline;{$ENDIF}
     begin
       if (Value > -0.5) and (Value <= 0.5) then
         Result := 1.0
@@ -7751,7 +7907,7 @@ procedure TDIB.DoResample(AmountX, AmountY: Integer; TypeResample: TFilterTypeRe
 
     // Triangle filter
     // a.k.a. "Linear" or "Bilinear" filter
-    function TriangleFilter(Value: Single): Single;
+    function TriangleFilter(Value: Single): Single; {$IFDEF VER9UP}inline;{$ENDIF}
     begin
       if (Value < 0.0) then
         Value := -Value;
@@ -7762,7 +7918,7 @@ procedure TDIB.DoResample(AmountX, AmountY: Integer; TypeResample: TFilterTypeRe
     end;
 
     // Bell filter
-    function BellFilter(Value: Single): Single;
+    function BellFilter(Value: Single): Single; {$IFDEF VER9UP}inline;{$ENDIF}
     begin
       if (Value < 0.0) then
         Value := -Value;
@@ -7779,7 +7935,7 @@ procedure TDIB.DoResample(AmountX, AmountY: Integer; TypeResample: TFilterTypeRe
     end;
 
     // B-spline filter
-    function SplineFilter(Value: Single): Single;
+    function SplineFilter(Value: Single): Single; {$IFDEF VER9UP}inline;{$ENDIF}
     var
       tt: single;
     begin
@@ -7802,7 +7958,7 @@ procedure TDIB.DoResample(AmountX, AmountY: Integer; TypeResample: TFilterTypeRe
 
     // Lanczos3 filter
     function Lanczos3Filter(Value: Single): Single;
-      function SinC(Value: Single): Single;
+      function SinC(Value: Single): Single; {$IFDEF VER9UP}inline;{$ENDIF}
       begin
         if (Value <> 0.0) then
         begin
@@ -7821,7 +7977,7 @@ procedure TDIB.DoResample(AmountX, AmountY: Integer; TypeResample: TFilterTypeRe
         Result := 0.0;
     end;
 
-    function MitchellFilter(Value: Single): Single;
+    function MitchellFilter(Value: Single): Single; {$IFDEF VER9UP}inline;{$ENDIF}
     const
       B = (1.0 / 3.0);
       C = (1.0 / 3.0);
@@ -7858,7 +8014,7 @@ procedure TDIB.DoResample(AmountX, AmountY: Integer; TypeResample: TFilterTypeRe
   // -----------------------------------------------------------------------------
   type
     // Contributor for a pixel
-    TContributor = record
+    TContributor = packed record
       pixel: Integer; // Source pixel
       weight: single; // Pixel weight
     end;
@@ -7867,7 +8023,7 @@ procedure TDIB.DoResample(AmountX, AmountY: Integer; TypeResample: TFilterTypeRe
     PContributorList = ^TContributorList;
 
     // List of source pixels contributing to a destination pixel
-    TCList = record
+    TCList = packed record
       n: Integer;
       p: PContributorList;
     end;
@@ -7903,7 +8059,7 @@ procedure TDIB.DoResample(AmountX, AmountY: Integer; TypeResample: TFilterTypeRe
   {$IFDEF USE_SCANLINE}
     SourceLine,
       DestLine: PRGBList;
-    SourcePixel,
+    //SourcePixel,
       DestPixel: PColorRGB;
     Delta,
       DestDelta: Integer;
@@ -7913,14 +8069,14 @@ procedure TDIB.DoResample(AmountX, AmountY: Integer; TypeResample: TFilterTypeRe
       DstWidth,
       DstHeight: Integer;
 
-    function Color2RGB(Color: TColor): TColorRGB;
+    function Color2RGB(Color: TColor): TColorRGB; {$IFDEF VER9UP}inline;{$ENDIF}
     begin
       Result.r := Color and $000000FF;
       Result.g := (Color and $0000FF00) shr 8;
       Result.b := (Color and $00FF0000) shr 16;
     end;
 
-    function RGB2Color(Color: TColorRGB): TColor;
+    function RGB2Color(Color: TColorRGB): TColor; {$IFDEF VER9UP}inline;{$ENDIF}
     begin
       Result := Color.r or (Color.g shl 8) or (Color.b shl 16);
     end;
@@ -8228,7 +8384,8 @@ procedure TDIB.DoResample(AmountX, AmountY: Integer; TypeResample: TFilterTypeRe
           for j := 0 to contrib^[i].n - 1 do
           begin
            {$IFDEF USE_SCANLINE}
-            color := PColorRGB(Integer(SourceLine) + contrib^[i].p^[j].pixel * Delta)^;
+            //color := PColorRGB(PByte(SourceLine) + contrib^[i].p^[j].pixel * Delta)^;
+            Move(Pointer(Integer(SourceLine) + contrib^[i].p^[j].pixel * Delta)^, Color, SizeOf(Color));
            {$ELSE}
             color := Color2RGB(Work.Canvas.Pixels[k, contrib^[i].p^[j].pixel]);
            {$ENDIF}
@@ -8259,7 +8416,11 @@ procedure TDIB.DoResample(AmountX, AmountY: Integer; TypeResample: TFilterTypeRe
             color.b := round(rgb.b);
          {$IFDEF USE_SCANLINE}
           DestPixel^ := color;
+          {$IFDEF WIN64}
+          inc(PByte(DestPixel), DestDelta);
+          {$ELSE}
           inc(Integer(DestPixel), DestDelta);
+          {$ENDIF}
          {$ELSE}
           Dst.Canvas.Pixels[k, i] := RGB2Color(color);
          {$ENDIF}
@@ -8400,7 +8561,7 @@ begin
 end;
 
 { procedure for special purpose }
-
+(*
 procedure TDIB.FadeOut(DIB2: TDIB; Step: Byte);
 var
   P1, P2: PByteArray;
@@ -8433,6 +8594,22 @@ begin
     JNZ @@1
     POP EDI
     POP ESI
+  end;
+end;
+*)
+procedure TDIB.FadeOut(DIB2: TDIB; Step: Byte);
+var
+  P1, P2: PByteArray;
+  W, H, i: Integer;
+begin
+  P1 := ScanLine[DIB2.Height - 1];
+  P2 := DIB2.ScanLine[DIB2.Height - 1];
+  W := WidthBytes;
+  H := Height;
+  for i := 0 to W * H - 1 do
+  begin
+    if P1[i] < Step then P2[i] := P1[i]
+    else P2[i] := Step;
   end;
 end;
 
@@ -8501,7 +8678,7 @@ begin
     end;
   end;
 end;
-
+(*
 procedure TDIB.FadeIn(DIB2: TDIB; Step: Byte);
 var
   P1, P2: PByteArray;
@@ -8536,7 +8713,24 @@ begin
     POP ESI
   end;
 end;
+*)
+procedure TDIB.FadeIn(DIB2: TDIB; Step: Byte);
+var
+  P1, P2: PByteArray;
+  W, H, i: Integer;
+begin
+  P1 := ScanLine[DIB2.Height - 1];
+  P2 := DIB2.ScanLine[DIB2.Height - 1];
+  W := WidthBytes;
+  H := Height;
+  for i := 0 to W * H - 1 do
+  begin
+    if P1[i] > Step then P2[i] := P1[i]
+    else P2[i] := Step;
+  end;
+end;
 
+(*
 procedure TDIB.FillDIB8(Color: Byte);
 var
   P: PByteArray;
@@ -8561,6 +8755,20 @@ begin
     POP ESI
   end;
 end;
+*)
+
+procedure TDIB.FillDIB8(Color: Byte);
+var
+  P: PByteArray;
+  W, H, I: Integer;
+begin
+  P := ScanLine[Height - 1];
+  W := WidthBytes;
+  H := Height;
+  for I := 0 to W * H - 1 do
+    P[I] := Color;
+end;
+
 
 procedure TDIB.DoRotate(DIB1: TDIB; cX, cY, Angle: Integer);
 type
@@ -9186,7 +9394,7 @@ begin
     end;
   end;
 end;
-
+(*
 function TDIB.GetColorBetween(StartColor, EndColor: TColor; Pointvalue,
   FromPoint, ToPoint: Extended): TColor;
 var F: Extended; r1, r2, r3, g1, g2, g3, b1, b2, b3: Byte;
@@ -9250,6 +9458,55 @@ begin
   @@Exit:
     mov @result, EAX
   end;
+end;
+*)
+function TDIB.GetColorBetween(StartColor, EndColor: TColor; Pointvalue, FromPoint, ToPoint: Extended): TColor;
+var
+  F: Extended;
+  r1, g1, b1, r2, g2, b2, r3, g3, b3: Byte;
+
+  function CalcColorBytes(const factor: Extended; const fb1, fb2: Byte): Byte; {$IFDEF VER9UP}inline;{$ENDIF}
+  begin
+    Result := fb1;
+    if fb1 < fb2 then Result := fb1 + Trunc(factor * (fb2 - fb1));
+    if fb1 > fb2 then Result := fb1 - Trunc(factor * (fb1 - fb2));
+  end;
+
+  procedure GetRGB(const AColor: TColor; var R, G, B: Byte); {$IFDEF VER9UP}inline;{$ENDIF}
+  begin
+    R := AColor and $FF;
+    G := (AColor shr 8) and $FF;
+    B := (AColor shr 16) and $FF;
+  end;
+
+begin
+  if Pointvalue <= FromPoint then
+  begin
+    Result := StartColor;
+    Exit;
+  end;
+  if Pointvalue >= ToPoint then
+  begin
+    Result := EndColor;
+    Exit;
+  end;
+
+  F := (Pointvalue - FromPoint) / (ToPoint - FromPoint);
+
+  GetRGB(StartColor, r1, g1, b1);
+//  r1 := StartColor and $FF;
+//  g1 := (StartColor shr 8) and $FF;
+//  b1 := (StartColor shr 16) and $FF;
+  GetRGB(StartColor, r2, g2, b2);
+//  r2 := EndColor and $FF;
+//  g2 := (EndColor shr 8) and $FF;
+//  b2 := (EndColor shr 16) and $FF;
+
+  r3 := CalcColorBytes(F, r1, r2);
+  g3 := CalcColorBytes(F, g1, g2);
+  b3 := CalcColorBytes(F, b1, b2);
+
+  Result := (b3 shl 16) or (g3 shl 8) or r3;
 end;
 
 procedure TDIB.ColoredLine(const iStart, iEnd: TPoint; iColorStyle: TColorLineStyle;
@@ -9459,7 +9716,7 @@ begin {DrawLine}
   end
 end {Line};
 
-procedure TDIB.DoNovaEffect(sr, sg, sb, cx, cy, radius,
+procedure TDIB.DoNovaEffect(const sr, sg, sb, cx, cy, radius,
   nspokes, randomhue, randomspok, randgauss: Integer; onProgress: TProgressEvent);
 // Copyright (c) 2000 by Keith Murray (kmurray@hotfreeware.com)
 // All rights reserved.
@@ -9468,9 +9725,9 @@ type
   PByteArray = ^TByteArray;
   TByteArray = array[0..32767] of Byte;
   PDoubleArray = ^TDoubleArray;
-  TDoubleArray = array[0..32767] of Double;
+  TDoubleArray = array[0..0] of Double;
   PIntegerArray = ^TIntegerArray;
-  TIntegerArray = array[0..32767] of Integer;
+  TIntegerArray = array[0..0] of Integer;
 type
   TProgressEvent = procedure(progress: Integer; message: string;
     var cancel: Boolean) of object;
@@ -9478,7 +9735,7 @@ const
   M_PI = 3.14159265358979323846;
   RAND_MAX = 2147483647;
 
-  function Gauss: double;
+  function Gauss(const randgauss: Integer): double; {$IFDEF VER9UP}inline;{$ENDIF}
   const magnitude = 6;
   var
     sum: double;
@@ -9490,7 +9747,7 @@ const
     result := sum / magnitude;
   end;
 
-  function Clamp(i, l, h: double): double; {$IFDEF VER9UP}inline;{$ENDIF}
+  function Clamp(const i, l, h: double): double; {$IFDEF VER9UP}inline;{$ENDIF}
   begin
     if i < l then
       result := l
@@ -9501,7 +9758,7 @@ const
         result := i;
   end;
 
-  function IClamp(i, l, h: Integer): Integer; {$IFDEF VER9UP}inline;{$ENDIF}
+  function IClamp(const i, l, h: Integer): Integer; {$IFDEF VER9UP}inline;{$ENDIF}
   begin
     if i < l then
       result := l
@@ -9509,8 +9766,8 @@ const
       result := h
     else result := i;
   end;
-
-  procedure rgb_to_hsl(r, g, b: Double; var h, s, l: Double); {$IFDEF VER9UP}inline;{$ENDIF}
+  {$IFNDEF VER9UP}
+  procedure rgb_to_hsl(const r, g, b: Double; var h, s, l: Double); {$IFDEF VER9UP}inline;{$ENDIF}
   {$IFNDEF VER4UP}
     function Max(a, b: Double): Double;
     begin
@@ -9622,6 +9879,26 @@ const
       end;
     end;
   end;
+  {$ELSE}
+  procedure rgb_to_hsl(const r, g, b: Double; var h, s, l: Double); {$IFDEF VER9UP}inline;{$ENDIF}
+  var
+    h0, s0, l0: Word;
+  begin  //procedure ColorRGBToHLS(clrRGB: TColorRef; var Hue, Luminance, Saturation: Word);
+    GraphUtil.ColorRGBToHLS(RGB(Trunc(r),Trunc(g),Trunc(b)), h0, s0, l0);
+    h := h0;
+    s := s0;
+    l := l0;
+  end;
+
+  procedure hsl_to_rgb(h, sl, l: Double; var r, g, b: Double); {$IFDEF VER9UP}inline;{$ENDIF}
+  var X: TColorRef;
+  begin //function ColorHLSToRGB(Hue, Luminance, Saturation: Word): TColorRef;
+    X := GraphUtil.ColorHLSToRGB(Trunc(h), Trunc(l), Trunc(sl));
+    r := GetRValue(X);
+    g := GetGValue(X);
+    b := GetBValue(X);
+  end;
+  {$ENDIF}
 
 var
   src_row, dest_row: PByte;
@@ -9629,8 +9906,8 @@ var
   color, colors: array[0..3] of Integer;
   SpokeColor: PIntegerArray;
   spoke: PDoubleArray;
-  x1, y1, x2, y2, row, col, x, y, alpha, has_alpha, bpp, progress, max_progress, xc, yc, i, j: Integer;
-  u, v, l, l0, w, w1, c, nova_alpha, src_alpha, new_alpha, compl_ratio, ratio, r, g, b, h, s, lu, SpokeCol: Double;
+  x2, row, col, x, y, alpha, has_alpha, bpp, xc, yc, i, j: Integer;
+  u, v, l, l0, w, w1, c, nova_alpha, new_alpha, compl_ratio, ratio, r, g, b, h, s, lu, SpokeCol: Double;
   dstDIB: TDIB;
 begin
   colors[0] := sr;
@@ -9641,15 +9918,16 @@ begin
   GetMem(spoke, NSpokes * sizeof(Double));
   GetMem(spokecolor, NSpokes * sizeof(Integer) * 3);
   dstDIB := TDIB.Create;
-  dstDIB.Assign(Self);
-  dstDIB.Canvas.Brush.Color := clBlack;
-  dstDIB.Canvas.FillRect(dstDIB.Canvas.ClipRect);
   try
+    dstDIB.Assign(Self);
+    dstDIB.Canvas.Brush.Color := clBlack;
+    dstDIB.Canvas.FillRect(dstDIB.Canvas.ClipRect);
+    //         R                  G                  B
     rgb_to_hsl(colors[0] / 255.0, colors[1] / 255.0, colors[2] / 255.0, h, s, lu);
 
     for i := 0 to NSpokes - 1 do
     begin
-      spoke[i] := gauss;
+      spoke[i] := gauss(randgauss);
       h := h + randomhue / 360.0 * ({Random(RAND_MAX)}RandomSpok / RAND_MAX - 0.5);
       if h < 0 then
         h := h + 1.0
@@ -9668,16 +9946,18 @@ begin
     has_alpha := 0;
     alpha := bpp;
     y := 0;
-    for row := 0 to Self.Height - 1 do begin
+    for row := 0 to Self.Height - 1 do
+    begin
       src_row := Self.ScanLine[row];
       dest_row := dstDIB.ScanLine[row];
       src := Pointer(src_row);
       dest := Pointer(dest_row);
       x := 0;
-      for col := 0 to Self.Width - 1 do begin
+      for col := 0 to Self.Width - 1 do
+      begin
         u := (x - xc) / radius;
         v := (y - yc) / radius;
-        l := sqrt((u * u) + (v * v));
+        l := sqrt(sqr(u) + sqr(v));
         c := (arctan2(u, v) / (2 * M_PI) + 0.51) * NSpokes;
         i := floor(c);
         c := c - i;
@@ -9698,14 +9978,19 @@ begin
           color[j] := Trunc(color[j] + 255 * Clamp(w1 * w, 0.0, 1.0));
           dest[j] := IClamp(color[j], 0, 255);
         end;
-        inc(Integer(src), bpp);
-        inc(Integer(dest), bpp);
-        inc(x);
+        {$IFDEF WIN64}
+        Inc(PByte(src), bpp);
+        Inc(PBYTE(dest), bpp);
+        {$ELSE}
+        Inc(Integer(src), bpp);
+        Inc(Integer(dest), bpp);
+        {$ENDIF}
+        Inc(x);
       end;
-      inc(y);
+      Inc(y);
     end;
-  finally
     Self.Assign(dstDIB);
+  finally
     dstDIB.Free;
     FreeMem(Spoke);
     FreeMem(SpokeColor);
@@ -9766,10 +10051,10 @@ end;
 procedure TDIB.SephiaEffect(Depth: Integer{$IFDEF VER4UP} = 20{$ENDIF});
 {Note: when depth parameter set to 0 will produce black and white picture only}
 var
-  color, color2: longint;
+  color, color2: LongInt;
   r, g, b, rr, gg: byte;
   h, w: Integer;
-  p0: pbytearray;
+  p0: PByteArray;
   x, y: Integer;
 begin
   if Self.BitCount = 24 then

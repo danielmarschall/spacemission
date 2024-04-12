@@ -407,7 +407,6 @@ object TDelphiXDIBEffectEditForm: TTDelphiXDIBEffectEditForm
       Top = 24
       Width = 150
       Height = 9
-      Min = 0
       Max = 360
       TabOrder = 10
       OnMouseMove = RaHUEMouseMove
@@ -418,7 +417,6 @@ object TDelphiXDIBEffectEditForm: TTDelphiXDIBEffectEditForm
       Width = 150
       Height = 9
       Min = 1
-      Max = 100
       Position = 1
       TabOrder = 11
       OnMouseMove = CentrMouseMove

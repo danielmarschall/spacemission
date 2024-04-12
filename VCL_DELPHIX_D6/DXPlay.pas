@@ -4,10 +4,6 @@ interface
 
 {$INCLUDE DelphiXcfg.inc}
 
-{$IFNDEF UseDirectPlay} // Daniel Marschall 12.04.2024 Added to avoid Windows showing "This app requires DirectPlay"
-{$MESSAGE ERROR 'If you want to use DXPlay.pas, please enable the IFDEF UseDirectPlay in DelphiXcfg.inc'}
-{$ENDIF}
-
 uses
   Windows, SysUtils, Classes, Forms, DXClass, ActiveX, DXETable,  
 {$IfDef StandardDX}
@@ -946,7 +942,7 @@ begin
 
     {  Thread start  }
     FRecvThread := TDXPlayRecvThread.Create(Self);
-    FRecvThread.Resume;
+    FRecvThread.{$IFDEF VER14UP}Start{$ELSE}Resume{$ENDIF};
   except
     Close;
     raise;

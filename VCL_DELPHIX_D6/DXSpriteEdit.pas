@@ -14,6 +14,7 @@ Supported:
 }
 interface                   
 {$INCLUDE DelphiXcfg.inc}
+{$WARNINGS OFF}
 uses
   Windows, SysUtils, Classes, Forms, Dialogs, Controls, ExtCtrls, StdCtrls,
   Graphics, DXSprite, DXDraws;

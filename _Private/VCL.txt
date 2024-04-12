@@ -1,11 +1,11 @@
 
 VCL_DELPHIX_D6
-	(un)DelphiX
-	Name: delphix_all_in_one_15
-	Version: 1. Sep 2015
-	Compatible with Delphi 6, Turbo Delphi (2006), Delphi XE4
+	(un)DelphiX  1.0.22.0
+	Name: delphix_all_in_one_22
+	Version: 19 November 2023
+	Compatible with Delphi 6, Turbo Delphi (2006), Delphi XE4, Delphi 12 Athens
 	Source: http://www.micrel.cz/Dx/
 	(C) Copyright 1996-2000 by Hiroyuki Hori
-	(C) Copyright 2004-2015 by Jaro Benes.
+	(C) Copyright 2004-2023 by Jaro Benes.
 	The rules governing the use of (un)DelphiX or other tools source code are based on the general Open Source Definition, available at http://www.opensource.org and with consideration shared rights.
 	This software is provided "as is" and is without warranty of any kind. The author(s) of this software does not warrant, guarantee or make any representations regarding the use or results of use of this software in terms of reliability, accuracy or fitness for purpose. You assume the entire risk of direct or indirect, consequential or inconsequential results from the correct or incorrect usage of this software even if the author has been informed of the possibilities of such damage. Neither the author nor anybody connected to this software in any way can assume any responsibility. 

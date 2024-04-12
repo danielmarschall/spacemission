@@ -24,7 +24,7 @@
              Ivan Blecic
 }
 unit SXEngine;
-
+{$WARN SYMBOL_PLATFORM OFF}
 interface
 
 uses

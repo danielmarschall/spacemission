@@ -26,7 +26,7 @@ unit main;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs, DirectX,
   SXMovie, SXModPlayer, SXEngine, Menus, DXSounds, DXDraws, MMSystem, DIB;
 
 type

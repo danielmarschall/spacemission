@@ -5,7 +5,7 @@ package DelphiX220;
 {$DESCRIPTION 'DelphiX - DirectX components for Delphi XE8'}
 {$DESIGNONLY}
 {$IMPLICITBUILD ON}
-
+{$define SXEXTENSIONS}
 requires
   vcl,
   vclsmp,

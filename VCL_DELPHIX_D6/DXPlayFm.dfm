@@ -226,9 +226,9 @@ object DelphiXDXPlayForm: TDelphiXDXPlayForm
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -15
-        Font.Name = 'Terminal'
+        Font.Name = 'Tahoma'
         Font.Style = []
-        ItemHeight = 13
+        ItemHeight = 18
         ParentFont = False
         TabOrder = 0
         OnClick = ProviderListClick
@@ -239,6 +239,8 @@ object DelphiXDXPlayForm: TDelphiXDXPlayForm
       Left = 0
       Top = 0
       Caption = 'SessionType'
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label2: TLabel
         Left = 16
         Top = 16
@@ -275,6 +277,8 @@ object DelphiXDXPlayForm: TDelphiXDXPlayForm
       Left = 0
       Top = 0
       Caption = 'SessionNew'
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label3: TLabel
         Left = 16
         Top = 16
@@ -325,6 +329,8 @@ object DelphiXDXPlayForm: TDelphiXDXPlayForm
       Left = 0
       Top = 0
       Caption = 'SessionJoin'
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label7: TLabel
         Left = 34
         Top = 176
@@ -361,9 +367,9 @@ object DelphiXDXPlayForm: TDelphiXDXPlayForm
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -15
-        Font.Name = 'Terminal'
+        Font.Name = 'Tahoma'
         Font.Style = []
-        ItemHeight = 13
+        ItemHeight = 12
         ParentFont = False
         TabOrder = 0
         OnClick = JoinGameSessionListClick

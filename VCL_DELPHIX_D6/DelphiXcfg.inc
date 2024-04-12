@@ -6,8 +6,8 @@
   {$DEFINE VER3UP}
 {$ENDIF}
 {$IFDEF VER120}
-  {$DEFINE VER4UP}
   {$DEFINE VER3UP}
+  {$DEFINE VER4UP}
 {$ENDIF}
 {$IFDEF VER130}
   {$DEFINE VER3UP}
@@ -33,7 +33,7 @@
   {$DEFINE VER5UP}
   {$DEFINE VER6UP}
   {$DEFINE VER7UP}
-  {$DEFINE VER9UP}
+  {$DEFINE VER9UP}  // Delphi 2005
 {$ENDIF}
 {$IFDEF VER180}
   {$DEFINE VER3UP}
@@ -42,9 +42,9 @@
   {$DEFINE VER6UP}
   {$DEFINE VER7UP}
   {$DEFINE VER9UP}
-  {$DEFINE VER10UP}
+  {$DEFINE VER10UP}  // Delphi 2006
   {$IFDEF VER185}
-    {$DEFINE VER11UP}
+    {$DEFINE VER11UP} // Delphi 2007
   {$ENDIF}
 {$ENDIF}
 {$IFDEF VER200}
@@ -128,7 +128,7 @@
   {$DEFINE VER14UP}
   {$DEFINE VER15UP}
   {$DEFINE VER16UP}
-  {$DEFINE VER17UP}
+  {$DEFINE VER17UP} 
   {$DEFINE VER18UP} //Delphi XE4
 {$ENDIF}
 
@@ -208,6 +208,181 @@
   {$DEFINE VER20UP}
   {$DEFINE VER21UP}
   {$DEFINE VER22UP}  //Delphi XE8
+{$ENDIF}
+
+{$IFDEF VER300}
+  {$DEFINE VER3UP}
+  {$DEFINE VER4UP}
+  {$DEFINE VER5UP}
+  {$DEFINE VER6UP}
+  {$DEFINE VER7UP}
+  {$DEFINE VER9UP}
+  {$DEFINE VER10UP}
+  {$DEFINE VER11UP}
+  {$DEFINE VER12UP}
+  {$DEFINE VER14UP}
+  {$DEFINE VER15UP}
+  {$DEFINE VER16UP}
+  {$DEFINE VER17UP} 
+  {$DEFINE VER18UP}
+  {$DEFINE VER19UP}
+  {$DEFINE VER20UP}
+  {$DEFINE VER21UP}
+  {$DEFINE VER22UP} 
+  {$DEFINE VER23UP} //Delphi 10 Seattle
+{$ENDIF}
+
+{$IFDEF VER310}
+  {$DEFINE VER3UP}
+  {$DEFINE VER4UP}
+  {$DEFINE VER5UP}
+  {$DEFINE VER6UP}
+  {$DEFINE VER7UP}
+  {$DEFINE VER9UP}
+  {$DEFINE VER10UP}
+  {$DEFINE VER11UP}
+  {$DEFINE VER12UP}
+  {$DEFINE VER14UP}
+  {$DEFINE VER15UP}
+  {$DEFINE VER16UP}
+  {$DEFINE VER17UP} 
+  {$DEFINE VER18UP}
+  {$DEFINE VER19UP}
+  {$DEFINE VER20UP}
+  {$DEFINE VER21UP}
+  {$DEFINE VER22UP} 
+  {$DEFINE VER23UP} 
+  {$DEFINE VER24UP}//Delphi 10.1 Berlin
+{$ENDIF}
+
+{$IFDEF VER320}
+  {$DEFINE VER3UP}
+  {$DEFINE VER4UP}
+  {$DEFINE VER5UP}
+  {$DEFINE VER6UP}
+  {$DEFINE VER7UP}
+  {$DEFINE VER9UP}
+  {$DEFINE VER10UP}
+  {$DEFINE VER11UP}
+  {$DEFINE VER12UP}
+  {$DEFINE VER14UP}
+  {$DEFINE VER15UP}
+  {$DEFINE VER16UP}
+  {$DEFINE VER17UP} 
+  {$DEFINE VER18UP}
+  {$DEFINE VER19UP}
+  {$DEFINE VER20UP}
+  {$DEFINE VER21UP}
+  {$DEFINE VER22UP} 
+  {$DEFINE VER23UP} 
+  {$DEFINE VER24UP}
+  {$DEFINE VER25UP} //Delphi 10.2 Tokyo
+{$ENDIF}
+
+{$IFDEF VER330}
+  {$DEFINE VER3UP}
+  {$DEFINE VER4UP}
+  {$DEFINE VER5UP}
+  {$DEFINE VER6UP}
+  {$DEFINE VER7UP}
+  {$DEFINE VER9UP}
+  {$DEFINE VER10UP}
+  {$DEFINE VER11UP}
+  {$DEFINE VER12UP}
+  {$DEFINE VER14UP}
+  {$DEFINE VER15UP}
+  {$DEFINE VER16UP}
+  {$DEFINE VER17UP}
+  {$DEFINE VER18UP}
+  {$DEFINE VER19UP}
+  {$DEFINE VER20UP}
+  {$DEFINE VER21UP}
+  {$DEFINE VER22UP}
+  {$DEFINE VER23UP}
+  {$DEFINE VER24UP}
+  {$DEFINE VER25UP}
+  {$DEFINE VER26UP} //Delphi 10.3 Rio
+{$ENDIF}
+
+{$IFDEF VER340}
+  {$DEFINE VER3UP}
+  {$DEFINE VER4UP}
+  {$DEFINE VER5UP}
+  {$DEFINE VER6UP}
+  {$DEFINE VER7UP}
+  {$DEFINE VER9UP}
+  {$DEFINE VER10UP}
+  {$DEFINE VER11UP}
+  {$DEFINE VER12UP}
+  {$DEFINE VER14UP}
+  {$DEFINE VER15UP}
+  {$DEFINE VER16UP}
+  {$DEFINE VER17UP}
+  {$DEFINE VER18UP}
+  {$DEFINE VER19UP}
+  {$DEFINE VER20UP}
+  {$DEFINE VER21UP}
+  {$DEFINE VER22UP}
+  {$DEFINE VER23UP}
+  {$DEFINE VER24UP}
+  {$DEFINE VER25UP}
+  {$DEFINE VER26UP} 
+  {$DEFINE VER27UP} //Delphi 10.4 Sydney
+{$ENDIF}
+
+{$IFDEF VER350}
+  {$DEFINE VER3UP}
+  {$DEFINE VER4UP}
+  {$DEFINE VER5UP}
+  {$DEFINE VER6UP}
+  {$DEFINE VER7UP}
+  {$DEFINE VER9UP}
+  {$DEFINE VER10UP}
+  {$DEFINE VER11UP}
+  {$DEFINE VER12UP}
+  {$DEFINE VER14UP}
+  {$DEFINE VER15UP}
+  {$DEFINE VER16UP}
+  {$DEFINE VER17UP}
+  {$DEFINE VER18UP}
+  {$DEFINE VER19UP}
+  {$DEFINE VER20UP}
+  {$DEFINE VER21UP}
+  {$DEFINE VER22UP}
+  {$DEFINE VER23UP}
+  {$DEFINE VER24UP}
+  {$DEFINE VER25UP}
+  {$DEFINE VER26UP} 
+  {$DEFINE VER27UP}
+  {$DEFINE VER28UP} //Delphi 11 Alexandria
+{$ENDIF}
+
+{$IFDEF VER360}
+  {$DEFINE VER3UP}
+  {$DEFINE VER4UP}
+  {$DEFINE VER5UP}
+  {$DEFINE VER6UP}
+  {$DEFINE VER7UP}
+  {$DEFINE VER9UP}
+  {$DEFINE VER10UP}
+  {$DEFINE VER11UP}
+  {$DEFINE VER12UP}
+  {$DEFINE VER14UP}
+  {$DEFINE VER15UP}
+  {$DEFINE VER16UP}
+  {$DEFINE VER17UP}
+  {$DEFINE VER18UP}
+  {$DEFINE VER19UP}
+  {$DEFINE VER20UP}
+  {$DEFINE VER21UP}
+  {$DEFINE VER22UP}
+  {$DEFINE VER23UP}
+  {$DEFINE VER24UP}
+  {$DEFINE VER25UP}
+  {$DEFINE VER26UP}
+  {$DEFINE VER27UP}
+  {$DEFINE VER28UP}
+  {$DEFINE VER29UP}//Delphi 12 Athens
 {$ENDIF}
 
 {$IFDEF VER100}
@@ -462,6 +637,201 @@
   {$Define D_EE_UP}
 {$ENDIF}
 
+{$IFDEF VER300}
+  // Delphi 23 - 10 Seattle
+  {$Define D3UP}
+  {$Define D4UP}
+  {$Define D5UP}
+  {$Define D6UP}
+  {$Define D7UP}
+  {$Define D9UP}
+  {$Define D10UP}
+  {$Define D11UP}
+  {$Define D12UP}
+  {$Define D14UP}
+  {$Define D15UP}
+  {$Define D16UP}
+  {$Define D17UP}
+  {$Define D18UP}
+  {$Define D19UP}
+  {$Define D20UP}
+  {$Define D21UP}
+  {$Define D22UP}
+  {$Define D23UP}
+  {$Define D_EE_UP}
+{$ENDIF}
+
+{$IFDEF VER310}
+  // Delphi 24 - 10.1 Berlin
+  {$Define D3UP}
+  {$Define D4UP}
+  {$Define D5UP}
+  {$Define D6UP}
+  {$Define D7UP}
+  {$Define D9UP}
+  {$Define D10UP}
+  {$Define D11UP}
+  {$Define D12UP}
+  {$Define D14UP}
+  {$Define D15UP}
+  {$Define D16UP}
+  {$Define D17UP}
+  {$Define D18UP}
+  {$Define D19UP}
+  {$Define D20UP}
+  {$Define D21UP}
+  {$Define D22UP}
+  {$Define D23UP}
+  {$Define D24UP}
+  //cannot be made, Berlin version lost older interfaces
+  //{.$Define D_EE_UP}
+{$ENDIF}
+
+{$IFDEF VER320}
+  // Delphi 25 - 10.2 Tokyo
+  {$Define D3UP}
+  {$Define D4UP}
+  {$Define D5UP}
+  {$Define D6UP}
+  {$Define D7UP}
+  {$Define D9UP}
+  {$Define D10UP}
+  {$Define D11UP}
+  {$Define D12UP}
+  {$Define D14UP}
+  {$Define D15UP}
+  {$Define D16UP}
+  {$Define D17UP}
+  {$Define D18UP}
+  {$Define D19UP}
+  {$Define D20UP}
+  {$Define D21UP}
+  {$Define D22UP}
+  {$Define D23UP}
+  {$Define D24UP}
+  {$Define D25UP}
+  //cannot be made, Berlin version lost older interfaces
+  //{.$Define D_EE_UP}
+{$ENDIF}
+
+{$IFDEF VER330}
+  // Delphi 26 - 10.3 Rio
+  {$Define D3UP}
+  {$Define D4UP}
+  {$Define D5UP}
+  {$Define D6UP}
+  {$Define D7UP}
+  {$Define D9UP}
+  {$Define D10UP}
+  {$Define D11UP}
+  {$Define D12UP}
+  {$Define D14UP}
+  {$Define D15UP}
+  {$Define D16UP}
+  {$Define D17UP}
+  {$Define D18UP}
+  {$Define D19UP}
+  {$Define D20UP}
+  {$Define D21UP}
+  {$Define D22UP}
+  {$Define D23UP}
+  {$Define D24UP}
+  {$Define D25UP}
+  {$Define D26UP}
+  //cannot be made, Berlin version lost older interfaces
+  //{.$Define D_EE_UP}
+{$ENDIF}
+
+{$IFDEF VER340}
+  // Delphi 27 - 10.4 Sydney
+  {$Define D3UP}
+  {$Define D4UP}
+  {$Define D5UP}
+  {$Define D6UP}
+  {$Define D7UP}
+  {$Define D9UP}
+  {$Define D10UP}
+  {$Define D11UP}
+  {$Define D12UP}
+  {$Define D14UP}
+  {$Define D15UP}
+  {$Define D16UP}
+  {$Define D17UP}
+  {$Define D18UP}
+  {$Define D19UP}
+  {$Define D20UP}
+  {$Define D21UP}
+  {$Define D22UP}
+  {$Define D23UP}
+  {$Define D24UP}
+  {$Define D25UP}
+  {$Define D26UP}
+  {$Define D27UP}
+  //cannot be made, Berlin version lost older interfaces
+  //{.$Define D_EE_UP}
+{$ENDIF}
+
+{$IFDEF VER350}
+  // Delphi 28 - 11 Alexandria
+  {$Define D3UP}
+  {$Define D4UP}
+  {$Define D5UP}
+  {$Define D6UP}
+  {$Define D7UP}
+  {$Define D9UP}
+  {$Define D10UP}
+  {$Define D11UP}
+  {$Define D12UP}
+  {$Define D14UP}
+  {$Define D15UP}
+  {$Define D16UP}
+  {$Define D17UP}
+  {$Define D18UP}
+  {$Define D19UP}
+  {$Define D20UP}
+  {$Define D21UP}
+  {$Define D22UP}
+  {$Define D23UP}
+  {$Define D24UP}
+  {$Define D25UP}
+  {$Define D26UP}
+  {$Define D27UP}
+  {$Define D28UP}
+  //cannot be made, Berlin version lost older interfaces
+  //{.$Define D_EE_UP}
+{$ENDIF}
+
+{$IFDEF VER360}
+  // Delphi 29 - 12 Athens
+  {$Define D3UP}
+  {$Define D4UP}
+  {$Define D5UP}
+  {$Define D6UP}
+  {$Define D7UP}
+  {$Define D9UP}
+  {$Define D10UP}
+  {$Define D11UP}
+  {$Define D12UP}
+  {$Define D14UP}
+  {$Define D15UP}
+  {$Define D16UP}
+  {$Define D17UP}
+  {$Define D18UP}
+  {$Define D19UP}
+  {$Define D20UP}
+  {$Define D21UP}
+  {$Define D22UP}
+  {$Define D23UP}
+  {$Define D24UP}
+  {$Define D25UP}
+  {$Define D26UP}
+  {$Define D27UP}
+  {$Define D28UP}
+  {$Define D29UP}
+  //cannot be made, Berlin version lost older interfaces
+  //{.$Define D_EE_UP}
+{$ENDIF}
+
 {standard feature for drawing blend textures}
 {this conditional is add-on as is for eliminate bad color key switching}
 {$DEFINE DrawHWAcc}
@@ -483,8 +853,8 @@
   {$DEFINE DX7}
 {$ELSE}
 
-  {Use standard of DirectX version 9}
-  {in concert with StandardDX for separate units only}
+{Use standard of DirectX version 9}
+{in concert with StandardDX for separate units only}
   {$IFDEF StandardDX}
     {$DEFINE DX9}
   {$ENDIF}
@@ -529,16 +899,14 @@
 {$IFDEF VER12UP}
   {PNG support is added in Delphi 2009 and up as native feature}
   {there is turn on, it is for backward compatibility only}
-  {$Define PNG_GRAPHICS}
+  {$DEFINE PNG_GRAPHICS}
 {$ELSE}
   {for Delphi 2007 and lower when you usen PNG support, you have write}
   {name of PNG package into required section of pavkage source .dpk}
   {and turn on this support here - remove the dot only bellow}
-  {.$Define PNG_GRAPHICS}
+  {.$DEFINE PNG_GRAPHICS}
 {$ENDIF}
 
 {special feature for enumerate displayis like primary, secondary etc.}
 {only for special purpose, multimonitors etc.}
-{.$Define _DMO_}
-
-{.$Define UseDirectPlay} // Daniel Marschall 12.04.2024 Added to avoid Windows showing "This app requires DirectPlay"
+{.$DEFINE _DMO_}

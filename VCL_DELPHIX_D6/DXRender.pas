@@ -8722,11 +8722,16 @@ begin
   end;
 end;
 
-function MulDiv64(a, b, c: Integer): Integer; assembler;
-asm
-  mov eax, a
-  imul b
-  idiv c
+//function MulDiv64(a, b, c: Integer): Integer; assembler;
+//asm
+//  mov eax, a
+//  imul b
+//  idiv c
+//end;
+
+function MulDiv64(a, b, c: Integer): Integer; {$IFDEF VER9UP}inline;{$ENDIF}
+begin
+  Result := a * b div c;
 end;
 
 function Max(B1, B2: Integer): Integer; {$IFDEF VER9UP}inline;{$ENDIF}

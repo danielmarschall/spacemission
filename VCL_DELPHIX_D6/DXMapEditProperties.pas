@@ -197,13 +197,13 @@ var
 begin
   W := FButton.Width;
   if not FButton.Visible then W := 0;
-  SendMessage(Handle, EM_GETRECT, 0, LongInt(@Loc));
+  SendMessage(Handle, EM_GETRECT, 0, LPARAM(@Loc));
   Loc.Bottom := ClientHeight + 1; {+1 is workaround for windows paint bug}
   Loc.Right := ClientWidth - W - 2;
   Loc.Top := 0;
   Loc.Left := 0;
-  SendMessage(Handle, EM_SETRECTNP, 0, LongInt(@Loc));
-  SendMessage(Handle, EM_GETRECT, 0, LongInt(@Loc)); {debug}
+  SendMessage(Handle, EM_SETRECTNP, 0, LPARAM(@Loc));
+  SendMessage(Handle, EM_GETRECT, 0, LPARAM(@Loc)); {debug}
 end;
 
 procedure TEdit.WMSize(var Message: TWMSize);

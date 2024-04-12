@@ -2143,7 +2143,7 @@ begin
   if FDirectInput=nil then
   begin
     try
-      TDirectInputCreate(DXLoadLibrary('DInput.dll', 'DirectInputCreateA'))
+      TDirectInputCreate(DXLoadLibrary('DInput.dll', {$IFDEF UNICODE}'DirectInputCreateW'{$ELSE}'DirectInputCreateA'{$ENDIF}))
         (HInstance, DIRECTINPUT_VERSION, FDirectInput, nil);
     except
       FDirectInput := nil;

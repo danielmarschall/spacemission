@@ -1,10 +1,10 @@
 unit DXPictEdit;
-
+{$INCLUDE DelphiXcfg.inc}
 interface
 
 uses
   Windows, SysUtils, Classes, Forms, Dialogs, Controls, StdCtrls, ExtCtrls,
-  ExtDlgs, DIB, Menus, Graphics, Clipbrd;
+  ExtDlgs, DIB, Menus, Graphics, Clipbrd {$IFDEF VER28UP}, PNGImage{$ENDIF};
 
 type
 

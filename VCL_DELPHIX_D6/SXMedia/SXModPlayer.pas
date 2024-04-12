@@ -277,7 +277,7 @@ var Msg : TMsg;
        S1,S2:Integer;
        {$ENDIF}
        NumWrite:Longint;
-       Pos:Integer;
+       Pos:{$IFDEF UNICODE}Cardinal{$ELSE}Integer{$ENDIF};
        Written1:Integer;
    begin
      if Event = 0 then
@@ -287,7 +287,7 @@ var Msg : TMsg;
      NumWrite := TDSBPositionNotify(Notify[Event]^).dwOffset - Pos;
      if (NumWrite < 0) then
         inc(NumWrite,BufferDesc.dwBufferBytes);
-     if SoundBuffer.IBuffer.Lock(Pos,NumWrite,w1,{$IFDEF UNICODE}@{$ENDIF}s1,Pointer(nil^),{$IFDEF UNICODE}@{$ENDIF}s2,0) = 0 then
+     if SoundBuffer.IBuffer.Lock(Pos,NumWrite,w1,{$IFDEF UNICODE}{$IFNDEF D26UP}@{$ENDIF}{$ENDIF}s1,Pointer(nil^),{$IFDEF UNICODE}{$IFNDEF D26UP}@{$ENDIF}{$ENDIF}s2,0) = 0 then
      begin
         Written1 := ModMixer.Render(W1,S1);
         SoundBuffer.IBuffer.Unlock(w1,Written1, nil,0);
@@ -344,7 +344,7 @@ end;
 function TSXModPlayer.CreateSoundNotify : IDirectSoundNotify;
 type TNotifyArray = Array[0..99] of TDSBPositionNotify;
 var PDSNotify : PDSBPositionNotify;
-    index : Integer; Offset: Integer;
+    index : Integer; Offset: {$IFDEF UNICODE}DWORD{$ELSE}Integer{$ENDIF};
     PNotify: ^TNotifyArray;
 begin
    Result := nil;
@@ -361,10 +361,10 @@ begin
          Notify.Add(PDSNotify);
          Events.Add(Pointer(PDSNotify^.hEventNotify));
          PNotify[Index-1] := PDSNotify^;
-         inc(Offset,WaveFormat.nAvgBytesPerSec div EVENTCOUNT);
+         Inc(Offset, WaveFormat.nAvgBytesPerSec div {$IFDEF UNICODE}DWORD{$ELSE}Integer{$ENDIF}(EVENTCOUNT));
       end;
 
-      if Result.SetNotificationPositions(EVENTCOUNT,{$IFDEF UNICODE}@{$ENDIF}PNotify[0]) <> 0 then
+      if Result.SetNotificationPositions(EVENTCOUNT,{$IFDEF UNICODE}{$IFNDEF D26UP}@{$ENDIF}{$ENDIF}PNotify[0]) <> 0 then
          ShowMessage('Notification Falied');
       FreeMem(PNotify,EVENTCOUNT * Sizeof(TDSBPositionNotify));
    end;
@@ -404,7 +404,7 @@ var w1,w2:pointer;
     Data:Word;
 begin
   Data := GetSilenceData;
-  if SoundBuffer.IBuffer.Lock(0,0,w1,{$IFDEF UNICODE}@{$ENDIF}s1,w2,{$IFDEF UNICODE}@{$ENDIF}s2,DSBLOCK_ENTIREBUFFER) = 0 then
+  if SoundBuffer.IBuffer.Lock(0,0,w1,{$IFDEF UNICODE}{$IFNDEF D26UP}@{$ENDIF}{$ENDIF}s1,w2,{$IFDEF UNICODE}{$IFNDEF D26UP}@{$ENDIF}{$ENDIF}s2,DSBLOCK_ENTIREBUFFER) = 0 then
   begin
      FillMemory(W1,S1,Data);
      if W2 <> nil then
@@ -490,7 +490,7 @@ begin
    end;
 end;
 procedure TSXModPlayer.SetOptions( const Value : TModOptions );
-const OptionArray: array[Boolean,TModOption] of Integer = (
+const OptionArray: array[Boolean,TModOption] of DWord = (
     (0,0,0,0,0,0,0),
    (MPPMIX_NORESAMPLING, MPPMIX_BASSEXPANSION,  MPPMIX_SURROUND,
    MPPMIX_REVERB, MPPMIX_HIGHQUALITY, MPPMIX_GAINCONTROL,

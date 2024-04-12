@@ -63,7 +63,7 @@ type
     procedure SetBottom(Value: integer);
   protected
   public
-    procedure Assign(Value: TScreenRect);
+    procedure Assign(Value: TScreenRect); reintroduce;
   published
     property Left: integer read FLeft write SetLeft;
     property Right: integer read FRight write SetRight;
@@ -254,7 +254,7 @@ end;
 
 procedure TSXMovie.CreateMediaStream;
 var
-  wPath:{$IFDEF UNICODE}array of Char{$ELSE}array[0..MAX_PATH] of WChar{$ELSE}{$ENDIF};
+  wPath:{$IFDEF UNICODE}string{$ELSE}array[0..MAX_PATH] of WChar{$ENDIF};
   AMStream:IAMMultiMediaStream;
   Media:IMediaStream;
 begin
@@ -263,16 +263,15 @@ begin
    try
       CoCreateinstance(CLSID_AMMULTIMEDIASTREAM,nil,CLSCTX_INPROC_SERVER,IID_IAMMULTIMEDIASTREAM,AMStream);
       {$IFDEF UNICODE}
-      SetLength(wPath, Length(Filename) + 1);
-      StrPCopy(@wPath, Filename);
+      wPath := Filename;
       {$ELSE}
       MultiByteToWideChar(CP_ACP,0,PAnsiChar(Filename),-1,wPath,Sizeof(wPAth) div sizeof(wPath[0]));
       {$ENDIF}
       AMStream.Initialize(STREAMTYPE_READ,AMMSF_NOGRAPHTHREAD,nil);
       if (DXSound <> nil) and (DXSound.DSound <> nil) and (DXSound.DSound.ISound <> nil) then
-         AMStream.AddMediaStream(DXSound.DSound.ISound,{$IFDEF UNICODE}@{$ENDIF}MSPID_PrimaryAudio,AMMSF_ADDDEFAULTRENDERER,IMediaStream(nil^));
-      AMStream.AddMediaStream(DXDraw.DDraw.IDraw,{$IFDEF UNICODE}@{$ENDIF}MSPID_PrimaryVideo,0,Media);
-      AMStream.OpenFile({$IFDEF UNICODE}@{$ENDIF}wPAth,0);
+         AMStream.AddMediaStream(DXSound.DSound.ISound,{$IFDEF UNICODE}{$IFNDEF D26UP}@{$ENDIF}{$ENDIF}MSPID_PrimaryAudio,AMMSF_ADDDEFAULTRENDERER,IMediaStream(nil^));
+      AMStream.AddMediaStream(DXDraw.DDraw.IDraw,{$IFDEF UNICODE}{$IFNDEF D26UP}@{$ENDIF}{$ENDIF}MSPID_PrimaryVideo,0,Media);
+      AMStream.OpenFile({$IFDEF UNICODE}@wPAth[1]{$ELSE}wPAth{$ENDIF},0);
       FMMStream := AMStream;
    except
       FMMStream := nil;

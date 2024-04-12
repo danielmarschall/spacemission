@@ -636,13 +636,13 @@ begin
     (lpGUID, lpDS, pUnkOuter);
 end;
 
-function DXDirectSoundEnumerate(lpCallback: TDSEnumCallbackA;
+function DXDirectSoundEnumerate(lpCallback: {$IFDEF UNICODE}TDSEnumCallbackW{$ELSE}TDSEnumCallbackA{$ENDIF};
   lpContext: Pointer): HRESULT;
 type
-  TDirectSoundEnumerate = function(lpCallback: TDSEnumCallbackA;
+  TDirectSoundEnumerate = function(lpCallback: {$IFDEF UNICODE}TDSEnumCallbackW{$ELSE}TDSEnumCallbackA{$ENDIF};
     lpContext: Pointer): HRESULT; stdcall;
 begin
-  Result := TDirectSoundEnumerate(DXLoadLibrary('DSound.dll', 'DirectSoundEnumerateA'))
+  Result := TDirectSoundEnumerate(DXLoadLibrary('DSound.dll', {$IFDEF UNICODE}'DirectSoundEnumerateW'{$ELSE}'DirectSoundEnumerateA'{$ENDIF}))
     (lpCallback, lpContext);
 end;
 
@@ -667,7 +667,7 @@ type
     lpContext: Pointer): HRESULT; stdcall;
 begin
   try
-    Result := TDirectSoundCaptureEnumerate(DXLoadLibrary('DSound.dll', 'DirectSoundCaptureEnumerateA'))
+    Result := TDirectSoundCaptureEnumerate(DXLoadLibrary('DSound.dll', {$IFDEF UNICODE}'DirectSoundCaptureEnumerateW'{$ELSE}'DirectSoundCaptureEnumerateA'{$ENDIF}))
       (lpCallback, lpContext);
   except
     raise EDirectXError.Create(SSinceDirectX5);
@@ -2178,7 +2178,7 @@ begin
     if Assigned(FOnFilledBuffer) then
     begin
       FNotifyThread := TSoundCaptureStreamNotify.Create(Self);
-      FNotifyThread.Resume;
+      FNotifyThread.{$IFDEF VER14UP}Start{$ELSE}Resume{$ENDIF};
     end;
   end else
     FOnFilledBuffer := Value;
@@ -2213,7 +2213,7 @@ begin
     if Assigned(FOnFilledBuffer) then
     begin
       FNotifyThread := TSoundCaptureStreamNotify.Create(Self);
-      FNotifyThread.Resume;
+      FNotifyThread.{$IFDEF VER14UP}Start{$ELSE}Resume{$ENDIF};
     end;
   except
     Stop;

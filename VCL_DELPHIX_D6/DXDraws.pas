@@ -4578,6 +4578,17 @@ end;
 
 {additional pixel routines like turbopixels}
 
+{
+procedure TDirectDrawSurface.PutPixel8(x, y, color: Integer);
+var
+  SurfacePtr: PByte;
+  PixelOffset: Integer;
+begin
+  SurfacePtr := FLockSurfaceDesc.lpSurface;
+  PixelOffset := x + y * FLockSurfaceDesc.dwWidth;
+  SurfacePtr[PixelOffset] := color and $FF; // set pixel (lo byte of color)
+end;}
+
 procedure TDirectDrawSurface.PutPixel8(x, y, color: Integer); assembler;
 { on entry:  self = eax, x = edx,   y = ecx,   color = ? }
 asm
@@ -4592,6 +4603,17 @@ asm
   pop esi                               // restore esi
   //ret                                   // return
 end;
+
+{
+procedure TDirectDrawSurface.PutPixel16(x, y, color: Integer);
+var
+  pPixel: PWord;
+begin
+  pPixel := PWord(Integer(TDirectDrawSurface(Self).FLockSurfaceDesc.lpSurface) +
+             x * 2 + y * TDirectDrawSurface(Self).FLockSurfaceDesc.lPitch);
+  pPixel^ := color;
+end;
+}
 
 procedure TDirectDrawSurface.PutPixel16(x, y, color: Integer); assembler;
 { on entry:  self = eax, x = edx,   y = ecx,   color = ? }
@@ -4608,6 +4630,24 @@ asm
   pop esi
   //ret
 end;
+
+{
+procedure TDirectDrawSurface.PutPixel24(x, y, color: Integer);
+var
+  pPixel: PByte;
+  dwPitch: DWORD;
+  dwColor: DWORD;
+begin
+  pPixel := PByte(TDirectDrawSurface(Self).FLockSurfaceDesc.lpSurface);
+  Inc(pPixel, x * 3);
+  dwPitch := TDirectDrawSurface(Self).FLockSurfaceDesc.lPitch;
+  Inc(pPixel, y * dwPitch);
+  dwColor := color and $FFFFFF;
+  pPixel[0] := Byte(dwColor);
+  pPixel[1] := Byte(dwColor shr 8);
+  pPixel[2] := Byte(dwColor shr 16);
+end;
+}
 
 procedure TDirectDrawSurface.PutPixel24(x, y, color: Integer); assembler;
 { on entry:  self = eax, x = edx,   y = ecx,   color = ? }
@@ -4627,6 +4667,18 @@ asm
   pop esi
   //ret
 end;
+
+{
+procedure TDirectDrawSurface.PutPixel24(x, y, color: Integer);
+var
+  offset: Integer;
+  pixelColor: LongInt;
+begin
+  offset := (y * TDirectDrawSurface(Self).FLockSurfaceDesc.lpitch) + (x * 3);
+  pixelColor := color and $FFFFFF;
+  Move(pixelColor, PByte(Integer(TDirectDrawSurface(Self).FLockSurfaceDesc.lpSurface) + offset)^, 3);
+end;
+}
 
 procedure TDirectDrawSurface.PutPixel32(x, y, color: Integer); assembler;
 { on entry:  self = eax, x = edx,   y = ecx,   color = ? }
@@ -4655,6 +4707,50 @@ begin
     32: PutPixel32(x, y, value);
   end;
 end;
+
+{
+function TDirectDrawSurface.GetPixel8(x, y: Integer): Integer;
+var
+  Pixel: Byte;
+  PixelPtr: PByte;
+begin
+  PixelPtr := PByte(TDirectDrawSurface(Self).FLockSurfaceDesc.lpSurface + x + (y * TDirectDrawSurface(Self).FLockSurfaceDesc.lpitch));
+  Pixel := PixelPtr^;
+  Result := Pixel;
+end;
+
+function TDirectDrawSurface.GetPixel16(x, y: Integer): Integer;
+var
+  Pixel: Word;
+  PixelPtr: PWord;
+begin
+  PixelPtr := PWord(TDirectDrawSurface(Self).FLockSurfaceDesc.lpSurface + (x * 2) + (y * TDirectDrawSurface(Self).FLockSurfaceDesc.lpitch));
+  Pixel := PixelPtr^;
+  Result := Pixel;
+end;
+
+function TDirectDrawSurface.GetPixel24(x, y: Integer): Integer;
+var
+  Pixel: array[0..2] of Byte;
+  PixelPtr: PByte;
+begin
+  PixelPtr := PByte(TDirectDrawSurface(Self).FLockSurfaceDesc.lpSurface + (x * 3) + (y * TDirectDrawSurface(Self).FLockSurfaceDesc.lpitch));
+  Pixel[0] := PixelPtr^;
+  Pixel[1] := (PixelPtr+1)^;
+  Pixel[2] := (PixelPtr+2)^;
+  Result := Pixel[0] or (Pixel[1] shl 8) or (Pixel[2] shl 16);
+end;
+
+function TDirectDrawSurface.GetPixel32(x, y: Integer): Integer;
+var
+  Pixel: Integer;
+  PixelPtr: PInteger;
+begin
+  PixelPtr := PInteger(TDirectDrawSurface(Self).FLockSurfaceDesc.lpSurface + (x * 4) + (y * TDirectDrawSurface(Self).FLockSurfaceDesc.lpitch));
+  Pixel := PixelPtr^;
+  Result := Pixel;
+end;
+}
 
 function TDirectDrawSurface.GetPixel8(x, y: Integer): Integer; assembler;
 { on entry:  self = eax, x = edx,   y = ecx,   result = eax }
@@ -4831,6 +4927,18 @@ begin
     (Alpha * (aB - cb) shr 8) + cb); // B alpha
 end;
 
+{
+function Conv24to16(Color: Integer): Word;
+var
+  r, g, b: Byte;
+begin
+  r := (Color shr 16) and $FF;
+  g := (Color shr 8) and $FF;
+  b := Color and $FF;
+  Result := ((r shr 3) shl 11) or ((g shr 2) shl 5) or (b shr 3);
+end;
+}
+
 function Conv24to16(Color: Integer): Word; register;
 asm
   mov ecx,eax
@@ -4938,6 +5046,18 @@ begin
     inc(dy);
   end;
 end;
+
+{
+function Conv16to24(Color: Word): Integer;
+var
+  r, g, b: Byte;
+begin
+  r := (Color shr 11) and $1F;
+  g := (Color shr 5) and $3F;
+  b := Color and $1F;
+  Result := (r shl 19) or (g shl 10) or (b shl 3);
+end;
+}
 
 function Conv16to24(Color: Word): Integer; register;
 asm

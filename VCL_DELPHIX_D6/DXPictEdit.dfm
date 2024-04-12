@@ -12,12 +12,10 @@ object DelphiXPictureEditForm: TDelphiXPictureEditForm
   Font.Height = -12
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  OldCreateOrder = True
   PopupMenu = PopupMenu1
   Position = poScreenCenter
   Scaled = False
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 13
   object Bevel2: TBevel
     Left = 272

@@ -3,7 +3,7 @@ unit DXReg;
 interface
 
 {$I DelphiXcfg.inc}
-
+{$WARNINGS OFF}
 uses
   Windows, SysUtils, Classes, Forms, Dialogs, Graphics, TypInfo,
   Controls, StdCtrls, ExtCtrls, Buttons,
