@@ -1,54 +1,48 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <ProjectGuid>{f90af773-90ac-488b-9173-e7e291bfe1f3}</ProjectGuid>
-  </PropertyGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <Projects Include="Converter.dproj" />
-    <Projects Include="LevEdit.dproj" />
-    <Projects Include="SpaceMission.dproj" />
-  </ItemGroup>
-  <ProjectExtensions>
-    <Borland.Personality>Default.Personality</Borland.Personality>
-    <Borland.ProjectType />
-    <BorlandProject>
-  <BorlandProject xmlns=""> <Default.Personality> </Default.Personality> </BorlandProject></BorlandProject>
-  </ProjectExtensions>
-  <Target Name="SpaceMission">
-    <MSBuild Projects="SpaceMission.dproj" Targets="" />
-  </Target>
-  <Target Name="SpaceMission:Clean">
-    <MSBuild Projects="SpaceMission.dproj" Targets="Clean" />
-  </Target>
-  <Target Name="SpaceMission:Make">
-    <MSBuild Projects="SpaceMission.dproj" Targets="Make" />
-  </Target>
-  <Target Name="LevEdit">
-    <MSBuild Projects="LevEdit.dproj" Targets="" />
-  </Target>
-  <Target Name="LevEdit:Clean">
-    <MSBuild Projects="LevEdit.dproj" Targets="Clean" />
-  </Target>
-  <Target Name="LevEdit:Make">
-    <MSBuild Projects="LevEdit.dproj" Targets="Make" />
-  </Target>
-  <Target Name="Converter">
-    <MSBuild Projects="Converter.dproj" Targets="" />
-  </Target>
-  <Target Name="Converter:Clean">
-    <MSBuild Projects="Converter.dproj" Targets="Clean" />
-  </Target>
-  <Target Name="Converter:Make">
-    <MSBuild Projects="Converter.dproj" Targets="Make" />
-  </Target>
-  <Target Name="Build">
-    <CallTarget Targets="SpaceMission;LevEdit;Converter" />
-  </Target>
-  <Target Name="Clean">
-    <CallTarget Targets="SpaceMission:Clean;LevEdit:Clean;Converter:Clean" />
-  </Target>
-  <Target Name="Make">
-    <CallTarget Targets="SpaceMission:Make;LevEdit:Make;Converter:Make" />
-  </Target>
-  <Import Condition="Exists('$(MSBuildBinPath)\Borland.Group.Targets')" Project="$(MSBuildBinPath)\Borland.Group.Targets" />
+    <PropertyGroup>
+        <ProjectGuid>{f90af773-90ac-488b-9173-e7e291bfe1f3}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="SpaceMission.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="LevEdit.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="SpaceMission">
+        <MSBuild Projects="SpaceMission.dproj"/>
+    </Target>
+    <Target Name="SpaceMission:Clean">
+        <MSBuild Projects="SpaceMission.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SpaceMission:Make">
+        <MSBuild Projects="SpaceMission.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="LevEdit">
+        <MSBuild Projects="LevEdit.dproj"/>
+    </Target>
+    <Target Name="LevEdit:Clean">
+        <MSBuild Projects="LevEdit.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="LevEdit:Make">
+        <MSBuild Projects="LevEdit.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="SpaceMission;LevEdit"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="SpaceMission:Clean;LevEdit:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="SpaceMission:Make;LevEdit:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

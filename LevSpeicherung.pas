@@ -61,8 +61,6 @@ uses
 
 procedure TSpeicherungForm.SearchLevels;
 var
-  {sr: TSearchRec;
-  res: integer;}
   i: integer;
 begin
   //SpinEdit.Value := 1;
@@ -76,21 +74,10 @@ begin
   liw.visible := true;
   LadenBtn.enabled := false;
   LoeschenBtn.enabled := false;
-  {res := FindFirst(mainform.fdirectory+'Levels\*.lev', 0, sr);
-  try
-    while (res = 0) do
-    begin
-      if (sr.name <> '.') and (sr.name <> '..') then
-        LevelListBox.items.Add(copy(sr.Name, 0, length(sr.name)-4));
-      res := FindNext(sr);
-    end;
-  finally
-    FindClose(sr);
-  end;}
   for i := 1 to 9999 do
   begin
-    if fileexists(fdirectory+'Levels\Level '+inttostr(i)+'.lev') then
-      LevelListBox.items.Add('Level ' + inttostr(i));
+    if fileexists(GetLevelFileName(i)) then
+      LevelListBox.items.Add(ExtractFileName(GetLevelFileName(i)));
   end;
 end;
 
@@ -117,7 +104,7 @@ begin
     liw.visible := true;
     LadenBtn.enabled := false;
     LoeschenBtn.enabled := false;
-    deletefile(FDirectory+'Levels\'+
+    deletefile(IncludeTrailingPathDelimiter(ExtractFilePath(GetLevelFileName(1)))+
       LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
     SearchLevels;
   end;
@@ -156,7 +143,8 @@ begin
 
   LevelData := TLevelData.Create;
   try
-    LevelData.Load(FDirectory+'Levels\'+LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
+    LevelData.Load(IncludeTrailingPathDelimiter(ExtractFilePath(GetLevelFileName(1)))+
+      LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
     MainForm.ScrollBar.Max := LevelData.LevelEditorLength;
     MainForm.Enemys.Clear;
     TempArtMain := MainForm.ArtChecked;
@@ -309,7 +297,7 @@ begin
       LevelData.EnemyAdventTable[i].y := StrToInt(filter(2, mainform.enemys.Strings[i]));
       LevelData.EnemyAdventTable[i].lifes := StrToInt(filter(4, mainform.enemys.Strings[i]));
     end;
-    LevelData.Save(FDirectory+'Levels\Level '+inttostr(SpinEdit.Position)+'.lev');
+    LevelData.Save(GetLevelFileName(SpinEdit.Position));
   finally
     FreeAndNil(LevelData);
   end;
@@ -349,7 +337,8 @@ begin
   LevelData := TLevelData.Create;
   try
     try
-      LevelData.Load(FDirectory+'Levels\'+LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
+      LevelData.Load(IncludeTrailingPathDelimiter(ExtractFilePath(GetLevelFileName(1)))+
+        LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
     except
       liu.visible := true;
       LadenBtn.enabled := false;

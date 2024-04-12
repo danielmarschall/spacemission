@@ -14,13 +14,13 @@ unit GamMain;
 //              Boss schwieriger machen: Er soll auch nach links und rechts gehen?
 //              Cooldown für Laser?
 //              Musik und Sounds optimieren
+//              hintergrundmusik als WAV anstelle MIDI ... new unDelphiX contains DXMusic component for MIDI?
 //              Pausiertes Spiel: Fenster bewegen lässt das Spiel wieder starten
 //              Zwei Fenster in Taskleiste
 //              "Doku" in Hilfemenü einbinden, ggf. auch den Leveleditor ins Menü machen
 //              Highscore Liste
 //              Multilingual (all strings in resourcestrings)
-//              Levelconverter entfernen, stattdessen einlesen abwärtskompatibel machen
-//              hintergrundmusik als WAV anstelle MIDI ... new unDelphiX contains DXMusic component for MIDI?
+// [OK SVN 17]  Levelconverter entfernen, stattdessen einlesen abwärtskompatibel machen
 //              Credits: unDelphiX (micrel.cz/Dx)
 
 interface
@@ -299,7 +299,6 @@ type
     procedure StartSceneNewLevel;
     procedure SceneNewLevel;
     procedure EndSceneNewLevel;
-    function GetLevelFileName(lev: integer): string;
   public
     FNextScene: TGameScene;
     FScore: Integer;
@@ -1913,11 +1912,6 @@ end;
 
 const
   ADDITIONAL_ENEMIES_PER_LEVEL = 75;
-
-function TMainForm.GetLevelFileName(lev: integer): string;
-begin
-  result := FDirectory+'Levels\Level '+inttostr(lev)+'.lev';
-end;
 
 procedure TMainForm.NewLevel(lev: integer);
 resourcestring
