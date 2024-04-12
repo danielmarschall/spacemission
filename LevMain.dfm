@@ -15,7 +15,7 @@ object MainForm: TMainForm
   KeyPreview = True
   Menu = MainMenu
   OldCreateOrder = True
-  Position = poDesktopCenter
+  Position = poScreenCenter
   Scaled = False
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
@@ -273,7 +273,6 @@ object MainForm: TMainForm
       ' Zeigen Sie mit dem Mauszeiger auf eine Einheit, um deren Eigens' +
       'chaften anzuzeigen...'
     OnMouseMove = DXDrawMouseMove
-    ExplicitTop = 539
   end
   object LivesEdt: TEdit
     Left = 648
