@@ -27,6 +27,7 @@
  ***************************************************************************)
 {
 (c)2004 Jaro Benes Recompilation with Erik Unger's headers
+(c)2024 Daniel Marschall, small fixes
 
 Join in order:
   1) DirectDraw
@@ -14458,6 +14459,8 @@ const
 
 //DirectPlay file
 
+{$IFDEF UseDirectPlay} // Daniel Marschall 12.04.2024 Added to avoid Windows showing "This app requires DirectPlay"
+
 (*==========================================================================;
  *
  *  Copyright (C) Microsoft Corporation.  All Rights Reserved.
@@ -14528,11 +14531,6 @@ const
  ****************************************************************************)
 
 type
-{$IFDEF UNICODE}
-  PCharAW = PWideChar;
-{$ELSE}
-  PCharAW = PAnsiChar;
-{$ENDIF}
 (*
  * TDPID
  * DirectPlay player and group ID
@@ -14679,8 +14677,8 @@ type
     dwCurrentPlayers: DWORD;   // Current # players in session (read only)
     case integer of
       0 : (
-    lpszSessionName: PCharAW;  // Name of the session
-    lpszPassword: PCharAW;     // Password of the session (optional)
+    lpszSessionName: PChar;  // Name of the session
+    lpszPassword: PChar;     // Password of the session (optional)
     dwReserved1: DWORD;        // Reserved for future MS use.
     dwReserved2: DWORD;
     dwUser1: DWORD;            // For use by the application
@@ -14800,8 +14798,8 @@ type
     dwFlags: DWORD;   // Not used. Must be zero.
     case Integer of
       0 : (
-    lpszShortName : PCharAW; // The short or friendly name
-    lpszLongName : PCharAW;  // The long or formal name
+    lpszShortName : PChar; // The short or friendly name
+    lpszLongName : PChar;  // The long or formal name
       );
       1 : (
     lpszShortNameA : PAnsiChar;
@@ -14824,9 +14822,9 @@ type
     dwFlags: DWORD;   // Not used. Must be zero.
     case Integer of
       0 : (
-    lpszUsername: PCharAW;   // User name of the account
-    lpszPassword: PCharAW;   // Password of the account
-    lpszDomain:   PCharAW;   // Domain name of the account
+    lpszUsername: PChar;   // User name of the account
+    lpszPassword: PChar;   // Password of the account
+    lpszDomain:   PChar;   // Domain name of the account
       );
       1 : (
     lpszUsernameA: PAnsiChar;   // User name of the account
@@ -14851,8 +14849,8 @@ type
     dwFlags: DWORD;                 // Not used. Must be zero.
     case Integer of
       0 : (
-    lpszSSPIProvider : PCharAW;  // SSPI provider name
-    lpszCAPIProvider : PCharAW;  // CAPI provider name
+    lpszSSPIProvider : PChar;  // SSPI provider name
+    lpszCAPIProvider : PChar;  // CAPI provider name
     dwCAPIProviderType: DWORD;      // Crypto Service Provider type
     dwEncryptionAlgorithm: DWORD;   // Encryption Algorithm type
       );
@@ -14876,7 +14874,7 @@ type
     dwSize: DWORD;    // Size of structure
     dwFlags: DWORD;   // Not used. Must be zero.
     case Integer of
-      0 : (lpszAccountID : PCharAW);  // Account identifier
+      0 : (lpszAccountID : PChar);  // Account identifier
       1 : (lpszAccountIDA : PAnsiChar); 
       2 : (lpszAccountIDW : PWideChar);
   end;
@@ -14906,7 +14904,7 @@ type
     dwSize: DWORD;
     dwFlags: DWORD;
     case Integer of
-      0 : (lpszMessage : PCharAW);  // Message string
+      0 : (lpszMessage : PChar);  // Message string
       1 : (lpszMessageA : PAnsiChar);
       2 : (lpszMessageW : PWideChar);
   end;
@@ -16154,7 +16152,7 @@ type
     dwSize: DWORD;            // Size of this structure
     guidApplication: TGUID;   // GUID of the Application
     case Integer of           // Pointer to the Application Name
-      0: (lpszAppName: PCharAW);
+      0: (lpszAppName: PChar);
       1: (lpszAppNameW: PWideChar);
       3: (lpszAppNameA: PChar);
   end;
@@ -16180,12 +16178,12 @@ type
     dwSize: DWORD;
     dwFlags: DWORD;
     case integer of
-      0 : (lpszApplicationName: PCharAW;
+      0 : (lpszApplicationName: PChar;
            guidApplication: TGUID;
-           lpszFilename: PCharAW;
-           lpszCommandLine: PCharAW;
-           lpszPath: PCharAW;
-           lpszCurrentDirectory: PCharAW;
+           lpszFilename: PChar;
+           lpszCommandLine: PChar;
+           lpszPath: PChar;
+           lpszCurrentDirectory: PChar;
            lpszDescriptionA: PAnsiChar;
            lpszDescriptionW: PWideChar);
       1 : (lpszApplicationNameA: PAnsiChar;
@@ -16211,15 +16209,15 @@ type
     dwSize: DWORD;
     dwFlags: DWORD;
     case integer of
-      0 : (lpszApplicationName: PCharAW;
+      0 : (lpszApplicationName: PChar;
            guidApplication: TGUID;
-           lpszFilename: PCharAW;
-           lpszCommandLine: PCharAW;
-           lpszPath: PCharAW;
-           lpszCurrentDirectory: PCharAW;
+           lpszFilename: PChar;
+           lpszCommandLine: PChar;
+           lpszPath: PChar;
+           lpszCurrentDirectory: PChar;
            lpszDescriptionA: PAnsiChar;
            lpszDescriptionW: PWideChar;
-           lpszAppLauncherName: PCharAW);
+           lpszAppLauncherName: PChar);
       1 : (lpszApplicationNameA: PAnsiChar;
            filler1: TGUID;
            lpszFilenameA: PAnsiChar;
@@ -16845,6 +16843,8 @@ const
  ****************************************************************************)
 
   DPLAD_SYSTEM = DPLMSG_SYSTEM;
+
+{$ENDIF} // IFDEF UseDirectPlay
  
 
 //DirectSetup file
@@ -17041,14 +17041,14 @@ type
 var
   DirectXSetupW : function (hWnd: HWND; lpszRootPath: PWideChar; dwFlags: DWORD) : Integer; stdcall;
   DirectXSetupA : function (hWnd: HWND; lpszRootPath: PAnsiChar; dwFlags: DWORD) : Integer; stdcall;
-  DirectXSetup : function (hWnd: HWND; lpszRootPath: PCharAW; dwFlags: DWORD) : Integer; stdcall;
+  DirectXSetup : function (hWnd: HWND; lpszRootPath: PChar; dwFlags: DWORD) : Integer; stdcall;
 
   DirectXDeviceDriverSetupW : function (hWnd: HWND; lpszDriverClass: PWideChar;
      lpszDriverPath: PWideChar; dwFlags: DWORD) : Integer; stdcall;
   DirectXDeviceDriverSetupA : function (hWnd: HWND; lpszDriverClass: PAnsiChar;
      lpszDriverPath: PAnsiChar; dwFlags: DWORD) : Integer; stdcall;
-  DirectXDeviceDriverSetup : function (hWnd: HWND; lpszDriverClass: PCharAW;
-     lpszDriverPath: PCharAW; dwFlags: DWORD) : Integer; stdcall;
+  DirectXDeviceDriverSetup : function (hWnd: HWND; lpszDriverClass: PChar;
+     lpszDriverPath: PChar; dwFlags: DWORD) : Integer; stdcall;
 
   DirectXRegisterApplicationW : function
      (hWnd: HWND; const lpDXRegApp: TDirectXRegisterAppW) : Integer; stdcall;
@@ -22644,6 +22644,7 @@ end;
  *
  ***************************************************************************)
 
+{$IFDEF UseDirectPlay} // Daniel Marschall 12.04.2024 Added to avoid Windows showing "This app requires DirectPlay"
 function DPErrorString(Value: HResult) : string;
 begin
   case Value of
@@ -22702,6 +22703,7 @@ begin
     else Result := 'Unrecognized Error';
   end;
 end;
+{$ENDIF} // UseDirectPlay
 
 //DirectSetup file
 
@@ -22985,6 +22987,7 @@ begin
 {$ENDIF}
   end;
   {DirectInput}
+  {$IFDEF UseDirectPlay} // Daniel Marschall 12.04.2024 Added to avoid Windows showing "This app requires DirectPlay"
   {DirectPlay}
   if not IsNTandDelphiRunning then
   begin
@@ -23012,6 +23015,7 @@ begin
 
   end;
   {DirectPlay}
+  {$ENDIF} // UseDirectPlay
   {DirectSetup}
   if not IsNTandDelphiRunning then
   begin
@@ -23064,9 +23068,11 @@ begin
   {DirectInput}
   FreeLibrary(DInputDLL);
   {DirectInput}
+  {$IFDEF UseDirectPlay} // Daniel Marschall 12.04.2024 Added to avoid Windows showing "This app requires DirectPlay"
   {DirectPlay}
   if DPlayDLL <> 0 then FreeLibrary(DPlayDLL);
   {DirectPlay}
+  {$ENDIF}
   {DirectSetup}
   FreeLibrary(DSetupDLL);
   {DirectSetup}

@@ -540,3 +540,5 @@
 {special feature for enumerate displayis like primary, secondary etc.}
 {only for special purpose, multimonitors etc.}
 {.$Define _DMO_}
+
+{.$Define UseDirectPlay} // Daniel Marschall 12.04.2024 Added to avoid Windows showing "This app requires DirectPlay"
