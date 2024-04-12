@@ -250,7 +250,7 @@ end;
 
 procedure TSpeicherungForm.SpeichernBtnClick(Sender: TObject);
 var
-  SavGame: textfile;
+  LevelData: TLevelData;
   i, j: integer;
   puffer: string;
 begin
@@ -282,10 +282,8 @@ begin
     if MessageDlg('Level ist bereits vorhanden. Ersetzen?', mtConfirmation, [mbYes, mbNo], 0) = mrNo then
       exit;
   end;
-  // ÷ffnen oder erstellen
-  AssignFile(SavGame, FDirectory+'Levels\Level '+inttostr(SpinEdit.Position)+'.lev');
-  Rewrite(SavGame);
-  // Sortierung
+
+  // Sortierung (wichtig)
   for j := 0 to mainform.enemys.Count - 2 do
   begin
     for i := 0 to mainform.enemys.Count - 2 do
@@ -298,19 +296,24 @@ begin
       end;
     end;
   end;
+
   // Speichern
-  WriteLN(SavGame, '; SpaceMission ' + FCompVersion);
-  WriteLN(SavGame, '; LEV-File');
-  WriteLN(SavGame, inttostr(MainForm.ScrollBar.Max)); // --> L‰nge der Karte
-  for i := 0 to mainform.enemys.count-1 do
-  begin
-    WriteLN(SavGame, filter(3, mainform.enemys.Strings[i]));
-    WriteLN(SavGame, filter(1, mainform.enemys.Strings[i]));
-    WriteLN(SavGame, filter(2, mainform.enemys.Strings[i]));
-    WriteLN(SavGame, filter(4, mainform.enemys.Strings[i]));
+  LevelData := TLevelData.Create;
+  try
+    LevelData.LevelEditorLength := MainForm.ScrollBar.Max;
+    SetLength(LevelData.EnemyAdventTable, mainform.enemys.count);
+    for i := 0 to mainform.enemys.count-1 do
+    begin
+      LevelData.EnemyAdventTable[i].enemyType := TEnemyType(StrToInt(filter(3, mainform.enemys.Strings[i])));
+      LevelData.EnemyAdventTable[i].x := StrToInt(filter(1, mainform.enemys.Strings[i]));
+      LevelData.EnemyAdventTable[i].y := StrToInt(filter(2, mainform.enemys.Strings[i]));
+      LevelData.EnemyAdventTable[i].lifes := StrToInt(filter(4, mainform.enemys.Strings[i]));
+    end;
+    LevelData.Save(FDirectory+'Levels\Level '+inttostr(SpinEdit.Position)+'.lev');
+  finally
+    FreeAndNil(LevelData);
   end;
-  // Schlieﬂen
-  CloseFile(SavGame);
+
   // Nacharbeiten
   MainForm.LevChanged := false;
   MainForm.AnzeigeAct;
@@ -426,7 +429,11 @@ end;
 procedure TSpeicherungForm.SpinEditEdtKeyPress(Sender: TObject;
   var Key: Char);
 begin
+  {$IFDEF UNICODE}
+  if not CharInSet(Key, [#13, #08, '0'..'9']) then
+  {$ELSE}
   if not (Key in [#13, #08, '0'..'9']) then
+  {$ENDIF}
     Key := #0;
 end;
 

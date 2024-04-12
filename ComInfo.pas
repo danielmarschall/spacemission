@@ -49,7 +49,7 @@ end;
 
 procedure TInfoForm.WebsiteClick(Sender: TObject);
 begin
-  ShellExecute(application.Handle, 'open', pchar('http://'+url2.caption+'/'), nil, nil, SW_SHOW);
+  ShellExecute(application.Handle, 'open', pchar('https://'+url2.caption+'/'), nil, nil, SW_SHOW);
 end;
 
 procedure TInfoForm.EMailClick(Sender: TObject);

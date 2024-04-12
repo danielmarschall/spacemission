@@ -71,7 +71,11 @@ end;
 
 procedure TLevelForm.GroesseEdtKeyPress(Sender: TObject; var Key: Char);
 begin
+  {$IFDEF UNICODE}
+  if not CharInSet(Key, [#13, #08, '0'..'9']) then
+  {$ELSE}
   if not (Key in [#13, #08, '0'..'9']) then
+  {$ENDIF}
     Key := #0;
 end;
 

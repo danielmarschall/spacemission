@@ -15,7 +15,8 @@ uses
   ComInfo in 'ComInfo.pas' {InfoForm},
   GamCheat in 'GamCheat.pas' {CheatForm},
   ComLevelReader in 'ComLevelReader.pas',
-  Global in 'Global.pas';
+  Global in 'Global.pas',
+  ComSaveGameReader in 'ComSaveGameReader.pas';
 
 {$R *.RES}
 

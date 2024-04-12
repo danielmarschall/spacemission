@@ -57,7 +57,7 @@ begin
       end;
     end;
   end;
-  Memo1.lines.add('; SpaceMission ' + FCompVersion);
+  Memo1.lines.add('; SpaceMission 1.0');
   Memo1.lines.add('; LEV-File');
   Memo1.lines.add(inttostr(MainForm.ScrollBar.Max)); // --> Länge der Karte
   for i := 0 to mainform.enemys.count-1 do

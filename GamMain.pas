@@ -18,9 +18,10 @@ unit GamMain;
 //              Zwei Fenster in Taskleiste
 //              "Doku" in Hilfemenü einbinden, ggf. auch den Leveleditor ins Menü machen
 //              Highscore Liste
-//              Multilingual
+//              Multilingual (all strings in resourcestrings)
 //              Levelconverter entfernen, stattdessen einlesen abwärtskompatibel machen
-//              hintergrundmusik als WAV anstelle MIDI
+//              hintergrundmusik als WAV anstelle MIDI ... new unDelphiX contains DXMusic component for MIDI?
+//              Credits: unDelphiX (micrel.cz/Dx)
 
 interface
 
@@ -28,7 +29,7 @@ uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, MMSystem, Dialogs,
   StdCtrls, ExtCtrls, Menus, DIB, DXClass, DXSprite, DXDraws, DXInput, DXSounds,
   INIFiles, ShellAPI, wininet, DirectX{$IF CompilerVersion >= 23.0},
-  System.UITypes{$IFEND}, ComLevelReader;
+  System.UITypes{$IFEND}, ComLevelReader, ComSaveGameReader;
 
 type
   TGameScene = (
@@ -305,7 +306,7 @@ type
     FNotSave: boolean;
     FLife: integer;
     FLevel: integer;
-    FMenuItem: integer;
+    FGameMode: TGameMode;
     FBossLife: integer;
     FRestEnemies: integer;
     FCheat: boolean;
@@ -1181,9 +1182,7 @@ end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 var
-  Ergebnis: string;
-  daten: textfile;
-  ok: boolean;
+  SavGame: TSaveData;
 begin
   LevelData := TLevelData.Create;
   
@@ -1247,26 +1246,22 @@ begin
   ResetLevelData;
   if (paramcount = 0) and (fileexists(paramstr(1))) then // (paramcount > 0)
   begin
-    // TODO: In "ComSavegameReader.pas" auslagern, so wie bei "ComLevelReader.pas" 
-    AssignFile(daten, paramstr(1));
-    Reset(daten);
-    ok := true;
-    ReadLN(daten, Ergebnis);
-    if Ergebnis <> '; SpaceMission '+ProgramVersion then ok := false;
-    ReadLN(daten, Ergebnis);
-    if ergebnis <> '; SAV-File' then ok := false;
-    if not ok then
-    begin
-      showmessage(FileError);
-      CloseFile(daten);
-      GameStartClick(GameStart);
-      exit;
+    SavGame := TSaveData.Create;
+    try
+      try
+        SavGame.Load(paramstr(1));
+        mainform.FScore := SavGame.FScore;
+        mainform.FLife := SavGame.FLife;
+        mainform.FLevel := SavGame.FLevel;
+        mainform.FGameMode := SavGame.FGameMode;
+      except
+        showmessage(FileError);
+        GameStartClick(GameStart);
+        exit;
+      end;
+    finally
+      FreeAndNil(SavGame);
     end;
-    ReadLN(daten, mainform.FScore);
-    ReadLN(daten, mainform.FLife);
-    ReadLN(daten, mainform.Flevel);
-    ReadLN(daten, mainform.FMenuItem);
-    CloseFile(daten);
     mainform.FNextScene := gsNewLevel;
     exit;
   end;
@@ -1933,7 +1928,7 @@ var
   e: TEnemyAdvent;
 begin
   ResetLevelData;
-  if FMenuItem = 2 then
+  if FGameMode = gmRandom then
   begin
     {$REGION 'Random game'}
     Enemies[1] := etEnemyAttacker;
@@ -2024,11 +2019,11 @@ begin
   inc(Fangle);
   with DXDraw.Surface.Canvas do
   begin
-    if (isDown in MainForm.DXInput.States) and (FMenuItem=1) then FMenuItem := 2;
-    if ((isUp in MainForm.DXInput.States) and (FMenuItem=2)) or (FMenuItem=0) then FMenuItem := 1;
+    if (isDown in MainForm.DXInput.States) and (FGameMode=gmLevels) then FGameMode := gmRandom;
+    if ((isUp in MainForm.DXInput.States) and (FGameMode=gmRandom)) or (FGameMode=gmUnknown) then FGameMode := gmLevels;
     Brush.Style := bsClear;
     Font.Size := 30;
-    if FMenuItem = 1 then
+    if FGameMode = gmLevels then
     begin
       Font.Color := clMaroon;
       Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)-52, 'Normales Spiel');
@@ -2068,7 +2063,7 @@ begin
   if (isButton1 in DXInput.States) or (isButton2 in DXInput.States) then
   begin
     FLevel := 1;
-    if ((FMenuItem=1) and not fileexists(GetLevelFileName(FLevel))) or ((FMenuItem=2) and (FLevel > 20)) then
+    if ((FGameMode=gmLevels) and not fileexists(GetLevelFileName(FLevel))) or ((FGameMode=gmRandom) and (FLevel > 20)) then
     begin
       //PlaySound('Frage', False);
       exit;
@@ -2311,7 +2306,7 @@ begin
   Spielgeschwindigkeit.enabled := false;
   BossExists := false;
   Spielgeschwindigkeit.enabled := false;
-  if ((FMenuItem=1) and (not fileexists(GetLevelFileName(FLevel)))) or ((FMenuItem=2) and (FLevel > 25)) then
+  if ((FGameMode=gmLevels) and (not fileexists(GetLevelFileName(FLevel)))) or ((FGameMode=gmRandom) and (FLevel > 25)) then
   begin
     //PlaySound('SceneMov', False);
     PalleteAnim(RGBQuad(0, 0, 0), 300);

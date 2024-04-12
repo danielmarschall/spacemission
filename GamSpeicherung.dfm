@@ -4,19 +4,17 @@ object SpeicherungForm: TSpeicherungForm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Spielst'#228'nde'
-  ClientHeight = 425
-  ClientWidth = 451
+  ClientHeight = 424
+  ClientWidth = 447
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnHide = FormHide
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 13
   object Bevel1: TBevel
     Left = 8

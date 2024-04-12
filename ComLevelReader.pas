@@ -45,34 +45,37 @@ end;
 
 procedure TLevelData.Load(filename: string);
 var
-  sl1: TStringList;
+  sl: TStringList;
   curline: integer;
   ergebniss: string;
   e: TEnemyAdvent;
 begin
-  sl1 := TStringList.Create;
+  sl := TStringList.Create;
   try
-    sl1.LoadFromFile(filename);
+    sl.LoadFromFile(filename);
     curline := 0;
 
-    ergebniss := sl1.Strings[curline]; Inc(curline);
+    ergebniss := sl.Strings[curline]; Inc(curline);
     if ergebniss = '; SpaceMission 1.0' then
     begin
-      ergebniss := sl1.Strings[curline]; Inc(curline);
-      Assert(ergebniss = '; LEV-File');
+      ergebniss := sl.Strings[curline]; Inc(curline);
+      if ergebniss <> '; LEV-File' then
+      begin
+        raise Exception.Create('Dies ist keine SpaceMission Level-Datei');
+      end;
 
-      ergebniss := sl1.Strings[curline]; Inc(curline);
+      ergebniss := sl.Strings[curline]; Inc(curline);
       LevelEditorLength := StrToInt(ergebniss);
 
-      while curline < sl1.Count do
+      while curline < sl.Count do
       begin
-        ergebniss := sl1.Strings[curline]; Inc(curline);
+        ergebniss := sl.Strings[curline]; Inc(curline);
         e.enemyType := TEnemyType(strtoint(ergebniss));
-        ergebniss := sl1.Strings[curline]; Inc(curline);
+        ergebniss := sl.Strings[curline]; Inc(curline);
         e.x := strtoint(ergebniss);
-        ergebniss := sl1.Strings[curline]; Inc(curline);
+        ergebniss := sl.Strings[curline]; Inc(curline);
         e.y := strtoint(ergebniss);
-        ergebniss := sl1.Strings[curline]; Inc(curline);
+        ergebniss := sl.Strings[curline]; Inc(curline);
         e.lifes := strtoint(ergebniss);
 
         SetLength(EnemyAdventTable, Length(EnemyAdventTable)+1);
@@ -85,13 +88,31 @@ begin
       raise Exception.CreateFmt('Level-Format "%s" nicht unterstützt', [Copy(ergebniss, 3, Length(ergebniss)-2)]);
     end;
   finally
-    FreeAndNil(sl1);
+    FreeAndNil(sl);
   end;
 end;
 
 procedure TLevelData.Save(filename: string);
+var
+  sl: TStringList;
+  i: integer;
 begin
-  // TODO: Implement and use everywhere (Hint: Search for FCompVersion)!
+  sl := TStringList.Create;
+  try
+    sl.Add('; SpaceMission 1.0');
+    sl.Add('; LEV-File');
+    sl.Add(IntToStr(LevelEditorLength));
+    for i := 0 to Length(EnemyAdventTable)-1 do
+    begin
+      sl.Add(IntToStr(Ord(EnemyAdventTable[i].enemyType)));
+      sl.Add(IntToStr(EnemyAdventTable[i].x));
+      sl.Add(IntToStr(EnemyAdventTable[i].y));
+      sl.Add(IntToStr(EnemyAdventTable[i].lifes));
+    end;
+    sl.SaveToFile(filename);
+  finally
+    FreeAndNil(sl);
+  end;
 end;
 
 end.

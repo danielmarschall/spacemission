@@ -1,12 +1,15 @@
 unit LevMain;
 
+// TODO 2024:
+// - Wenn man ein Level "X" lädt, und dann Verwalten wieder öffnet, sollte diese Level-Nummer vorgeschlagen werden, sodass man direkt Speichern klicken kann
+
 interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, MMSystem,
   Dialogs, StdCtrls, ExtCtrls, Menus, DIB, DXClass, DXSprite, DXDraws,
   DXSounds, Spin, ComCtrls{$IF CompilerVersion >= 23.0}, System.UITypes,
-  WinAPI.DirectDraw{$ELSE}, DirectX{$IFEND};
+  WinAPI.DirectDraw{$ENDIF}, DirectX;
 
 type
   TMainForm = class(TDXForm)
@@ -728,7 +731,11 @@ end;
 
 procedure TMainForm.LivesEdtKeyPress(Sender: TObject; var Key: Char);
 begin
+  {$IFDEF UNICODE}
+  if not CharInSet(Key, [#13, #08, '0'..'9']) then
+  {$ELSE}
   if not (Key in [#13, #08, '0'..'9']) then
+  {$ENDIF}
     Key := #0;
 end;
 

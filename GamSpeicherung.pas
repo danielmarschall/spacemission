@@ -50,7 +50,7 @@ var
 implementation
 
 uses
-  Global, GamMain;
+  Global, GamMain, ComSaveGameReader;
 
 {$R *.DFM}
 
@@ -127,7 +127,7 @@ procedure TSpeicherungForm.LadenBtnClick(Sender: TObject);
 var
   Markiert: boolean;
   i: integer;
-  SavGame: textfile;
+  SavGame: TSaveData;
 begin
   Markiert := false;
   for i := 0 to LevelListBox.items.Count-1 do
@@ -155,15 +155,16 @@ begin
   end;
   {if liu.visible or (LevelListBox.items.count=0) then
     exit;}
-  AssignFile(SavGame, FDirectory+'Spielstände\'+LevelListBox.Items.strings[LevelListBox.itemindex]+'.sav');
-  Reset(SavGame);
-  ReadLN(SavGame);
-  ReadLN(SavGame);
-  ReadLN(SavGame, mainform.FScore);
-  ReadLN(SavGame, mainform.FLife);
-  ReadLN(SavGame, mainform.Flevel);
-  ReadLN(SavGame, mainform.FMenuItem);
-  CloseFile(SavGame);
+  SavGame := TSaveData.Create;
+  try
+    SavGame.Load(FDirectory+'Spielstände\'+LevelListBox.Items.strings[LevelListBox.itemindex]+'.sav');
+    mainform.FScore := SavGame.FScore;
+    mainform.FLife := SavGame.FLife;
+    mainform.FLevel := SavGame.FLevel;
+    mainform.FGameMode := SavGame.FGameMode;
+  finally
+    FreeAndNil(SavGame);
+  end;
   mainform.playsound('SceneMov', false);
   mainform.FNextScene := gsNewLevel;
   mainform.FCheat := false;
@@ -172,7 +173,7 @@ end;
 
 procedure TSpeicherungForm.SpeichernBtnClick(Sender: TObject);
 var
-  SavGame: textfile;
+  SavGame: TSaveData;
   i: integer;
 begin
   if Levelname.text = '' then
@@ -203,23 +204,26 @@ begin
     if MessageDlg('Spielstand ist bereits vorhanden. Ersetzen?', mtConfirmation, [mbYes, mbNo], 0) = mrNo then
       exit;
   end;
-  AssignFile(SavGame, FDirectory+'Spielstände\'+LevelName.text+'.sav');
-  Rewrite(SavGame);
-  WriteLN(SavGame, '; SpaceMission '+FCompVersion);
-  WriteLN(SavGame, '; SAV-File');
-  WriteLN(SavGame, mainform.FScore);
-  WriteLN(SavGame, mainform.FLife);
-  WriteLN(SavGame, mainform.FLevel);
-  WriteLN(SavGame, mainform.FMenuItem);
-  CloseFile(SavGame);
+
+  SavGame := TSaveData.Create;
+  try
+    SavGame.FScore := mainform.FScore;
+    SavGame.FLife := mainform.FLife;
+    SavGame.FLevel := mainform.FLevel;
+    SavGame.FGameMode := mainform.FGameMode;
+    SavGame.Save(FDirectory+'Spielstände\'+LevelName.text+'.sav');
+  finally
+    FreeAndNil(SavGame);
+  end;
+
   SearchSaves;
 end;
 
 procedure TSpeicherungForm.LevelListBoxClick(Sender: TObject);
 var
-  Ergebniss: String;
-  SavGame: textfile;
-  Punkte, Leben, Level, Art: integer;
+  SavGame: TSaveData;
+  Punkte, Leben, Level: integer;
+  Art: TGameMode;
 begin
   ladenbtn.enabled := true;
   loeschenbtn.enabled := true;
@@ -244,29 +248,23 @@ begin
     exit;
   end;
   LevelName.Text := LevelListBox.Items.strings[LevelListBox.itemindex];
-  AssignFile(SavGame, FDirectory+'Spielstände\'+LevelListBox.Items.strings[LevelListBox.itemindex]+'.sav');
-  Reset(SavGame);
-  ReadLN(SavGame, Ergebniss);
-  if Ergebniss <> '; SpaceMission '+FCompVersion then
-  begin
-    liu.visible := true;
-    ladenbtn.enabled := false;
-    CloseFile(SavGame);
-    exit;
+
+  SavGame := TSaveData.Create;
+  try
+    try
+      SavGame.Load(FDirectory+'Spielstände\'+LevelListBox.Items.strings[LevelListBox.itemindex]+'.sav');
+      Punkte := SavGame.FScore;
+      Leben := SavGame.FLife;
+      Level := SavGame.FLevel;
+      Art := SavGame.FGameMode;
+    except
+      liu.visible := true;
+      ladenbtn.enabled := false;
+      exit;
+    end;
+  finally
+    FreeAndNil(SavGame);
   end;
-  ReadLN(SavGame, Ergebniss);
-  if Ergebniss <> '; SAV-File' then
-  begin
-    liu.visible := true;
-    ladenbtn.enabled := false;
-    CloseFile(SavGame);
-    exit;
-  end;
-  ReadLN(SavGame, Punkte);
-  ReadLN(SavGame, Leben);
-  ReadLN(SavGame, Level);
-  ReadLN(SavGame, Art);
-  CloseFile(SavGame);
   li1.visible := true;
   li2a.visible := true;
   li2b.visible := true;
@@ -274,7 +272,7 @@ begin
   li3b.visible := true;
   li4a.visible := true;
   li4b.visible := true;
-  if Art = 1 then
+  if Art = gmLevels then
     li1.caption := 'Das Level ist ein normales Level.'
   else
     li1.caption := 'Das Level ist ein Zufallslevel.';
