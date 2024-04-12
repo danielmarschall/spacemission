@@ -1,12 +1,29 @@
 unit GamMain;
 
+// TODO: 2024 Quellcode optimieren und klassen-namen überdenken
+// TODO: 2024 Form Screen center anstelle Desktop Center => OK!
+// TODO: 2024 Vollbild entf.
+// TODO: 2024 DPlayX.dll auskommentieren => OK!
+// TODO: 2024 Software-Update routine prüfen
+// TODO: 2024 EV CodeSign
+// TODO: 2024 Spielstände usw. "Spiele" Ordner speichern, Config in Registry sichern, etc.
+// TODO: 2024 Neue Einheiten => Medikit, Ufo das im Kreis fliegt und nicht weggeht
+// TODO: 2024 Bei Pause => Entweder alles grau werden lassen, oder irgendwo "Pause" hinschreiben (nur Not in die Form Caption)
+// TODO: 2024 Alle Notizen durchschauen
+// TODO: 2024 Boss schwieriger machen: Er soll auch nach links und rechts gehen?
+// TODO: 2024 Cooldown für Laser?
+// TODO: 2024 Musik und Sounds optimieren
+// TODO: 2024 Pausiertes Spiel: Fenster bewegen lässt das Spiel wieder starten
+// TODO: 2024 Zwei Fenster in Taskleiste
+// TODO: 2024 "Doku" in Hilfemenü einbinden, ggf. auch den Leveleditor ins Menü machen
+// TODO: 2024 Highscore Liste
+
 interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, MMSystem, Dialogs,
   StdCtrls, ExtCtrls, Menus, DIB, DXClass, DXSprite, DXDraws, DXInput, DXSounds,
-  INIFiles, ShellAPI, wininet{$IF CompilerVersion >= 23.0}, Winapi.DirectDraw,
-  System.UITypes{$ELSE}, DirectX{$IFEND};
+  INIFiles, ShellAPI, wininet, DirectX;
 
 type
   TGameScene = (
@@ -103,7 +120,7 @@ type
     procedure HitEnemy(ADead: Boolean); virtual;
   public
     procedure Hit(AHitStrength: integer = 1);
-    constructor Create(AParent: TSprite; ALifes: integer); virtual;
+    constructor Create(AParent: TSprite; ALifes: integer); reintroduce; virtual;
     destructor Destroy; override;
   end;
 
@@ -2236,9 +2253,9 @@ begin
     Brush.Style := bsClear;
     Font.Size := 35;
     Font.Color := clMaroon;
-    Textout((dxdraw.surfacewidth div 2)-127, 98, 'Verloren!');
+    Textout((dxdraw.surfacewidth div 2)-127, 98, 'Game Over!');
     Font.Color := clRed;
-    Textout((dxdraw.surfacewidth div 2)-125, 100, 'Verloren!');
+    Textout((dxdraw.surfacewidth div 2)-125, 100, 'Game Over!');
     if (FBlink div 300) mod 2=0 then
     begin
       Font.Size := 30;
