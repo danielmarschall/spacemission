@@ -74,7 +74,7 @@ object InfoForm: TInfoForm
     Top = 80
     Width = 264
     Height = 13
-    Caption = #169' Copyright 2001 - 2015 Daniel Marschall, ViaThinkSoft'
+    Caption = #169' Copyright 2001 - 2024 Daniel Marschall, ViaThinkSoft'
     Transparent = True
   end
   object Copyright2Lbl: TLabel
@@ -135,21 +135,20 @@ object InfoForm: TInfoForm
     Height = 121
     Lines.Strings = (
       
-        'SpaceMission wurde von Daniel Marschall aus einer Codevorlage vo' +
-        'n '
-      
-        'Hiroyuki Hori heraus erstellt. Das Original ist ein Codebeispiel' +
-        ' f'#252'r DelphiX '
-      '2000.'
+        'SpaceMission wurde von Daniel Marschall auf Basis eines Codebeis' +
+        'piels '
+      'von  Hiroyuki Hori f'#252'r DelphiX 2000 entwickelt.'
+      ''
+      'Entwickelt mit Embarcadero Delphi.'
+      ''
+      'Verwendete Komponenten: (un)DelphiX'
+      'Source: http://www.micrel.cz/Dx/'
+      '(C) Copyright 1996-2000 by Hiroyuki Hori'
+      '(C) Copyright 2004-2023 by Jaro Benes.'
       ''
       'Musik von Savage Peachers Software, Grafikquellen unbekannt.'
-      ''
       'Levels von Daniel Marschall, Patrick B'#252'ssecker und Andreas '
-      'K'#252'belsbeck.'
-      ''
-      'Entwickelt mit Borland Turbo Delphi.'
-      ''
-      'Verwendete Komponenten: (un)DelphiX')
+      'K'#252'belsbeck.')
     ReadOnly = True
     ScrollBars = ssVertical
     TabOrder = 1

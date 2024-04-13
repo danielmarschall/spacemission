@@ -1,33 +1,28 @@
 unit GamMain;
 
-// TODO unDelphiX auf GitHub
-// - Dokumente als MarkDown
-// - dxmEdit + dxwEdit fixes
-// (GIT OK) - Dplay disable
-
 // TODO 2024 Review
 // ----------------
-//              Quellcode optimieren und klassen-namen überdenken
 // [OK SVN 12]  Form Screen center anstelle Desktop Center
-//              Vollbild entf.
-// [OK SVN 21]  DPlayX.dll auskommentieren => OK!
+// [OK SVN 17]  Levelconverter entfernen, stattdessen einlesen abwärtskompatibel machen
+// [OK SVN 18]  MCI hangs a lot! Use new unDelphiX DXMusic component for MIDI!
+// [OK SVN 19]  Pause wird nicht in Caption geschrieben
+// [OK SVN 19]  Wenn man pause gemacht hat und fenster wechselt und wieder zurückwechselt, ist pause aufgehoben.
+// [OK SVN 21]  DPlayX.dll auskommentieren wegen Windows Meldung
+// [OK SVN 22]  Vollbild entf.
+// [OK SVN 22]  Credits: unDelphiX (micrel.cz/Dx)
+//              Quellcode optimieren und klassen-namen überdenken
 //              EV CodeSign
 //              Spielstände usw. "Spiele" Ordner speichern, Config in Registry sichern, etc.
 //              Neue Einheiten => Medikit, Ufo das im Kreis fliegt und nicht weggeht
 //              Bei Pause => Entweder alles grau werden lassen
-// [OK SVN 19]  Pause wird nicht in Caption geschrieben
-// [OK SVN 19]  Wenn man pause gemacht hat und fenster wechselt und wieder zurückwechselt, ist pause aufgehoben.
 //              Alle Notizen durchschauen
 //              Boss schwieriger machen: Er soll auch nach links und rechts gehen?
 //              Cooldown für Laser?
 //              Improve Sound effects
-// [OK SVN 18]  MCI hangs a lot! Use new unDelphiX DXMusic component for MIDI!
 //              Zwei Fenster in Taskleiste
 //              "Doku" in Hilfemenü einbinden, ggf. auch den Leveleditor ins Menü machen
 //              Highscore Liste
 //              Multilingual (all strings in resourcestrings)
-// [OK SVN 17]  Levelconverter entfernen, stattdessen einlesen abwärtskompatibel machen
-//              Credits: unDelphiX (micrel.cz/Dx)
 
 interface
 
@@ -227,17 +222,14 @@ type
     GamePause: TMenuItem;
     Beenden: TMenuItem;
     Einstellungen: TMenuItem;
-    OptionFullScreen: TMenuItem;
     OptionMusic: TMenuItem;
     Leer2: TMenuItem;
-    Leer4: TMenuItem;
     Hilfe: TMenuItem;
     OptionSound: TMenuItem;
     Leer3: TMenuItem;
     Spielstand: TMenuItem;
     Leer5: TMenuItem;
     Neustart: TMenuItem;
-    OptionBreitbild: TMenuItem;
     Spielgeschwindigkeit: TMenuItem;
     Leicht: TMenuItem;
     Mittel: TMenuItem;
@@ -254,17 +246,14 @@ type
     procedure DXTimerTimer(Sender: TObject; LagCount: Integer);
     procedure DXTimerActivate(Sender: TObject);
     procedure DXTimerDeactivate(Sender: TObject);
-    procedure OptionFullScreenClick(Sender: TObject);
     procedure DXDrawInitializing(Sender: TObject);
     procedure GameStartClick(Sender: TObject);
     procedure GamePauseClick(Sender: TObject);
     procedure BeendenClick(Sender: TObject);
     procedure OptionSoundClick(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure OptionMusicClick(Sender: TObject);
     procedure SpielstandClick(Sender: TObject);
     procedure NeustartClick(Sender: TObject);
-    procedure OptionBreitbildClick(Sender: TObject);
     procedure LeichtClick(Sender: TObject);
     procedure MittelClick(Sender: TObject);
     procedure SchwerClick(Sender: TObject);
@@ -526,29 +515,9 @@ begin
     DXDraw.ColorTable := ImageList.Items.ColorTable;
     DXDraw.DefColorTable := ImageList.Items.ColorTable;
     DXDraw.UpdatePalette;
-    OptionBreitBild.enabled := OptionFullScreen.checked;
     DXDraw.Finalize;
-    if OptionFullScreen.Checked then
-    begin
-      if not (doFullScreen in DXDraw.Options) then StoreWindow;
-      DXDraw.Options := DXDraw.Options + [doFullScreen];
-    end
-    else
-    begin
-      if doFullScreen in DXDraw.Options then RestoreWindow;
-      DXDraw.Options := DXDraw.Options - [doFullScreen];
-    end;
-    if not OptionBreitBild.checked then
-    begin
-      dxdraw.autosize := false;
-      dxdraw.Top := 0;
-      dxdraw.Left := 0;
-      dxdraw.width := mainform.ClientWidth;
-      dxdraw.height := mainform.ClientHeight;
-      dxdraw.surfacewidth := mainform.ClientWidth;
-      dxdraw.surfaceheight := mainform.ClientHeight;
-    end
-    else dxdraw.autosize := true;
+    DXDraw.Options := DXDraw.Options - [doFullScreen];
+    DXDraw.autosize := true;
     DXDraw.Initialize;
   except
     //Imagelist.Items.clear;
@@ -1271,13 +1240,6 @@ begin
   GameStartClick(GameStart);
 end;
 
-procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  if (ssAlt in Shift) and (Key=VK_RETURN) then
-    OptionFullScreenClick(OptionFullScreen);
-end;
-
 procedure TMainForm.GameStartClick(Sender: TObject);
 begin
   StartScene(gsTitle);
@@ -1405,13 +1367,6 @@ end;
 procedure TMainForm.BeendenClick(Sender: TObject);
 begin
   close;
-end;
-
-procedure TMainForm.OptionFullScreenClick(Sender: TObject);
-begin
-  OptionFullScreen.Checked := not OptionFullScreen.Checked;
-  DXInit;
-  writeoptions;
 end;
 
 procedure TMainForm.OptionSoundClick(Sender: TObject);
@@ -1554,10 +1509,6 @@ begin
       else INIDatei.WriteBool('Settings', 'Music', false);
     if OptionSound.checked then INIDatei.WriteBool('Settings', 'Sound', true)
       else INIDatei.WriteBool('Settings', 'Sound', false);
-    if OptionFullScreen.checked then INIDatei.WriteBool('Settings', 'FullScreen', true)
-      else INIDatei.WriteBool('Settings', 'FullScreen', false);
-    if OptionBreitbild.checked then INIDatei.WriteBool('Settings', 'ScreenAutoSize', true)
-      else INIDatei.WriteBool('Settings', 'ScreenAutoSize', false);
     if FInterval = giLeicht then INIDatei.WriteInteger('Settings', 'Speed', 1);
     if FInterval = giMittel then INIDatei.WriteInteger('Settings', 'Speed', 2);
     if FInterval = giSchwer then INIDatei.WriteInteger('Settings', 'Speed', 3);
@@ -1575,8 +1526,6 @@ begin
   try
     optionmusic.checked := INIDatei.ReadBool('Settings', 'Music', true);
     optionsound.checked := INIDatei.ReadBool('Settings', 'Sound', true);
-    optionfullscreen.checked := INIDatei.ReadBool('Settings', 'fullscreen', false);
-    OptionBreitBild.checked := INIDatei.ReadBool('Settings', 'ScreenAutoSize', true);
     if INIDatei.ReadInteger('Settings', 'Speed', 2) = 1 then
     begin
       FInterval := giLeicht;
@@ -2393,13 +2342,6 @@ begin
   EnemyCounter := 0;
   StartScene(gsMain);
   MusicSwitchTrack(mtGame);
-end;
-
-procedure TMainForm.OptionBreitbildClick(Sender: TObject);
-begin
-  OptionBreitbild.Checked := not OptionBreitbild.Checked;
-  DXInit;
-  writeoptions;
 end;
 
 procedure TMainForm.LeichtClick(Sender: TObject);

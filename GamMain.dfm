@@ -19,7 +19,6 @@ object MainForm: TMainForm
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnKeyDown = FormKeyDown
   OnShow = FormShow
   TextHeight = 13
   object MainMenu: TMainMenu
@@ -71,21 +70,6 @@ object MainForm: TMainForm
     end
     object Einstellungen: TMenuItem
       Caption = '&Einstellungen'
-      object OptionFullScreen: TMenuItem
-        Caption = '&Vollbildschirm'
-        ShortCut = 116
-        OnClick = OptionFullScreenClick
-      end
-      object OptionBreitbild: TMenuItem
-        Caption = '&Breitbild'
-        Checked = True
-        ShortCut = 117
-        OnClick = OptionBreitbildClick
-      end
-      object Leer4: TMenuItem
-        Caption = '-'
-        GroupIndex = 1
-      end
       object OptionSound: TMenuItem
         Caption = '&Soundeffekte'
         Checked = True
