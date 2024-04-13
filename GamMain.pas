@@ -2188,9 +2188,9 @@ begin
     Brush.Style := bsClear;
     Font.Size := 35;
     Font.Color := clMaroon;
-    Textout((dxdraw.surfacewidth div 2)-127, 98, 'Game Over!');
+    Textout((dxdraw.surfacewidth div 2)-127, 98, 'Game over!');
     Font.Color := clRed;
-    Textout((dxdraw.surfacewidth div 2)-125, 100, 'Game Over!');
+    Textout((dxdraw.surfacewidth div 2)-125, 100, 'Game over!');
     if (FBlink div 300) mod 2=0 then
     begin
       Font.Size := 30;
@@ -2202,7 +2202,8 @@ begin
     BlinkUpdate;
     Release;
   end;
-  if isButton1 in DXInput.States then
+  // Weiter mit Leertaste oder Enter
+  if (isButton1 in DXInput.States) or (isButton2 in DXInput.States) then
   begin
     PlaySound('SceneMov', False);
     PalleteAnim(RGBQuad(0, 0, 0), 300);

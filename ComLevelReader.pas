@@ -57,7 +57,6 @@ var
   sl, sl2: TStringList;
   curline: integer;
   ergebnis: string;
-  e: TEnemyAdvent;
   z, act: integer;
   i, j: integer;
   temp: string;
@@ -185,17 +184,15 @@ begin
       curline := 3;
       while curline < sl.Count do
       begin
-        ergebnis := sl.Strings[curline]; Inc(curline);
-        e.enemyType := TEnemyType(strtoint(ergebnis));
-        ergebnis := sl.Strings[curline]; Inc(curline);
-        e.x := strtoint(ergebnis);
-        ergebnis := sl.Strings[curline]; Inc(curline);
-        e.y := strtoint(ergebnis);
-        ergebnis := sl.Strings[curline]; Inc(curline);
-        e.lifes := strtoint(ergebnis);
-
         SetLength(EnemyAdventTable, Length(EnemyAdventTable)+1);
-        EnemyAdventTable[Length(EnemyAdventTable)-1] := e;
+        EnemyAdventTable[Length(EnemyAdventTable)-1].enemyType := TEnemyType(strtoint(sl.Strings[curline]));
+        Inc(curline);
+        EnemyAdventTable[Length(EnemyAdventTable)-1].x         := strtoint(sl.Strings[curline]);
+        Inc(curline);
+        EnemyAdventTable[Length(EnemyAdventTable)-1].y         := strtoint(sl.Strings[curline]);
+        Inc(curline);
+        EnemyAdventTable[Length(EnemyAdventTable)-1].lifes     := strtoint(sl.Strings[curline]);
+        Inc(curline);
       end;
       {$ENDREGION}
     end
