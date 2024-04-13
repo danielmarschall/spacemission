@@ -11,6 +11,7 @@ unit GamMain;
 // [OK SVN 22]  Vollbild entf.
 // [OK SVN 22]  Credits: unDelphiX (micrel.cz/Dx)
 // [OK SVN 24]  Quellcode optimieren
+// [OK SVN 25]  Bug: Zwei Fenster in Taskleiste
 //              EV CodeSign
 //              Spielstände usw. "Spiele" Ordner speichern, Config in Registry sichern, etc.
 //              Neue Einheiten => Medikit, Ufo das im Kreis fliegt und nicht weggeht
@@ -19,7 +20,6 @@ unit GamMain;
 //              Boss schwieriger machen: Er soll auch nach links und rechts gehen?
 //              Cooldown für Laser?
 //              Improve Sound effects
-//              Bug: Zwei Fenster in Taskleiste
 //              Level-Editor in die SpaceMission.exe rein und über Hauptmenü aufrufen?
 //              "Doku" in Hilfemenü einbinden, ggf. auch den Leveleditor ins Menü machen
 //              Highscore Liste
@@ -100,13 +100,27 @@ type
     constructor Create(AParent: TSprite); override;
   end;
 
-  TPlayerState = (pmNormal, pmDead, pmDeadVanished, pmFlyaway, pmEntering);
-  TPlayerSprite = class(TImageSprite)
+  TPlayerOrEnemyState = (
+    pesUnknown,
+    pesNormal,
+    pesExploding, // only boss, as preparation of pesDead
+    pesDead,
+    pesDeadVanished,
+    pesFlyaway, // only player at mission end
+    pesEntering,
+    pesHovering // only some kind of enemies
+  );
+
+  TPlayerOrEnemy = class abstract (TImageSprite)
+  strict protected
+    State: TPlayerOrEnemyState;
+  end;
+
+  TPlayerSprite = class(TPlayerOrEnemy)
   private
     FTamaCount: Integer; // accessed by TPlayerTamaSprite.Destroy
   strict private
     FCounter: Integer;
-    FState: TPlayerState;
     FOldTamaTime: Integer;
   strict protected
     procedure DoCollision(Sprite: TSprite; var Done: Boolean); override;
@@ -129,11 +143,10 @@ type
   end;
 
   TEnemyClass = class of TEnemy;
-  TEnemy = class(TImageSprite)
+  TEnemy = class abstract (TPlayerOrEnemy)
   strict protected
     FCounter: Integer;
     FLife: integer;
-    FMode: Integer; // TODO: Find out what this does and replace with an Enum (maybe the same as TPlayerState?)
     procedure HitEnemy(ADead: Boolean); virtual;
   public
     property Life: integer read FLife;
@@ -545,7 +558,7 @@ procedure TBackgroundSpecial.DoMove(MoveCount: Integer);
 begin
   inherited DoMove(MoveCount);
   X := X - MoveCount*(60/1000)*FSpeed;
-  if X<-Width then Dead;
+  if X < -Width then Dead;
 end;
 
 { TExplosion }
@@ -575,6 +588,7 @@ end;
 constructor TPlayerSprite.Create(AParent: TSprite);
 begin
   inherited Create(AParent);
+  State := pesEntering;
   Image := MainForm.ImageList.Items.Find('Machine');
   Width := Image.Width;
   Height := Image.Height;
@@ -584,7 +598,6 @@ begin
   AnimCount := Image.PatternCount;
   AnimLooped := True;
   AnimSpeed := DEFAULT_ANIMSPEED;
-  FState := pmEntering;
 end;
 
 procedure TPlayerSprite.DoCollision(Sprite: TSprite; var Done: Boolean);
@@ -601,7 +614,7 @@ begin
         MainForm.PlaySound('Explosion', false);
         Collisioned := false;
         FCounter := 0;
-        FState := pmDead;
+        State := pesDead;
         Done := false;
         Image := MainForm.ImageList.Items.Find('Explosion');
         Width := Image.Width;
@@ -628,7 +641,7 @@ const
   WegduesKonstante = 1.75;
 begin
   inherited DoMove(MoveCount);
-  if FState = pmNormal then
+  if State = pesNormal then
   begin
     if isUp in MainForm.DXInput.States then Y := Y - (250/1000)*MoveCount;
     if isDown in MainForm.DXInput.States then Y := Y + (250/1000)*MoveCount;
@@ -654,16 +667,16 @@ begin
     end;
     Collision;
   end
-  else if FState = pmDead then
+  else if State = pesDead then
   begin
     if FCounter>200 then
     begin
       FCounter := 0;
-      FState := pmDeadVanished;
+      State := pesDeadVanished;
       Visible := false;
     end;
   end
-  else if FState = pmDeadVanished then
+  else if State = pesDeadVanished then
   begin
     if FCounter>1500 then
     begin
@@ -673,7 +686,7 @@ begin
       Sleep(200);
     end;
   end
-  else if FState = pmFlyaway then
+  else if State = pesFlyaway then
   begin
     // TODO: "Wusch" sound?
     X := X + MoveCount*(300/1000) * (X/MainForm.DXDraw.Width + WegduesKonstante);
@@ -686,17 +699,17 @@ begin
       MainForm.PalleteAnim(RGBQuad(0, 0, 0), 300);
     end;
   end
-  else if FState = pmEntering then
+  else if State = pesEntering then
   begin
     X := X + MoveCount*(300/1000);
-    if X > 19 then FState := pmNormal;
+    if X > 19 then State := pesNormal;
   end;
   inc(FCounter, MoveCount);
 end;
 
 procedure TPlayerSprite.FlyAway;
 begin
-  FState := pmFlyaway;
+  State := pesFlyaway;
 end;
 
 { TPlayerTamaSprite }
@@ -793,7 +806,7 @@ procedure TEnemyTama.DoMove(MoveCount: Integer);
 begin
   inherited DoMove(MoveCount);
   X := X - MoveCount*(600/1000);
-  if X<-Width then Dead;
+  if X < -Width then Dead;
 end;
 
 { TEnemyMeteor }
@@ -801,6 +814,7 @@ end;
 constructor TEnemyMeteor.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
+  State := pesNormal;
   Image := MainForm.ImageList.Items.Find('Enemy-Meteor');
   Width := Image.Width;
   Height := Image.Height;
@@ -828,6 +842,7 @@ end;
 constructor TEnemyUFO.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
+  State := pesNormal;
   Image := MainForm.ImageList.Items.Find('Enemy-disk');
   Width := Image.Width;
   Height := Image.Height;
@@ -842,7 +857,7 @@ begin
 
   if ADead then
   begin
-    FMode := 2;
+    State := pesDead;
     FCounter := 0;
     Inc(MainForm.FScore, 1000);
     Image := MainForm.ImageList.Items.Find('Explosion');
@@ -862,16 +877,20 @@ end;
 procedure TEnemyUFO.DoMove(MoveCount: Integer);
 begin
   inherited DoMove(MoveCount);
-  if FMode=0 then
+  if State = pesNormal then
   begin
     X := X - MoveCount*(300/1000);
     Y := Y + Cos256(FCounter div 15)*2;
-    if X<-Width then Dead;
+    if X < -Width then Dead;
   end
-  else if FMode=2 then
+  else if State = pesDead then
   begin
     X := X - MoveCount*(300/1000);
-    if FCounter>200 then Dead;
+    if FCounter>200 then
+    begin
+      State := pesDeadVanished;
+      Dead;
+    end;
   end;
   inc(FCounter, MoveCount);
 end;
@@ -881,6 +900,7 @@ end;
 constructor TEnemyUFO2.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
+  State := pesNormal;
   Image := MainForm.ImageList.Items.Find('Enemy-disk2');
   Width := Image.Width;
   Height := Image.Height;
@@ -895,7 +915,7 @@ begin
 
   if ADead then
   begin
-    FMode := 2;
+    State := pesDead;
     FCounter := 0;
     Inc(MainForm.FScore, 1000);
     Image := MainForm.ImageList.Items.Find('Explosion');
@@ -915,11 +935,11 @@ end;
 procedure TEnemyUFO2.DoMove(MoveCount: Integer);
 begin
   inherited DoMove(MoveCount);
-  if FMode=0 then
+  if State = pesNormal then
   begin
     X := X - MoveCount*(300/1000);
     Y := Y + Cos256(FCounter div 15)*2;
-    if X<-Width then Dead;
+    if X < -Width then Dead;
     if FCounter-FOldTamaTime>=100 then
     begin
       Inc(FTamaCount);
@@ -932,10 +952,14 @@ begin
       FOldTamaTime := FCounter;
     end;
   end
-  else if FMode=2 then
+  else if State = pesDead then
   begin
     X := X - MoveCount*(300/1000);
-    if FCounter>200 then Dead;
+    if FCounter>200 then
+    begin
+      State := pesDeadVanished;
+      Dead;
+    end;
   end;
   inc(FCounter, MoveCount);
 end;
@@ -945,6 +969,7 @@ end;
 constructor TEnemyAttacker.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
+  State := pesNormal;
   Image := MainForm.ImageList.Items.Find('Enemy-Attacker');
   Width := Image.Width;
   Height := Image.Height;
@@ -960,7 +985,7 @@ begin
 
   if ADead then
   begin
-    FMode := 2;
+    State := pesDead;
     FCounter := 0;
     Inc(MainForm.FScore, 1000);
     Image := MainForm.ImageList.Items.Find('Explosion');
@@ -980,15 +1005,19 @@ end;
 procedure TEnemyAttacker.DoMove(MoveCount: Integer);
 begin
   inherited DoMove(MoveCount);
-  if FMode=0 then
+  if State = pesNormal then
   begin
     X := X - MoveCount*(300/1000)-FCounter div 128;
     if X < -Width then Dead;
   end
-  else if FMode=2 then
+  else if State = pesDead then
   begin
     X := X - MoveCount*(300/1000);
-    if FCounter>200 then Dead;
+    if FCounter>200 then
+    begin
+      State := pesDeadVanished;
+      Dead;
+    end;
   end;
   inc(FCounter, MoveCount);
 end;
@@ -998,6 +1027,7 @@ end;
 constructor TEnemyAttacker2.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
+  State := pesEntering;
   Image := MainForm.ImageList.Items.Find('Enemy-Attacker2');
   Width := Image.Width;
   Height := Image.Height;
@@ -1013,7 +1043,7 @@ begin
 
   if ADead then
   begin
-    FMode := 2;
+    State := pesDead;
     FCounter := 0;
     Inc(MainForm.FScore, 5000);
     Image := MainForm.ImageList.Items.Find('Explosion');
@@ -1033,19 +1063,19 @@ end;
 procedure TEnemyAttacker2.DoMove(MoveCount: Integer);
 begin
   inherited DoMove(MoveCount);
-  if FMode=0 then
+  if State = pesEntering then
   begin
     if X>((mainform.dxdraw.width/4) + (mainform.dxdraw.width/2) - (width/2)){450} then
       X := X - MoveCount*(300/1000)
     else
     begin
       Collisioned := True;
-      FMode := 1;
+      State := pesHovering;
       FPutTama := True;
     end;
     Y := Y + Cos256(FCounter div 15)*5;
   end
-  else if FMode=1 then
+  else if State = pesHovering then
   begin
     Y := Y + Cos256(FCounter div 15)*5;
     if FPutTama then
@@ -1075,9 +1105,13 @@ begin
       end;
     end;
   end
-  else if FMode=2 then
+  else if State = pesDead then
   begin
-    if FCounter>200 then Dead;
+    if FCounter>200 then
+    begin
+      State := pesDeadVanished;
+      Dead;
+    end;
   end;
   inc(FCounter, MoveCount);
 end;
@@ -1087,6 +1121,7 @@ end;
 constructor TEnemyAttacker3.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
+  State := pesNormal;
   Image := MainForm.ImageList.Items.Find('Enemy-Attacker3');
   Width := Image.Width;
   Height := Image.Height;
@@ -1102,7 +1137,7 @@ begin
 
   if ADead then
   begin
-    FMode := 1;
+    State := pesDead;
     FCounter := 0;
     Inc(MainForm.FScore, 5000);
     Image := MainForm.ImageList.Items.Find('Explosion');
@@ -1122,10 +1157,10 @@ end;
 procedure TEnemyAttacker3.DoMove(MoveCount: Integer);
 begin
   inherited DoMove(MoveCount);
-  if FMode=0 then
+  if State = pesNormal then
   begin
     X := X - (250/1000)*MoveCount;
-    if X<-Width then Dead;
+    if X < -Width then Dead;
     if FCounter-FOldTamaTime>=100 then
     begin
       Inc(FTamaCount);
@@ -1138,9 +1173,13 @@ begin
       FOldTamaTime := FCounter;
      end;
   end
-  else if FMode=1 then
+  else if State = pesDead then
   begin
-    if FCounter>200 then Dead;
+    if FCounter>200 then
+    begin
+      State := pesDeadVanished;
+      Dead;
+    end;
   end;
   inc(FCounter, MoveCount);
 end;
@@ -1150,6 +1189,7 @@ end;
 constructor TEnemyBoss.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
+  State := pesEntering;
   Image := MainForm.ImageList.Items.Find('Enemy-boss');
   Width := Image.Width;
   Height := Image.Height;
@@ -1171,7 +1211,7 @@ begin
 
   if ADead then
   begin
-    FMode := 2;
+    State := pesExploding; // not pesDead for the boss!
     FCounter := 0;
     Inc(MainForm.FScore, 100000);
     BossExists := false;
@@ -1187,19 +1227,19 @@ end;
 procedure TEnemyBoss.DoMove(MoveCount: Integer);
 begin
   inherited DoMove(MoveCount);
-  if FMode=0 then
+  if State = pesEntering then
   begin
     if X>((mainform.dxdraw.width/4) + (mainform.dxdraw.width/2) - (width/4)){450} then
       X := X - MoveCount*(300/1000)
     else
     begin
       Collisioned := True;
-      FMode := 1;
+      State := pesHovering;
       FPutTama := True;
     end;
     Y := Y + Cos256(FCounter div 15)*5;
   end
-  else if FMode=1 then
+  else if State = pesHovering then
   begin
     Y := Y + Cos256(FCounter div 15)*5;
     if FPutTama then
@@ -1229,7 +1269,7 @@ begin
       end;
     end;
   end
-  else if FMode=2 then
+  else if State = pesExploding then
   begin
     inc(waiter1);
     if waiter1 = 3 then
@@ -1247,14 +1287,18 @@ begin
       end
       else
       begin
-        Inc(MainForm.FScore, 1000);
-        FMode := 3;
+        Inc(MainForm.FScore, 10000);
+        State := pesDead;
       end;
     end;
   end
-  else if FMode=3 then
+  else if State = pesDead then
   begin
-    if FCounter>4000 then Dead;
+    if FCounter>4000 then
+    begin
+      State := pesDeadVanished;
+      Dead;
+    end;
   end;
   inc(FCounter, MoveCount);
 end;
@@ -2173,7 +2217,7 @@ begin
         DXDraw.Surface.Canvas.Font.Color := clLime;
         DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-250, dxdraw.surfaceheight-40, 'Mission erfolgreich!');
         DXDraw.Surface.Canvas.Release;
-        Sleep(1);
+        Sleep(1); // TODO: man merkt hier einen lag!
         inc(FCounter);
         if FCounter>150{200} then PlayerSprite.FlyAway;
       end;
@@ -2250,7 +2294,8 @@ begin
   BlinkUpdate;
   DXDraw.Surface.Canvas.Release;
 
-  if isButton1 in DXInput.States then
+  // Weiter mit Leertaste oder Enter
+  if (isButton1 in DXInput.States) or (isButton2 in DXInput.States) then
   begin
     PlaySound('SceneMov', False);
     PalleteAnim(RGBQuad(0, 0, 0), 300);
@@ -2307,7 +2352,8 @@ begin
   BlinkUpdate;
   DXDraw.Surface.Canvas.Release;
 
-  if isButton1 in DXInput.States then
+  // Weiter mit Leertaste oder Enter
+  if (isButton1 in DXInput.States) or (isButton2 in DXInput.States) then
   begin
     PlaySound('SceneMov', False);
     PalleteAnim(RGBQuad(0, 0, 0), 300);

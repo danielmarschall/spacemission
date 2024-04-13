@@ -34,7 +34,8 @@ begin
   SplashForm.Show;
   SplashForm.Update;
   Application.Initialize;
-  Application.showmainform := False;
+  Application.ShowMainform := False;
+  Application.MainFormOnTaskBar := true;
   Application.Title := 'SpaceMission Leveleditor';
   if not fileexists(FDirectory+'DirectX\Graphic.dxg') then
   begin
