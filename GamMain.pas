@@ -9,7 +9,9 @@ unit GamMain;
 //              EV CodeSign
 //              Spielstände usw. "Spiele" Ordner speichern, Config in Registry sichern, etc.
 //              Neue Einheiten => Medikit, Ufo das im Kreis fliegt und nicht weggeht
-//              Bei Pause => Entweder alles grau werden lassen, oder irgendwo "Pause" hinschreiben (nur Not in die Form Caption)
+//              Bei Pause => Entweder alles grau werden lassen
+// [OK SVN 19]  Pause wird nicht in Caption geschrieben
+// [OK SVN 19]  Wenn man pause gemacht hat und fenster wechselt und wieder zurückwechselt, ist pause aufgehoben.
 //              Alle Notizen durchschauen
 //              Boss schwieriger machen: Er soll auch nach links und rechts gehen?
 //              Cooldown für Laser?
@@ -321,13 +323,12 @@ type
     { Level-Routinen }
     procedure NewLevel(lev: integer);
     procedure ResetLevelData;
-    { MCI-Routinen }
+    { Musik-Routinen }
+    procedure MusicSwitchTrack(Name: TMusicTrack);
     procedure PlayMusic(Name: TMusicTrack);
-    //procedure StopMusic(Name: TMusicTrack);
-    procedure PauseMusic(Name: TMusicTrack);
+    procedure StopMusic(Name: TMusicTrack);
     procedure ResumeMusic(Name: TMusicTrack);
-    procedure DestroyMusic(Name: TMusicTrack);
-    procedure OpenMusic(Name: TMusicTrack);
+    procedure PauseMusic(Name: TMusicTrack);
     { Sound-Routinen }
     procedure PlaySound(Name: string; Wait: Boolean);
     { Initialisiations-Routinen }
@@ -538,10 +539,10 @@ begin
       dxdraw.autosize := false;
       dxdraw.Top := 0;
       dxdraw.Left := 0;
-      dxdraw.width := 640;    // TODO: besser die dimensionen des fensters
-      dxdraw.height := 480;
-      dxdraw.surfacewidth := 640;
-      dxdraw.surfaceheight := 480;
+      dxdraw.width := mainform.ClientWidth;
+      dxdraw.height := mainform.ClientHeight;
+      dxdraw.surfacewidth := mainform.ClientWidth;
+      dxdraw.surfaceheight := mainform.ClientHeight;
     end
     else dxdraw.autosize := true;
     DXDraw.Initialize;
@@ -917,7 +918,7 @@ begin
   Width := Image.Width;
   Height := Image.Height;
   BossExists := true;
-  MainForm.PlayMusic(mtBoss);
+  MainForm.MusicSwitchTrack(mtBoss);
   AnimCount := Image.PatternCount;
   AnimLooped := True;
   AnimSpeed := DEFAULT_ANIMSPEED;
@@ -1193,17 +1194,19 @@ begin
   dxdraw.Align := alClient;
   dxdraw.Left := 0;
   dxdraw.Top := 0;
-  dxdraw.Width := 640;
-  dxdraw.Height := 480;
+  dxdraw.Width := mainform.ClientWidth;
+  dxdraw.Height := mainform.ClientHeight;
   dxdraw.AutoInitialize := False;
   dxdraw.AutoSize := False;
   dxdraw.Color := clBlack;
+  (*
   dxdraw.Display.BitCount := 24;
   dxdraw.Display.FixedBitCount := False;
   dxdraw.Display.FixedRatio := False;
   dxdraw.Display.FixedSize := False;
   dxdraw.Display.Height := 600;
   dxdraw.Display.Width := 800;
+  *)
   dxdraw.Options := [doAllowReboot, doWaitVBlank, doAllowPalette256, doCenter, {doRetainedMode,} doHardware, doSelectDriver];
   dxdraw.TabOrder := 0;
   dxdraw.Visible := true;
@@ -1281,9 +1284,15 @@ begin
   GamePause.Checked := not GamePause.Checked;
   DXTimer.Enabled := not GamePause.Checked;
   if GamePause.Checked then
-    PauseMusic(FMusic)
+  begin
+    if Assigned(DXTimer.OnDeactivate) then
+      DXTimer.OnDeactivate(DXTimer);
+  end
   else
-    ResumeMusic(FMusic);
+  begin
+    if Assigned(DXTimer.OnActivate) then
+      DXTimer.OnActivate(DXTimer);
+  end;
 end;
 
 // http://www.delphipraxis.net/post43515.html
@@ -1426,29 +1435,22 @@ begin
 end;
 
 procedure TMainForm.MusicInit;
+var
+  i: integer;
 begin
   try
     dxmusic.Midis.LoadFromFile(FDirectory+'DirectX\Music.dxm');
+    for i := 0 to dxmusic.Midis.Count-1 do
+    begin
+      if not dxmusic.Midis.Items[i].IsInitialized then
+      begin
+        dxmusic.Midis.Items[i].Init;
+        dxmusic.Midis.Items[i].Load;
+      end;
+    end;
   except
     optionmusic.enabled := false;
   end;
-end;
-
-procedure TMainForm.DestroyMusic(Name: TMusicTrack);
-begin
-  if Name = mtNone then exit;
-  dxmusic.Midis.Items[Ord(Name)-1].Stop;
-end;
-
-procedure TMainForm.OpenMusic(Name: TMusicTrack);
-begin
-  // Nothing to do
-end;
-
-procedure TMainForm.PauseMusic(Name: TMusicTrack);
-begin
-  if Name = mtNone then exit;
-  dxmusic.Midis.Items[Ord(Name)-1].Stop;
 end;
 
 procedure TMainForm.DXDrawInitializing(Sender: TObject);
@@ -1477,6 +1479,10 @@ end;
 
 procedure TMainForm.DXTimerActivate(Sender: TObject);
 begin
+  if TDxTimer(Sender).Tag > 0 then
+    TDxTimer(Sender).Tag := TDxTimer(Sender).Tag - 1; // es können mehrere activate/deactivate vorkommen, wegen dem Pause-Button
+  if TDxTimer(Sender).Tag > 0 then
+    exit;
   Caption := Application.Title;
   if not ProgrammGestartet then
   begin
@@ -1488,6 +1494,7 @@ end;
 
 procedure TMainForm.DXTimerDeactivate(Sender: TObject);
 begin
+  TDxTimer(Sender).Tag := TDxTimer(Sender).Tag + 1;
   Caption := Application.Title + ' [Pause]';
   PauseMusic(FMusic);
 end;
@@ -1606,15 +1613,14 @@ begin
     WaveList.Items.Find(Name).Play(Wait);
 end;
 
-procedure TMainForm.PlayMusic(Name: TMusicTrack);
+procedure TMainForm.MusicSwitchTrack(Name: TMusicTrack);
 begin
   if (not mainform.active) and (mainform.visible) then //1st Programmstart
     exit;
   if (OptionMusic.checked) and (OptionMusic.enabled) then
   begin
-    DestroyMusic(FMusic);
-    OpenMusic(Name);
-    ResumeMusic(Name);
+    StopMusic(FMusic);
+    PlayMusic(Name);
   end;
   FMusic := Name;
 end;
@@ -1702,7 +1708,7 @@ begin
   GameStart.enabled := false;
   Spielgeschwindigkeit.enabled := false;
   mainform.Visible := true;
-  PlayMusic(mtTitle);
+  MusicSwitchTrack(mtTitle);
 end;
 
 procedure TMainForm.StartSceneMain;
@@ -1713,7 +1719,7 @@ begin
   FCounter := 0;
   NewLevel(FLevel);
   BossExists := false;
-  PlayMusic(mtGame);
+  MusicSwitchTrack(mtGame);
   FEnemyAdventPos := 0;
   FFrame := -4;
   PlayerSprite := TPlayerSprite.Create(SpriteEngine.Engine);
@@ -1808,7 +1814,7 @@ begin
   Spielgeschwindigkeit.enabled := false;
   Neustart.enabled := false;
   GamePause.enabled := false;
-  PlayMusic(mtScene);
+  MusicSwitchTrack(mtScene);
   BossExists := false;
 end;
 
@@ -1820,7 +1826,7 @@ begin
   Spielgeschwindigkeit.enabled := false;
   Neustart.enabled := false;
   GamePause.enabled := false;
-  PlayMusic(mtScene);
+  MusicSwitchTrack(mtScene);
   BossExists := false;
 end;
 
@@ -2259,7 +2265,7 @@ begin
     StartScene(gsWin);
     exit;
   end;
-  PlayMusic(mtScene);
+  MusicSwitchTrack(mtScene);
 end;
 
 procedure TMainForm.EndSceneNewLevel;
@@ -2303,11 +2309,11 @@ begin
   OptionMusic.Checked := not OptionMusic.Checked;
   if OptionMusic.Checked then
   begin
-    PlayMusic(FMusic)
+    MusicSwitchTrack(FMusic)
   end
   else
   begin
-    DestroyMusic(FMusic);
+    StopMusic(FMusic);
   end;
   WriteOptions;
 end;
@@ -2332,19 +2338,28 @@ begin
   if ADead then Collisioned := True;
 end;
 
-{procedure TMainForm.StopMusic;
+procedure TMainForm.PlayMusic(Name: TMusicTrack);
 begin
-  PauseMusic(FMusic);
-  MCISendString(pchar('seek "'+FDirectory+'Musik\Boss.mid" to start'), nil, 255, 0);
-  MCISendString(pchar('seek "'+FDirectory+'Musik\Game.mid" to start'), nil, 255, 0);
-  MCISendString(pchar('seek "'+FDirectory+'Musik\Title.mid" to start'), nil, 255, 0);
-  MCISendString(pchar('seek "'+FDirectory+'Musik\Scene.mid" to start'), nil, 255, 0);
-end;}
+  if not OptionMusic.checked then exit;
+  dxmusic.Midis.Items[Ord(Name)-1].Play;
+end;
+
+procedure TMainForm.StopMusic(Name: TMusicTrack);
+begin
+  if Name = mtNone then exit;
+  dxmusic.Midis.Items[Ord(Name)-1].Stop;
+end;
 
 procedure TMainForm.ResumeMusic(Name: TMusicTrack);
 begin
   if not OptionMusic.checked then exit;
-  dxmusic.Midis.Items[Ord(Name)-1].Play;
+  dxmusic.Midis.Items[Ord(Name)-1].Play; // TODO: how to pause/resume instead play/stop
+end;
+
+procedure TMainForm.PauseMusic(Name: TMusicTrack);
+begin
+  if Name = mtNone then exit;
+  dxmusic.Midis.Items[Ord(Name)-1].Stop; // TODO: how to pause/resume instead play/stop
 end;
 
 constructor TEnemyMeteor.Create(AParent: TSprite; ALifes: integer);
@@ -2371,7 +2386,7 @@ begin
   FScore := 0;
   EnemyCounter := 0;
   StartScene(gsMain);
-  PlayMusic(mtGame);
+  MusicSwitchTrack(mtGame);
 end;
 
 procedure TMainForm.OptionBreitbildClick(Sender: TObject);
@@ -2428,7 +2443,7 @@ end;
 
 procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  if optionMusic.checked then DestroyMusic(FMusic);
+  if optionMusic.checked then StopMusic(FMusic);
   SpriteEngine.Engine.Clear;
   dxsound.Finalize;
   dxinput.Destroy;
