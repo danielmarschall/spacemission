@@ -27,8 +27,7 @@ type
     li3b: TLabel;
     liu: TLabel;
     liw: TLabel;
-    SpinEditEdt: TEdit;
-    SpinEdit: TUpDown;
+    LevelNumber: TSpinEdit;
     procedure LoeschenBtnClick(Sender: TObject);
     procedure LadenBtnClick(Sender: TObject);
     procedure SpeichernBtnClick(Sender: TObject);
@@ -40,9 +39,6 @@ type
     procedure LevelNameChange(Sender: TObject);
     procedure LevelListBoxDblClick(Sender: TObject);
     procedure FormHide(Sender: TObject);
-    procedure SpinEditClick(Sender: TObject; Button: TUDBtnType);
-    procedure SpinEditEdtKeyPress(Sender: TObject; var Key: Char);
-    procedure SpinEditEdtChange(Sender: TObject);
   public
     procedure SearchLevels;
     function RightStr(str: string; count: integer): string;
@@ -77,7 +73,7 @@ begin
   for i := 1 to 9999 do
   begin
     if fileexists(GetLevelFileName(i)) then
-      LevelListBox.items.Add(ExtractFileName(GetLevelFileName(i)));
+      LevelListBox.items.Add(ChangeFileExt(ExtractFileName(GetLevelFileName(i)),''));
   end;
 end;
 
@@ -113,7 +109,7 @@ end;
 procedure TSpeicherungForm.LadenBtnClick(Sender: TObject);
 var
   Markiert: boolean;
-  i, TempArtMain, TempLiveMain: integer;
+  i: integer;
   LevelData: TLevelData;
 begin
   Markiert := false;
@@ -147,8 +143,6 @@ begin
       LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
     MainForm.ScrollBar.Max := LevelData.LevelEditorLength;
     MainForm.Enemys.Clear;
-    TempArtMain := MainForm.ArtChecked;
-    TempLiveMain := MainForm.LiveEdit;
     MainForm.NumEnemys := Length(LevelData.EnemyAdventTable);
     for i := 0 to MainForm.NumEnemys-1 do
     begin
@@ -158,19 +152,17 @@ begin
         Ord(LevelData.EnemyAdventTable[i].enemyType),
         LevelData.EnemyAdventTable[i].lifes
       );
-      MainForm.ArtChecked := Ord(LevelData.EnemyAdventTable[i].enemyType);
-      MainForm.LiveEdit := LevelData.EnemyAdventTable[i].lifes;
       MainForm.EnemyCreate(
         LevelData.EnemyAdventTable[i].x,
-        LevelData.EnemyAdventTable[i].y
+        LevelData.EnemyAdventTable[i].y,
+        LevelData.EnemyAdventTable[i].enemyType,
+        LevelData.EnemyAdventTable[i].lifes
       );
       if LevelData.EnemyAdventTable[i].enemyType = etEnemyBoss then MainForm.Boss := true;
     end;
   finally
     FreeAndNil(LevelData);
   end;
-  MainForm.LiveEdit := TempLiveMain;
-  MainForm.ArtChecked := TempArtMain;
   // Nacharbeiten
   MainForm.AnzeigeAct;
   close;
@@ -245,7 +237,7 @@ begin
   if mainform.Enemys.count = 0 then
   begin
     MessageDlg('Das Level ist leer!', mtError, [mbOK], 0);
-    SpinEdit.SetFocus;
+    LevelNumber.SetFocus;
     exit;
   end;
   {for i := 0 to length(LevelName.text) do
@@ -265,7 +257,7 @@ begin
       exit;
     end;
   end;}
-  if LevelListBox.items.IndexOf('Level ' + inttostr(SpinEdit.Position)) > -1 then
+  if LevelListBox.items.IndexOf('Level ' + inttostr(LevelNumber.Value)) > -1 then
   begin
     if MessageDlg('Level ist bereits vorhanden. Ersetzen?', mtConfirmation, [mbYes, mbNo], 0) = mrNo then
       exit;
@@ -297,7 +289,7 @@ begin
       LevelData.EnemyAdventTable[i].y := StrToInt(filter(2, mainform.enemys.Strings[i]));
       LevelData.EnemyAdventTable[i].lifes := StrToInt(filter(4, mainform.enemys.Strings[i]));
     end;
-    LevelData.Save(GetLevelFileName(SpinEdit.Position));
+    LevelData.Save(GetLevelFileName(LevelNumber.Value));
   finally
     FreeAndNil(LevelData);
   end;
@@ -332,7 +324,7 @@ begin
     exit;
   end;
   temp := LevelListBox.Items.strings[LevelListBox.itemindex];
-  SpinEdit.Position := strtoint(RightStr(temp, length(temp)-6));
+  LevelNumber.Value := strtoint(RightStr(temp, length(temp)-Length('Level ')));
 
   LevelData := TLevelData.Create;
   try
@@ -407,28 +399,6 @@ end;
 procedure TSpeicherungForm.FormHide(Sender: TObject);
 begin
   mainform.dxtimer.enabled := true;
-end;
-
-procedure TSpeicherungForm.SpinEditClick(Sender: TObject;
-  Button: TUDBtnType);
-begin
-  SpinEditEdt.Text := inttostr(SpinEdit.position);
-end;
-
-procedure TSpeicherungForm.SpinEditEdtKeyPress(Sender: TObject;
-  var Key: Char);
-begin
-  {$IFDEF UNICODE}
-  if not CharInSet(Key, [#13, #08, '0'..'9']) then
-  {$ELSE}
-  if not (Key in [#13, #08, '0'..'9']) then
-  {$ENDIF}
-    Key := #0;
-end;
-
-procedure TSpeicherungForm.SpinEditEdtChange(Sender: TObject);
-begin
-  SpinEdit.Position := strtoint(SpinEditEdt.text);
 end;
 
 end.

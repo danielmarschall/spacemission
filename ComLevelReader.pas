@@ -39,9 +39,9 @@ uses
 
 function GetLevelFileName(lev: integer): string;
 begin
-  result := FDirectory+'Levels\Lev'+inttostr(lev)+'A1.lev'; // Version 0.2 Level Files
+  result := FDirectory+'Levels\Level '+inttostr(lev)+'.lev'; // Version 0.3+ Level Files
   if not FileExists(Result) then
-    result := FDirectory+'Levels\Level '+inttostr(lev)+'.lev'; // Version 0.3+ Level Files
+    result := FDirectory+'Levels\Lev'+inttostr(lev)+'A1.lev'; // Version 0.2 Level Files
 end;
 
 { TLevelData }

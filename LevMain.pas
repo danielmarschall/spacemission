@@ -2,6 +2,7 @@ unit LevMain;
 
 // TODO 2024:
 // - Wenn man ein Level "X" lädt, und dann Verwalten wieder öffnet, sollte diese Level-Nummer vorgeschlagen werden, sodass man direkt Speichern klicken kann
+// - Remove "Source edit" form
 
 interface
 
@@ -9,7 +10,7 @@ uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, MMSystem,
   Dialogs, StdCtrls, ExtCtrls, Menus, DIB, DXClass, DXSprite, DXDraws,
   DXSounds, Spin, ComCtrls{$IF CompilerVersion >= 23.0}, System.UITypes,
-  WinAPI.DirectDraw{$ENDIF}, DirectX;
+  WinAPI.DirectDraw{$ENDIF}, DirectX, ComLevelReader;
 
 type
   TMainForm = class(TDXForm)
@@ -49,8 +50,8 @@ type
     StatusBar: TStatusBar;
     N1: TMenuItem;
     Spielfelderweitern1: TMenuItem;
-    LivesEdt: TEdit;
-    Lives: TUpDown;
+    SidePanel: TPanel;
+    LivesEdit: TSpinEdit;
     procedure DXDrawFinalize(Sender: TObject);
     procedure DXDrawInitialize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -73,9 +74,6 @@ type
     procedure Spielfelderweitern1Click(Sender: TObject);
     procedure ScrollBarScroll(Sender: TObject; ScrollCode: TScrollCode;
       var ScrollPos: Integer);
-    procedure LivesClick(Sender: TObject; Button: TUDBtnType);
-    procedure LivesEdtKeyPress(Sender: TObject; var Key: Char);
-    procedure LivesEdtChange(Sender: TObject);
   public
     { VCL-Ersatz }
     spriteengine: tdxspriteengine;
@@ -85,15 +83,15 @@ type
     { Variablen }
     FMenuItem: integer;
     Enemys: TStrings;
-    ArtChecked: integer;
-    LiveEdit: integer;
     ScrollP: integer;
     AltScrollPos: integer;
     Boss: boolean;
     LevChanged: boolean;
     NumEnemys: integer;
+    function SelectedEnemyType: TEnemyType;
     { Level-Routinen }
-    procedure EnemyCreate(x, y: integer);
+    procedure EnemyCreate(x, y: integer); overload;
+    procedure EnemyCreate(x, y: integer; AEnemyType: TEnemyType; ALives: integer); overload;
     procedure DestroyLevel;
     procedure AnzeigeAct;
     { Initialisiations-Routinen }
@@ -102,8 +100,6 @@ type
     { Farb-Routinen }
     function ComposeColor(Dest, Src: TRGBQuad; Percent: Integer): TRGBQuad;
     procedure PalleteAnim(Col: TRGBQuad; Time: Integer);
-    { Sonstiges }
-    procedure LivesChange(newval: integer);
   end;
 
 var
@@ -112,14 +108,9 @@ var
 implementation
 
 uses
-  Global, LevSplash, LevSpeicherung, ComInfo, LevSource, LevOptions,
-  ComLevelReader;
+  Global, LevSplash, LevSpeicherung, ComInfo, LevSource, LevOptions;
 
 const
-  FileError = 'Die Datei kann von SpaceMission nicht geöffnet werden!';
-  status_info = ' Zeigen Sie mit dem Mauszeiger auf eine Einheit, um deren Eigenschaften anzuzeigen...';
-  status_lives = ' Leben: ';
-  status_nolives = ' Einheit hat keine Lebensangabe';
   RasterW = 48;
   RasterH = 32;
 
@@ -127,21 +118,62 @@ const
 
 type
   TBackground = class(TBackgroundSprite)
-  protected
+  strict protected
     procedure DoMove(MoveCount: Integer); override;
   end;
 
   TEnemy = class(TImageSprite)
-  private
-    Lives: integer;
-    Art: integer;
-    XCor: integer;
-    CorInit: boolean;
-  protected
+  strict private
+    FLives: integer;
+    FEnemyType: TEnemyType;
+    FXCor: integer;
+    FCorInit: boolean;
+  strict protected
     procedure DoMove(MoveCount: Integer); override;
   public
-    constructor Create(AParent: TSprite); override;
+    constructor Create(AParent: TSprite; AEnemyType: TEnemyType; ALives: Integer); reintroduce;
   end;
+
+{ TBackground }
+
+procedure TBackground.DoMove(MoveCount: Integer);
+begin
+  X := -(MainForm.ScrollP * RasterW);
+end;
+
+{ TEnemy }
+
+procedure TEnemy.DoMove(MoveCount: Integer);
+begin
+  if not FCorInit then
+  begin
+    FXCor := trunc(x) + (MainForm.ScrollP * RasterW);
+    FCorInit := true;
+  end;
+  if MainForm.Enemys.IndexOf(floattostr(FXCor)+'-'+floattostr(y)+':'+
+    inttostr(Ord(FEnemyType))+'('+inttostr(FLives)+')') = -1 then dead;
+  X := FXCor - (MainForm.ScrollP * RasterW);
+end;
+
+constructor TEnemy.Create(AParent: TSprite; AEnemyType: TEnemyType; ALives: Integer);
+begin
+  inherited Create(AParent);
+  if AEnemyType = etEnemyAttacker then Image := MainForm.ImageList.Items.Find('Enemy-Attacker');
+  if AEnemyType = etEnemyAttacker2 then Image := MainForm.ImageList.Items.Find('Enemy-Attacker2');
+  if AEnemyType = etEnemyAttacker3 then Image := MainForm.ImageList.Items.Find('Enemy-Attacker3');
+  if AEnemyType = etEnemyMeteor then Image := MainForm.ImageList.Items.Find('Enemy-Meteor');
+  if AEnemyType = etEnemyUFO then Image := MainForm.ImageList.Items.Find('Enemy-Disk');
+  if AEnemyType = etEnemyUFO2 then Image := MainForm.ImageList.Items.Find('Enemy-Disk2');
+  if AEnemyType = etEnemyBoss then Image := MainForm.ImageList.Items.Find('Enemy-Boss');
+
+  if AEnemyType = etEnemyMeteor then FLives := 0 else FLives := ALives;
+  FEnemyType := AEnemyType;
+  Width := Image.Width;
+  Height := Image.Height;
+  PixelCheck := True;
+end;
+
+{ TMainForm }
 
 procedure TMainForm.DXInit;
 begin
@@ -153,41 +185,9 @@ begin
   DXDraw.Initialize;
 end;
 
-procedure TEnemy.DoMove(MoveCount: Integer);
-begin
-  if not CorInit then
-  begin
-    XCor := trunc(x) + (MainForm.ScrollP * RasterW);
-    CorInit := true;
-  end;
-  if MainForm.Enemys.IndexOf(floattostr(XCor)+'-'+floattostr(y)+':'+
-    inttostr(Art)+'('+inttostr(Lives)+')') = -1 then dead;
-  X := XCor - (MainForm.ScrollP * RasterW);
-end;
-
-procedure TBackground.DoMove(MoveCount: Integer);
-begin
-  X := -(MainForm.ScrollP * RasterW);
-end;
-
-constructor TEnemy.Create(AParent: TSprite);
-begin
-  inherited Create(AParent);
-  if MainForm.ArtChecked = 1 then Image := MainForm.ImageList.Items.Find('Enemy-Attacker');
-  if MainForm.ArtChecked = 2 then Image := MainForm.ImageList.Items.Find('Enemy-Attacker2');
-  if MainForm.ArtChecked = 3 then Image := MainForm.ImageList.Items.Find('Enemy-Attacker3');
-  if MainForm.ArtChecked = 4 then Image := MainForm.ImageList.Items.Find('Enemy-Meteor');
-  if MainForm.ArtChecked = 5 then Image := MainForm.ImageList.Items.Find('Enemy-Disk');
-  if MainForm.ArtChecked = 6 then Image := MainForm.ImageList.Items.Find('Enemy-Disk2');
-  if MainForm.ArtChecked = 7 then Image := MainForm.ImageList.Items.Find('Enemy-Boss');
-  if MainForm.ArtChecked = 4 then Lives := 0 else Lives := MainForm.LiveEdit;
-  Art := MainForm.ArtChecked;
-  Width := Image.Width;
-  Height := Image.Height;
-  PixelCheck := True;
-end;
-
 procedure TMainForm.FormCreate(Sender: TObject);
+resourcestring
+  SFileError = 'Die Datei kann von SpaceMission nicht geöffnet werden!';
 var
   LevelData: TLevelData;
 begin
@@ -202,17 +202,19 @@ begin
   dxdraw.Parent := self;
   dxdraw.Left := 0;
   dxdraw.Top := 0;
-  dxdraw.Width := 640;
-  dxdraw.Height := 480;
+  dxdraw.Width := SidePanel.Left;
+  dxdraw.Height := ScrollBar.Top;
   dxdraw.AutoInitialize := False;
   dxdraw.AutoSize := False;
   dxdraw.Color := clBlack;
+  (*
   dxdraw.Display.BitCount := 24;
   dxdraw.Display.FixedBitCount := False;
   dxdraw.Display.FixedRatio := False;
   dxdraw.Display.FixedSize := False;
   dxdraw.Display.Height := 600;
   dxdraw.Display.Width := 800;
+  *)
   dxdraw.Options := [doAllowReboot, doWaitVBlank, doAllowPalette256, doCenter, {doRetainedMode,} doHardware, doSelectDriver];
   dxdraw.OnFinalize := DXDrawFinalize;
   dxdraw.OnInitialize := DXDrawInitialize;
@@ -230,8 +232,8 @@ begin
 
   { VCL-Ersatz ende }
 
-  ArtChecked := 1;
-  LiveEdit := 1;
+  Enemy1.Checked := true;
+  EnemyClick(Enemy1);
   // Leeres Level am Anfang braucht keine Beenden-Bestätigung.
   // LevChanged := true;
 
@@ -245,7 +247,7 @@ begin
       try
         LevelData.Load(paramstr(1));
       except
-        showmessage(FileError);
+        showmessage(SFileError);
         ProgramInit;
         exit;
       end;
@@ -255,10 +257,6 @@ begin
     { Laden }
     exit;
   end;
-  if fileexists(fdirectory+'Bilder\Auswahl.bmp') then
-    Image1.Picture.LoadFromFile(fdirectory+'Bilder\Auswahl.bmp');
-  {else
-    SelPanel.visible := false;}
   ProgramInit;
 end;
 
@@ -478,7 +476,8 @@ begin
   if Button = mbLeft then
   begin
     ok := true;
-    if (ArtChecked = 7) and boss then ok := false
+    if (SelectedEnemyType = etEnemyBoss) and boss then
+      ok := false // boss already exists
     else
     begin
       for i := 1 to 7 do
@@ -513,14 +512,14 @@ begin
     end;
     if ok then
     begin
-      if ArtChecked <> 4 then
+      if SelectedEnemyType <> etEnemyMeteor then
         Enemys.Add(floattostr(ex + (ScrollP * RasterW))+'-'+floattostr(ey)+':'+
-          inttostr(ArtChecked)+'('+inttostr(LiveEdit)+')')
+          inttostr(Ord(SelectedEnemyType))+'('+inttostr(LivesEdit.Value)+')')
       else
         Enemys.Add(floattostr(ex + (ScrollP * RasterW))+'-'+floattostr(ey)+':'+
-          inttostr(ArtChecked)+'(0)');
+          inttostr(Ord(SelectedEnemyType))+'(0)');
       inc(NumEnemys);
-      if ArtChecked = 7 then boss := true;
+      if SelectedEnemyType = etEnemyBoss then boss := true;
     end
     else beep;
   end
@@ -568,28 +567,27 @@ begin
 end;
 
 procedure TMainForm.EnemyClick(Sender: TObject);
+var
+  et: TEnemyType;
 begin
-  if sender = Enemy1 then ArtChecked := 1;
-  if sender = Enemy2 then ArtChecked := 2;
-  if sender = Enemy3 then ArtChecked := 3;
-  if sender = Enemy4 then ArtChecked := 4;
-  if sender = Enemy5 then ArtChecked := 5;
-  if sender = Enemy6 then ArtChecked := 6;
-  if sender = Enemy7 then ArtChecked := 7;
-  Image1.Left := -(87 * (ArtChecked - 1)) + 1;
-  Lives.Enabled := sender <> Enemy4;
-  LivesLabel.Enabled := sender <> Enemy4;
-  if sender = Enemy4 then LivesEdt.Font.Color := clBtnShadow // andere farbe?
-    else LivesEdt.Font.Color := clWindowText;
+  et := SelectedEnemyType;
+  Image1.Left := -(87 * (Ord(et) - 1)) + 1;
+  LivesEdit.Enabled := et <> etEnemyMeteor;
+  LivesLabel.Enabled := et <> etEnemyMeteor;
 end;
 
-procedure TMainForm.EnemyCreate(x, y: integer);
+procedure TMainForm.EnemyCreate(x, y: integer; AEnemyType: TEnemyType; ALives: integer);
 var
   Enemy: TSprite;
 begin
-  Enemy := TEnemy.Create(SpriteEngine.Engine);
+  Enemy := TEnemy.Create(SpriteEngine.Engine, AEnemyType, ALives);
   Enemy.x := x;
   Enemy.y := y;
+end;
+
+procedure TMainForm.EnemyCreate(x, y: integer);
+begin
+  EnemyCreate(x, y, SelectedEnemyType, LivesEdit.Value);
 end;
 
 procedure TMainForm.DestroyLevel;
@@ -600,8 +598,7 @@ begin
   NumEnemys := 0;
   Boss := false;
   LevChanged := true;
-  Lives.Position := 1;
-  LivesChange(Lives.Position);
+  LivesEdit.Value := 1;
   Enemy1.Checked := true;
   EnemyClick(Enemy1);
   AnzeigeAct;
@@ -639,13 +636,17 @@ end;
 
 procedure TMainForm.DXDrawMouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
+resourcestring
+  status_info = 'Zeigen Sie mit dem Mauszeiger auf eine Einheit, um deren Eigenschaften anzuzeigen...';
+  status_lives = 'Leben: ';
+  status_nolives = 'Einheit hat keine Lebensangabe';
 var
   ex, ey, i, j, k, l, wert: integer;
   breaked: boolean;
 begin
   if sender <> DxDraw then
   begin
-    StatusBar.SimpleText := status_info;
+    StatusBar.SimpleText := ' ' + status_info;
     exit;
   end;
   ex := trunc(x/RasterW) * RasterW;
@@ -685,12 +686,12 @@ begin
   if wert <> -1 then
   begin
     if wert > 0 then
-      StatusBar.SimpleText := status_lives + inttostr(wert)
+      StatusBar.SimpleText := ' ' + status_lives + inttostr(wert)
     else
-      StatusBar.SimpleText := status_nolives;
+      StatusBar.SimpleText := ' ' + status_nolives;
   end
   else
-    StatusBar.SimpleText := status_info;
+    StatusBar.SimpleText := ' ' + status_info;
 end;
 
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -717,31 +718,16 @@ begin
   ScrollP := ScrollPos;
 end;
 
-procedure TMainForm.LivesChange(newval: integer);
+function TMainForm.SelectedEnemyType: TEnemyType;
 begin
-  LiveEdit := newval;
-  livesedt.Text := inttostr(LiveEdit);
-  lives.Position := newval;
-end;
-
-procedure TMainForm.LivesClick(Sender: TObject; Button: TUDBtnType);
-begin
-  LivesChange(lives.Position);
-end;
-
-procedure TMainForm.LivesEdtKeyPress(Sender: TObject; var Key: Char);
-begin
-  {$IFDEF UNICODE}
-  if not CharInSet(Key, [#13, #08, '0'..'9']) then
-  {$ELSE}
-  if not (Key in [#13, #08, '0'..'9']) then
-  {$ENDIF}
-    Key := #0;
-end;
-
-procedure TMainForm.LivesEdtChange(Sender: TObject);
-begin
-  LivesChange(strtoint(livesedt.text));
+  if Enemy1.Checked then result := etEnemyAttacker
+  else if Enemy2.Checked then result := etEnemyAttacker2
+  else if Enemy3.Checked then result := etEnemyAttacker3
+  else if Enemy4.Checked then result := etEnemyMeteor
+  else if Enemy5.Checked then result := etEnemyUFO
+  else if Enemy6.Checked then result := etEnemyUFO2
+  else if Enemy7.Checked then result := etEnemyBoss
+  else result := etUnknown;
 end;
 
 end.

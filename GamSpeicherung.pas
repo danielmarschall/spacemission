@@ -81,7 +81,7 @@ begin
     while (res = 0) do
     begin
       if (sr.name <> '.') and (sr.name <> '..') then
-        LevelListBox.items.Add(copy(sr.Name, 0, length(sr.name)-4));
+        LevelListBox.items.Add(ChangeFileExt(sr.Name, ''));
       res := FindNext(sr);
     end;
   finally

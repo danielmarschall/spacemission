@@ -44,7 +44,6 @@ end;
 procedure TInfoForm.FormCreate(Sender: TObject);
 begin
   VersionLbl.caption := 'Version ' + ProgramVersion;
-  image.picture.loadfromfile(FDirectory + 'Bilder\Delphi.bmp');
 end;
 
 procedure TInfoForm.WebsiteClick(Sender: TObject);

@@ -10,7 +10,7 @@ unit GamMain;
 // [OK SVN 21]  DPlayX.dll auskommentieren wegen Windows Meldung
 // [OK SVN 22]  Vollbild entf.
 // [OK SVN 22]  Credits: unDelphiX (micrel.cz/Dx)
-//              Quellcode optimieren und klassen-namen überdenken
+// [OK SVN 24]  Quellcode optimieren
 //              EV CodeSign
 //              Spielstände usw. "Spiele" Ordner speichern, Config in Registry sichern, etc.
 //              Neue Einheiten => Medikit, Ufo das im Kreis fliegt und nicht weggeht
@@ -354,18 +354,16 @@ var
 implementation
 
 uses
-  GamSplash, GamSpeicherung, ComInfo, GamCheat, Global;
+  GamSplash, GamSpeicherung, ComInfo, GamCheat, Global, MMSystem;
 
 const
-  conleicht = 650 div 60; // 10
+  conleicht =  650 div 60; // 10
   conmittel = 1000 div 60; // 16
   conschwer = 1350 div 60; // 22
   conmaster = 2000 div 60; // 33
   lives = 6;
   DEFAULT_ANIMSPEED = 15/1000;
-
-resourcestring
-  FileError = 'Die Datei kann von SpaceMission nicht geöffnet werden!';
+  ADDITIONAL_ENEMIES_PER_LEVEL = 75;
 
 {$R *.DFM}
 
@@ -380,7 +378,199 @@ const
     isButton19, isButton20, isButton21, isButton22, isButton23, isButton24, isButton25,
     isButton26, isButton27, isButton28, isButton29, isButton30, isButton31, isButton32];
 
-// TODO: Code komplett überarbeiten. Bessere Ableitungen machen
+// https://www.delphipraxis.net/post43515.html
+function GetHTML(AUrl: string): string;
+var
+  databuffer : array[0..4095] of char;
+  ResStr : string;
+  hSession, hfile: hInternet;
+  dwindex,dwcodelen,dwread,dwNumber: cardinal;
+  dwcode : array[1..20] of char;
+  res    : pchar;
+  Str    : pchar;
+begin
+  ResStr:='';
+  if (system.pos('http://',lowercase(AUrl))=0) and
+     (system.pos('https://',lowercase(AUrl))=0) then
+     AUrl:='http://'+AUrl;
+
+  // Hinzugefügt
+  application.ProcessMessages;
+
+  hSession:=InternetOpen('InetURL:/1.0',
+                         INTERNET_OPEN_TYPE_PRECONFIG,
+                         nil,
+                         nil,
+                         0);
+  if assigned(hsession) then
+  begin
+    // Hinzugefügt
+    application.ProcessMessages;
+
+    hfile:=InternetOpenUrl(
+           hsession,
+           pchar(AUrl),
+           nil,
+           0,
+           INTERNET_FLAG_RELOAD,
+           0);
+    dwIndex  := 0;
+    dwCodeLen := 10;
+
+    // Hinzugefügt
+    application.ProcessMessages;
+
+    HttpQueryInfo(hfile,
+                  HTTP_QUERY_STATUS_CODE,
+                  @dwcode,
+                  dwcodeLen,
+                  dwIndex);
+    res := pchar(@dwcode);
+    dwNumber := sizeof(databuffer)-1;
+    if (res ='200') or (res ='302') then
+    begin
+      while (InternetReadfile(hfile,
+                              @databuffer,
+                              dwNumber,
+                              DwRead)) do
+      begin
+
+        // Hinzugefügt
+        application.ProcessMessages;
+
+        if dwRead =0 then
+          break;
+        databuffer[dwread]:=#0;
+        Str := pchar(@databuffer);
+        resStr := resStr + Str;
+      end;
+    end
+    else
+      ResStr := 'Status:'+res;
+    if assigned(hfile) then
+      InternetCloseHandle(hfile);
+  end;
+
+  // Hinzugefügt
+  application.ProcessMessages;
+
+  InternetCloseHandle(hsession);
+  Result := resStr;
+end;
+
+
+{ TBackground }
+
+procedure TBackground.DoMove(MoveCount: Integer);
+var
+  ran: integer;
+begin
+  inherited DoMove(MoveCount);
+  X := X - MoveCount*(60/1000)*FSpeed;
+  randomize;
+  ran := Random(1500);
+  if ran = 150 then
+  begin
+    with TBackgroundSpecial.Create(mainform.SpriteEngine.Engine) do
+    begin
+      SetMapSize(1, 1);
+      Image := mainform.ImageList.Items.Find('Background-Planet1');
+      Width := Image.Width;
+      Height := Image.Height;
+
+      Y := random(mainform.dxdraw.height);
+      X := mainform.dxdraw.width;
+
+      ran := Random(2);
+      if ran = 0 then
+      begin
+        Z := -20;
+        FSpeed := 1.8;
+      end
+      else if ran = 1 then
+      begin
+        Z := -40;
+        FSpeed := 0.8;
+      end
+      else if ran = 2 then
+      begin
+        Z := -60;
+        FSpeed := 0.3;
+      end;
+    end;
+  end
+  else if ran = 500 then
+  begin
+    with TBackgroundSpecial.Create(mainform.SpriteEngine.Engine) do
+    begin
+      SetMapSize(1, 1);
+      ran := Random(4);
+      if ran = 0 then
+        Image := mainform.ImageList.Items.Find('Background-Red')
+      else if ran = 1 then
+        Image := mainform.ImageList.Items.Find('Background-Blue')
+      else if ran = 2 then
+        Image := mainform.ImageList.Items.Find('Background-Yellow')
+      else if ran = 3 then
+        Image := mainform.ImageList.Items.Find('Hintergrund-Rot');
+      Width := Image.Width;
+      Height := Image.Height;
+
+      Y := random(mainform.dxdraw.height);
+      X := mainform.dxdraw.width;
+
+      { ran := Random(2);
+      if ran = 0 then
+      begin
+        Z := -20;
+        FSpeed := 1.8;
+      end
+      else if ran = 1 then
+      begin
+        Z := -40;
+        FSpeed := 0.8;
+      end
+      else if ran = 2 then
+      begin }
+        Z := -60;
+        FSpeed := 0.3;
+      { end; }
+    end;
+  end;
+end;
+
+{ TBackgroundSpecial }
+
+procedure TBackgroundSpecial.DoMove(MoveCount: Integer);
+begin
+  inherited DoMove(MoveCount);
+  X := X - MoveCount*(60/1000)*FSpeed;
+  if X<-Width then Dead;
+end;
+
+{ TExplosion }
+
+constructor TExplosion.Create(AParent: TSprite);
+begin
+  inherited Create(AParent);
+  mainform.PlaySound('Explosion', false);
+  Image := MainForm.ImageList.Items.Find('Explosion');
+  Width := Image.Width;
+  Height := Image.Height;
+  AnimCount := Image.PatternCount;
+  AnimLooped := True;
+  AnimSpeed := DEFAULT_ANIMSPEED;
+  AnimPos := Random(AnimCount);
+end;
+
+procedure TExplosion.DoMove(MoveCount: Integer);
+begin
+  inherited DoMove(MoveCount);
+  inc(FCounter, MoveCount);
+  if FCounter > 2999 then dead;
+end;
+
+{ TPlayerSprite }
 
 constructor TPlayerSprite.Create(AParent: TSprite);
 begin
@@ -509,23 +699,7 @@ begin
   FState := pmFlyaway;
 end;
 
-procedure TMainForm.DXInit;
-begin
-  try
-    Imagelist.Items.LoadFromFile(FDirectory+'DirectX\Graphic.dxg');
-    ImageList.Items.MakeColorTable;
-    DXDraw.ColorTable := ImageList.Items.ColorTable;
-    DXDraw.DefColorTable := ImageList.Items.ColorTable;
-    DXDraw.UpdatePalette;
-    DXDraw.Finalize;
-    DXDraw.Options := DXDraw.Options - [doFullScreen];
-    DXDraw.autosize := true;
-    DXDraw.Initialize;
-  except
-    //Imagelist.Items.clear;
-    //application.terminate;
-  end;
-end;
+{ TPlayerTamaSprite }
 
 constructor TPlayerTamaSprite.Create(AParent: TSprite; APlayerSprite: TPlayerSprite);
 begin
@@ -565,129 +739,19 @@ begin
   Collision;
 end;
 
-procedure TBackground.DoMove(MoveCount: Integer);
-var
-  ran: integer;
-begin
-  inherited DoMove(MoveCount);
-  X := X - MoveCount*(60/1000)*FSpeed;
-  randomize;
-  ran := Random(1500);
-  if ran = 150 then
-  begin
-    with TBackgroundSpecial.Create(mainform.SpriteEngine.Engine) do
-    begin
-      SetMapSize(1, 1);
-      Image := mainform.ImageList.Items.Find('Background-Planet1');
-      Width := Image.Width;
-      Height := Image.Height;
+{ TEnemy }
 
-      Y := random(mainform.dxdraw.height);
-      X := mainform.dxdraw.width;
-
-      ran := Random(2);
-      if ran = 0 then
-      begin
-        Z := -20;
-        FSpeed := 1.8;
-      end
-      else if ran = 1 then
-      begin
-        Z := -40;
-        FSpeed := 0.8;
-      end
-      else if ran = 2 then
-      begin
-        Z := -60;
-        FSpeed := 0.3;
-      end;
-    end;
-  end
-  else if ran = 500 then
-  begin
-    with TBackgroundSpecial.Create(mainform.SpriteEngine.Engine) do
-    begin
-      SetMapSize(1, 1);
-      ran := Random(4);
-      if ran = 0 then
-        Image := mainform.ImageList.Items.Find('Background-Red')
-      else if ran = 1 then
-        Image := mainform.ImageList.Items.Find('Background-Blue')
-      else if ran = 2 then
-        Image := mainform.ImageList.Items.Find('Background-Yellow')
-      else if ran = 3 then
-        Image := mainform.ImageList.Items.Find('Hintergrund-Rot');
-      Width := Image.Width;
-      Height := Image.Height;
-
-      Y := random(mainform.dxdraw.height);
-      X := mainform.dxdraw.width;
-
-      { ran := Random(2);
-      if ran = 0 then
-      begin
-        Z := -20;
-        FSpeed := 1.8;
-      end
-      else if ran = 1 then
-      begin
-        Z := -40;
-        FSpeed := 0.8;
-      end
-      else if ran = 2 then
-      begin }
-        Z := -60;
-        FSpeed := 0.3;
-      { end; }
-    end;
-  end;
-end;
-
-procedure TBackgroundSpecial.DoMove(MoveCount: Integer);
-begin
-  inherited DoMove(MoveCount);
-  X := X - MoveCount*(60/1000)*FSpeed;
-  if X<-Width then Dead;
-end;
-
-constructor TExplosion.Create(AParent: TSprite);
+constructor TEnemy.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent);
-  mainform.PlaySound('Explosion', false);
-  Image := MainForm.ImageList.Items.Find('Explosion');
-  Width := Image.Width;
-  Height := Image.Height;
-  AnimCount := Image.PatternCount;
-  AnimLooped := True;
-  AnimSpeed := DEFAULT_ANIMSPEED;
-  AnimPos := Random(AnimCount);
+  FLife := ALifes;
+  inc(EnemyCounter);
 end;
 
-procedure TExplosion.DoMove(MoveCount: Integer);
+destructor TEnemy.Destroy;
 begin
-  inherited DoMove(MoveCount);
-  inc(FCounter, MoveCount);
-  if FCounter > 2999 then dead;
-end;
-
-constructor TEnemyTama.Create(AParent: TSprite; AEnemySprite: TSprite);
-begin
-  inherited Create(AParent);
-  FEnemySprite := AEnemySprite;
-  Image := MainForm.ImageList.Items.Find('Bounce2');
-  Width := Image.Width;
-  Height := Image.Height;
-  AnimCount := Image.PatternCount;
-  AnimLooped := True;
-  AnimSpeed := DEFAULT_ANIMSPEED;
-  MainForm.PlaySound('Shoot', False);
-end;
-
-procedure TEnemyTama.DoMove(MoveCount: Integer);
-begin
-  inherited DoMove(MoveCount);
-  X := X - MoveCount*(600/1000);
-  if X<-Width then Dead;
+  inherited Destroy;
+  dec(EnemyCounter);
 end;
 
 procedure TEnemy.Hit(AHitStrength: integer = 1);
@@ -710,6 +774,57 @@ begin
     MainForm.PlaySound('Hit', False);
 end;
 
+{ TEnemyTama }
+
+constructor TEnemyTama.Create(AParent: TSprite; AEnemySprite: TSprite);
+begin
+  inherited Create(AParent);
+  FEnemySprite := AEnemySprite;
+  Image := MainForm.ImageList.Items.Find('Bounce2');
+  Width := Image.Width;
+  Height := Image.Height;
+  AnimCount := Image.PatternCount;
+  AnimLooped := True;
+  AnimSpeed := DEFAULT_ANIMSPEED;
+  MainForm.PlaySound('Shoot', False);
+end;
+
+procedure TEnemyTama.DoMove(MoveCount: Integer);
+begin
+  inherited DoMove(MoveCount);
+  X := X - MoveCount*(600/1000);
+  if X<-Width then Dead;
+end;
+
+{ TEnemyMeteor }
+
+constructor TEnemyMeteor.Create(AParent: TSprite; ALifes: integer);
+begin
+  inherited Create(AParent, ALifes);
+  Image := MainForm.ImageList.Items.Find('Enemy-Meteor');
+  Width := Image.Width;
+  Height := Image.Height;
+  AnimCount := Image.PatternCount;
+  AnimLooped := True;
+  AnimSpeed := DEFAULT_ANIMSPEED;
+  PixelCheck := True;
+end;
+
+procedure TEnemyMeteor.HitEnemy(ADead: Boolean);
+begin
+  inherited HitEnemy(False);
+
+  if ADead then Collisioned := True;
+end;
+
+procedure TEnemyMeteor.DoMove(MoveCount: Integer);
+begin
+  X := X - MoveCount*(250/1000);
+  if X < -Width then Dead;
+end;
+
+{ TEnemyUFO }
+
 constructor TEnemyUFO.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
@@ -721,20 +836,60 @@ begin
   AnimSpeed := DEFAULT_ANIMSPEED;
 end;
 
-constructor TEnemy.Create(AParent: TSprite; ALifes: integer);
-begin
-  inherited Create(AParent);
-  FLife := ALifes;
-  inc(EnemyCounter);
-end;
-
-destructor TEnemy.Destroy;
-begin
-  inherited Destroy;
-  dec(EnemyCounter);
-end;
-
 procedure TEnemyUFO.HitEnemy(ADead: Boolean);
+begin
+  inherited HitEnemy(ADead);
+
+  if ADead then
+  begin
+    FMode := 2;
+    FCounter := 0;
+    Inc(MainForm.FScore, 1000);
+    Image := MainForm.ImageList.Items.Find('Explosion');
+    Width := Image.Width;
+    Height := Image.Height;
+    AnimCount := Image.PatternCount;
+    AnimLooped := False;
+    AnimSpeed := DEFAULT_ANIMSPEED;
+    AnimPos := 0;
+  end
+  else
+  begin
+    Inc(MainForm.FScore, 100);
+  end;
+end;
+
+procedure TEnemyUFO.DoMove(MoveCount: Integer);
+begin
+  inherited DoMove(MoveCount);
+  if FMode=0 then
+  begin
+    X := X - MoveCount*(300/1000);
+    Y := Y + Cos256(FCounter div 15)*2;
+    if X<-Width then Dead;
+  end
+  else if FMode=2 then
+  begin
+    X := X - MoveCount*(300/1000);
+    if FCounter>200 then Dead;
+  end;
+  inc(FCounter, MoveCount);
+end;
+
+{ TEnemyUFO2 }
+
+constructor TEnemyUFO2.Create(AParent: TSprite; ALifes: integer);
+begin
+  inherited Create(AParent, ALifes);
+  Image := MainForm.ImageList.Items.Find('Enemy-disk2');
+  Width := Image.Width;
+  Height := Image.Height;
+  AnimCount := Image.PatternCount;
+  AnimLooped := True;
+  AnimSpeed := DEFAULT_ANIMSPEED;
+end;
+
+procedure TEnemyUFO2.HitEnemy(ADead: Boolean);
 begin
   inherited HitEnemy(ADead);
 
@@ -785,56 +940,7 @@ begin
   inc(FCounter, MoveCount);
 end;
 
-procedure TEnemyUFO2.HitEnemy(ADead: Boolean);
-begin
-  inherited HitEnemy(ADead);
-
-  if ADead then
-  begin
-    FMode := 2;
-    FCounter := 0;
-    Inc(MainForm.FScore, 1000);
-    Image := MainForm.ImageList.Items.Find('Explosion');
-    Width := Image.Width;
-    Height := Image.Height;
-    AnimCount := Image.PatternCount;
-    AnimLooped := False;
-    AnimSpeed := DEFAULT_ANIMSPEED;
-    AnimPos := 0;
-  end
-  else
-  begin
-    Inc(MainForm.FScore, 100);
-  end;
-end;
-
-constructor TEnemyUFO2.Create(AParent: TSprite; ALifes: integer);
-begin
-  inherited Create(AParent, ALifes);
-  Image := MainForm.ImageList.Items.Find('Enemy-disk2');
-  Width := Image.Width;
-  Height := Image.Height;
-  AnimCount := Image.PatternCount;
-  AnimLooped := True;
-  AnimSpeed := DEFAULT_ANIMSPEED;
-end;
-
-procedure TEnemyUFO.DoMove(MoveCount: Integer);
-begin
-  inherited DoMove(MoveCount);
-  if FMode=0 then
-  begin
-    X := X - MoveCount*(300/1000);
-    Y := Y + Cos256(FCounter div 15)*2;
-    if X<-Width then Dead;
-  end
-  else if FMode=2 then
-  begin
-    X := X - MoveCount*(300/1000);
-    if FCounter>200 then Dead;
-  end;
-  inc(FCounter, MoveCount);
-end;
+{ TEnemyAttacker }
 
 constructor TEnemyAttacker.Create(AParent: TSprite; ALifes: integer);
 begin
@@ -886,6 +992,160 @@ begin
   end;
   inc(FCounter, MoveCount);
 end;
+
+{ TEnemyAttacker2 }
+
+constructor TEnemyAttacker2.Create(AParent: TSprite; ALifes: integer);
+begin
+  inherited Create(AParent, ALifes);
+  Image := MainForm.ImageList.Items.Find('Enemy-Attacker2');
+  Width := Image.Width;
+  Height := Image.Height;
+  AnimCount := Image.PatternCount;
+  AnimLooped := True;
+  AnimSpeed := DEFAULT_ANIMSPEED;
+  PixelCheck := True;
+end;
+
+procedure TEnemyAttacker2.HitEnemy(ADead: Boolean);
+begin
+  inherited HitEnemy(ADead);
+
+  if ADead then
+  begin
+    FMode := 2;
+    FCounter := 0;
+    Inc(MainForm.FScore, 5000);
+    Image := MainForm.ImageList.Items.Find('Explosion');
+    Width := Image.Width;
+    Height := Image.Height;
+    AnimCount := Image.PatternCount;
+    AnimLooped := False;
+    AnimSpeed := DEFAULT_ANIMSPEED;
+    AnimPos := 0;
+  end
+  else
+  begin
+    Inc(MainForm.FScore, 100);
+  end;
+end;
+
+procedure TEnemyAttacker2.DoMove(MoveCount: Integer);
+begin
+  inherited DoMove(MoveCount);
+  if FMode=0 then
+  begin
+    if X>((mainform.dxdraw.width/4) + (mainform.dxdraw.width/2) - (width/2)){450} then
+      X := X - MoveCount*(300/1000)
+    else
+    begin
+      Collisioned := True;
+      FMode := 1;
+      FPutTama := True;
+    end;
+    Y := Y + Cos256(FCounter div 15)*5;
+  end
+  else if FMode=1 then
+  begin
+    Y := Y + Cos256(FCounter div 15)*5;
+    if FPutTama then
+    begin
+      if FTamaT>100 then
+      begin
+        with TEnemyTama.Create(Engine, Self) do
+        begin
+          Z := 1;
+          X := Self.X-Width;
+          Y := Self.Y+Self.Height div 2-Height div 2;
+        end;
+        Inc(FTamaF);
+        if FTamaF>Random(30) then FPutTama := False;
+        FTamaT := 0;
+      end;
+      FTamaT := FTamaT + MoveCount;
+    end
+    else
+    begin
+      FTamaT := FTamaT + MoveCount;
+      if FTamaT>2000+Random(500) then
+      begin
+        FPutTama := True;
+        FTamaF := 0;
+        FTamaT := 0;
+      end;
+    end;
+  end
+  else if FMode=2 then
+  begin
+    if FCounter>200 then Dead;
+  end;
+  inc(FCounter, MoveCount);
+end;
+
+{ TEnemyAttacker3 }
+
+constructor TEnemyAttacker3.Create(AParent: TSprite; ALifes: integer);
+begin
+  inherited Create(AParent, ALifes);
+  Image := MainForm.ImageList.Items.Find('Enemy-Attacker3');
+  Width := Image.Width;
+  Height := Image.Height;
+  AnimCount := Image.PatternCount;
+  AnimLooped := True;
+  AnimSpeed := DEFAULT_ANIMSPEED;
+  PixelCheck := True;
+end;
+
+procedure TEnemyAttacker3.HitEnemy(ADead: Boolean);
+begin
+  inherited HitEnemy(ADead);
+
+  if ADead then
+  begin
+    FMode := 1;
+    FCounter := 0;
+    Inc(MainForm.FScore, 5000);
+    Image := MainForm.ImageList.Items.Find('Explosion');
+    Width := Image.Width;
+    Height := Image.Height;
+    AnimCount := Image.PatternCount;
+    AnimLooped := False;
+    AnimSpeed := DEFAULT_ANIMSPEED;
+    AnimPos := 0;
+  end
+  else
+  begin
+    Inc(MainForm.FScore, 100);
+  end;
+end;
+
+procedure TEnemyAttacker3.DoMove(MoveCount: Integer);
+begin
+  inherited DoMove(MoveCount);
+  if FMode=0 then
+  begin
+    X := X - (250/1000)*MoveCount;
+    if X<-Width then Dead;
+    if FCounter-FOldTamaTime>=100 then
+    begin
+      Inc(FTamaCount);
+      with TEnemyTama.Create(Engine, Self) do
+      begin
+        X := Self.X;
+        Y := Self.Y+Self.Height div 2-Height div 2;
+        Z := 10;
+      end;
+      FOldTamaTime := FCounter;
+     end;
+  end
+  else if FMode=1 then
+  begin
+    if FCounter>200 then Dead;
+  end;
+  inc(FCounter, MoveCount);
+end;
+
+{ TEnemyBoss }
 
 constructor TEnemyBoss.Create(AParent: TSprite; ALifes: integer);
 begin
@@ -999,155 +1259,11 @@ begin
   inc(FCounter, MoveCount);
 end;
 
-constructor TEnemyAttacker2.Create(AParent: TSprite; ALifes: integer);
-begin
-  inherited Create(AParent, ALifes);
-  Image := MainForm.ImageList.Items.Find('Enemy-Attacker2');
-  Width := Image.Width;
-  Height := Image.Height;
-  AnimCount := Image.PatternCount;
-  AnimLooped := True;
-  AnimSpeed := DEFAULT_ANIMSPEED;
-  PixelCheck := True;
-end;
-
-procedure TEnemyAttacker2.HitEnemy(ADead: Boolean);
-begin
-  inherited HitEnemy(ADead);
-
-  if ADead then
-  begin
-    FMode := 2;
-    FCounter := 0;
-    Inc(MainForm.FScore, 5000);
-    Image := MainForm.ImageList.Items.Find('Explosion');
-    Width := Image.Width;
-    Height := Image.Height;
-    AnimCount := Image.PatternCount;
-    AnimLooped := False;
-    AnimSpeed := DEFAULT_ANIMSPEED;
-    AnimPos := 0;
-  end
-  else
-  begin
-    Inc(MainForm.FScore, 100);
-  end;
-end;
-
-procedure TEnemyAttacker2.DoMove(MoveCount: Integer);
-begin
-  inherited DoMove(MoveCount);
-  if FMode=0 then
-  begin
-    if X>((mainform.dxdraw.width/4) + (mainform.dxdraw.width/2) - (width/2)){450} then
-      X := X - MoveCount*(300/1000)
-    else
-    begin
-      Collisioned := True;
-      FMode := 1;
-      FPutTama := True;
-    end;
-    Y := Y + Cos256(FCounter div 15)*5;
-  end
-  else if FMode=1 then
-  begin
-    Y := Y + Cos256(FCounter div 15)*5;
-    if FPutTama then
-    begin
-      if FTamaT>100 then
-      begin
-        with TEnemyTama.Create(Engine, Self) do
-        begin
-          Z := 1;
-          X := Self.X-Width;
-          Y := Self.Y+Self.Height div 2-Height div 2;
-        end;
-        Inc(FTamaF);
-        if FTamaF>Random(30) then FPutTama := False;
-        FTamaT := 0;
-      end;
-      FTamaT := FTamaT + MoveCount;
-    end
-    else
-    begin
-      FTamaT := FTamaT + MoveCount;
-      if FTamaT>2000+Random(500) then
-      begin
-        FPutTama := True;
-        FTamaF := 0;
-        FTamaT := 0;
-      end;
-    end;
-  end
-  else if FMode=2 then
-  begin
-    if FCounter>200 then Dead;
-  end;
-  inc(FCounter, MoveCount);
-end;
-
-procedure TEnemyAttacker3.HitEnemy(ADead: Boolean);
-begin
-  inherited HitEnemy(ADead);
-
-  if ADead then
-  begin
-    FMode := 1;
-    FCounter := 0;
-    Inc(MainForm.FScore, 5000);
-    Image := MainForm.ImageList.Items.Find('Explosion');
-    Width := Image.Width;
-    Height := Image.Height;
-    AnimCount := Image.PatternCount;
-    AnimLooped := False;
-    AnimSpeed := DEFAULT_ANIMSPEED;
-    AnimPos := 0;
-  end
-  else
-  begin
-    Inc(MainForm.FScore, 100);
-  end;
-end;
-
-procedure TEnemyAttacker3.DoMove(MoveCount: Integer);
-begin
-  inherited DoMove(MoveCount);
-  if FMode=0 then
-  begin
-    X := X - (250/1000)*MoveCount;
-    if X<-Width then Dead;
-    if FCounter-FOldTamaTime>=100 then
-    begin
-      Inc(FTamaCount);
-      with TEnemyTama.Create(Engine, Self) do
-      begin
-        X := Self.X;
-        Y := Self.Y+Self.Height div 2-Height div 2;
-        Z := 10;
-      end;
-      FOldTamaTime := FCounter;
-     end;
-  end
-  else if FMode=1 then
-  begin
-    if FCounter>200 then Dead;
-  end;
-  inc(FCounter, MoveCount);
-end;
-
-constructor TEnemyAttacker3.Create(AParent: TSprite; ALifes: integer);
-begin
-  inherited Create(AParent, ALifes);
-  Image := MainForm.ImageList.Items.Find('Enemy-Attacker3');
-  Width := Image.Width;
-  Height := Image.Height;
-  AnimCount := Image.PatternCount;
-  AnimLooped := True;
-  AnimSpeed := DEFAULT_ANIMSPEED;
-  PixelCheck := True;
-end;
+{ TMainForm }
 
 procedure TMainForm.FormCreate(Sender: TObject);
+resourcestring
+  SFileError = 'Die Datei kann von SpaceMission nicht geöffnet werden!';
 var
   SavGame: TSaveData;
 begin
@@ -1227,7 +1343,7 @@ begin
         mainform.FLevel := SavGame.FLevel;
         mainform.FGameMode := SavGame.FGameMode;
       except
-        showmessage(FileError);
+        showmessage(SFileError);
         GameStartClick(GameStart);
         exit;
       end;
@@ -1261,84 +1377,22 @@ begin
   end;
 end;
 
-// https://www.delphipraxis.net/post43515.html
-Function GetHTML(AUrl: string): string;
-var
-  databuffer : array[0..4095] of char;
-  ResStr : string;
-  hSession, hfile: hInternet;
-  dwindex,dwcodelen,dwread,dwNumber: cardinal;
-  dwcode : array[1..20] of char;
-  res    : pchar;
-  Str    : pchar;
+procedure TMainForm.DXInit;
 begin
-  ResStr:='';
-  if (system.pos('http://',lowercase(AUrl))=0) and
-     (system.pos('https://',lowercase(AUrl))=0) then
-     AUrl:='http://'+AUrl;
-
-  // Hinzugefügt
-  application.ProcessMessages;
-
-  hSession:=InternetOpen('InetURL:/1.0',
-                         INTERNET_OPEN_TYPE_PRECONFIG,
-                         nil,
-                         nil,
-                         0);
-  if assigned(hsession) then
-  begin
-    // Hinzugefügt
-    application.ProcessMessages;
-
-    hfile:=InternetOpenUrl(
-           hsession,
-           pchar(AUrl),
-           nil,
-           0,
-           INTERNET_FLAG_RELOAD,
-           0);
-    dwIndex  := 0;
-    dwCodeLen := 10;
-
-    // Hinzugefügt
-    application.ProcessMessages;
-
-    HttpQueryInfo(hfile,
-                  HTTP_QUERY_STATUS_CODE,
-                  @dwcode,
-                  dwcodeLen,
-                  dwIndex);
-    res := pchar(@dwcode);
-    dwNumber := sizeof(databuffer)-1;
-    if (res ='200') or (res ='302') then
-    begin
-      while (InternetReadfile(hfile,
-                              @databuffer,
-                              dwNumber,
-                              DwRead)) do
-      begin
-
-        // Hinzugefügt
-        application.ProcessMessages;
-
-        if dwRead =0 then
-          break;
-        databuffer[dwread]:=#0;
-        Str := pchar(@databuffer);
-        resStr := resStr + Str;
-      end;
-    end
-    else
-      ResStr := 'Status:'+res;
-    if assigned(hfile) then
-      InternetCloseHandle(hfile);
+  try
+    Imagelist.Items.LoadFromFile(FDirectory+'DirectX\Graphic.dxg');
+    ImageList.Items.MakeColorTable;
+    DXDraw.ColorTable := ImageList.Items.ColorTable;
+    DXDraw.DefColorTable := ImageList.Items.ColorTable;
+    DXDraw.UpdatePalette;
+    DXDraw.Finalize;
+    DXDraw.Options := DXDraw.Options - [doFullScreen];
+    DXDraw.autosize := true;
+    DXDraw.Initialize;
+  except
+    //Imagelist.Items.clear;
+    //application.terminate;
   end;
-
-  // Hinzugefügt
-  application.ProcessMessages;
-
-  InternetCloseHandle(hsession);
-  Result := resStr; 
 end;
 
 procedure TMainForm.CheckUpdatesClick(Sender: TObject);
@@ -1378,6 +1432,13 @@ end;
 
 procedure TMainForm.SoundInit;
 begin
+  if (WaveOutGetNumDevs < 1) or not FileExists(FDirectory+'DirectX\Sound.dxw') then
+  begin
+    OptionSound.Checked := false;
+    OptionSound.Enabled := False;
+    exit;
+  end;
+
   if OptionSound.Checked then
   begin
     if not DXSound.Initialized then
@@ -1398,6 +1459,13 @@ procedure TMainForm.MusicInit;
 var
   i: integer;
 begin
+  if (WaveOutGetNumDevs < 1) or not FileExists(FDirectory+'DirectX\Music.dxm') then
+  begin
+    optionmusic.Checked := false;
+    optionmusic.Enabled := False;
+    exit;
+  end;
+
   try
     dxmusic.Midis.LoadFromFile(FDirectory+'DirectX\Music.dxm');
     for i := 0 to dxmusic.Midis.Count-1 do
@@ -1820,9 +1888,6 @@ begin
   LevelData.Clear;
   FRestEnemies := 0;
 end;
-
-const
-  ADDITIONAL_ENEMIES_PER_LEVEL = 75;
 
 procedure TMainForm.NewLevel(lev: integer);
 resourcestring
@@ -2272,53 +2337,32 @@ begin
   writeoptions;
 end;
 
-procedure TEnemyMeteor.DoMove(MoveCount: Integer);
-begin
-  X := X - MoveCount*(250/1000);
-  if X < -Width then Dead;
-end;
-
-procedure TEnemyMeteor.HitEnemy(ADead: Boolean);
-begin
-  inherited HitEnemy(False);
-
-  if ADead then Collisioned := True;
-end;
-
 procedure TMainForm.PlayMusic(Name: TMusicTrack);
 begin
   if not OptionMusic.checked then exit;
+  if Ord(Name) > dxmusic.Midis.Count then exit;
   dxmusic.Midis.Items[Ord(Name)-1].Play;
 end;
 
 procedure TMainForm.StopMusic(Name: TMusicTrack);
 begin
   if Name = mtNone then exit;
+  if Ord(Name) > dxmusic.Midis.Count then exit;
   dxmusic.Midis.Items[Ord(Name)-1].Stop;
 end;
 
 procedure TMainForm.ResumeMusic(Name: TMusicTrack);
 begin
   if not OptionMusic.checked then exit;
+  if Ord(Name) > dxmusic.Midis.Count then exit;
   dxmusic.Midis.Items[Ord(Name)-1].Play; // TODO: how to pause/resume instead play/stop
 end;
 
 procedure TMainForm.PauseMusic(Name: TMusicTrack);
 begin
   if Name = mtNone then exit;
+  if Ord(Name) > dxmusic.Midis.Count then exit;
   dxmusic.Midis.Items[Ord(Name)-1].Stop; // TODO: how to pause/resume instead play/stop
-end;
-
-constructor TEnemyMeteor.Create(AParent: TSprite; ALifes: integer);
-begin
-  inherited Create(AParent, ALifes);
-  Image := MainForm.ImageList.Items.Find('Enemy-Meteor');
-  Width := Image.Width;
-  Height := Image.Height;
-  AnimCount := Image.PatternCount;
-  AnimLooped := True;
-  AnimSpeed := DEFAULT_ANIMSPEED;
-  PixelCheck := True;
 end;
 
 procedure TMainForm.SpielstandClick(Sender: TObject);

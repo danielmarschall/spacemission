@@ -15,15 +15,11 @@ type
     Panel1: TPanel;
     ElLabel1: TLabel;
     ElLabel2: TLabel;
-    GroesseEdt: TEdit;
-    Groesse: TUpDown;
+    Groesse: TSpinEdit;
     procedure ElPopupButton1Click(Sender: TObject);
     procedure ElPopupButton2Click(Sender: TObject);
     procedure FormHide(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure GroesseClick(Sender: TObject; Button: TUDBtnType);
-    procedure GroesseEdtKeyPress(Sender: TObject; var Key: Char);
-    procedure GroesseEdtChange(Sender: TObject);
   public
     procedure Aktualisieren;
   end;
@@ -39,12 +35,12 @@ uses LevMain;
 
 procedure TLevelForm.Aktualisieren;
 begin
-  Groesse.Position := MainForm.ScrollBar.Max;
+  Groesse.Value := MainForm.ScrollBar.Max;
 end;
 
 procedure TLevelForm.ElPopupButton1Click(Sender: TObject);
 begin
-  MainForm.ScrollBar.Max := Groesse.Position;
+  MainForm.ScrollBar.Max := Groesse.Value;
   MainForm.AnzeigeAct;
   close;
 end;
@@ -62,26 +58,6 @@ end;
 procedure TLevelForm.FormShow(Sender: TObject);
 begin
   mainform.dxtimer.enabled := false;
-end;
-
-procedure TLevelForm.GroesseClick(Sender: TObject; Button: TUDBtnType);
-begin
-  groesseedt.Text := inttostr(groesse.position);
-end;
-
-procedure TLevelForm.GroesseEdtKeyPress(Sender: TObject; var Key: Char);
-begin
-  {$IFDEF UNICODE}
-  if not CharInSet(Key, [#13, #08, '0'..'9']) then
-  {$ELSE}
-  if not (Key in [#13, #08, '0'..'9']) then
-  {$ENDIF}
-    Key := #0;
-end;
-
-procedure TLevelForm.GroesseEdtChange(Sender: TObject);
-begin
-  groesse.Position := strtoint(groesseedt.text);
 end;
 
 end.

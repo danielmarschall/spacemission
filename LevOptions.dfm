@@ -87,26 +87,15 @@ object LevelForm: TLevelForm
         ParentFont = False
       end
     end
-    object GroesseEdt: TEdit
+    object Groesse: TSpinEdit
       Left = 144
       Top = 28
-      Width = 185
-      Height = 21
-      MaxLength = 4
+      Width = 121
+      Height = 22
+      MaxValue = 65000
+      MinValue = 100
       TabOrder = 1
-      Text = '1200'
-      OnChange = GroesseEdtChange
-      OnKeyPress = GroesseEdtKeyPress
-    end
-    object Groesse: TUpDown
-      Left = 328
-      Top = 30
-      Width = 17
-      Height = 19
-      Max = 9999
-      Position = 1
-      TabOrder = 2
-      OnClick = GroesseClick
+      Value = 1200
     end
   end
 end

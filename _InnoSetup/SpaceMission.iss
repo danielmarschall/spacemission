@@ -43,10 +43,6 @@ Name: "levedit"; Description: "Installiere den &Leveleditor"; GroupDescription: 
 Source: "..\SpaceMission.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\LevEdit.exe"; DestDir: "{app}"; Flags: ignoreversion; Tasks: levedit
 Source: "..\Dokumentation.pdf"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bilder\Auswahl.bmp"; DestDir: "{app}\Bilder"; Flags: ignoreversion; Tasks: levedit
-Source: "..\Bilder\Delphi.bmp"; DestDir: "{app}\Bilder"; Flags: ignoreversion
-Source: "..\Bilder\LevSplash.jpg"; DestDir: "{app}\Bilder"; Flags: ignoreversion; Tasks: levedit
-Source: "..\Bilder\SplSplash.jpg"; DestDir: "{app}\Bilder"; Flags: ignoreversion
 Source: "..\DirectX\Graphic.dxg"; DestDir: "{app}\DirectX"; Flags: ignoreversion
 Source: "..\DirectX\Music.dxm"; DestDir: "{app}\DirectX"; Flags: ignoreversion
 Source: "..\DirectX\Sound.dxw"; DestDir: "{app}\DirectX"; Flags: ignoreversion

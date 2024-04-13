@@ -183,26 +183,14 @@ object SpeicherungForm: TSpeicherungForm
       Visible = False
     end
   end
-  object SpinEditEdt: TEdit
+  object LevelNumber: TSpinEdit
     Left = 112
     Top = 20
-    Width = 185
-    Height = 21
-    MaxLength = 4
+    Width = 201
+    Height = 22
+    MaxValue = 9999
+    MinValue = 1
     TabOrder = 7
-    Text = '1'
-    OnChange = SpinEditEdtChange
-    OnKeyPress = SpinEditEdtKeyPress
-  end
-  object SpinEdit: TUpDown
-    Left = 296
-    Top = 22
-    Width = 17
-    Height = 19
-    Min = 1
-    Max = 9999
-    Position = 1
-    TabOrder = 8
-    OnClick = SpinEditClick
+    Value = 1
   end
 end
