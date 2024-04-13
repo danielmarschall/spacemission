@@ -40,6 +40,8 @@ type
     procedure AbbrechenBtnClick(Sender: TObject);
     procedure FormHide(Sender: TObject);
     procedure LevelListBoxDblClick(Sender: TObject);
+  private
+    function GetSpielstandVerzeichnis: string;
   public
     procedure SearchSaves;
   end;
@@ -50,9 +52,36 @@ var
 implementation
 
 uses
-  Global, GamMain, ComSaveGameReader;
+  Global, GamMain, ComSaveGameReader, ActiveX, ShlObj;
 
 {$R *.DFM}
+
+const
+  FOLDERID_SavedGames: TGuid = '{4C5C32FF-BB9D-43b0-B5B4-2D72E54EAAA4}';
+
+function GetKnownFolderPath(const rfid: TGUID): string;
+var
+  OutPath: PWideChar;
+begin
+  // https://www.delphipraxis.net/135471-unit-zur-verwendung-von-shgetknownfolderpath.html
+  if ShGetKnownFolderPath(rfid, 0, 0, OutPath) {>= 0} = S_OK then
+  begin
+    Result := OutPath;
+    // From MSDN
+    // ppszPath [out]
+    // Type: PWSTR*
+    // When this method returns, contains the address of a pointer to a null-terminated Unicode string that specifies the path of the known folder
+    // The calling process is responsible for freeing this resource once it is no longer needed by calling CoTaskMemFree.
+    // The returned path does not include a trailing backslash. For example, "C:\Users" is returned rather than "C:\Users\".
+    CoTaskMemFree(OutPath);
+  end
+  else
+  begin
+    Result := '';
+  end;
+end;
+
+{ TSpeicherungForm }
 
 procedure TSpeicherungForm.SearchSaves;
 var
@@ -76,7 +105,7 @@ begin
   li4b.caption := 'n/a';
   LadenBtn.enabled := false;
   LoeschenBtn.enabled := false;
-  res := FindFirst(fdirectory+'Spielstände\*.sav', 0, sr);
+  res := FindFirst(IncludeTrailingPathDelimiter(GetSpielstandVerzeichnis)+'*.sav', 0, sr);
   try
     while (res = 0) do
     begin
@@ -118,7 +147,7 @@ begin
     li4b.caption := 'n/a';
     LadenBtn.enabled := false;
     LoeschenBtn.enabled := false;
-    deletefile(FDirectory+'Spielstände\'+LevelListBox.Items.strings[LevelListBox.itemindex]+'.sav');
+    deletefile(IncludeTrailingPathDelimiter(GetSpielstandVerzeichnis)+LevelListBox.Items.strings[LevelListBox.itemindex]+'.sav');
     searchsaves;
   end;
 end;
@@ -157,7 +186,7 @@ begin
     exit;}
   SavGame := TSaveData.Create;
   try
-    SavGame.Load(FDirectory+'Spielstände\'+LevelListBox.Items.strings[LevelListBox.itemindex]+'.sav');
+    SavGame.Load(IncludeTrailingPathDelimiter(GetSpielstandVerzeichnis)+LevelListBox.Items.strings[LevelListBox.itemindex]+'.sav');
     mainform.FScore := SavGame.FScore;
     mainform.FLife := SavGame.FLife;
     mainform.FLevel := SavGame.FLevel;
@@ -211,7 +240,7 @@ begin
     SavGame.FLife := mainform.FLife;
     SavGame.FLevel := mainform.FLevel;
     SavGame.FGameMode := mainform.FGameMode;
-    SavGame.Save(FDirectory+'Spielstände\'+LevelName.text+'.sav');
+    SavGame.Save(IncludeTrailingPathDelimiter(GetSpielstandVerzeichnis)+LevelName.text+'.sav');
   finally
     FreeAndNil(SavGame);
   end;
@@ -252,7 +281,7 @@ begin
   SavGame := TSaveData.Create;
   try
     try
-      SavGame.Load(FDirectory+'Spielstände\'+LevelListBox.Items.strings[LevelListBox.itemindex]+'.sav');
+      SavGame.Load(IncludeTrailingPathDelimiter(GetSpielstandVerzeichnis)+LevelListBox.Items.strings[LevelListBox.itemindex]+'.sav');
       Punkte := SavGame.FScore;
       Leben := SavGame.FLife;
       Level := SavGame.FLevel;
@@ -308,6 +337,27 @@ begin
     LevelName.enabled := true;
     SpeichernBtn.enabled := true;
   end;
+end;
+
+function TSpeicherungForm.GetSpielstandVerzeichnis: string;
+begin
+  try
+    result := GetKnownFolderPath(FOLDERID_SavedGames);
+  except
+    result := '';
+  end;
+  if result = '' then
+  begin
+    // Pre Vista
+    result := FDirectory + 'Spielstände';
+  end
+  else
+  begin
+    result := IncludeTrailingPathDelimiter(result);
+    result := result + 'SpaceMission';
+  end;
+  result := IncludeTrailingPathDelimiter(result);
+  ForceDirectories(result);
 end;
 
 procedure TSpeicherungForm.DsFancyButton2Click(Sender: TObject);

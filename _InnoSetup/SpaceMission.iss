@@ -46,12 +46,9 @@ Source: "..\Dokumentation.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\DirectX\Graphic.dxg"; DestDir: "{app}\DirectX"; Flags: ignoreversion
 Source: "..\DirectX\Music.dxm"; DestDir: "{app}\DirectX"; Flags: ignoreversion
 Source: "..\DirectX\Sound.dxw"; DestDir: "{app}\DirectX"; Flags: ignoreversion
-Source: "..\Einstellungen\SpaceMission_Default.ini"; DestName: "SpaceMission.ini"; DestDir: "{app}\Einstellungen"; Flags: ignoreversion
 Source: "..\Levels\*.lev"; DestDir: "{app}\Levels"; Flags: ignoreversion
 
 [Dirs]
-Name: "{app}\Spielstände"
-Name: "{app}\Levels"
 Name: "{group}\Webseiten"
 Name: "{group}\Ordner"
 
@@ -63,7 +60,6 @@ Name: "{group}\SpaceMission"; Filename: "{app}\SpaceMission.exe"
 Name: "{group}\Dokumentation"; Filename: "{app}\Dokumentation.pdf"
 Name: "{group}\Leveleditor"; Filename: "{app}\LevEdit.exe"; Tasks: levedit
 Name: "{group}\Ordner\Levelordner"; Filename: "{app}\Levels\"
-Name: "{group}\Ordner\Spielstände"; Filename: "{app}\Spielstände\"
 Name: "{userdesktop}\SpaceMission"; Filename: "{app}\SpaceMission.exe"; MinVersion: 4,4; Tasks: desktopicon
 Name: "{group}\SpaceMission deinstallieren"; Filename: "{uninstallexe}"
 

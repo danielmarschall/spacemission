@@ -12,9 +12,11 @@ unit GamMain;
 // [OK SVN 22]  Credits: unDelphiX (micrel.cz/Dx)
 // [OK SVN 24]  Quellcode optimieren
 // [OK SVN 25]  Bug: Zwei Fenster in Taskleiste
+// [OK SVN 26]  Spielstände werden in "Gespeicherte Spiele" gesichert, so wie von Windows definiert!
+// [OK SVN 26]  Einstellungen werden in Registry gesichert
 //              EV CodeSign
-//              Spielstände usw. "Spiele" Ordner speichern, Config in Registry sichern, etc.
-//              Neue Einheiten => Medikit, Ufo das im Kreis fliegt und nicht weggeht
+//              Neue Einheit: Medikit
+//              Neue Einheit: Ufo, das im Kreis fliegt und nicht weggeht
 //              Bei Pause => Entweder alles grau werden lassen
 //              Alle Notizen durchschauen
 //              Boss schwieriger machen: Er soll auch nach links und rechts gehen?
@@ -33,7 +35,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, ExtCtrls, Menus, DIB, DXClass, DXSprite, DXDraws, DXInput, DXSounds,
-  INIFiles, ShellAPI, wininet, DirectX{$IF CompilerVersion >= 23.0},
+  ShellAPI, wininet, DirectX{$IF CompilerVersion >= 23.0},
   System.UITypes{$IFEND}, ComLevelReader, ComSaveGameReader, DirectMusic;
 
 type
@@ -367,7 +369,7 @@ var
 implementation
 
 uses
-  GamSplash, GamSpeicherung, ComInfo, GamCheat, Global, MMSystem;
+  GamSplash, GamSpeicherung, ComInfo, GamCheat, Global, MMSystem, Registry;
 
 const
   conleicht =  650 div 60; // 10
@@ -1611,55 +1613,56 @@ begin
   FBlinkTime := GetTickCount;
 end;
 
+const
+  RegistrySettingsKey = 'SOFTWARE\ViaThinkSoft\SpaceMission\Settings';
+
 procedure TMainForm.WriteOptions;
 var
-  INIDatei: TIniFile;
+  Reg: TRegistry;
 begin
-  INIDatei := TIniFile.Create(FDirectory+'Einstellungen\SpaceMission.ini');
+  Reg := TRegistry.Create;
   try
-    if OptionMusic.checked then INIDatei.WriteBool('Settings', 'Music', true)
-      else INIDatei.WriteBool('Settings', 'Music', false);
-    if OptionSound.checked then INIDatei.WriteBool('Settings', 'Sound', true)
-      else INIDatei.WriteBool('Settings', 'Sound', false);
-    if FInterval = giLeicht then INIDatei.WriteInteger('Settings', 'Speed', 1);
-    if FInterval = giMittel then INIDatei.WriteInteger('Settings', 'Speed', 2);
-    if FInterval = giSchwer then INIDatei.WriteInteger('Settings', 'Speed', 3);
-    if FInterval = giMaster then INIDatei.WriteInteger('Settings', 'Speed', 4);
+    Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey(RegistrySettingsKey, true) then
+    begin
+      Reg.WriteBool('Music', OptionMusic.checked);
+      Reg.WriteBool('Sound', OptionSound.checked);
+      Reg.WriteInteger('Speed', Ord(FInterval));
+      Reg.CloseKey;
+    end;
   finally
-    FreeAndNil(INIDatei);
+    FreeAndNil(Reg);
   end;
 end;
 
 procedure TMainForm.LoadOptions;
 var
-  INIDatei: TIniFile;
+  Reg: TRegistry;
 begin
-  INIDatei := TIniFile.Create(FDirectory+'Einstellungen\SpaceMission.ini');
+  Reg := TRegistry.Create;
   try
-    optionmusic.checked := INIDatei.ReadBool('Settings', 'Music', true);
-    optionsound.checked := INIDatei.ReadBool('Settings', 'Sound', true);
-    if INIDatei.ReadInteger('Settings', 'Speed', 2) = 1 then
+    Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey(RegistrySettingsKey, true) then
     begin
-      FInterval := giLeicht;
-      Leicht.checked := true;
-    end;
-    if INIDatei.ReadInteger('Settings', 'Speed', 2) = 2 then
-    begin
-      FInterval := giMittel;
-      Mittel.checked := true;
-    end;
-    if INIDatei.ReadInteger('Settings', 'Speed', 2) = 3 then
-    begin
-      FInterval := giSchwer;
-      Schwer.checked := true;
-    end;
-    if INIDatei.ReadInteger('Settings', 'Speed', 2) = 4 then
-    begin
-      FInterval := giMaster;
-      Master.checked := true;
+      if Reg.ValueExists('Music') then
+        optionmusic.checked := Reg.ReadBool('Music')
+      else
+        optionmusic.checked := true; // default
+
+      if Reg.ValueExists('Sound') then
+        optionsound.checked := Reg.ReadBool('Sound')
+      else
+        optionsound.checked := true; // default
+
+      if Reg.ValueExists('Speed') then
+        FInterval := TGameInterval(Reg.ReadInteger('Speed'))
+      else
+        FInterval := giMittel; // default
+
+      Reg.CloseKey;
     end;
   finally
-    FreeAndNil(INIDatei);
+    FreeAndNil(Reg);
   end;
   WriteOptions;
 end;
