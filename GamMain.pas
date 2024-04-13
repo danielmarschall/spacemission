@@ -19,10 +19,14 @@ unit GamMain;
 //              Boss schwieriger machen: Er soll auch nach links und rechts gehen?
 //              Cooldown für Laser?
 //              Improve Sound effects
-//              Zwei Fenster in Taskleiste
+//              Bug: Zwei Fenster in Taskleiste
+//              Level-Editor in die SpaceMission.exe rein und über Hauptmenü aufrufen?
 //              "Doku" in Hilfemenü einbinden, ggf. auch den Leveleditor ins Menü machen
 //              Highscore Liste
 //              Multilingual (all strings in resourcestrings)
+//              ESC soll Pause machen und das MainMenu (wie Alt Taste) aufmachen
+//              Was ist wenn man mission erfolgreich hatte und dann doch stirbt?
+//              Schrift rechts (Boss: X) soll rechtsbündig sein
 
 interface
 
@@ -70,35 +74,41 @@ type
   );}
 
   TBackground = class(TBackgroundSprite)
-  private
+  strict private
     FSpeed: Double;
-  protected
+  strict protected
     procedure DoMove(MoveCount: Integer); override;
+  public
+    property Speed: Double read FSpeed write FSpeed;
   end;
 
   TBackgroundSpecial = class(TBackgroundSprite)
-  private
+  strict private
     FSpeed: Double;
-  protected
+  strict protected
     procedure DoMove(MoveCount: Integer); override;
+  public
+    property Speed: Double read FSpeed write FSpeed;
   end;
 
   TExplosion = class(TImageSprite)
-  private
+  strict private
     FCounter: Integer;
-  protected
+  strict protected
     procedure DoMove(MoveCount: Integer); override;
   public
     constructor Create(AParent: TSprite); override;
   end;
 
+  TPlayerState = (pmNormal, pmDead, pmDeadVanished, pmFlyaway, pmEntering);
   TPlayerSprite = class(TImageSprite)
   private
+    FTamaCount: Integer; // accessed by TPlayerTamaSprite.Destroy
+  strict private
     FCounter: Integer;
-    FMode: Integer;
-    FTamaCount: Integer;
+    FState: TPlayerState;
     FOldTamaTime: Integer;
-  protected
+  strict protected
     procedure DoCollision(Sprite: TSprite; var Done: Boolean); override;
     procedure DoMove(MoveCount: Integer); override;
   public
@@ -106,42 +116,44 @@ type
     procedure FlyAway;
   end;
 
-  TTamaSprite = class(TImageSprite)
-  private
+  TPlayerTamaSprite = class(TImageSprite)
+  strict private
     FPlayerSprite: TPlayerSprite;
-  protected
+  strict protected
+    property PlayerSprite: TPlayerSprite read FPlayerSprite write FPlayerSprite;
     procedure DoCollision(Sprite: TSprite; var Done: Boolean); override;
     procedure DoMove(MoveCount: Integer); override;
   public
-    constructor Create(AParent: TSprite); override;
+    constructor Create(AParent: TSprite; APlayerSprite: TPlayerSprite); reintroduce;
     destructor Destroy; override;
   end;
 
   TEnemyClass = class of TEnemy;
   TEnemy = class(TImageSprite)
-  private
+  strict protected
     FCounter: Integer;
     FLife: integer;
-    FMode: Integer;
-  protected
+    FMode: Integer; // TODO: Find out what this does and replace with an Enum (maybe the same as TPlayerState?)
     procedure HitEnemy(ADead: Boolean); virtual;
   public
+    property Life: integer read FLife;
     procedure Hit(AHitStrength: integer = 1);
     constructor Create(AParent: TSprite; ALifes: integer); reintroduce; virtual;
     destructor Destroy; override;
   end;
 
   TEnemyTama = class(TImageSprite)
-  private
-    FPlayerSprite: TSprite;
-  protected
+  strict private
+    FEnemySprite: TSprite;
+  strict protected
+    property EnemySprite: TSprite read FEnemySprite write FEnemySprite;
     procedure DoMove(MoveCount: Integer); override;
   public
-    constructor Create(AParent: TSprite); override;
+    constructor Create(AParent: TSprite; AEnemySprite: TSprite); reintroduce;
   end;
 
   TEnemyMeteor = class(TEnemy)
-  protected
+  strict protected
     procedure DoMove(MoveCount: Integer); override;
     procedure HitEnemy(ADead: Boolean); override;
   public
@@ -149,7 +161,7 @@ type
   end;
 
   TEnemyUFO = class(TEnemy)
-  protected
+  strict protected
     procedure DoMove(MoveCount: Integer); override;
     procedure HitEnemy(ADead: Boolean); override;
   public
@@ -157,11 +169,11 @@ type
   end;
 
   TEnemyUFO2 = class(TEnemy)
-  private
+  strict private
     FCounter: Integer;
     FTamaCount: Integer;
     FOldTamaTime: Integer;
-  protected
+  strict protected
     procedure DoMove(MoveCount: Integer); override;
     procedure HitEnemy(ADead: Boolean); override;
   public
@@ -169,7 +181,7 @@ type
   end;
 
   TEnemyAttacker = class(TEnemy)
-  protected
+  strict protected
     procedure DoMove(MoveCount: Integer); override;
     procedure HitEnemy(ADead: Boolean); override;
   public
@@ -177,12 +189,12 @@ type
   end;
 
   TEnemyAttacker2 = class(TEnemy)
-  private
+  strict private
     FCounter: Integer;
     FTamaF: Integer;
     FTamaT: Integer;
     FPutTama: Boolean;
-  protected
+  strict protected
     procedure DoMove(MoveCount: Integer); override;
     procedure HitEnemy(ADead: Boolean); override;
   public
@@ -190,11 +202,11 @@ type
   end;
 
   TEnemyAttacker3 = class(TEnemy)
-  private
+  strict private
     FCounter: Integer;
     FTamaCount: Integer;
     FOldTamaTime: Integer;
-  protected
+  strict protected
     procedure DoMove(MoveCount: Integer); override;
     procedure HitEnemy(ADead: Boolean); override;
   public
@@ -202,13 +214,13 @@ type
   end;
 
   TEnemyBoss = class(TEnemy)
-  private
+  strict private
     FCounter: Integer;
     FTamaF: Integer;
     FTamaT: Integer;
     FPutTama: Boolean;
     waiter1, waiter2: integer;
-  protected
+  strict protected
     procedure DoMove(MoveCount: Integer); override;
     procedure HitEnemy(ADead: Boolean); override;
   public
@@ -345,20 +357,11 @@ uses
   GamSplash, GamSpeicherung, ComInfo, GamCheat, Global;
 
 const
-  // TODO: ini file
   conleicht = 650 div 60; // 10
   conmittel = 1000 div 60; // 16
   conschwer = 1350 div 60; // 22
   conmaster = 2000 div 60; // 33
   lives = 6;
-
-  // TODO: Auch für Enemies
-  PLAYER_MODE_NORMAL = 0;
-  PLAYER_MODE_DEAD = 1;
-  PLAYER_MODE_DEAD_VANISHED = 2;
-  PLAYER_MODE_FLYAWAY = 3;
-  PLAYER_MODE_ENTER = 4;
-
   DEFAULT_ANIMSPEED = 15/1000;
 
 resourcestring
@@ -366,7 +369,7 @@ resourcestring
 
 {$R *.DFM}
 
-var // TODO: irgendwo hinpacken. irgendwo!!!
+var
   Crash2, EnemyCounter: integer;
   BossExists, Crash, crashsound: boolean;
 
@@ -391,7 +394,7 @@ begin
   AnimCount := Image.PatternCount;
   AnimLooped := True;
   AnimSpeed := DEFAULT_ANIMSPEED;
-  FMode := PLAYER_MODE_ENTER;
+  FState := pmEntering;
 end;
 
 procedure TPlayerSprite.DoCollision(Sprite: TSprite; var Done: Boolean);
@@ -408,7 +411,7 @@ begin
         MainForm.PlaySound('Explosion', false);
         Collisioned := false;
         FCounter := 0;
-        FMode := PLAYER_MODE_DEAD;
+        FState := pmDead;
         Done := false;
         Image := MainForm.ImageList.Items.Find('Explosion');
         Width := Image.Width;
@@ -435,7 +438,7 @@ const
   WegduesKonstante = 1.75;
 begin
   inherited DoMove(MoveCount);
-  if FMode=PLAYER_MODE_NORMAL then
+  if FState = pmNormal then
   begin
     if isUp in MainForm.DXInput.States then Y := Y - (250/1000)*MoveCount;
     if isDown in MainForm.DXInput.States then Y := Y + (250/1000)*MoveCount;
@@ -450,9 +453,8 @@ begin
       if (FTamaCount<8) and (FCounter-FOldTamaTime>=100) then
       begin
         Inc(FTamaCount);
-        with TTamaSprite.Create(Engine) do
+        with TPlayerTamaSprite.Create(Engine, Self) do
         begin
-          FPlayerSprite := Self;
           X := Self.X+Self.Width;
           Y := Self.Y+Self.Height div 2-Height div 2;
           Z := 10;
@@ -462,16 +464,16 @@ begin
     end;
     Collision;
   end
-  else if FMode=PLAYER_MODE_DEAD then
+  else if FState = pmDead then
   begin
     if FCounter>200 then
     begin
       FCounter := 0;
-      FMode := PLAYER_MODE_DEAD_VANISHED;
+      FState := pmDeadVanished;
       Visible := false;
     end;
   end
-  else if FMode=PLAYER_MODE_DEAD_VANISHED then
+  else if FState = pmDeadVanished then
   begin
     if FCounter>1500 then
     begin
@@ -481,9 +483,9 @@ begin
       Sleep(200);
     end;
   end
-  else if FMode=PLAYER_MODE_FLYAWAY then
+  else if FState = pmFlyaway then
   begin
-    // FUT: "Wusch" sound?
+    // TODO: "Wusch" sound?
     X := X + MoveCount*(300/1000) * (X/MainForm.DXDraw.Width + WegduesKonstante);
     if X > MainForm.DXDraw.Width+Width then
     begin
@@ -494,17 +496,17 @@ begin
       MainForm.PalleteAnim(RGBQuad(0, 0, 0), 300);
     end;
   end
-  else if FMode = PLAYER_MODE_ENTER then
+  else if FState = pmEntering then
   begin
     X := X + MoveCount*(300/1000);
-    if X > 19 then FMode := PLAYER_MODE_NORMAL;
+    if X > 19 then FState := pmNormal;
   end;
   inc(FCounter, MoveCount);
 end;
 
 procedure TPlayerSprite.FlyAway;
 begin
-  FMode := PLAYER_MODE_FLYAWAY;
+  FState := pmFlyaway;
 end;
 
 procedure TMainForm.DXInit;
@@ -525,9 +527,10 @@ begin
   end;
 end;
 
-constructor TTamaSprite.Create(AParent: TSprite);
+constructor TPlayerTamaSprite.Create(AParent: TSprite; APlayerSprite: TPlayerSprite);
 begin
   inherited Create(AParent);
+  FPlayerSprite := APlayerSprite;
   Image := MainForm.ImageList.Items.Find('Bounce');
   Z := 2;
   Width := Image.Width;
@@ -538,13 +541,13 @@ begin
   MainForm.PlaySound('Shoot', False);
 end;
 
-destructor TTamaSprite.Destroy;
+destructor TPlayerTamaSprite.Destroy;
 begin
   inherited Destroy;
   Dec(FPlayerSprite.FTamaCount);
 end;
 
-procedure TTamaSprite.DoCollision(Sprite: TSprite; var Done: Boolean);
+procedure TPlayerTamaSprite.DoCollision(Sprite: TSprite; var Done: Boolean);
 begin
   if (Sprite is TEnemy) and not (Sprite is TEnemyTama) then
   begin
@@ -554,7 +557,7 @@ begin
   Done := False;
 end;
 
-procedure TTamaSprite.DoMove(MoveCount: Integer);
+procedure TPlayerTamaSprite.DoMove(MoveCount: Integer);
 begin
   inherited DoMove(MoveCount);
   X := X+(800/1000)*MoveCount;
@@ -667,9 +670,10 @@ begin
   if FCounter > 2999 then dead;
 end;
 
-constructor TEnemyTama.Create(AParent: TSprite);
+constructor TEnemyTama.Create(AParent: TSprite; AEnemySprite: TSprite);
 begin
   inherited Create(AParent);
+  FEnemySprite := AEnemySprite;
   Image := MainForm.ImageList.Items.Find('Bounce2');
   Width := Image.Width;
   Height := Image.Height;
@@ -764,9 +768,8 @@ begin
     if FCounter-FOldTamaTime>=100 then
     begin
       Inc(FTamaCount);
-      with TEnemyTama.Create(Engine) do
+      with TEnemyTama.Create(Engine, Self) do
       begin
-        FPlayerSprite := Self;
         X := Self.X;
         Y := Self.Y+Self.Height div 2-Height div 2;
         Z := 10;
@@ -943,9 +946,8 @@ begin
     begin
       if FTamaT>100 then
       begin
-        with TEnemyTama.Create(Engine) do
+        with TEnemyTama.Create(Engine, Self) do
         begin
-          FPlayerSprite := Self;
           Z := 1;
           X := Self.X-Width;
           Y := Self.Y+Self.Height div 2-Height div 2;
@@ -1054,9 +1056,8 @@ begin
     begin
       if FTamaT>100 then
       begin
-        with TEnemyTama.Create(Engine) do
+        with TEnemyTama.Create(Engine, Self) do
         begin
-          FPlayerSprite := Self;
           Z := 1;
           X := Self.X-Width;
           Y := Self.Y+Self.Height div 2-Height div 2;
@@ -1118,9 +1119,8 @@ begin
     if FCounter-FOldTamaTime>=100 then
     begin
       Inc(FTamaCount);
-      with TEnemyTama.Create(Engine) do
+      with TEnemyTama.Create(Engine, Self) do
       begin
-        FPlayerSprite := Self;
         X := Self.X;
         Y := Self.Y+Self.Height div 2-Height div 2;
         Z := 10;
@@ -1514,7 +1514,7 @@ begin
     if FInterval = giSchwer then INIDatei.WriteInteger('Settings', 'Speed', 3);
     if FInterval = giMaster then INIDatei.WriteInteger('Settings', 'Speed', 4);
   finally
-    INIDatei.Free;
+    FreeAndNil(INIDatei);
   end;
 end;
 
@@ -1547,7 +1547,7 @@ begin
       Master.checked := true;
     end;
   finally
-    INIDatei.Free;
+    FreeAndNil(INIDatei);
   end;
   WriteOptions;
 end;
@@ -1683,7 +1683,7 @@ begin
     Image := mainform.ImageList.Items.Find('Star3');
     Z := -13;
     Y := 40;
-    FSpeed := 1 / 2;
+    Speed := 1 / 2;
     Tile := True;
   end;
   with TBackground.Create(SpriteEngine.Engine) do
@@ -1692,7 +1692,7 @@ begin
     Image := mainform.ImageList.Items.Find('Star2');
     Z := -12;
     Y := 30;
-    FSpeed := 1;
+    Speed := 1;
     Tile := True;
   end;
   with TBackground.Create(SpriteEngine.Engine) do
@@ -1701,7 +1701,7 @@ begin
     Image := mainform.ImageList.Items.Find('Star1');
     Z := -11;
     Y := 10;
-    FSpeed := 2;
+    Speed := 2;
     Tile := True;
   end;
   {with TBackground.Create(SpriteEngine.Engine) do
@@ -1709,7 +1709,7 @@ begin
     SetMapSize(200, 10);
     Y := 10;
     Z := -13;
-    FSpeed := 1 / 2;
+    Speed := 1 / 2;
     Tile := True;
     for i := 0 to MapHeight-1 do
     begin
@@ -1725,7 +1725,7 @@ begin
     SetMapSize(200, 10);
     Y := 30;
     Z := -12;
-    FSpeed := 1;
+    Speed := 1;
     Tile := True;
     for i := 0 to MapHeight-1 do
     begin
@@ -1741,7 +1741,7 @@ begin
     SetMapSize(200, 10);
     Y := 40;
     Z := -11;
-    FSpeed := 2;
+    Speed := 2;
     Tile := True;
     for i := 0 to MapHeight-1 do
     begin
@@ -1922,48 +1922,47 @@ begin
   Logo.DrawWaveX(DXDraw.Surface, trunc((dxdraw.surfaceWidth / 2) - (Logo.Width / 2)), 65, Logo.Width, Logo.Height, 0,
     2, 80, Fangle * 4);
   inc(Fangle);
-  with DXDraw.Surface.Canvas do
+
+  if (isDown in MainForm.DXInput.States) and (FGameMode=gmLevels) then FGameMode := gmRandom;
+  if ((isUp in MainForm.DXInput.States) and (FGameMode=gmRandom)) or (FGameMode=gmUnknown) then FGameMode := gmLevels;
+  DXDraw.Surface.Canvas.Brush.Style := bsClear;
+  DXDraw.Surface.Canvas.Font.Size := 30;
+  if FGameMode = gmLevels then
   begin
-    if (isDown in MainForm.DXInput.States) and (FGameMode=gmLevels) then FGameMode := gmRandom;
-    if ((isUp in MainForm.DXInput.States) and (FGameMode=gmRandom)) or (FGameMode=gmUnknown) then FGameMode := gmLevels;
-    Brush.Style := bsClear;
-    Font.Size := 30;
-    if FGameMode = gmLevels then
-    begin
-      Font.Color := clMaroon;
-      Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)-52, 'Normales Spiel');
-      Textout((dxdraw.surfaceWidth div 2)-187, (dxdraw.surfaceheight div 2)-52, '>');
-      Font.Color := clRed;
-      Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2)-50, 'Normales Spiel');
-      Textout((dxdraw.surfaceWidth div 2)-185, (dxdraw.surfaceheight div 2)-50, '>');
-      Font.Color := clOlive;
-      Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)-2, 'Zufallslevel');
-      Font.Color := clYellow;
-      Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2), 'Zufallslevel');
-    end
-    else
-    begin
-      Font.Color := clOlive;
-      Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)-52, 'Normales Spiel');
-      Font.Color := clYellow;
-      Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2)-50, 'Normales Spiel');
-      Font.Color := clMaroon;
-      Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)-2, 'Zufallslevel');
-      Textout((dxdraw.surfaceWidth div 2)-187, (dxdraw.surfaceheight div 2)-2, '>');
-      Font.Color := clRed;
-      Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2), 'Zufallslevel');
-      Textout((dxdraw.surfaceWidth div 2)-185, (dxdraw.surfaceheight div 2), '>');
-    end;
-    { if (FBlink div 300) mod 2=0 then
-    begin
-      Font.Color := clGreen;
-      Textout((dxdraw.surfaceWidth div 2)-187, dxdraw.surfaceheight-117, 'Weiter mit Leertaste');
-      Font.Color := clLime;
-      Textout((dxdraw.surfaceWidth div 2)-185, dxdraw.surfaceheight-115, 'Weiter mit Leertaste');
-    end; }
-    BlinkUpdate;
-    Release;
+    DXDraw.Surface.Canvas.Font.Color := clMaroon;
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)-52, 'Normales Spiel');
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-187, (dxdraw.surfaceheight div 2)-52, '>');
+    DXDraw.Surface.Canvas.Font.Color := clRed;
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2)-50, 'Normales Spiel');
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, (dxdraw.surfaceheight div 2)-50, '>');
+    DXDraw.Surface.Canvas.Font.Color := clOlive;
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)-2, 'Zufallslevel');
+    DXDraw.Surface.Canvas.Font.Color := clYellow;
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2), 'Zufallslevel');
+  end
+  else
+  begin
+    DXDraw.Surface.Canvas.Font.Color := clOlive;
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)-52, 'Normales Spiel');
+    DXDraw.Surface.Canvas.Font.Color := clYellow;
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2)-50, 'Normales Spiel');
+    DXDraw.Surface.Canvas.Font.Color := clMaroon;
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)-2, 'Zufallslevel');
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-187, (dxdraw.surfaceheight div 2)-2, '>');
+    DXDraw.Surface.Canvas.Font.Color := clRed;
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2), 'Zufallslevel');
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, (dxdraw.surfaceheight div 2), '>');
   end;
+  { if (FBlink div 300) mod 2=0 then
+  begin
+    DXDraw.Surface.Canvas.Font.Color := clGreen;
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-187, dxdraw.surfaceheight-117, 'Weiter mit Leertaste');
+    DXDraw.Surface.Canvas.Font.Color := clLime;
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, dxdraw.surfaceheight-115, 'Weiter mit Leertaste');
+  end; }
+  BlinkUpdate;
+  DXDraw.Surface.Canvas.Release;
+
   // Weiter mit Leertaste oder Enter
   if (isButton1 in DXInput.States) or (isButton2 in DXInput.States) then
   begin
@@ -2032,130 +2031,124 @@ begin
     SpriteEngine.Draw;
     if MainForm.flife > 0 then
     begin
-      with DXDraw.Surface.Canvas do
+      DXDraw.Surface.Canvas.Brush.Style := bsClear;
+      DXDraw.Surface.Canvas.Font.Size := 20;
+      DXDraw.Surface.Canvas.Font.Color := clOlive;
+      DXDraw.Surface.Canvas.Textout(9, 9, 'Punkte: ' + FloatToStrF(FScore,ffNumber,14,0));
+      DXDraw.Surface.Canvas.Font.Color := clYellow;
+      DXDraw.Surface.Canvas.Textout(10, 10, 'Punkte: ' + FloatToStrF(FScore,ffNumber,14,0));
+      DXDraw.Surface.Canvas.Font.Color := clMaroon;
+      DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-141, 9, 'Level: ' + IntToStr(MainForm.flevel));
+      DXDraw.Surface.Canvas.Font.Color := clRed;
+      DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-140, 10, 'Level: ' + IntToStr(MainForm.flevel));
+      if FLife<0 then mainform.FLife := 0;
+      if FCheat then
       begin
-        Brush.Style := bsClear;
-        Font.Size := 20;
-        Font.Color := clOlive;
-        Textout(9, 9, 'Punkte: ' + FloatToStrF(FScore,ffNumber,14,0));
-        Font.Color := clYellow;
-        Textout(10, 10, 'Punkte: ' + FloatToStrF(FScore,ffNumber,14,0));
-        Font.Color := clMaroon;
-        Textout(dxdraw.surfacewidth-141, 9, 'Level: ' + IntToStr(MainForm.flevel));
-        Font.Color := clRed;
-        Textout(dxdraw.surfacewidth-140, 10, 'Level: ' + IntToStr(MainForm.flevel));
-        if FLife<0 then mainform.FLife := 0;
-        if FCheat then
+        DXDraw.Surface.Canvas.Font.Color := clPurple;
+        DXDraw.Surface.Canvas.Textout(9, dxdraw.surfaceheight-41, 'Leben: ?');
+        DXDraw.Surface.Canvas.Font.Color := clFuchsia;
+        DXDraw.Surface.Canvas.Textout(10, dxdraw.surfaceheight-40, 'Leben: ?');
+      end
+      else
+      begin
+        if ((Flife = 1) and ((FBlink div 300) mod 2=0)) or (Flife <> 1) then
         begin
-          Font.Color := clPurple;
-          Textout(9, dxdraw.surfaceheight-41, 'Leben: ?');
-          Font.Color := clFuchsia;
-          Textout(10, dxdraw.surfaceheight-40, 'Leben: ?');
-        end
-        else
-        begin
-          if ((Flife = 1) and ((FBlink div 300) mod 2=0)) or (Flife <> 1) then
-          begin
-            Font.Color := clPurple;
-            Textout(9, dxdraw.surfaceheight-41, 'Leben: ' + IntToStr(MainForm.flife));
-            Font.Color := clFuchsia;
-            Textout(10, dxdraw.surfaceheight-40, 'Leben: ' + IntToStr(MainForm.flife));
-          end;
-          if Flife = 1 then BlinkUpdate;
+          DXDraw.Surface.Canvas.Font.Color := clPurple;
+          DXDraw.Surface.Canvas.Textout(9, dxdraw.surfaceheight-41, 'Leben: ' + IntToStr(MainForm.flife));
+          DXDraw.Surface.Canvas.Font.Color := clFuchsia;
+          DXDraw.Surface.Canvas.Textout(10, dxdraw.surfaceheight-40, 'Leben: ' + IntToStr(MainForm.flife));
         end;
-        {if BossExists and (FBossLife>0) then
+        if Flife = 1 then BlinkUpdate;
+      end;
+      {if BossExists and (FBossLife>0) then
+      begin
+        DXDraw.Surface.Canvas.Font.Color := clPurple;
+        DXDraw.Surface.Canvas.Textout(449, 439, 'Boss: ' + IntToStr(FBossLife));
+        DXDraw.Surface.Canvas.Font.Color := clFuchsia;
+        DXDraw.Surface.Canvas.Textout(450, 440, 'Boss: ' + IntToStr(FBossLife));
+      end
+      else
+        if RestlicheEinheiten>0 then
         begin
-          Font.Color := clPurple;
-          Textout(449, 439, 'Boss: ' + IntToStr(FBossLife));
-          Font.Color := clFuchsia;
-          Textout(450, 440, 'Boss: ' + IntToStr(FBossLife));
-        end
-        else
-          if RestlicheEinheiten>0 then
-          begin
-            Font.Color := clPurple;
-            Textout(449, 439, 'Einheiten: ' + IntToStr(RestlicheEinheiten));
-            Font.Color := clFuchsia;
-            Textout(450, 440, 'Einheiten: ' + IntToStr(RestlicheEinheiten));
-          end;}
-        if BossExists and (FBossLife>0) then
+          DXDraw.Surface.Canvas.Font.Color := clPurple;
+          DXDraw.Surface.Canvas.Textout(449, 439, 'Einheiten: ' + IntToStr(RestlicheEinheiten));
+          DXDraw.Surface.Canvas.Font.Color := clFuchsia;
+          DXDraw.Surface.Canvas.Textout(450, 440, 'Einheiten: ' + IntToStr(RestlicheEinheiten));
+        end;}
+      if BossExists and (FBossLife>0) then
+      begin
+        if (FRestEnemies>0) then
         begin
-          if (FRestEnemies>0) then
-          begin
-            Font.Color := clGreen;
-            Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-81, 'Boss: ' + IntToStr(FBossLife));
-            Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Einheiten: ' + IntToStr(FRestEnemies));
-            Font.Color := clLime;
-            Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-80, 'Boss: ' + IntToStr(FBossLife));
-            Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Einheiten: ' + IntToStr(FRestEnemies));
-          end;
-          if (FRestEnemies<1) then
-          begin
-            Font.Color := clGreen;
-            Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Boss: ' + IntToStr(FBossLife));
-            Font.Color := clLime;
-            Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Boss: ' + IntToStr(FBossLife));
-          end;
+          DXDraw.Surface.Canvas.Font.Color := clGreen;
+          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-81, 'Boss: ' + IntToStr(FBossLife));
+          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Einheiten: ' + IntToStr(FRestEnemies));
+          DXDraw.Surface.Canvas.Font.Color := clLime;
+          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-80, 'Boss: ' + IntToStr(FBossLife));
+          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Einheiten: ' + IntToStr(FRestEnemies));
         end;
-        if (FRestEnemies>0) and not Bossexists then
+        if (FRestEnemies<1) then
         begin
-          Font.Color := clGreen;
-          Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Einheiten: ' + IntToStr(FRestEnemies));
-          Font.Color := clLime;
-          Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Einheiten: ' + IntToStr(FRestEnemies));
+          DXDraw.Surface.Canvas.Font.Color := clGreen;
+          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Boss: ' + IntToStr(FBossLife));
+          DXDraw.Surface.Canvas.Font.Color := clLime;
+          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Boss: ' + IntToStr(FBossLife));
         end;
-        Release;
+      end;
+      if (FRestEnemies>0) and not Bossexists then
+      begin
+        DXDraw.Surface.Canvas.Font.Color := clGreen;
+        DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Einheiten: ' + IntToStr(FRestEnemies));
+        DXDraw.Surface.Canvas.Font.Color := clLime;
+        DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Einheiten: ' + IntToStr(FRestEnemies));
+      end;
+      if (EnemyCounter=0) and (FRestEnemies=0) and ((BossExists and (FBossLife=0)) or not BossExists) then
+      begin
+        DXDraw.Surface.Canvas.Font.Color := clGreen;
+        DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-251, dxdraw.surfaceheight-41, 'Mission erfolgreich!');
+        DXDraw.Surface.Canvas.Font.Color := clLime;
+        DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-250, dxdraw.surfaceheight-40, 'Mission erfolgreich!');
+        DXDraw.Surface.Canvas.Release;
+        Sleep(1);
+        inc(FCounter);
+        if FCounter>150{200} then PlayerSprite.FlyAway;
       end;
     end
     else
     begin
-      DXDraw.Surface.Canvas.Font.Color := clGreen; // Grüne schrift bei gescheitert? FIXME
+      DXDraw.Surface.Canvas.Font.Color := clMaroon;
       DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-251, dxdraw.surfaceheight-41, 'Mission gescheitert!');
-      DXDraw.Surface.Canvas.Font.Color := clLime;
+      DXDraw.Surface.Canvas.Font.Color := clRed;
       DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-250, dxdraw.surfaceheight-40, 'Mission gescheitert!');
-      DXDraw.Surface.Canvas.Release;
     end;
-    if (EnemyCounter=0) and (FRestEnemies=0){ and (SpielerFliegtFort = false)}
-    and ((BossExists and (FBossLife=0)) or not BossExists) then
-    begin
-      DXDraw.Surface.Canvas.Font.Color := clGreen;
-      DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-251, dxdraw.surfaceheight-41, 'Mission erfolgreich!');
-      DXDraw.Surface.Canvas.Font.Color := clLime;
-      DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-250, dxdraw.surfaceheight-40, 'Mission erfolgreich!');
-      DXDraw.Surface.Canvas.Release;
-      Sleep(1);
-      inc(FCounter);
-      if FCounter>150{200} then PlayerSprite.FlyAway;
-    end;
+    DXDraw.Surface.Canvas.Release;
   end;
 end;
 
 procedure TMainForm.SceneGameOver;
 begin
   DXDraw.Surface.Fill(0);
-  with DXDraw.Surface.Canvas do
+
+  FNotSave := true;
+  Cheat.enabled := false;
+  GamePause.enabled := false;
+  Neustart.enabled := false;
+  Brush.Style := bsClear;
+  DXDraw.Surface.Canvas.Font.Size := 35;
+  DXDraw.Surface.Canvas.Font.Color := clMaroon;
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfacewidth div 2)-127, 98, 'Game over!');
+  DXDraw.Surface.Canvas.Font.Color := clRed;
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfacewidth div 2)-125, 100, 'Game over!');
+  if (FBlink div 300) mod 2=0 then
   begin
-    FNotSave := true;
-    Cheat.enabled := false;
-    GamePause.enabled := false;
-    Neustart.enabled := false;
-    Brush.Style := bsClear;
-    Font.Size := 35;
-    Font.Color := clMaroon;
-    Textout((dxdraw.surfacewidth div 2)-127, 98, 'Game over!');
-    Font.Color := clRed;
-    Textout((dxdraw.surfacewidth div 2)-125, 100, 'Game over!');
-    if (FBlink div 300) mod 2=0 then
-    begin
-      Font.Size := 30;
-      Font.Color := clOlive;
-      Textout((dxdraw.surfaceWidth div 2)-187, dxdraw.surfaceheight-117, 'Weiter mit Leertaste');
-      Font.Color := clYellow;
-      Textout((dxdraw.surfaceWidth div 2)-185, dxdraw.surfaceheight-115, 'Weiter mit Leertaste');
-    end;
-    BlinkUpdate;
-    Release;
+    DXDraw.Surface.Canvas.Font.Size := 30;
+    DXDraw.Surface.Canvas.Font.Color := clOlive;
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-187, dxdraw.surfaceheight-117, 'Weiter mit Leertaste');
+    DXDraw.Surface.Canvas.Font.Color := clYellow;
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, dxdraw.surfaceheight-115, 'Weiter mit Leertaste');
   end;
+  BlinkUpdate;
+  DXDraw.Surface.Canvas.Release;
+
   // Weiter mit Leertaste oder Enter
   if (isButton1 in DXInput.States) or (isButton2 in DXInput.States) then
   begin
@@ -2169,29 +2162,29 @@ end;
 procedure TMainForm.SceneWin;
 begin
   DXDraw.Surface.Fill(0);
-  with DXDraw.Surface.Canvas do
+
+  FNotSave := true;
+  Cheat.enabled := false;
+  GamePause.enabled := false;
+  Neustart.enabled := false;
+
+  DXDraw.Surface.Canvas.Brush.Style := bsClear;
+  DXDraw.Surface.Canvas.Font.Size := 35;
+  DXDraw.Surface.Canvas.Font.Color := clMaroon;
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-127, 98, 'Gewonnen!');
+  DXDraw.Surface.Canvas.Font.Color := clRed;
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-125, 100, 'Gewonnen!');
+  if (FBlink div 300) mod 2=0 then
   begin
-    FNotSave := true;
-    Cheat.enabled := false;
-    GamePause.enabled := false;
-    Neustart.enabled := false;
-    Brush.Style := bsClear;
-    Font.Size := 35;
-    Font.Color := clMaroon;
-    Textout((dxdraw.surfaceWidth div 2)-127, 98, 'Gewonnen!');
-    Font.Color := clRed;
-    Textout((dxdraw.surfaceWidth div 2)-125, 100, 'Gewonnen!');
-    if (FBlink div 300) mod 2=0 then
-    begin
-      Font.Size := 30;
-      Font.Color := clOlive;
-      Textout((dxdraw.surfaceWidth div 2)-187, dxdraw.surfaceheight-117, 'Weiter mit Leertaste');
-      Font.Color := clYellow;
-      Textout((dxdraw.surfaceWidth div 2)-185, dxdraw.surfaceheight-115, 'Weiter mit Leertaste');
-    end;
-    BlinkUpdate;
-    Release;
+    DXDraw.Surface.Canvas.Font.Size := 30;
+    DXDraw.Surface.Canvas.Font.Color := clOlive;
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-187, dxdraw.surfaceheight-117, 'Weiter mit Leertaste');
+    DXDraw.Surface.Canvas.Font.Color := clYellow;
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, dxdraw.surfaceheight-115, 'Weiter mit Leertaste');
   end;
+  BlinkUpdate;
+  DXDraw.Surface.Canvas.Release;
+
   if isButton1 in DXInput.States then
   begin
     PlaySound('SceneMov', False);
@@ -2231,25 +2224,24 @@ end;
 procedure TMainForm.SceneNewLevel;
 begin
   DXDraw.Surface.Fill(0);
-  with DXDraw.Surface.Canvas do
+
+  DXDraw.Surface.Canvas.Brush.Style := bsClear;
+  DXDraw.Surface.Canvas.Font.Size := 40;
+  DXDraw.Surface.Canvas.Font.Color := clMaroon;
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-(83+(length(inttostr(flevel))*22)), 98, 'Level '+inttostr(flevel));
+  DXDraw.Surface.Canvas.Font.Color := clRed;
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-(81+(length(inttostr(flevel))*22)), 100, 'Level '+inttostr(flevel));
+  if (FBlink div 300) mod 2=0 then
   begin
-    Brush.Style := bsClear;
-    Font.Size := 40;
-    Font.Color := clMaroon;
-    Textout((dxdraw.surfaceWidth div 2)-(83+(length(inttostr(flevel))*22)), 98, 'Level '+inttostr(flevel));
-    Font.Color := clRed;
-    Textout((dxdraw.surfaceWidth div 2)-(81+(length(inttostr(flevel))*22)), 100, 'Level '+inttostr(flevel));
-    if (FBlink div 300) mod 2=0 then
-    begin
-      Font.Size := 30;
-      Font.Color := clOlive;
-      Textout((dxdraw.surfaceWidth div 2)-187, dxdraw.surfaceheight-117, 'Weiter mit Leertaste');
-      Font.Color := clYellow;
-      Textout((dxdraw.surfaceWidth div 2)-185, dxdraw.surfaceheight-115, 'Weiter mit Leertaste');
-    end;
-    BlinkUpdate;
-    Release;
+    DXDraw.Surface.Canvas.Font.Size := 30;
+    DXDraw.Surface.Canvas.Font.Color := clOlive;
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-187, dxdraw.surfaceheight-117, 'Weiter mit Leertaste');
+    DXDraw.Surface.Canvas.Font.Color := clYellow;
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, dxdraw.surfaceheight-115, 'Weiter mit Leertaste');
   end;
+  BlinkUpdate;
+  DXDraw.Surface.Canvas.Release;
+
   if isButton1 in DXInput.States then
   begin
     PlaySound('SceneMov', False);
@@ -2400,16 +2392,16 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
-  imagelist.Free;
-  spriteengine.Free;
-  dxdraw.Free;
-  wavelist.Free;
-  dxsound.Free;
-  //dxinput.Free;
-  dxtimer.Free;
-  dxmusic.Free;
+  FreeAndNil(imagelist);
+  FreeAndNil(spriteengine);
+  FreeAndNil(dxdraw);
+  FreeAndNil(wavelist);
+  FreeAndNil(dxsound);
+  //FreeAndNil(dxinput);
+  FreeAndNil(dxtimer);
+  FreeAndNil(dxmusic);
   DeleteCriticalSection(TimerCS);
-  LevelData.Free;
+  FreeAndNil(LevelData);
 end;
 
 end.
