@@ -1,11 +1,16 @@
 unit GamMain;
 
+// TODO unDelphiX auf GitHub
+// - Dokumente als MarkDown
+// - dxmEdit + dxwEdit fixes
+// (GIT OK) - Dplay disable
+
 // TODO 2024 Review
 // ----------------
 //              Quellcode optimieren und klassen-namen überdenken
 // [OK SVN 12]  Form Screen center anstelle Desktop Center
 //              Vollbild entf.
-// [OK SVN 10]  DPlayX.dll auskommentieren => OK!
+// [OK SVN 21]  DPlayX.dll auskommentieren => OK!
 //              EV CodeSign
 //              Spielstände usw. "Spiele" Ordner speichern, Config in Registry sichern, etc.
 //              Neue Einheiten => Medikit, Ufo das im Kreis fliegt und nicht weggeht
@@ -17,7 +22,6 @@ unit GamMain;
 //              Cooldown für Laser?
 //              Improve Sound effects
 // [OK SVN 18]  MCI hangs a lot! Use new unDelphiX DXMusic component for MIDI!
-//              Pausiertes Spiel: Fenster bewegen lässt das Spiel wieder starten
 //              Zwei Fenster in Taskleiste
 //              "Doku" in Hilfemenü einbinden, ggf. auch den Leveleditor ins Menü machen
 //              Highscore Liste
@@ -1295,7 +1299,7 @@ begin
   end;
 end;
 
-// http://www.delphipraxis.net/post43515.html
+// https://www.delphipraxis.net/post43515.html
 Function GetHTML(AUrl: string): string;
 var
   databuffer : array[0..4095] of char;
@@ -1307,7 +1311,8 @@ var
   Str    : pchar;
 begin
   ResStr:='';
-  if system.pos('http://',lowercase(AUrl))=0 then
+  if (system.pos('http://',lowercase(AUrl))=0) and
+     (system.pos('https://',lowercase(AUrl))=0) then
      AUrl:='http://'+AUrl;
 
   // Hinzugefügt
@@ -1378,17 +1383,17 @@ procedure TMainForm.CheckUpdatesClick(Sender: TObject);
 var
   cont: string;
 begin
-  cont := GetHTML('http://www.viathinksoft.de/update/?id=spacemission');
+  cont := GetHTML('https://www.viathinksoft.de/update/?id=spacemission');
   if copy(cont, 0, 7) = 'Status:' then
   begin
     Application.MessageBox('Ein Fehler ist aufgetreten. Wahrscheinlich ist keine Internetverbindung aufgebaut, oder der der ViaThinkSoft-Server vorübergehend offline.', 'Fehler', MB_OK + MB_ICONERROR)
   end
   else
   begin
-    if GetHTML('http://www.viathinksoft.de/update/?id=spacemission') <> ProgramVersion then
+    if cont <> ProgramVersion then
     begin
       if Application.MessageBox('Eine neue Programmversion ist vorhanden. Möchten Sie diese jetzt herunterladen?', 'Information', MB_YESNO + MB_ICONASTERISK) = ID_YES then
-        shellexecute(application.handle, 'open', pchar('http://www.viathinksoft.de/update/?id=@spacemission'), '', '', sw_normal);
+        shellexecute(application.handle, 'open', pchar('https://www.viathinksoft.de/update/?id=@spacemission'), '', '', sw_normal);
     end
     else
     begin

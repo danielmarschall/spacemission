@@ -109,22 +109,26 @@ object MainForm: TMainForm
         object Leicht: TMenuItem
           Caption = '&Leicht'
           RadioItem = True
+          ShortCut = 49
           OnClick = LeichtClick
         end
         object Mittel: TMenuItem
           Caption = '&Mittel'
           Checked = True
           RadioItem = True
+          ShortCut = 50
           OnClick = MittelClick
         end
         object Schwer: TMenuItem
           Caption = '&Schwer'
           RadioItem = True
+          ShortCut = 51
           OnClick = SchwerClick
         end
         object Master: TMenuItem
           Caption = 'Meist&er'
           RadioItem = True
+          ShortCut = 52
           OnClick = MasterClick
         end
       end
