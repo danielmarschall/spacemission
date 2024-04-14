@@ -37,8 +37,8 @@ type
   );
 
   TGameInterval = (
-    giMittel,
     giLeicht,
+    giMittel,
     giSchwer,
     giMaster
   );
@@ -2079,8 +2079,8 @@ var
   spriteClass: TEnemyClass;
 begin
   case FInterval of
-    giMittel: SpriteEngine.Move(conleicht);
-    giLeicht: SpriteEngine.Move(conmittel);
+    giLeicht: SpriteEngine.Move(conleicht);
+    giMittel: SpriteEngine.Move(conmittel);
     giSchwer: SpriteEngine.Move(conschwer);
     giMaster: SpriteEngine.Move(conmaster);
   end;
