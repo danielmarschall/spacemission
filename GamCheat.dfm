@@ -1,8 +1,7 @@
 object CheatForm: TCheatForm
   Left = 275
   Top = 165
-  BorderIcons = [biSystemMenu]
-  BorderStyle = bsSingle
+  BorderStyle = bsDialog
   Caption = 'Cheatverwaltung'
   ClientHeight = 233
   ClientWidth = 313

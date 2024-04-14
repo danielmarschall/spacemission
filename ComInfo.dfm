@@ -1,11 +1,10 @@
 object InfoForm: TInfoForm
   Left = 289
   Top = 184
-  BorderIcons = [biSystemMenu]
-  BorderStyle = bsSingle
+  BorderStyle = bsDialog
   Caption = 'Informationen'
-  ClientHeight = 336
-  ClientWidth = 381
+  ClientHeight = 343
+  ClientWidth = 384
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,6 +13,9 @@ object InfoForm: TInfoForm
   Font.Style = []
   Position = poMainFormCenter
   OnCreate = FormCreate
+  DesignSize = (
+    384
+    343)
   TextHeight = 13
   object HomeLbl: TLabel
     Left = 32
@@ -140,21 +142,25 @@ object InfoForm: TInfoForm
     OnClick = EMailClick
   end
   object OkBtn: TButton
-    Left = 270
-    Top = 303
+    Left = 273
+    Top = 310
     Width = 107
     Height = 25
+    Anchors = [akRight, akBottom]
     Cancel = True
     Caption = 'OK'
     Default = True
     TabOrder = 0
     OnClick = OkBtnClick
+    ExplicitLeft = 270
+    ExplicitTop = 303
   end
   object MemoMitwirkende: TMemo
     Left = 8
     Top = 168
-    Width = 369
-    Height = 121
+    Width = 372
+    Height = 128
+    Anchors = [akLeft, akTop, akRight, akBottom]
     Lines.Strings = (
       
         'SpaceMission wurde von Daniel Marschall auf Basis eines Codebeis' +
@@ -176,5 +182,7 @@ object InfoForm: TInfoForm
     ReadOnly = True
     ScrollBars = ssVertical
     TabOrder = 1
+    ExplicitWidth = 369
+    ExplicitHeight = 121
   end
 end

@@ -1,8 +1,7 @@
 object LevelForm: TLevelForm
   Left = 195
   Top = 103
-  BorderIcons = [biSystemMenu, biMinimize]
-  BorderStyle = bsSingle
+  BorderStyle = bsDialog
   Caption = 'Leveleigenschaften'
   ClientHeight = 251
   ClientWidth = 384

@@ -1,8 +1,7 @@
 object SpeicherungForm: TSpeicherungForm
   Left = 281
   Top = 153
-  BorderIcons = [biSystemMenu]
-  BorderStyle = bsSingle
+  BorderStyle = bsDialog
   Caption = 'Levels'
   ClientHeight = 408
   ClientWidth = 445

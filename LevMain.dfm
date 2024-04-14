@@ -2016,22 +2016,21 @@ object MainForm: TMainForm
     Top = 16
     object Spiel: TMenuItem
       Caption = '&Datei'
+      object Neu: TMenuItem
+        Caption = '&Neu'
+        ShortCut = 16462
+        OnClick = NeuClick
+      end
       object Level: TMenuItem
         Caption = '&Laden/Speichern...'
-        ShortCut = 115
+        ShortCut = 16463
         OnClick = LevelClick
       end
       object N1: TMenuItem
         Caption = '-'
       end
-      object Neu: TMenuItem
-        Caption = '&Neu'
-        ShortCut = 117
-        OnClick = NeuClick
-      end
       object Spielfelderweitern1: TMenuItem
         Caption = 'Leveleigenschaften...'
-        ShortCut = 118
         OnClick = Spielfelderweitern1Click
       end
       object Leer1: TMenuItem
