@@ -106,6 +106,11 @@ end;
 procedure TLevelData.AddEnemy(x,y:integer;enemyType:TEnemyType;lifes:integer);
 begin
   SetLength(EnemyAdventTable, Length(EnemyAdventTable)+1);
+
+  if enemyType = etEnemyMeteor then lifes := 0;
+  if x mod 48 <> 0 then raise Exception.Create('X-Koordinate muss ohne Rest durch 48 teilbar sein');
+  if y mod 32 <> 0 then raise Exception.Create('Y-Koordinate muss ohne Rest durch 32 teilbar sein');
+
   EnemyAdventTable[Length(EnemyAdventTable)-1].x         := x;
   EnemyAdventTable[Length(EnemyAdventTable)-1].y         := y;
   EnemyAdventTable[Length(EnemyAdventTable)-1].enemyType := enemyType;

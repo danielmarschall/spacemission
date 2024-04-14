@@ -113,8 +113,7 @@ begin
   begin
     if CheatBox.Selected[CheatBox.items.IndexOf(Cheat1Text)] then
     begin
-      if MessageDlg('Diesen Cheat wirklich deaktivieren?',
-        mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+      if MessageDlg('Diesen Cheat wirklich deaktivieren?', mtConfirmation, mbYesNoCancel, 0) = mrYes then
       begin
         mainform.FCheat := false;
         showmessage('Dieser Cheat wurde deakiviert!');

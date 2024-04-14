@@ -1,8 +1,5 @@
 unit LevSpeicherung;
 
-// TODO: Wenn man lädt, soll er fragen, ob man wirklich die aktuelle arbeit verwerfen will
-// TODO: LevelListBoxDblClick ist gefährlich, denn man weis ja nicht ob der nutzer jetzt laden oder speichern will!
-
 interface
 
 uses
@@ -40,7 +37,6 @@ type
     procedure DsFancyButton2Click(Sender: TObject);
     procedure AbbrechenBtnClick(Sender: TObject);
     procedure LevelNameChange(Sender: TObject);
-    procedure LevelListBoxDblClick(Sender: TObject);
     procedure FormHide(Sender: TObject);
   public
     procedure SearchLevels;
@@ -80,17 +76,10 @@ begin
 end;
 
 procedure TSpeicherungForm.LoeschenBtnClick(Sender: TObject);
-var
-  Markiert: boolean;
-  i: integer;
 begin
-  Markiert := false;
-  for i := 0 to LevelListBox.items.Count-1 do
-  begin
-    if LevelListBox.Selected[i] then Markiert := true;
-  end;
-  if not Markiert then exit;
-  if MessageDlg('Dieses Level wirklich löschen?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  if LevelListBox.ItemIndex = -1 then exit;
+
+  if MessageDlg('Dieses Level wirklich löschen?', mtConfirmation, mbYesNoCancel, 0) = mrYes then
   begin
     li1a.visible := false;
     li2a.visible := false;
@@ -110,27 +99,15 @@ end;
 
 procedure TSpeicherungForm.LadenBtnClick(Sender: TObject);
 var
-  Markiert: boolean;
   i: integer;
 begin
-  Markiert := false;
-  for i := 0 to LevelListBox.items.Count-1 do
+  if LevelListBox.ItemIndex = -1 then exit;
+
+  if MainForm.LevChanged then
   begin
-    if LevelListBox.Selected[i] then Markiert := true;
+    if MessageDlg('Neues Level laden und Änderungen verwerfen?', mtConfirmation, mbYesNoCancel, 0) <> mrYes then exit;
   end;
-  if not Markiert then exit;
-  if LevelListBox.items.count = 0 then
-  begin
-    li1a.visible := false;
-    li2a.visible := false;
-    li3a.visible := false;
-    li1b.visible := false;
-    li2b.visible := false;
-    li3b.visible := false;
-    liw.visible := true;
-    LadenBtn.enabled := false;
-    LoeschenBtn.enabled := false;
-  end;
+
   // Da Button bei ungültigen Level deaktiviert wird, ist das nicht mehr nötig.
   {if liu.visible or (LevelListBox.items.count=0) then
     exit;}
@@ -191,7 +168,7 @@ begin
   end;}
   if LevelListBox.items.IndexOf('Level ' + inttostr(LevelNumber.Value)) > -1 then
   begin
-    if MessageDlg('Level ist bereits vorhanden. Ersetzen?', mtConfirmation, [mbYes, mbNo], 0) = mrNo then
+    if MessageDlg('Level ist bereits vorhanden. Ersetzen?', mtConfirmation, mbYesNoCancel, 0) <> mrYes then
       exit;
   end;
 
@@ -294,11 +271,6 @@ end;
 procedure TSpeicherungForm.LevelNameChange(Sender: TObject);
 begin
   {...}
-end;
-
-procedure TSpeicherungForm.LevelListBoxDblClick(Sender: TObject);
-begin
-  LadenBtn.click;
 end;
 
 procedure TSpeicherungForm.FormHide(Sender: TObject);

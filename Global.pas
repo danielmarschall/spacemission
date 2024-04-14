@@ -3,7 +3,7 @@ unit Global;
 interface
 
 const
-  ProgramVersion = '1.1e';
+  ProgramVersion = '1.2';
 
 function FDirectory: string;
 

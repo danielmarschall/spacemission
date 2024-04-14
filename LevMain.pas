@@ -607,7 +607,7 @@ end;
 
 procedure TMainForm.NeuClick(Sender: TObject);
 begin
-  if MessageDlg('Level wirklich löschen?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  if MessageDlg('Level wirklich löschen?', mtConfirmation, mbYesNoCancel, 0) = mrYes then
     DestroyLevel;
 end;
 
@@ -686,7 +686,7 @@ end;
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   if LevChanged then
-    CanClose := MessageDlg('Beenden ohne abspeichern?', mtConfirmation, [mbYes, mbNo], 0) = mrYes;
+    CanClose := MessageDlg('Beenden ohne abspeichern?', mtConfirmation, mbYesNoCancel, 0) = mrYes;
 end;
 
 procedure TMainForm.Spielfelderweitern1Click(Sender: TObject);

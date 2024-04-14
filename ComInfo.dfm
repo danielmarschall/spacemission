@@ -162,6 +162,8 @@ object InfoForm: TInfoForm
       'von  Hiroyuki Hori f'#252'r DelphiX 2000 entwickelt.'
       ''
       'Entwickelt mit Embarcadero Delphi.'
+      'Setup erstellt mit InnoSetup.'
+      'Sicherheitszertifikat von HickelSOFT Huth GmbH.'
       ''
       'Verwendete Komponenten: (un)DelphiX'
       'Source: http://www.micrel.cz/Dx/'

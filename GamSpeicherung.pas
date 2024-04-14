@@ -119,18 +119,10 @@ begin
 end;
 
 procedure TSpeicherungForm.LoeschenBtnClick(Sender: TObject);
-var
-  Markiert: boolean;
-  i: integer;
 begin
-  Markiert := false;
-  for i := 0 to LevelListBox.items.Count-1 do
-  begin
-    if LevelListBox.Selected[i] then Markiert := true;
-  end;
-  if not Markiert then exit;
-  if MessageDlg('Diesen Spielstand wirklich löschen?',
-    mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  if LevelListBox.ItemIndex = -1 then exit;
+
+  if MessageDlg('Diesen Spielstand wirklich löschen?', mtConfirmation, mbYesNoCancel, 0) = mrYes then
   begin
     li1.visible := false;
     li2a.visible := false;
@@ -154,16 +146,10 @@ end;
 
 procedure TSpeicherungForm.LadenBtnClick(Sender: TObject);
 var
-  Markiert: boolean;
-  i: integer;
   SavGame: TSaveData;
 begin
-  Markiert := false;
-  for i := 0 to LevelListBox.items.Count-1 do
-  begin
-    if LevelListBox.Selected[i] then Markiert := true;
-  end;
-  if not Markiert then exit;
+  if LevelListBox.ItemIndex = -1 then exit;
+
   if LevelListBox.items.count = 0 then
   begin
     li1.visible := false;
@@ -230,7 +216,7 @@ begin
   end;
   if LevelListBox.items.IndexOf(LevelName.text) > -1 then
   begin
-    if MessageDlg('Spielstand ist bereits vorhanden. Ersetzen?', mtConfirmation, [mbYes, mbNo], 0) = mrNo then
+    if MessageDlg('Spielstand ist bereits vorhanden. Ersetzen?', mtConfirmation, mbYesNoCancel, 0) <> mrYes then
       exit;
   end;
 

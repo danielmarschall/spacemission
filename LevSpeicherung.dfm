@@ -102,7 +102,6 @@ object SpeicherungForm: TSpeicherungForm
     ItemHeight = 13
     TabOrder = 5
     OnClick = LevelListBoxClick
-    OnDblClick = LevelListBoxDblClick
   end
   object ElPanel1: TPanel
     Left = 112

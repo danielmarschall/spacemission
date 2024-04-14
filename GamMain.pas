@@ -2,19 +2,6 @@ unit GamMain;
 
 // TODO 2024 Review
 // ----------------
-// [OK SVN 12]  Form Screen center anstelle Desktop Center
-// [OK SVN 17]  Levelconverter entfernen, stattdessen einlesen abwärtskompatibel machen
-// [OK SVN 18]  MCI hangs a lot! Use new unDelphiX DXMusic component for MIDI!
-// [OK SVN 19]  Pause wird nicht in Caption geschrieben
-// [OK SVN 19]  Wenn man pause gemacht hat und fenster wechselt und wieder zurückwechselt, ist pause aufgehoben.
-// [OK SVN 21]  DPlayX.dll auskommentieren wegen Windows Meldung
-// [OK SVN 22]  Vollbild entf.
-// [OK SVN 22]  Credits: unDelphiX (micrel.cz/Dx)
-// [OK SVN 24]  Quellcode optimieren
-// [OK SVN 25]  Bug: Zwei Fenster in Taskleiste
-// [OK SVN 26]  Spielstände werden in "Gespeicherte Spiele" gesichert, so wie von Windows definiert!
-// [OK SVN 26]  Einstellungen werden in Registry gesichert
-// [OK SVN 27]  Leveleditor: "Source code" window remove
 //              EV CodeSign
 //              Neue Einheit: Medikit
 //              Neue Einheit: Ufo, das im Kreis fliegt und nicht weggeht
@@ -691,7 +678,6 @@ begin
   end
   else if State = pesFlyaway then
   begin
-    // TODO: "Wusch" sound?
     X := X + MoveCount*(300/1000) * (X/MainForm.DXDraw.Width + WegduesKonstante);
     if X > MainForm.DXDraw.Width+Width then
     begin
