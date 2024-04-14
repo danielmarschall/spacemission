@@ -47,17 +47,16 @@ object MainForm: TMainForm
       object Leer1: TMenuItem
         Caption = '-'
       end
+      object Spielstand: TMenuItem
+        Caption = '&Spielst'#228'nde...'
+        ShortCut = 115
+        OnClick = SpielstandClick
+      end
       object Cheat: TMenuItem
         Caption = '&Cheatverwaltung...'
         Enabled = False
+        ShortCut = 116
         OnClick = CheatClick
-      end
-      object Leer2: TMenuItem
-        Caption = '-'
-      end
-      object Spielstand: TMenuItem
-        Caption = '&Spielst'#228'nde...'
-        OnClick = SpielstandClick
       end
       object Leer3: TMenuItem
         Caption = '-'

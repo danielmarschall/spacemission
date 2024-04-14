@@ -200,7 +200,6 @@ type
     Beenden: TMenuItem;
     Einstellungen: TMenuItem;
     OptionMusic: TMenuItem;
-    Leer2: TMenuItem;
     Hilfe: TMenuItem;
     OptionSound: TMenuItem;
     Leer3: TMenuItem;
@@ -431,78 +430,72 @@ end;
 procedure TBackground.DoMove(MoveCount: Integer);
 var
   ran: integer;
+  bgs: TBackgroundSpecial;
 begin
   inherited DoMove(MoveCount);
   X := X - MoveCount*(60/1000)*FSpeed;
-  randomize;
   ran := Random(1500);
   if ran = 150 then
   begin
-    with TBackgroundSpecial.Create(mainform.SpriteEngine.Engine) do
+    bgs := TBackgroundSpecial.Create(mainform.SpriteEngine.Engine);
+    bgs.SetMapSize(1, 1);
+    bgs.Image := MainForm.GetSpriteGraphic(smgBackgroundPlanet1);
+    bgs.Width := Image.Width;
+    bgs.Height := Image.Height;
+    bgs.Y := random(mainform.dxdraw.height);
+    bgs.X := mainform.dxdraw.width;
+    ran := Random(2);
+    if ran = 0 then
     begin
-      SetMapSize(1, 1);
-      Image := MainForm.GetSpriteGraphic(smgBackgroundPlanet1);
-      Width := Image.Width;
-      Height := Image.Height;
-
-      Y := random(mainform.dxdraw.height);
-      X := mainform.dxdraw.width;
-
-      ran := Random(2);
-      if ran = 0 then
-      begin
-        Z := -20;
-        FSpeed := 1.8;
-      end
-      else if ran = 1 then
-      begin
-        Z := -40;
-        FSpeed := 0.8;
-      end
-      else if ran = 2 then
-      begin
-        Z := -60;
-        FSpeed := 0.3;
-      end;
+      bgs.Z := -20;
+      bgs.Speed := 1.8;
+    end
+    else if ran = 1 then
+    begin
+      bgs.Z := -40;
+      bgs.Speed := 0.8;
+    end
+    else if ran = 2 then
+    begin
+      bgs.Z := -60;
+      bgs.Speed := 0.3;
     end;
   end
   else if ran = 500 then
   begin
-    with TBackgroundSpecial.Create(mainform.SpriteEngine.Engine) do
+    bgs := TBackgroundSpecial.Create(mainform.SpriteEngine.Engine);
+    bgs.SetMapSize(1, 1);
+    ran := Random(4);
+    if ran = 0 then
+      bgs.Image := MainForm.GetSpriteGraphic(smgBackgroundRed)
+    else if ran = 1 then
+      bgs.Image := MainForm.GetSpriteGraphic(smgBackgroundBlue)
+    else if ran = 2 then
+      bgs.Image := MainForm.GetSpriteGraphic(smgBackgroundYellow)
+    else if ran = 3 then
+      bgs.Image := MainForm.GetSpriteGraphic(smgHintergrundRot);
+    bgs.Width := Image.Width;
+    bgs.Height := Image.Height;
+
+    bgs.Y := random(mainform.dxdraw.height);
+    bgs.X := mainform.dxdraw.width;
+
+    { ran := Random(2);
+    if ran = 0 then
     begin
-      SetMapSize(1, 1);
-      ran := Random(4);
-      if ran = 0 then
-        Image := MainForm.GetSpriteGraphic(smgBackgroundRed)
-      else if ran = 1 then
-        Image := MainForm.GetSpriteGraphic(smgBackgroundBlue)
-      else if ran = 2 then
-        Image := MainForm.GetSpriteGraphic(smgBackgroundYellow)
-      else if ran = 3 then
-        Image := MainForm.GetSpriteGraphic(smgHintergrundRot);
-      Width := Image.Width;
-      Height := Image.Height;
-
-      Y := random(mainform.dxdraw.height);
-      X := mainform.dxdraw.width;
-
-      { ran := Random(2);
-      if ran = 0 then
-      begin
-        Z := -20;
-        FSpeed := 1.8;
-      end
-      else if ran = 1 then
-      begin
-        Z := -40;
-        FSpeed := 0.8;
-      end
-      else if ran = 2 then
-      begin }
-        Z := -60;
-        FSpeed := 0.3;
-      { end; }
-    end;
+      bgs.Z := -20;
+      bgs.Speed := 1.8;
+    end
+    else if ran = 1 then
+    begin
+      bgs.Z := -40;
+      bgs.Speed := 0.8;
+    end
+    else if ran = 2 then
+    begin }
+      bgs.Z := -60;
+      bgs.Speed := 0.3;
+    { end; }
   end;
 end;
 
@@ -632,7 +625,7 @@ begin
   end
   else if State = pesDeadVanished then
   begin
-    if FCounter>1500 then
+    if FCounter>2000 then
     begin
       MainForm.FNextScene := gsGameOver;
       MainForm.PlaySound(smsSceneMov, false);
@@ -1264,8 +1257,10 @@ resourcestring
 var
   SavGame: TSaveData;
 begin
+  Randomize;
+
   LevelData := TLevelData.Create;
-  
+
   { Beginne VCL-Ersatz }
   dxtimer := tdxtimer.Create(self);
   dxtimer.Interval := 33;
@@ -1938,7 +1933,6 @@ begin
     Enemies[25] := etEnemyMeteor;
     Enemies[26] := etEnemyUFO;
     Enemies[27] := etEnemyAttacker;
-    randomize;
     FRestEnemies := lev*ADDITIONAL_ENEMIES_PER_LEVEL+1;
     SetLength(LevelData.EnemyAdventTable, FRestEnemies);
     for act := 0 to lev*ADDITIONAL_ENEMIES_PER_LEVEL-1 do
@@ -2183,7 +2177,7 @@ begin
         DXDraw.Surface.Canvas.Font.Color := clLime;
         DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-250, dxdraw.surfaceheight-40, 'Mission erfolgreich!');
         DXDraw.Surface.Canvas.Release;
-        Sleep(1); // TODO: man merkt hier einen lag!
+        Sleep(1);
         inc(FCounter);
         if FCounter>150{200} then PlayerSprite.FlyAway;
       end;
