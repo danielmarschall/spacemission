@@ -19,6 +19,7 @@ object MainForm: TMainForm
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnKeyDown = FormKeyDown
   OnShow = FormShow
   TextHeight = 13
   object MainMenu: TMainMenu

@@ -240,6 +240,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure CheckUpdatesClick(Sender: TObject);
     procedure MasterClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     ProgrammGestartet: boolean;
     FInterval: TGameInterval;
@@ -2452,6 +2453,77 @@ begin
   FreeAndNil(dxmusic);
   DeleteCriticalSection(TimerCS);
   FreeAndNil(LevelData);
+end;
+
+procedure PostKeyEx32(key: Word; const shift: TShiftState; specialkey: Boolean);
+{************************************************************
+* Procedure PostKeyEx32
+*
+* Parameters:
+*  key    : virtual keycode of the key to send. For printable
+*           keys this is simply the ANSI code (Ord(character)).
+*  shift  : state of the modifier keys. This is a set, so you
+*           can set several of these keys (shift, control, alt,
+*           mouse buttons) in tandem. The TShiftState type is
+*           declared in the Classes Unit.
+*  specialkey: normally this should be False. Set it to True to
+*           specify a key on the numeric keypad, for example.
+* Description:
+*  Uses keybd_event to manufacture a series of key events matching
+*  the passed parameters. The events go to the control with focus.
+*  Note that for characters key is always the upper-case version of
+*  the character. Sending without any modifier keys will result in
+*  a lower-case character, sending it with [ssShift] will result
+*  in an upper-case character!
+// Code by P. Below
+************************************************************}
+type
+  TShiftKeyInfo = record
+    shift: Byte;
+    vkey: Byte;
+  end;
+  byteset = set of 0..7;
+const
+  shiftkeys: array [1..3] of TShiftKeyInfo =
+    ((shift: Ord(ssCtrl); vkey: VK_CONTROL),
+    (shift: Ord(ssShift); vkey: VK_SHIFT),
+    (shift: Ord(ssAlt); vkey: VK_MENU));
+var
+  flag: DWORD;
+  bShift: ByteSet absolute shift;
+  i: Integer;
+begin
+  for i := 1 to 3 do
+  begin
+    if shiftkeys[i].shift in bShift then
+      keybd_event(shiftkeys[i].vkey, MapVirtualKey(shiftkeys[i].vkey, 0), 0, 0);
+  end; { For }
+  if specialkey then
+    flag := KEYEVENTF_EXTENDEDKEY
+  else
+    flag := 0;
+
+  keybd_event(key, MapvirtualKey(key, 0), flag, 0);
+  flag := flag or KEYEVENTF_KEYUP;
+  keybd_event(key, MapvirtualKey(key, 0), flag, 0);
+
+  for i := 3 downto 1 do
+  begin
+    if shiftkeys[i].shift in bShift then
+      keybd_event(shiftkeys[i].vkey, MapVirtualKey(shiftkeys[i].vkey, 0),
+        KEYEVENTF_KEYUP, 0);
+  end; { For }
+end; { PostKeyEx32 }
+
+procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then
+  begin
+    // TODO: Unfortunately, you cannot see if it is already popup. It would be great if ESC closes the main menu...
+    Key := 0;
+    PostKeyEx32(Ord('S'), [ssAlt], False);
+  end;
 end;
 
 end.
