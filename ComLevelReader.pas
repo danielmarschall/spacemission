@@ -2,6 +2,9 @@ unit ComLevelReader;
 
 interface
 
+const
+  NumEnemyTypes = 7;
+
 type
   TEnemyType = (
     etUnknown,
@@ -22,9 +25,17 @@ type
   end;
 
   TLevelData = class(TObject)
+  strict private
+    procedure SortEnemies;
   public
     LevelEditorLength: integer;
     EnemyAdventTable: array of TEnemyAdvent;
+    function IndexOfEnemy(x,y:integer;enemyType:TEnemyType;lifes:integer): integer;
+    procedure AddEnemy(x,y:integer;enemyType:TEnemyType;lifes:integer);
+    procedure DeleteEnemy(i: integer); overload;
+    procedure DeleteEnemy(x,y:integer;enemyType:TEnemyType;lifes:integer); overload;
+    function CountEnemies: integer;
+    function HasBoss: boolean;
     procedure Clear;
     procedure Load(filename: string);
     procedure Save(filename: string);
@@ -36,6 +47,9 @@ implementation
 
 uses
   SysUtils, StrUtils, Classes, Global;
+
+const
+  DefaultLevelLength = 1200;
 
 function GetLevelFileName(lev: integer): string;
 begin
@@ -49,7 +63,72 @@ end;
 procedure TLevelData.Clear;
 begin
   SetLength(EnemyAdventTable, 0);
-  LevelEditorLength := 0;
+  LevelEditorLength := DefaultLevelLength;
+end;
+
+function TLevelData.CountEnemies: integer;
+begin
+  result := Length(EnemyAdventTable);
+end;
+
+procedure TLevelData.DeleteEnemy(i: integer);
+var
+  j: integer;
+begin
+  for j := i+1 to CountEnemies-1 do
+  begin
+    EnemyAdventTable[j-1] := EnemyAdventTable[j];
+  end;
+  SetLength(EnemyAdventTable, Length(EnemyAdventTable)-1);
+end;
+
+procedure TLevelData.DeleteEnemy(x, y: integer; enemyType: TEnemyType;
+  lifes: integer);
+begin
+  DeleteEnemy(IndexOfEnemy(x, y, enemyType, lifes));
+end;
+
+function TLevelData.HasBoss: boolean;
+var
+  i: integer;
+begin
+  for i := 0 to Length(EnemyAdventTable) - 1 do
+  begin
+    if EnemyAdventTable[i].enemyType = etEnemyBoss then
+    begin
+      result := true;
+      exit;
+    end;
+  end;
+  result := false;
+end;
+
+procedure TLevelData.AddEnemy(x,y:integer;enemyType:TEnemyType;lifes:integer);
+begin
+  SetLength(EnemyAdventTable, Length(EnemyAdventTable)+1);
+  EnemyAdventTable[Length(EnemyAdventTable)-1].x         := x;
+  EnemyAdventTable[Length(EnemyAdventTable)-1].y         := y;
+  EnemyAdventTable[Length(EnemyAdventTable)-1].enemyType := enemyType;
+  EnemyAdventTable[Length(EnemyAdventTable)-1].lifes     := lifes;
+end;
+
+function TLevelData.IndexOfEnemy(x, y: integer; enemyType: TEnemyType;
+  lifes: integer): integer;
+var
+  i: integer;
+begin
+  for i := 0 to Length(EnemyAdventTable) - 1 do
+  begin
+    if (EnemyAdventTable[i].x = x) and
+       (EnemyAdventTable[i].y = y) and
+       (EnemyAdventTable[i].enemyType = enemyType) and
+       (EnemyAdventTable[i].lifes = lifes) then
+    begin
+      result := i;
+      exit;
+    end;
+  end;
+  result := -1;
 end;
 
 procedure TLevelData.Load(filename: string);
@@ -61,7 +140,11 @@ var
   i, j: integer;
   temp: string;
   m: array[1..6] of tstrings;
+  tmpX, tmpY, tmpLifes: integer;
+  tmpEnemy: TEnemyType;
 begin
+  Clear;
+
   sl := TStringList.Create;
   try
     if EndsText('A1.lev', filename) then
@@ -150,7 +233,7 @@ begin
           else
           begin
             if (ergebnis = '30000') and (z = 3) then
-              sl2.Add('1200')
+              sl2.Add(IntTostr(DefaultLevelLength))
             else
             begin
               //if not (((ergebnis = '0') and (z = 4)) or ((ergebnis = '-624') and (z = 5)) or ((ergebnis = '222') and (z = 6)) or ((ergebnis = '3') and (z = 7))) then
@@ -184,15 +267,15 @@ begin
       curline := 3;
       while curline < sl.Count do
       begin
-        SetLength(EnemyAdventTable, Length(EnemyAdventTable)+1);
-        EnemyAdventTable[Length(EnemyAdventTable)-1].enemyType := TEnemyType(strtoint(sl.Strings[curline]));
+        tmpEnemy := TEnemyType(strtoint(sl.Strings[curline]));
         Inc(curline);
-        EnemyAdventTable[Length(EnemyAdventTable)-1].x         := strtoint(sl.Strings[curline]);
+        tmpX := strtoint(sl.Strings[curline]);
         Inc(curline);
-        EnemyAdventTable[Length(EnemyAdventTable)-1].y         := strtoint(sl.Strings[curline]);
+        tmpY := strtoint(sl.Strings[curline]);
         Inc(curline);
-        EnemyAdventTable[Length(EnemyAdventTable)-1].lifes     := strtoint(sl.Strings[curline]);
+        tmpLifes := strtoint(sl.Strings[curline]);
         Inc(curline);
+        AddEnemy(tmpX, tmpY, tmpEnemy, tmpLifes);
       end;
       {$ENDREGION}
     end
@@ -203,6 +286,7 @@ begin
   finally
     FreeAndNil(sl);
   end;
+  SortEnemies;
 end;
 
 procedure TLevelData.Save(filename: string);
@@ -215,6 +299,7 @@ begin
     sl.Add('; SpaceMission 1.0');
     sl.Add('; LEV-File');
     sl.Add(IntToStr(LevelEditorLength));
+    SortEnemies;
     for i := 0 to Length(EnemyAdventTable)-1 do
     begin
       sl.Add(IntToStr(Ord(EnemyAdventTable[i].enemyType)));
@@ -225,6 +310,32 @@ begin
     sl.SaveToFile(filename);
   finally
     FreeAndNil(sl);
+  end;
+end;
+
+procedure TLevelData.SortEnemies;
+var
+  i, n: integer;
+  e: TEnemyAdvent;
+begin
+  // Bubble Sort Algorithmus
+  for n := Length(EnemyAdventTable) downto 2 do
+  begin
+    for i := 0 to n - 2 do
+    begin
+      if
+        // Sort by X-coord (important for the game!)
+        (EnemyAdventTable[i].x > EnemyAdventTable[i+1].x)
+        or
+        // Sort by Y-coord (just cosmetics)
+        ((EnemyAdventTable[i].x = EnemyAdventTable[i+1].x) and (EnemyAdventTable[i].y > EnemyAdventTable[i+1].y))
+      then
+      begin
+        e := EnemyAdventTable[i];
+        EnemyAdventTable[i] := EnemyAdventTable[i + 1];
+        EnemyAdventTable[i + 1] := e;
+      end;
+    end;
   end;
 end;
 

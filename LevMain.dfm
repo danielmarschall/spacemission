@@ -44,8 +44,6 @@ object MainForm: TMainForm
       ' Zeigen Sie mit dem Mauszeiger auf eine Einheit, um deren Eigens' +
       'chaften anzuzeigen...'
     OnMouseMove = DXDrawMouseMove
-    ExplicitTop = 499
-    ExplicitWidth = 745
   end
   object SidePanel: TPanel
     Left = 640
@@ -2019,14 +2017,9 @@ object MainForm: TMainForm
     object Spiel: TMenuItem
       Caption = '&Datei'
       object Level: TMenuItem
-        Caption = '&Verwaltung...'
+        Caption = '&Laden/Speichern...'
         ShortCut = 115
         OnClick = LevelClick
-      end
-      object Quelltext1: TMenuItem
-        Caption = '&Quelltext...'
-        ShortCut = 116
-        OnClick = Quelltext1Click
       end
       object N1: TMenuItem
         Caption = '-'

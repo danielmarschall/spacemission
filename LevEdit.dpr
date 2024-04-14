@@ -2,7 +2,9 @@ program LevEdit;
 
 uses
   Windows,
-  {$IF CompilerVersion >= 23.0}System.UITypes,{$IFEND}
+  {$IF CompilerVersion >= 23.0}
+  System.UITypes,
+  {$IFEND }
   Forms,
   Dialogs,
   SysUtils,
@@ -11,7 +13,6 @@ uses
   LevSplash in 'LevSplash.pas' {SplashForm},
   LevSpeicherung in 'LevSpeicherung.pas' {SpeicherungForm},
   ComInfo in 'ComInfo.pas' {InfoForm},
-  LevSource in 'LevSource.pas' {SourceForm},
   LevOptions in 'LevOptions.pas' {LevelForm},
   ComLevelReader in 'ComLevelReader.pas',
   Global in 'Global.pas';
@@ -45,7 +46,6 @@ begin
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TSpeicherungForm, SpeicherungForm);
   Application.CreateForm(TInfoForm, InfoForm);
-  Application.CreateForm(TSourceForm, SourceForm);
   Application.CreateForm(TLevelForm, LevelForm);
   Application.Run;
 end.

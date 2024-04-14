@@ -14,6 +14,7 @@ unit GamMain;
 // [OK SVN 25]  Bug: Zwei Fenster in Taskleiste
 // [OK SVN 26]  Spielstände werden in "Gespeicherte Spiele" gesichert, so wie von Windows definiert!
 // [OK SVN 26]  Einstellungen werden in Registry gesichert
+// [OK SVN 27]  Leveleditor: "Source code" window remove
 //              EV CodeSign
 //              Neue Einheit: Medikit
 //              Neue Einheit: Ufo, das im Kreis fliegt und nicht weggeht

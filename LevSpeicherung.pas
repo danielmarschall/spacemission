@@ -1,5 +1,8 @@
 unit LevSpeicherung;
 
+// TODO: Wenn man lädt, soll er fragen, ob man wirklich die aktuelle arbeit verwerfen will
+// TODO: LevelListBoxDblClick ist gefährlich, denn man weis ja nicht ob der nutzer jetzt laden oder speichern will!
+
 interface
 
 uses
@@ -42,7 +45,6 @@ type
   public
     procedure SearchLevels;
     function RightStr(str: string; count: integer): string;
-    function Filter(n: integer; s: string): string;
   end;
 
 var
@@ -110,7 +112,6 @@ procedure TSpeicherungForm.LadenBtnClick(Sender: TObject);
 var
   Markiert: boolean;
   i: integer;
-  LevelData: TLevelData;
 begin
   Markiert := false;
   for i := 0 to LevelListBox.items.Count-1 do
@@ -137,32 +138,22 @@ begin
   MainForm.DestroyLevel;
   MainForm.LevChanged := false;
 
-  LevelData := TLevelData.Create;
-  try
-    LevelData.Load(IncludeTrailingPathDelimiter(ExtractFilePath(GetLevelFileName(1)))+
-      LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
-    MainForm.ScrollBar.Max := LevelData.LevelEditorLength;
-    MainForm.Enemys.Clear;
-    MainForm.NumEnemys := Length(LevelData.EnemyAdventTable);
-    for i := 0 to MainForm.NumEnemys-1 do
-    begin
-      MainForm.EnemyAdd(
-        LevelData.EnemyAdventTable[i].x,
-        LevelData.EnemyAdventTable[i].y,
-        Ord(LevelData.EnemyAdventTable[i].enemyType),
-        LevelData.EnemyAdventTable[i].lifes
-      );
-      MainForm.EnemyCreate(
-        LevelData.EnemyAdventTable[i].x,
-        LevelData.EnemyAdventTable[i].y,
-        LevelData.EnemyAdventTable[i].enemyType,
-        LevelData.EnemyAdventTable[i].lifes
-      );
-      if LevelData.EnemyAdventTable[i].enemyType = etEnemyBoss then MainForm.Boss := true;
-    end;
-  finally
-    FreeAndNil(LevelData);
+  MainForm.ScrollBar.Max := MainForm.LevData.LevelEditorLength;
+  MainForm.LevData.Load(
+    IncludeTrailingPathDelimiter(ExtractFilePath(GetLevelFileName(1)))+
+    LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
+  for i := 0 to MainForm.LevData.CountEnemies - 1 do
+  begin
+    MainForm.EnemyCreateSprite(
+      MainForm.LevData.EnemyAdventTable[i].x,
+      MainForm.LevData.EnemyAdventTable[i].y,
+      MainForm.LevData.EnemyAdventTable[i].enemyType,
+      MainForm.LevData.EnemyAdventTable[i].lifes
+    );
   end;
+  MainForm.NumEnemys := MainForm.LevData.CountEnemies;
+  MainForm.Boss := MainForm.LevData.HasBoss;
+
   // Nacharbeiten
   MainForm.AnzeigeAct;
   close;
@@ -173,68 +164,9 @@ begin
   result := copy(str, length(str)-(count-1), count);
 end;
 
-function TSpeicherungForm.Filter(n: integer; s: string): string;
-var
-  i, last: integer;
-  start, start2: boolean;
-  temp: string;
-begin
-  last := 0;
-  start := false;
-  start2 := false;
-  temp := '';
-  if n = 1 then
-  begin
-    for i := 1 to length(s)+1 do
-    begin
-      if copy(s, i, 1) = '-' then
-      begin
-        last := i;
-        break;
-      end;
-    end;
-    temp := copy(s, 1, last-1);
-  end;
-  if n = 2 then
-  begin
-    for i := 1 to length(s)+1 do
-    begin
-      if start2 then start := true;
-      if copy(s, i, 1) = '-' then start2 := true;
-      if (copy(s, i, 1) = ':') and start then break;
-      if start then temp := temp + copy(s, i, 1)
-    end;
-  end;
-  if n = 3 then
-  begin
-    for i := 1 to length(s)+1 do
-    begin
-      if start2 then start := true;
-      if copy(s, i, 1) = ':' then start2 := true;
-      if (copy(s, i, 1) = '(') and start then break;
-      if start then temp := temp + copy(s, i, 1)
-    end;
-  end;
-  if n = 4 then
-  begin
-    for i := 1 to length(s)+1 do
-    begin
-      if start2 then start := true;
-      if copy(s, i, 1) = '(' then start2 := true;
-      if (copy(s, i, 1) = ')') and start then break;
-      if start then temp := temp + copy(s, i, 1)
-    end;
-  end;
-  result := temp;
-end;
-
 procedure TSpeicherungForm.SpeichernBtnClick(Sender: TObject);
-var
-  LevelData: TLevelData;
-  i, j: integer;
-  puffer: string;
 begin
-  if mainform.Enemys.count = 0 then
+  if MainForm.LevData.CountEnemies = 0 then
   begin
     MessageDlg('Das Level ist leer!', mtError, [mbOK], 0);
     LevelNumber.SetFocus;
@@ -263,36 +195,9 @@ begin
       exit;
   end;
 
-  // Sortierung (wichtig)
-  for j := 0 to mainform.enemys.Count - 2 do
-  begin
-    for i := 0 to mainform.enemys.Count - 2 do
-    begin
-      if strtoint(filter(1, mainform.enemys.Strings[i])) > strtoint(filter(1, mainform.enemys.Strings[i + 1])) then
-      begin
-        puffer := mainform.enemys.Strings[i];
-        mainform.enemys.Strings[i] := mainform.enemys.Strings[i + 1];
-        mainform.enemys.Strings[i + 1] := puffer;
-      end;
-    end;
-  end;
-
   // Speichern
-  LevelData := TLevelData.Create;
-  try
-    LevelData.LevelEditorLength := MainForm.ScrollBar.Max;
-    SetLength(LevelData.EnemyAdventTable, mainform.enemys.count);
-    for i := 0 to mainform.enemys.count-1 do
-    begin
-      LevelData.EnemyAdventTable[i].enemyType := TEnemyType(StrToInt(filter(3, mainform.enemys.Strings[i])));
-      LevelData.EnemyAdventTable[i].x := StrToInt(filter(1, mainform.enemys.Strings[i]));
-      LevelData.EnemyAdventTable[i].y := StrToInt(filter(2, mainform.enemys.Strings[i]));
-      LevelData.EnemyAdventTable[i].lifes := StrToInt(filter(4, mainform.enemys.Strings[i]));
-    end;
-    LevelData.Save(GetLevelFileName(LevelNumber.Value));
-  finally
-    FreeAndNil(LevelData);
-  end;
+  MainForm.LevData.LevelEditorLength := MainForm.ScrollBar.Max;
+  MainForm.LevData.Save(GetLevelFileName(LevelNumber.Value));
 
   // Nacharbeiten
   MainForm.LevChanged := false;

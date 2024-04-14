@@ -1,9 +1,5 @@
 unit LevMain;
 
-// TODO 2024:
-// - Wenn man ein Level "X" lädt, und dann Verwalten wieder öffnet, sollte diese Level-Nummer vorgeschlagen werden, sodass man direkt Speichern klicken kann
-// - Remove "Source edit" form
-
 interface
 
 uses
@@ -46,7 +42,6 @@ type
     SLabel4a: TLabel;
     SLabel4b: TLabel;
     LivesLabel: TLabel;
-    Quelltext1: TMenuItem;
     StatusBar: TStatusBar;
     N1: TMenuItem;
     Spielfelderweitern1: TMenuItem;
@@ -65,12 +60,10 @@ type
     procedure DXDrawMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure EnemyClick(Sender: TObject);
-    procedure EnemyAdd(x, y, art, lives: integer);
     procedure NeuClick(Sender: TObject);
     procedure DXDrawMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
-    procedure Quelltext1Click(Sender: TObject);
     procedure Spielfelderweitern1Click(Sender: TObject);
     procedure ScrollBarScroll(Sender: TObject; ScrollCode: TScrollCode;
       var ScrollPos: Integer);
@@ -82,7 +75,7 @@ type
     dxdraw: tdxdraw;
     { Variablen }
     FMenuItem: integer;
-    Enemys: TStrings;
+    LevData: TLevelData;
     ScrollP: integer;
     AltScrollPos: integer;
     Boss: boolean;
@@ -90,8 +83,7 @@ type
     NumEnemys: integer;
     function SelectedEnemyType: TEnemyType;
     { Level-Routinen }
-    procedure EnemyCreate(x, y: integer); overload;
-    procedure EnemyCreate(x, y: integer; AEnemyType: TEnemyType; ALives: integer); overload;
+    procedure EnemyCreateSprite(x, y: integer; AEnemyType: TEnemyType; ALives: integer);
     procedure DestroyLevel;
     procedure AnzeigeAct;
     { Initialisiations-Routinen }
@@ -108,7 +100,7 @@ var
 implementation
 
 uses
-  Global, LevSplash, LevSpeicherung, ComInfo, LevSource, LevOptions;
+  Global, LevSplash, LevSpeicherung, ComInfo, LevOptions;
 
 const
   RasterW = 48;
@@ -150,8 +142,7 @@ begin
     FXCor := trunc(x) + (MainForm.ScrollP * RasterW);
     FCorInit := true;
   end;
-  if MainForm.Enemys.IndexOf(floattostr(FXCor)+'-'+floattostr(y)+':'+
-    inttostr(Ord(FEnemyType))+'('+inttostr(FLives)+')') = -1 then dead;
+  if MainForm.LevData.IndexOfEnemy(FXCor, integer(round(Y)), FEnemyType, FLives) = -1 then dead;
   X := FXCor - (MainForm.ScrollP * RasterW);
 end;
 
@@ -262,7 +253,7 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
-  Enemys.Free;
+  LevData.Free;
   //spriteengine.Free;
   dxtimer.Free;
   imagelist.Free;
@@ -349,7 +340,7 @@ procedure TMainForm.ProgramInit;
 {var
   i, j: Integer;}
 begin
-  Enemys := TStringList.create;
+  LevData := TLevelData.create;
   sleep(500);
   //PlayerSprite
   with TBackground.Create(SpriteEngine.Engine) do
@@ -470,7 +461,7 @@ var
 begin
   ex := trunc(x/RasterW) * RasterW;
   ey := trunc(y/RasterH) * RasterH;
-  EnemyCreate(ex, ey);
+  EnemyCreateSprite(ex, ey, SelectedEnemyType, LivesEdit.Value);
   breaked := false;
   { Setzen }
   if Button = mbLeft then
@@ -480,7 +471,7 @@ begin
       ok := false // boss already exists
     else
     begin
-      for i := 1 to 7 do
+      for i := 1 to NumEnemyTypes do
       begin
         for j := 0 to 999 do
         begin
@@ -490,7 +481,7 @@ begin
             begin
               for l := 0 to 1 do
               begin
-                if Enemys.IndexOf(floattostr(ex + ((ScrollP - k) * RasterW))+'-'+floattostr(ey - (RasterH * l))+':7('+inttostr(j)+')') <> -1 then
+                if LevData.IndexOfEnemy(ex + ((ScrollP - k) * RasterW), ey - (RasterH * l), etEnemyBoss, j) <> -1 then
                 begin
                   ok := false;
                   break;
@@ -500,8 +491,7 @@ begin
             end;
             if not ok then break;
           end;
-          if Enemys.IndexOf(floattostr(ex + (ScrollP * RasterW))+'-'+floattostr(ey)+':'+
-            inttostr(i)+'('+inttostr(j)+')') <> -1 then
+          if LevData.IndexOfEnemy(ex + (ScrollP * RasterW), ey, TEnemyType(i), j) <> -1 then
           begin
             ok := false;
             break;
@@ -513,11 +503,9 @@ begin
     if ok then
     begin
       if SelectedEnemyType <> etEnemyMeteor then
-        Enemys.Add(floattostr(ex + (ScrollP * RasterW))+'-'+floattostr(ey)+':'+
-          inttostr(Ord(SelectedEnemyType))+'('+inttostr(LivesEdit.Value)+')')
+        LevData.AddEnemy(ex + (ScrollP * RasterW), ey, SelectedEnemyType, LivesEdit.Value)
       else
-        Enemys.Add(floattostr(ex + (ScrollP * RasterW))+'-'+floattostr(ey)+':'+
-          inttostr(Ord(SelectedEnemyType))+'(0)');
+        LevData.AddEnemy(ex + (ScrollP * RasterW), ey, SelectedEnemyType, 0);
       inc(NumEnemys);
       if SelectedEnemyType = etEnemyBoss then boss := true;
     end
@@ -526,19 +514,19 @@ begin
   { Löschen }
   else if Button = mbRight then
   begin
-    for i := 1 to 7 do
+    for i := 1 to NumEnemyTypes do
     begin
       for j := 0 to 999 do
       begin
-        if boss and (i = 7) then
+        if boss and (TEnemyType(i) = etEnemyBoss) then
         begin
           for k := 0 to 3 do
           begin
             for l := 0 to 1 do
             begin
-              if Enemys.IndexOf(floattostr(ex + ((ScrollP - k) * RasterW))+'-'+floattostr(ey - (RasterH * l))+':'+inttostr(i)+'('+inttostr(j)+')') <> -1 then
+              if LevData.IndexOfEnemy(ex + ((ScrollP - k) * RasterW), ey - (RasterH * l), TEnemyType(i), j) <> -1 then
               begin
-                Enemys.Delete(Enemys.IndexOf(floattostr(ex + ((ScrollP - k) * RasterW))+'-'+floattostr(ey - (RasterH * l))+':'+inttostr(i)+'('+inttostr(j)+')'));
+                LevData.DeleteEnemy(ex + ((ScrollP - k) * RasterW), ey - (RasterH * l), TEnemyType(i), j);
                 Boss := false;
                 dec(NumEnemys);
                 breaked := true;
@@ -548,12 +536,10 @@ begin
             if breaked then break;
           end;
         end;
-        if Enemys.IndexOf(floattostr(ex + (ScrollP * RasterW))+'-'+floattostr(ey)+':'+
-          inttostr(i)+'('+inttostr(j)+')') <> -1 then
+        if LevData.IndexOfEnemy(ex + (ScrollP * RasterW), ey, TEnemyType(i), j) <> -1 then
         begin
-          Enemys.Delete(Enemys.IndexOf(floattostr(ex + (ScrollP * RasterW))+'-'+floattostr(ey)+
-            ':'+inttostr(i)+'('+inttostr(j)+')'));
-          if i = 7 then Boss := false;
+          LevData.DeleteEnemy(ex + (ScrollP * RasterW), ey, TEnemyType(i), j);
+          if TEnemyType(i) = etEnemyBoss then Boss := false;
           dec(NumEnemys);
           breaked := true;
           break;
@@ -576,7 +562,7 @@ begin
   LivesLabel.Enabled := et <> etEnemyMeteor;
 end;
 
-procedure TMainForm.EnemyCreate(x, y: integer; AEnemyType: TEnemyType; ALives: integer);
+procedure TMainForm.EnemyCreateSprite(x, y: integer; AEnemyType: TEnemyType; ALives: integer);
 var
   Enemy: TSprite;
 begin
@@ -585,16 +571,12 @@ begin
   Enemy.y := y;
 end;
 
-procedure TMainForm.EnemyCreate(x, y: integer);
-begin
-  EnemyCreate(x, y, SelectedEnemyType, LivesEdit.Value);
-end;
-
 procedure TMainForm.DestroyLevel;
 begin
   ScrollBar.Position := 0; // this doesn't call ScrollBarScroll()
   ScrollP := 0;
-  Enemys.Clear;
+  LevData.Clear;
+  ScrollBar.Max := MainForm.LevData.LevelEditorLength;
   NumEnemys := 0;
   Boss := false;
   LevChanged := true;
@@ -623,11 +605,6 @@ begin
   end;
 end;
 
-procedure TMainForm.EnemyAdd(x, y, art, lives: integer);
-begin
-  Enemys.Add(inttostr(x)+'-'+inttostr(y)+':'+inttostr(art)+'('+inttostr(lives)+')');
-end;
-
 procedure TMainForm.NeuClick(Sender: TObject);
 begin
   if MessageDlg('Level wirklich löschen?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
@@ -641,7 +618,10 @@ resourcestring
   status_lives = 'Leben: ';
   status_nolives = 'Einheit hat keine Lebensangabe';
 var
-  ex, ey, i, j, k, l, wert: integer;
+  ex, ey, i, j, k, l: integer;
+  lifes: integer;
+  enemyType: TEnemyType;
+  enemyName: string;
   breaked: boolean;
 begin
   if sender <> DxDraw then
@@ -651,21 +631,22 @@ begin
   end;
   ex := trunc(x/RasterW) * RasterW;
   ey := trunc(y/RasterH) * RasterH;
-  wert := -1;
+  lifes := -1;
+  enemyType := etUnknown;
   breaked := false;
-  for i := 1 to 7 do
+  for i := 1 to NumEnemyTypes do
   begin
     for j := 0 to 999 do
     begin
-      if boss and (i = 7) then
+      if boss and (TEnemyType(i) = etEnemyBoss) then
       begin
         for k := 0 to 3 do
         begin
           for l := 0 to 1 do
           begin
-            if Enemys.IndexOf(floattostr(ex + ((ScrollP - k) * RasterW))+'-'+floattostr(ey - (RasterH * l))+':'+inttostr(i)+'('+inttostr(j)+')') <> -1 then
+            if LevData.IndexOfEnemy(ex + ((ScrollP - k) * RasterW), ey - (RasterH * l), TEnemyType(i), j) <> -1 then
             begin
-              wert := j;
+              lifes := j;
               breaked := true;
               break;
             end;
@@ -673,22 +654,30 @@ begin
           if breaked then break;
         end;
       end;
-      if (breaked = false) and (Enemys.IndexOf(floattostr(ex + (ScrollP * RasterW))+'-'+floattostr(ey)+':'+
-        inttostr(i)+'('+inttostr(j)+')') <> -1) then
+      if (breaked = false) and (LevData.IndexOfEnemy(ex + (ScrollP * RasterW), ey, TEnemyType(i), j) <> -1) then
       begin
-        wert := j;
+        lifes := j;
+        enemyType := TEnemyType(i);
         breaked := true;
         break;
       end;
     end;
     if breaked then break;
   end;
-  if wert <> -1 then
+  if lifes <> -1 then
   begin
-    if wert > 0 then
-      StatusBar.SimpleText := ' ' + status_lives + inttostr(wert)
+    if Ord(enemyType) = 1 then enemyName := Enemy1.Caption
+    else if Ord(enemyType) = 2 then enemyName := Enemy2.Caption
+    else if Ord(enemyType) = 3 then enemyName := Enemy3.Caption
+    else if Ord(enemyType) = 4 then enemyName := Enemy4.Caption
+    else if Ord(enemyType) = 5 then enemyName := Enemy5.Caption
+    else if Ord(enemyType) = 6 then enemyName := Enemy6.Caption
+    else if Ord(enemyType) = 7 then enemyName := Enemy7.Caption
+    else enemyName := '???';
+    if lifes > 0 then
+      StatusBar.SimpleText := ' ' + enemyName + ' - ' + status_lives + inttostr(lifes)
     else
-      StatusBar.SimpleText := ' ' + status_nolives;
+      StatusBar.SimpleText := ' ' + enemyName + ' - ' + status_nolives;
   end
   else
     StatusBar.SimpleText := ' ' + status_info;
@@ -698,12 +687,6 @@ procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   if LevChanged then
     CanClose := MessageDlg('Beenden ohne abspeichern?', mtConfirmation, [mbYes, mbNo], 0) = mrYes;
-end;
-
-procedure TMainForm.Quelltext1Click(Sender: TObject);
-begin
-  SourceForm.Aktualisieren;
-  SourceForm.showmodal;
 end;
 
 procedure TMainForm.Spielfelderweitern1Click(Sender: TObject);
