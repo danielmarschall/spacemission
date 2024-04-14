@@ -24,7 +24,7 @@ uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, ExtCtrls, Menus, DIB, DXClass, DXSprite, DXDraws, DXInput, DXSounds,
   ShellAPI, wininet, DirectX{$IF CompilerVersion >= 23.0},
-  System.UITypes{$IFEND}, ComLevelReader, ComSaveGameReader, DirectMusic;
+  System.UITypes{$IFEND}, ComLevelReader, ComSaveGameReader, DirectMusic, Global;
 
 type
   TGameScene = (
@@ -42,26 +42,6 @@ type
     giSchwer,
     giMaster
   );
-
-  TMusicTrack = (
-    mtNone,
-    mtBoss,   // dxmusic.Midi[0]
-    mtGame,   // dxmusic.Midi[1]
-    mtScene,  // ...
-    mtTitle
-  );
-
-  {TSoundFile = (
-    sfNone,
-    sfSceneMov,
-    sfExplosion,
-    sfHit,
-    sfShoot,
-    sfDanger,
-    sfEnde,
-    sfFrage,
-    sfLevIntro
-  );}
 
   TBackground = class(TBackgroundSprite)
   strict private
@@ -283,7 +263,7 @@ type
     ProgrammGestartet: boolean;
     FInterval: TGameInterval;
     FScene: TGameScene;
-    FMusic: TMusicTrack;
+    FMusic: TSpaceMissionMusicTrack;
     FBlink: DWORD;
     FBlinkTime: DWORD;
     FFrame, FAngle, FCounter, FEnemyAdventPos: Integer;
@@ -332,13 +312,15 @@ type
     procedure NewLevel(lev: integer);
     procedure ResetLevelData;
     { Musik-Routinen }
-    procedure MusicSwitchTrack(Name: TMusicTrack);
-    procedure PlayMusic(Name: TMusicTrack);
-    procedure StopMusic(Name: TMusicTrack);
-    procedure ResumeMusic(Name: TMusicTrack);
-    procedure PauseMusic(Name: TMusicTrack);
+    procedure MusicSwitchTrack(Name: TSpaceMissionMusicTrack);
+    procedure PlayMusic(Name: TSpaceMissionMusicTrack);
+    procedure StopMusic(Name: TSpaceMissionMusicTrack);
+    procedure ResumeMusic(Name: TSpaceMissionMusicTrack);
+    procedure PauseMusic(Name: TSpaceMissionMusicTrack);
     { Sound-Routinen }
-    procedure PlaySound(Name: string; Wait: Boolean);
+    procedure PlaySound(Sound: TSpaceMissionSound; Wait: Boolean);
+    { Grafik-Routinen }
+    function GetSpriteGraphic(Sprite: TSpaceMissionGraphicSprite): TPictureCollectionItem;
     { Initialisiations-Routinen }
     procedure DXInit;
     procedure SoundInit;
@@ -357,7 +339,7 @@ var
 implementation
 
 uses
-  GamSplash, GamSpeicherung, ComInfo, GamCheat, Global, MMSystem, Registry;
+  GamSplash, GamSpeicherung, ComInfo, GamCheat, MMSystem, Registry;
 
 const
   conleicht =  650 div 60; // 10
@@ -477,7 +459,7 @@ begin
     with TBackgroundSpecial.Create(mainform.SpriteEngine.Engine) do
     begin
       SetMapSize(1, 1);
-      Image := mainform.ImageList.Items.Find('Background-Planet1');
+      Image := MainForm.GetSpriteGraphic(smgBackgroundPlanet1);
       Width := Image.Width;
       Height := Image.Height;
 
@@ -509,13 +491,13 @@ begin
       SetMapSize(1, 1);
       ran := Random(4);
       if ran = 0 then
-        Image := mainform.ImageList.Items.Find('Background-Red')
+        Image := MainForm.GetSpriteGraphic(smgBackgroundRed)
       else if ran = 1 then
-        Image := mainform.ImageList.Items.Find('Background-Blue')
+        Image := MainForm.GetSpriteGraphic(smgBackgroundBlue)
       else if ran = 2 then
-        Image := mainform.ImageList.Items.Find('Background-Yellow')
+        Image := MainForm.GetSpriteGraphic(smgBackgroundYellow)
       else if ran = 3 then
-        Image := mainform.ImageList.Items.Find('Hintergrund-Rot');
+        Image := MainForm.GetSpriteGraphic(smgHintergrundRot);
       Width := Image.Width;
       Height := Image.Height;
 
@@ -556,8 +538,8 @@ end;
 constructor TExplosion.Create(AParent: TSprite);
 begin
   inherited Create(AParent);
-  mainform.PlaySound('Explosion', false);
-  Image := MainForm.ImageList.Items.Find('Explosion');
+  mainform.PlaySound(smsExplosion, false);
+  Image := MainForm.GetSpriteGraphic(smgExplosion);
   Width := Image.Width;
   Height := Image.Height;
   AnimCount := Image.PatternCount;
@@ -579,7 +561,7 @@ constructor TPlayerSprite.Create(AParent: TSprite);
 begin
   inherited Create(AParent);
   State := pesEntering;
-  Image := MainForm.ImageList.Items.Find('Machine');
+  Image := MainForm.GetSpriteGraphic(smgMachine);
   Width := Image.Width;
   Height := Image.Height;
   X := -70{20};
@@ -601,12 +583,12 @@ begin
       Crash := true;
       if MainForm.Flife=0 then
       begin
-        MainForm.PlaySound('Explosion', false);
+        MainForm.PlaySound(smsExplosion, false);
         Collisioned := false;
         FCounter := 0;
         State := pesDead;
         Done := false;
-        Image := MainForm.ImageList.Items.Find('Explosion');
+        Image := MainForm.GetSpriteGraphic(smgExplosion);
         Width := Image.Width;
         Height := Image.Height;
         AnimCount := Image.PatternCount;
@@ -619,7 +601,7 @@ begin
     begin
       if not crashsound then
       begin
-        MainForm.PlaySound('Hit', False);
+        MainForm.PlaySound(smsHit, False);
         crashsound := true;
       end;
     end;
@@ -671,7 +653,7 @@ begin
     if FCounter>1500 then
     begin
       MainForm.FNextScene := gsGameOver;
-      MainForm.PlaySound('SceneMov', false);
+      MainForm.PlaySound(smsSceneMov, false);
       MainForm.PalleteAnim(RGBQuad(0, 0, 0), 300);
       Sleep(200);
     end;
@@ -684,7 +666,7 @@ begin
       Dead;
       inc(mainform.FLevel);
       MainForm.FNextScene := gsNewLevel;
-      MainForm.PlaySound('SceneMov', false);
+      MainForm.PlaySound(smsSceneMov, false);
       MainForm.PalleteAnim(RGBQuad(0, 0, 0), 300);
     end;
   end
@@ -707,14 +689,14 @@ constructor TPlayerTamaSprite.Create(AParent: TSprite; APlayerSprite: TPlayerSpr
 begin
   inherited Create(AParent);
   FPlayerSprite := APlayerSprite;
-  Image := MainForm.ImageList.Items.Find('Bounce');
+  Image := MainForm.GetSpriteGraphic(smgBounce);
   Z := 2;
   Width := Image.Width;
   Height := Image.Height;
   AnimCount := Image.PatternCount;
   AnimLooped := True;
   AnimSpeed := DEFAULT_ANIMSPEED;
-  MainForm.PlaySound('Shoot', False);
+  MainForm.PlaySound(smsShoot, False);
 end;
 
 destructor TPlayerTamaSprite.Destroy;
@@ -771,9 +753,9 @@ end;
 procedure TEnemy.HitEnemy(ADead: Boolean);
 begin
   if ADead then
-    MainForm.PlaySound('Explosion', False)
+    MainForm.PlaySound(smsExplosion, False)
   else
-    MainForm.PlaySound('Hit', False);
+    MainForm.PlaySound(smsHit, False);
 end;
 
 { TEnemyTama }
@@ -782,13 +764,13 @@ constructor TEnemyTama.Create(AParent: TSprite; AEnemySprite: TSprite);
 begin
   inherited Create(AParent);
   FEnemySprite := AEnemySprite;
-  Image := MainForm.ImageList.Items.Find('Bounce2');
+  Image := MainForm.GetSpriteGraphic(smgBounce2);
   Width := Image.Width;
   Height := Image.Height;
   AnimCount := Image.PatternCount;
   AnimLooped := True;
   AnimSpeed := DEFAULT_ANIMSPEED;
-  MainForm.PlaySound('Shoot', False);
+  MainForm.PlaySound(smsShoot, False);
 end;
 
 procedure TEnemyTama.DoMove(MoveCount: Integer);
@@ -804,7 +786,7 @@ constructor TEnemyMeteor.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
   State := pesNormal;
-  Image := MainForm.ImageList.Items.Find('Enemy-Meteor');
+  Image := MainForm.GetSpriteGraphic(smgEnemyMeteor);
   Width := Image.Width;
   Height := Image.Height;
   AnimCount := Image.PatternCount;
@@ -832,7 +814,7 @@ constructor TEnemyUFO.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
   State := pesNormal;
-  Image := MainForm.ImageList.Items.Find('Enemy-disk');
+  Image := MainForm.GetSpriteGraphic(smgEnemyDisk);
   Width := Image.Width;
   Height := Image.Height;
   AnimCount := Image.PatternCount;
@@ -849,7 +831,7 @@ begin
     State := pesDead;
     FCounter := 0;
     Inc(MainForm.FScore, 1000);
-    Image := MainForm.ImageList.Items.Find('Explosion');
+    Image := MainForm.GetSpriteGraphic(smgExplosion);
     Width := Image.Width;
     Height := Image.Height;
     AnimCount := Image.PatternCount;
@@ -890,7 +872,7 @@ constructor TEnemyUFO2.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
   State := pesNormal;
-  Image := MainForm.ImageList.Items.Find('Enemy-disk2');
+  Image := MainForm.GetSpriteGraphic(smgEnemyDisk2);
   Width := Image.Width;
   Height := Image.Height;
   AnimCount := Image.PatternCount;
@@ -907,7 +889,7 @@ begin
     State := pesDead;
     FCounter := 0;
     Inc(MainForm.FScore, 1000);
-    Image := MainForm.ImageList.Items.Find('Explosion');
+    Image := MainForm.GetSpriteGraphic(smgExplosion);
     Width := Image.Width;
     Height := Image.Height;
     AnimCount := Image.PatternCount;
@@ -959,7 +941,7 @@ constructor TEnemyAttacker.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
   State := pesNormal;
-  Image := MainForm.ImageList.Items.Find('Enemy-Attacker');
+  Image := MainForm.GetSpriteGraphic(smgEnemyAttacker);
   Width := Image.Width;
   Height := Image.Height;
   AnimCount := Image.PatternCount;
@@ -977,7 +959,7 @@ begin
     State := pesDead;
     FCounter := 0;
     Inc(MainForm.FScore, 1000);
-    Image := MainForm.ImageList.Items.Find('Explosion');
+    Image := MainForm.GetSpriteGraphic(smgExplosion);
     Width := Image.Width;
     Height := Image.Height;
     AnimCount := Image.PatternCount;
@@ -1017,7 +999,7 @@ constructor TEnemyAttacker2.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
   State := pesEntering;
-  Image := MainForm.ImageList.Items.Find('Enemy-Attacker2');
+  Image := MainForm.GetSpriteGraphic(smgEnemyAttacker2);
   Width := Image.Width;
   Height := Image.Height;
   AnimCount := Image.PatternCount;
@@ -1035,7 +1017,7 @@ begin
     State := pesDead;
     FCounter := 0;
     Inc(MainForm.FScore, 5000);
-    Image := MainForm.ImageList.Items.Find('Explosion');
+    Image := MainForm.GetSpriteGraphic(smgExplosion);
     Width := Image.Width;
     Height := Image.Height;
     AnimCount := Image.PatternCount;
@@ -1111,7 +1093,7 @@ constructor TEnemyAttacker3.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
   State := pesNormal;
-  Image := MainForm.ImageList.Items.Find('Enemy-Attacker3');
+  Image := MainForm.GetSpriteGraphic(smgEnemyAttacker3);
   Width := Image.Width;
   Height := Image.Height;
   AnimCount := Image.PatternCount;
@@ -1129,7 +1111,7 @@ begin
     State := pesDead;
     FCounter := 0;
     Inc(MainForm.FScore, 5000);
-    Image := MainForm.ImageList.Items.Find('Explosion');
+    Image := MainForm.GetSpriteGraphic(smgExplosion);
     Width := Image.Width;
     Height := Image.Height;
     AnimCount := Image.PatternCount;
@@ -1179,11 +1161,11 @@ constructor TEnemyBoss.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
   State := pesEntering;
-  Image := MainForm.ImageList.Items.Find('Enemy-boss');
+  Image := MainForm.GetSpriteGraphic(smgEnemyBoss);
   Width := Image.Width;
   Height := Image.Height;
   BossExists := true;
-  MainForm.MusicSwitchTrack(mtBoss);
+  MainForm.MusicSwitchTrack(smmBoss);
   AnimCount := Image.PatternCount;
   AnimLooped := True;
   AnimSpeed := DEFAULT_ANIMSPEED;
@@ -1397,6 +1379,15 @@ begin
   StartScene(gsTitle);
 end;
 
+function TMainForm.GetSpriteGraphic(
+  Sprite: TSpaceMissionGraphicSprite): TPictureCollectionItem;
+begin
+  if (Sprite<>smgNone) and (imagelist.Items.Count >= Ord(Sprite)) then
+    result := imagelist.Items.Items[Ord(Sprite)-1]
+  else
+    result := nil;
+end;
+
 procedure TMainForm.GamePauseClick(Sender: TObject);
 begin
   GamePause.Checked := not GamePause.Checked;
@@ -1416,7 +1407,7 @@ end;
 procedure TMainForm.DXInit;
 begin
   try
-    Imagelist.Items.LoadFromFile(FDirectory+'DirectX\Graphic.dxg');
+    Imagelist.Items.LoadFromFile(OwnDirectory+'DirectX\Graphics.dxg');
     ImageList.Items.MakeColorTable;
     DXDraw.ColorTable := ImageList.Items.ColorTable;
     DXDraw.DefColorTable := ImageList.Items.ColorTable;
@@ -1468,7 +1459,7 @@ end;
 
 procedure TMainForm.SoundInit;
 begin
-  if (WaveOutGetNumDevs < 1) or not FileExists(FDirectory+'DirectX\Sound.dxw') then
+  if (WaveOutGetNumDevs < 1) or not FileExists(OwnDirectory+'DirectX\Sound.dxw') then
   begin
     OptionSound.Checked := false;
     OptionSound.Enabled := False;
@@ -1481,7 +1472,7 @@ begin
     begin
       try
         DXSound.Initialize;
-        WaveList.Items.LoadFromFile(FDirectory+'DirectX\Sound.dxw');
+        WaveList.Items.LoadFromFile(OwnDirectory+'DirectX\Sound.dxw');
       except
         OptionSound.enabled := False;
         WaveList.items.clear;
@@ -1495,7 +1486,7 @@ procedure TMainForm.MusicInit;
 var
   i: integer;
 begin
-  if (WaveOutGetNumDevs < 1) or not FileExists(FDirectory+'DirectX\Music.dxm') then
+  if (WaveOutGetNumDevs < 1) or not FileExists(OwnDirectory+'DirectX\Music.dxm') then
   begin
     optionmusic.Checked := false;
     optionmusic.Enabled := False;
@@ -1503,7 +1494,7 @@ begin
   end;
 
   try
-    dxmusic.Midis.LoadFromFile(FDirectory+'DirectX\Music.dxm');
+    dxmusic.Midis.LoadFromFile(OwnDirectory+'DirectX\Music.dxm');
     for i := 0 to dxmusic.Midis.Count-1 do
     begin
       if not dxmusic.Midis.Items[i].IsInitialized then
@@ -1666,13 +1657,13 @@ begin
   end;
 end;
 
-procedure TMainForm.PlaySound(Name: string; Wait: Boolean);
+procedure TMainForm.PlaySound(Sound: TSpaceMissionSound; Wait: Boolean);
 begin
-  if (OptionSound.Checked) and (OptionSound.Enabled) then
-    WaveList.Items.Find(Name).Play(Wait);
+  if (Sound<>smsNone) and (OptionSound.Checked) and (OptionSound.Enabled) and (WaveList.Items.Count >= Ord(Sound)) then
+    WaveList.Items.Items[Ord(Sound)-1].Play(Wait);
 end;
 
-procedure TMainForm.MusicSwitchTrack(Name: TMusicTrack);
+procedure TMainForm.MusicSwitchTrack(Name: TSpaceMissionMusicTrack);
 begin
   if (not mainform.active) and (mainform.visible) then //1st Programmstart
     exit;
@@ -1767,7 +1758,7 @@ begin
   GameStart.enabled := false;
   Spielgeschwindigkeit.enabled := false;
   mainform.Visible := true;
-  MusicSwitchTrack(mtTitle);
+  MusicSwitchTrack(smmTitle);
 end;
 
 procedure TMainForm.StartSceneMain;
@@ -1778,14 +1769,14 @@ begin
   FCounter := 0;
   NewLevel(FLevel);
   BossExists := false;
-  MusicSwitchTrack(mtGame);
+  MusicSwitchTrack(smmGame);
   FEnemyAdventPos := 0;
   FFrame := -4;
   PlayerSprite := TPlayerSprite.Create(SpriteEngine.Engine);
   with TBackground.Create(SpriteEngine.Engine) do
   begin
     SetMapSize(1, 1);
-    Image := mainform.ImageList.Items.Find('Star3');
+    Image := MainForm.GetSpriteGraphic(smgStar3);
     Z := -13;
     Y := 40;
     Speed := 1 / 2;
@@ -1794,7 +1785,7 @@ begin
   with TBackground.Create(SpriteEngine.Engine) do
   begin
     SetMapSize(1, 1);
-    Image := mainform.ImageList.Items.Find('Star2');
+    Image := MainForm.GetSpriteGraphic(smgStar2);
     Z := -12;
     Y := 30;
     Speed := 1;
@@ -1803,7 +1794,7 @@ begin
   with TBackground.Create(SpriteEngine.Engine) do
   begin
     SetMapSize(1, 1);
-    Image := mainform.ImageList.Items.Find('Star1');
+    Image := MainForm.GetSpriteGraphic(smgStar1);
     Z := -11;
     Y := 10;
     Speed := 2;
@@ -1873,7 +1864,7 @@ begin
   Spielgeschwindigkeit.enabled := false;
   Neustart.enabled := false;
   GamePause.enabled := false;
-  MusicSwitchTrack(mtScene);
+  MusicSwitchTrack(smmScene);
   BossExists := false;
 end;
 
@@ -1885,7 +1876,7 @@ begin
   Spielgeschwindigkeit.enabled := false;
   Neustart.enabled := false;
   GamePause.enabled := false;
-  MusicSwitchTrack(mtScene);
+  MusicSwitchTrack(smmScene);
   BossExists := false;
 end;
 
@@ -1990,7 +1981,7 @@ begin
     end;
     e.enemyType := etEnemyBoss;
     e.x := lev*75*30{O_o} div lev;
-    e.y := (dxdraw.surfaceheight div 2) - (MainForm.ImageList.Items.Find('Enemy-boss').height div 2);
+    e.y := (dxdraw.surfaceheight div 2) - (MainForm.GetSpriteGraphic(smgEnemyBoss).height div 2);
     e.lifes := lev*5;
     LevelData.EnemyAdventTable[lev*ADDITIONAL_ENEMIES_PER_LEVEL] := e;
     Assert(FRestEnemies = Length(LevelData.EnemyAdventTable));
@@ -2018,7 +2009,7 @@ var
   Logo: TPictureCollectionItem;
 begin
   DXDraw.Surface.Fill(0);
-  Logo := ImageList.Items.Find('Logo');
+  Logo := GetSpriteGraphic(smgLogo);
   {Logo.DrawWaveX(DXDraw.Surface, (dxdraw.surfaceWidth div 2) - 181, 65, Logo.Width, Logo.Height, 0,
     Trunc(16 - Cos256(FBlink div 60) * 16), 32, -FBlink div 5);}
   Logo.DrawWaveX(DXDraw.Surface, trunc((dxdraw.surfaceWidth / 2) - (Logo.Width / 2)), 65, Logo.Width, Logo.Height, 0,
@@ -2075,7 +2066,7 @@ begin
       exit;
     end;
     NewLevel(FLevel);
-    PlaySound('SceneMov', False);
+    PlaySound(smsSceneMov, False);
     PalleteAnim(RGBQuad(0, 0, 0), 300);
     Sleep(200);
     StartScene(gsMain);
@@ -2254,7 +2245,7 @@ begin
   // Weiter mit Leertaste oder Enter
   if (isButton1 in DXInput.States) or (isButton2 in DXInput.States) then
   begin
-    PlaySound('SceneMov', False);
+    PlaySound(smsSceneMov, False);
     PalleteAnim(RGBQuad(0, 0, 0), 300);
     Sleep(200);
     StartScene(gsTitle);
@@ -2290,7 +2281,7 @@ begin
   // Weiter mit Leertaste oder Enter
   if (isButton1 in DXInput.States) or (isButton2 in DXInput.States) then
   begin
-    PlaySound('SceneMov', False);
+    PlaySound(smsSceneMov, False);
     PalleteAnim(RGBQuad(0, 0, 0), 300);
     Sleep(200);
     StartScene(gsTitle);
@@ -2316,7 +2307,7 @@ begin
     StartScene(gsWin);
     exit;
   end;
-  MusicSwitchTrack(mtScene);
+  MusicSwitchTrack(smmScene);
 end;
 
 procedure TMainForm.EndSceneNewLevel;
@@ -2348,7 +2339,7 @@ begin
   // Weiter mit Leertaste oder Enter
   if (isButton1 in DXInput.States) or (isButton2 in DXInput.States) then
   begin
-    PlaySound('SceneMov', False);
+    PlaySound(smsSceneMov, False);
     PalleteAnim(RGBQuad(0, 0, 0), 300);
     Sleep(200);
     StartScene(gsMain);
@@ -2376,30 +2367,30 @@ begin
   writeoptions;
 end;
 
-procedure TMainForm.PlayMusic(Name: TMusicTrack);
+procedure TMainForm.PlayMusic(Name: TSpaceMissionMusicTrack);
 begin
   if not OptionMusic.checked then exit;
   if Ord(Name) > dxmusic.Midis.Count then exit;
   dxmusic.Midis.Items[Ord(Name)-1].Play;
 end;
 
-procedure TMainForm.StopMusic(Name: TMusicTrack);
+procedure TMainForm.StopMusic(Name: TSpaceMissionMusicTrack);
 begin
-  if Name = mtNone then exit;
+  if Name = smmNone then exit;
   if Ord(Name) > dxmusic.Midis.Count then exit;
   dxmusic.Midis.Items[Ord(Name)-1].Stop;
 end;
 
-procedure TMainForm.ResumeMusic(Name: TMusicTrack);
+procedure TMainForm.ResumeMusic(Name: TSpaceMissionMusicTrack);
 begin
   if not OptionMusic.checked then exit;
   if Ord(Name) > dxmusic.Midis.Count then exit;
   dxmusic.Midis.Items[Ord(Name)-1].Play; // TODO: how to pause/resume instead play/stop
 end;
 
-procedure TMainForm.PauseMusic(Name: TMusicTrack);
+procedure TMainForm.PauseMusic(Name: TSpaceMissionMusicTrack);
 begin
-  if Name = mtNone then exit;
+  if Name = smmNone then exit;
   if Ord(Name) > dxmusic.Midis.Count then exit;
   dxmusic.Midis.Items[Ord(Name)-1].Stop; // TODO: how to pause/resume instead play/stop
 end;
@@ -2416,7 +2407,7 @@ begin
   FScore := 0;
   EnemyCounter := 0;
   StartScene(gsMain);
-  MusicSwitchTrack(mtGame);
+  MusicSwitchTrack(smmGame);
 end;
 
 procedure TMainForm.LeichtClick(Sender: TObject);

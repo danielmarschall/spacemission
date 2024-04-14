@@ -53,9 +53,9 @@ const
 
 function GetLevelFileName(lev: integer): string;
 begin
-  result := FDirectory+'Levels\Level '+inttostr(lev)+'.lev'; // Version 0.3+ Level Files
+  result := OwnDirectory+'Levels\Level '+inttostr(lev)+'.lev'; // Version 0.3+ Level Files
   if not FileExists(Result) then
-    result := FDirectory+'Levels\Lev'+inttostr(lev)+'A1.lev'; // Version 0.2 Level Files
+    result := OwnDirectory+'Levels\Lev'+inttostr(lev)+'A1.lev'; // Version 0.2 Level Files
 end;
 
 { TLevelData }
@@ -108,8 +108,8 @@ begin
   SetLength(EnemyAdventTable, Length(EnemyAdventTable)+1);
 
   if enemyType = etEnemyMeteor then lifes := 0;
-  if x mod 48 <> 0 then raise Exception.Create('X-Koordinate muss ohne Rest durch 48 teilbar sein');
-  if y mod 32 <> 0 then raise Exception.Create('Y-Koordinate muss ohne Rest durch 32 teilbar sein');
+  if x mod RasterW <> 0 then raise Exception.CreateFmt('X-Koordinate muss ohne Rest durch %d teilbar sein', [RasterW]);
+  if y mod RasterH <> 0 then raise Exception.CreateFmt('Y-Koordinate muss ohne Rest durch %d teilbar sein', [RasterH]);
 
   EnemyAdventTable[Length(EnemyAdventTable)-1].x         := x;
   EnemyAdventTable[Length(EnemyAdventTable)-1].y         := y;

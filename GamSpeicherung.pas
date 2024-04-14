@@ -180,7 +180,7 @@ begin
   finally
     FreeAndNil(SavGame);
   end;
-  mainform.playsound('SceneMov', false);
+  mainform.playsound(smsSceneMov, false);
   mainform.FNextScene := gsNewLevel;
   mainform.FCheat := false;
   close;
@@ -335,7 +335,7 @@ begin
   if result = '' then
   begin
     // Pre Vista
-    result := FDirectory + 'Spielstände';
+    result := OwnDirectory + 'Spielstände';
   end
   else
   begin

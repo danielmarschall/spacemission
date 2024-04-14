@@ -36,9 +36,9 @@ begin
   Application.ShowMainform := False;
   Application.MainFormOnTaskBar := true;
   Application.Title := 'SpaceMission';
-  if not fileexists(FDirectory+'DirectX\Graphic.dxg') then
+  if not fileexists(OwnDirectory+'DirectX\Graphics.dxg') then
   begin
-    MessageDLG('Graphic.dxg fehlt. Bitte installieren Sie SpaceMission erneut.', mtError, [mbOK], 0);
+    MessageDLG('DirectX\Graphics.dxg fehlt. Bitte installieren Sie SpaceMission erneut.', mtError, [mbOK], 0);
     exit;
   end;
   Application.CreateForm(TMainForm, MainForm);

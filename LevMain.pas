@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, MMSystem,
   Dialogs, StdCtrls, ExtCtrls, Menus, DIB, DXClass, DXSprite, DXDraws,
   DXSounds, Spin, ComCtrls{$IF CompilerVersion >= 23.0}, System.UITypes,
-  WinAPI.DirectDraw{$ENDIF}, DirectX, ComLevelReader;
+  WinAPI.DirectDraw{$ENDIF}, DirectX, ComLevelReader, Global;
 
 type
   TMainForm = class(TDXForm)
@@ -84,6 +84,8 @@ type
     LevChanged: boolean;
     NumEnemys: integer;
     function SelectedEnemyType: TEnemyType;
+    { Grafik-Routinen }
+    function GetSpriteGraphic(Sprite: TSpaceMissionGraphicSprite): TPictureCollectionItem;
     { Level-Routinen }
     procedure EnemyCreateSprite(x, y: integer; AEnemyType: TEnemyType; ALives: integer);
     procedure DestroyLevel;
@@ -103,11 +105,7 @@ var
 implementation
 
 uses
-  Global, LevSplash, LevSpeicherung, ComInfo, LevOptions;
-
-const
-  RasterW = 48;
-  RasterH = 32;
+  LevSplash, LevSpeicherung, ComInfo, LevOptions;
 
 {$R *.DFM}
 
@@ -152,13 +150,13 @@ end;
 constructor TEnemy.Create(AParent: TSprite; AEnemyType: TEnemyType; ALives: Integer);
 begin
   inherited Create(AParent);
-  if AEnemyType = etEnemyAttacker then Image := MainForm.ImageList.Items.Find('Enemy-Attacker');
-  if AEnemyType = etEnemyAttacker2 then Image := MainForm.ImageList.Items.Find('Enemy-Attacker2');
-  if AEnemyType = etEnemyAttacker3 then Image := MainForm.ImageList.Items.Find('Enemy-Attacker3');
-  if AEnemyType = etEnemyMeteor then Image := MainForm.ImageList.Items.Find('Enemy-Meteor');
-  if AEnemyType = etEnemyUFO then Image := MainForm.ImageList.Items.Find('Enemy-Disk');
-  if AEnemyType = etEnemyUFO2 then Image := MainForm.ImageList.Items.Find('Enemy-Disk2');
-  if AEnemyType = etEnemyBoss then Image := MainForm.ImageList.Items.Find('Enemy-Boss');
+  if AEnemyType = etEnemyAttacker then Image := MainForm.GetSpriteGraphic(smgEnemyAttacker);
+  if AEnemyType = etEnemyAttacker2 then Image := MainForm.GetSpriteGraphic(smgEnemyAttacker2);
+  if AEnemyType = etEnemyAttacker3 then Image := MainForm.GetSpriteGraphic(smgEnemyAttacker3);
+  if AEnemyType = etEnemyMeteor then Image := MainForm.GetSpriteGraphic(smgEnemyMeteor);
+  if AEnemyType = etEnemyUFO then Image := MainForm.GetSpriteGraphic(smgEnemyDisk);
+  if AEnemyType = etEnemyUFO2 then Image := MainForm.GetSpriteGraphic(smgEnemyDisk2);
+  if AEnemyType = etEnemyBoss then Image := MainForm.GetSpriteGraphic(smgEnemyBoss);
 
   if AEnemyType = etEnemyMeteor then FLives := 0 else FLives := ALives;
   FEnemyType := AEnemyType;
@@ -171,7 +169,7 @@ end;
 
 procedure TMainForm.DXInit;
 begin
-  Imagelist.Items.LoadFromFile(FDirectory+'DirectX\Graphic.dxg');
+  Imagelist.Items.LoadFromFile(OwnDirectory+'DirectX\Graphics.dxg');
   ImageList.Items.MakeColorTable;
   DXDraw.ColorTable := ImageList.Items.ColorTable;
   DXDraw.DefColorTable := ImageList.Items.ColorTable;
@@ -346,7 +344,7 @@ begin
   with TBackground.Create(SpriteEngine.Engine) do
   begin
     SetMapSize(1, 1);
-    Image := mainform.ImageList.Items.Find('Star3');
+    Image := MainForm.GetSpriteGraphic(smgStar3);
     Z := -13;
     Y := 40;
     Tile := True;
@@ -354,7 +352,7 @@ begin
   with TBackground.Create(SpriteEngine.Engine) do
   begin
     SetMapSize(1, 1);
-    Image := mainform.ImageList.Items.Find('Star2');
+    Image := MainForm.GetSpriteGraphic(smgStar2);
     Z := -12;
     Y := 30;
     Tile := True;
@@ -362,7 +360,7 @@ begin
   with TBackground.Create(SpriteEngine.Engine) do
   begin
     SetMapSize(1, 1);
-    Image := mainform.ImageList.Items.Find('Star1');
+    Image := MainForm.GetSpriteGraphic(smgStar1);
     Z := -11;
     Y := 10;
     Tile := True;
@@ -370,7 +368,7 @@ begin
   with TBackground.Create(SpriteEngine.Engine) do
   begin
     SetMapSize(1, 1);
-    Image := mainform.ImageList.Items.Find('Matrix');
+    Image := MainForm.GetSpriteGraphic(smgMatrix);
     Z := -10;
     Tile := True;
   end;
@@ -457,6 +455,15 @@ begin
 
   dxtimer.Enabled := true;
   dxtimer.ActiveOnly := true;
+end;
+
+function TMainForm.GetSpriteGraphic(
+  Sprite: TSpaceMissionGraphicSprite): TPictureCollectionItem;
+begin
+  if (Sprite<>smgNone) and (imagelist.Items.Count >= Ord(Sprite)) then
+    result := imagelist.Items.Items[Ord(Sprite)-1]
+  else
+    result := nil;
 end;
 
 procedure TMainForm.InformationenClick(Sender: TObject);
