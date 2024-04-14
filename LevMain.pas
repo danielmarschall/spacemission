@@ -47,6 +47,7 @@ type
     Spielfelderweitern1: TMenuItem;
     SidePanel: TPanel;
     LivesEdit: TSpinEdit;
+    AlleLeveldateienaktualisieren1: TMenuItem;
     procedure DXDrawFinalize(Sender: TObject);
     procedure DXDrawInitialize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -67,6 +68,7 @@ type
     procedure Spielfelderweitern1Click(Sender: TObject);
     procedure ScrollBarScroll(Sender: TObject; ScrollCode: TScrollCode;
       var ScrollPos: Integer);
+    procedure AlleLeveldateienaktualisieren1Click(Sender: TObject);
   public
     { VCL-Ersatz }
     spriteengine: tdxspriteengine;
@@ -85,6 +87,7 @@ type
     { Level-Routinen }
     procedure EnemyCreateSprite(x, y: integer; AEnemyType: TEnemyType; ALives: integer);
     procedure DestroyLevel;
+    procedure RefreshFromLevData;
     procedure AnzeigeAct;
     { Initialisiations-Routinen }
     procedure DXInit;
@@ -179,8 +182,6 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 resourcestring
   SFileError = 'Die Datei kann von SpaceMission nicht geöffnet werden!';
-var
-  LevelData: TLevelData;
 begin
   { VCL-Ersatz start }
   dxtimer := tdxtimer.create(self);
@@ -231,24 +232,24 @@ begin
   //Application.Title := 'SpaceMission '+ProgramVersion+' - Leveleditor';
   Caption := 'SpaceMission '+ProgramVersion+' - Leveleditor';
   DXInit;
+  LevData := TLevelData.create;
+  ProgramInit;
+  DestroyLevel;
   if (paramcount > 0) and (fileexists(paramstr(1))) then
   begin
-    LevelData := TLevelData.Create;
     try
-      try
-        LevelData.Load(paramstr(1));
-      except
-        showmessage(SFileError);
-        ProgramInit;
-        exit;
+      LevData.Load(paramstr(1));
+    except
+      on E: Exception do
+      begin
+        showmessage(SFileError + ' ' +E.Message);
+        DestroyLevel;
       end;
-    finally
-      FreeAndNil(LevelData);
     end;
-    { Laden }
-    exit;
+    RefreshFromLevData;
+    LevChanged := false;
+    AnzeigeAct;
   end;
-  ProgramInit;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
@@ -340,7 +341,6 @@ procedure TMainForm.ProgramInit;
 {var
   i, j: Integer;}
 begin
-  LevData := TLevelData.create;
   sleep(500);
   //PlayerSprite
   with TBackground.Create(SpriteEngine.Engine) do
@@ -424,6 +424,25 @@ begin
   end;}
   PalleteAnim(RGBQuad(0, 0, 0), 300);
   mainform.Visible := true;
+end;
+
+procedure TMainForm.RefreshFromLevData;
+var
+  i: integer;
+begin
+  MainForm.ScrollBar.Max := MainForm.LevData.LevelEditorLength;
+  for i := 0 to MainForm.LevData.CountEnemies - 1 do
+  begin
+    MainForm.EnemyCreateSprite(
+      MainForm.LevData.EnemyAdventTable[i].x,
+      MainForm.LevData.EnemyAdventTable[i].y,
+      MainForm.LevData.EnemyAdventTable[i].enemyType,
+      MainForm.LevData.EnemyAdventTable[i].lifes
+    );
+  end;
+  MainForm.NumEnemys := MainForm.LevData.CountEnemies;
+  MainForm.Boss := MainForm.LevData.HasBoss;
+  AnzeigeAct;
 end;
 
 procedure TMainForm.LevelClick(Sender: TObject);
@@ -576,7 +595,7 @@ begin
   ScrollBar.Position := 0; // this doesn't call ScrollBarScroll()
   ScrollP := 0;
   LevData.Clear;
-  ScrollBar.Max := MainForm.LevData.LevelEditorLength;
+  ScrollBar.Max := LevData.LevelEditorLength;
   NumEnemys := 0;
   Boss := false;
   LevChanged := true;
@@ -584,6 +603,21 @@ begin
   Enemy1.Checked := true;
   EnemyClick(Enemy1);
   AnzeigeAct;
+end;
+
+procedure TMainForm.AlleLeveldateienaktualisieren1Click(Sender: TObject);
+var
+  i: integer;
+begin
+  // Just for internal/development purposes
+  for i := 1 to 9999 do
+  begin
+    if FileExists('Levels\Level '+IntToStr(i)+'.lev') then
+    begin
+      LevData.Load('Levels\Level '+IntToStr(i)+'.lev');
+      LevData.Save('Levels\Level '+IntToStr(i)+'.lev');
+    end;
+  end;
 end;
 
 procedure TMainForm.AnzeigeAct;
@@ -685,7 +719,7 @@ end;
 
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-  if LevChanged then
+  if Assigned(LevData) and LevChanged and (LevData.CountEnemies>0) then
     CanClose := MessageDlg('Beenden ohne abspeichern?', mtConfirmation, mbYesNoCancel, 0) = mrYes;
 end;
 

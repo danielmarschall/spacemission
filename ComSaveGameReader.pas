@@ -29,20 +29,24 @@ begin
   sl := TStringList.Create;
   try
     sl.LoadFromFile(filename);
-    if sl.Strings[0] = '; SpaceMission 1.0' then
+    if (sl.Strings[0] = '; SpaceMission 1.0') and
+       (sl.Strings[1] = '; SAV-File') then
     begin
-      if sl.Strings[1] <> '; SAV-File' then
-      begin
-        raise Exception.Create('Dies ist kein SpaceMission-Spielstand.');
-      end;
-      FScore := StrToInt(sl.Strings[2]);
-      FLife := StrToInt(sl.Strings[3]);
-      FLevel := StrToInt(sl.Strings[4]);
+      FScore    := StrToInt(sl.Strings[2]);
+      FLife     := StrToInt(sl.Strings[3]);
+      FLevel    := StrToInt(sl.Strings[4]);
       FGameMode := TGameMode(StrToInt(sl.Strings[5]));
+    end
+    else if (sl.Strings[0] = '[SpaceMission Savegame, Format 1.2]') then
+    begin
+      FScore    := StrToInt(sl.Strings[1]);
+      FLife     := StrToInt(sl.Strings[2]);
+      FLevel    := StrToInt(sl.Strings[3]);
+      FGameMode := TGameMode(StrToInt(sl.Strings[4]));
     end
     else
     begin
-      raise Exception.CreateFmt('Spielstand-Format "%s" nicht unterstützt', [Copy(sl.Strings[0], 3, Length(sl.Strings[0])-2)]);
+      raise Exception.Create('Spielstand-Format nicht unterstützt oder Datei beschädigt');
     end;
   finally
     FreeAndNil(sl);
@@ -55,8 +59,7 @@ var
 begin
   sl := TStringList.Create;
   try
-    sl.Add('; SpaceMission 1.0');
-    sl.Add('; SAV-File');
+    sl.Add('[SpaceMission Savegame, Format 1.2]');
     sl.Add(IntToStr(FScore));
     sl.Add(IntToStr(FLife));
     sl.Add(IntToStr(FLevel));

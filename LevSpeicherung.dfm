@@ -183,7 +183,7 @@ object SpeicherungForm: TSpeicherungForm
   end
   object LevelNumber: TSpinEdit
     Left = 112
-    Top = 20
+    Top = 16
     Width = 201
     Height = 22
     MaxValue = 9999

@@ -71,26 +71,36 @@ verbessert! Das Installationsprogramm wurde mit InnoSetup erstellt.
 
 ## Aufbau von Leveldateien:
 
-    ; SpaceMission 1.0
-    ; LEV-File
-    Länge der Karte (Default: 1200, nur für Leveleditor relevant)
-    Gegner 1 Typ (1=Attacker, 2=Attacker2, 3=Attacker3, 4=Meteor, 5=UFO, 6=UFO2, 7=Boss)
-    Gegner 1 X-Koordinate (muss durch 48 teilbar sein)
-    Gegner 1 Y-Koordinate (muss durch 32 teilbar sein)
-    Gegner 1 Leben (keine relevanz für Kometen)
-    Gegner 2 Typ ...
-    ...
+    [SpaceMission Level, Format 1.2]
+    Width  1200
+    Enemy  tttttt xxxxxx yyyyyy llllll
+    Enemy  tttttt xxxxxx yyyyyy llllll ; Kommentarzeile am Ende einer Gegner-Zeile
+    Enemy  tttttt xxxxxx yyyyyy llllll
+    Enemy  ...
+    ; Kommentar-Zeile
 
-Regeln für die Leveldateien: Alle Dateien müssen den Namen „Level [Level-Nr].lev“ haben. [L / S]*
+Anmerkungen:
+- Alle Dateien müssen den Namen "Level [Level-Nr].lev" haben.
+- Die Reihenfolge der Zeilen ist beliebig. Die erste Zeile muss jedoch exakt stimmen.
+- Leere Zeilen sind erlaubt
+- Width ist Länge der Karte (Default: 1200, nur für Leveleditor relevant)
+- Enemy tttttt = Gegner Typ (1=Attacker, 2=Attacker2, 3=Attacker3, 4=Meteor, 5=UFO, 6=UFO2, 7=Boss)
+- Enemy xxxxxx = Gegner X-Koordinate (muss durch 48 teilbar sein)
+- Enemy yyyyyy = Gegner Y-Koordinate (muss durch 32 teilbar sein)
+- Enemy llllll = Gegner Leben (keine relevanz für Kometen)
 
 ## Aufbau von Spielständen:
 
-    ; SpaceMission 1.0
-    ; SAV-File
+    [SpaceMission Savegame, Format 1.2]
     Punkte
     Leben
     Levelnummer
     Spielart (1=Normal, 2=Zufall)
+
+Anmerkungen:
+- Alle Dateien müssen den Namen "[Name].sav" haben.
+- Die Reihenfolge der Zeilen ist fest vorgegeben. Die erste Zeile muss exakt stimmen.
+- Kommentare sind nicht erlaubt
 
 ## License
 

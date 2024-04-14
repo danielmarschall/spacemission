@@ -1376,9 +1376,12 @@ begin
         mainform.FLevel := SavGame.FLevel;
         mainform.FGameMode := SavGame.FGameMode;
       except
-        showmessage(SFileError);
-        GameStartClick(GameStart);
-        exit;
+        on E: Exception do
+        begin
+          showmessage(SFileError + ' ' +E.Message);
+          GameStartClick(GameStart);
+          exit;
+        end;
       end;
     finally
       FreeAndNil(SavGame);

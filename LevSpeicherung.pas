@@ -98,12 +98,10 @@ begin
 end;
 
 procedure TSpeicherungForm.LadenBtnClick(Sender: TObject);
-var
-  i: integer;
 begin
   if LevelListBox.ItemIndex = -1 then exit;
 
-  if MainForm.LevChanged then
+  if MainForm.LevChanged and (MainForm.LevData.CountEnemies>0) then
   begin
     if MessageDlg('Neues Level laden und Änderungen verwerfen?', mtConfirmation, mbYesNoCancel, 0) <> mrYes then exit;
   end;
@@ -111,27 +109,14 @@ begin
   // Da Button bei ungültigen Level deaktiviert wird, ist das nicht mehr nötig.
   {if liu.visible or (LevelListBox.items.count=0) then
     exit;}
-  // Vorbereiten
-  MainForm.DestroyLevel;
-  MainForm.LevChanged := false;
 
-  MainForm.ScrollBar.Max := MainForm.LevData.LevelEditorLength;
+  MainForm.DestroyLevel;
   MainForm.LevData.Load(
     IncludeTrailingPathDelimiter(ExtractFilePath(GetLevelFileName(1)))+
     LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
-  for i := 0 to MainForm.LevData.CountEnemies - 1 do
-  begin
-    MainForm.EnemyCreateSprite(
-      MainForm.LevData.EnemyAdventTable[i].x,
-      MainForm.LevData.EnemyAdventTable[i].y,
-      MainForm.LevData.EnemyAdventTable[i].enemyType,
-      MainForm.LevData.EnemyAdventTable[i].lifes
-    );
-  end;
-  MainForm.NumEnemys := MainForm.LevData.CountEnemies;
-  MainForm.Boss := MainForm.LevData.HasBoss;
 
-  // Nacharbeiten
+  MainForm.RefreshFromLevData;
+  MainForm.LevChanged := false;
   MainForm.AnzeigeAct;
   close;
 end;
@@ -213,37 +198,37 @@ begin
     try
       LevelData.Load(IncludeTrailingPathDelimiter(ExtractFilePath(GetLevelFileName(1)))+
         LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
-    except
-      liu.visible := true;
-      LadenBtn.enabled := false;
-    end;
 
-    boss := false;
-    anzahlEinheiten := Length(LevelData.EnemyAdventTable);
-    for i := 0 to anzahlEinheiten - 1 do
-    begin
-      if LevelData.EnemyAdventTable[i].enemyType = etEnemyBoss then
+      boss := false;
+      anzahlEinheiten := Length(LevelData.EnemyAdventTable);
+      for i := 0 to anzahlEinheiten - 1 do
       begin
-        boss := true;
+        if LevelData.EnemyAdventTable[i].enemyType = etEnemyBoss then
+        begin
+          boss := true;
+        end;
       end;
-    end;
 
-    li1a.visible := true;
-    li2a.visible := true;
-    li3a.visible := true;
-    li1b.visible := true;
-    li2b.visible := true;
-    li3b.visible := true;
-    LadenBtn.enabled := true;
-    LoeschenBtn.enabled := true;
-    li1b.caption := inttostr(anzahlEinheiten);
-    if boss then
-      li2b.caption := 'Ja'
-    else
-      li2b.caption := 'Nein';
-    li3b.caption := IntToStr(LevelData.LevelEditorLength) + ' Felder';
-  finally
-    FreeAndNil(LevelData);
+      li1a.visible := true;
+      li2a.visible := true;
+      li3a.visible := true;
+      li1b.visible := true;
+      li2b.visible := true;
+      li3b.visible := true;
+      LadenBtn.enabled := true;
+      LoeschenBtn.enabled := true;
+      li1b.caption := inttostr(anzahlEinheiten);
+      if boss then
+        li2b.caption := 'Ja'
+      else
+        li2b.caption := 'Nein';
+      li3b.caption := IntToStr(LevelData.LevelEditorLength) + ' Felder';
+    finally
+      FreeAndNil(LevelData);
+    end;
+  except
+    liu.visible := true;
+    LadenBtn.enabled := false;
   end;
 end;
 

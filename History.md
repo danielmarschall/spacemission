@@ -17,6 +17,7 @@ SpaceMission 1.2:
 - Level File Format no longer requires being sorted by X coordinates
 - Level File Format no longer requires having meteroids 0 lives. (Lifes will be ignored)
 - Boss besiegen gibt nun 10.000 Punkte anstelle 1.000
+- Neue LEV und SAV Dateiformate
 
 Version 1.1:
 - Bugfixes

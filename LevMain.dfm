@@ -2026,6 +2026,11 @@ object MainForm: TMainForm
         ShortCut = 16463
         OnClick = LevelClick
       end
+      object AlleLeveldateienaktualisieren1: TMenuItem
+        Caption = 'Alle Leveldateien aktualisieren'
+        Visible = False
+        OnClick = AlleLeveldateienaktualisieren1Click
+      end
       object N1: TMenuItem
         Caption = '-'
       end
