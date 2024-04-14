@@ -4,7 +4,6 @@ interface
 
 const
   ProgramVersion = '1.2';
-
   RasterW = 48;
   RasterH = 32;
 
@@ -20,28 +19,28 @@ type
 
   // DirectX\Graphics.dxg
   TSpaceMissionGraphicSprite = (
-    smgNone,              // ImageList.Items.Item[0]
-    smgEnemyDisk,         // ImageList.Items.Item[1]
-    smgEnemyAttacker,     // ImageList.Items.Item[2]
-    smgEnemyBoss,         // ImageList.Items.Item[3]
-    smgBounce,            // ImageList.Items.Item[4]
-    smgMachine,           // ImageList.Items.Item[5]
-    smgEnemyAttacker2,    // ImageList.Items.Item[6]
-    smgEnemyAttacker3,    // ImageList.Items.Item[7]
-    smgEnemyMeteor,       // ImageList.Items.Item[8]
-    smgBounce2,           // ImageList.Items.Item[9]
-    smgEnemyDisk2,        // ImageList.Items.Item[10]
-    smgLogo,              // ImageList.Items.Item[11]
-    smgExplosion,         // ImageList.Items.Item[12]
-    smgBackgroundPlanet1, // ImageList.Items.Item[13]
-    smgMatrix,            // ImageList.Items.Item[14]
-    smgStar1,             // ImageList.Items.Item[15]
-    smgStar2,             // ImageList.Items.Item[16]
-    smgStar3,             // ImageList.Items.Item[17]
-    smgBackgroundBlue,    // ImageList.Items.Item[18]
-    smgBackgroundRed,     // ImageList.Items.Item[19]
-    smgBackgroundYellow,  // ImageList.Items.Item[20]
-    smgHintergrundRot     // ImageList.Items.Item[21]
+    smgNone,
+    smgEnemyDisk,         // ImageList.Items.Item[0]
+    smgEnemyAttacker,     // ImageList.Items.Item[1]
+    smgEnemyBoss,         // ImageList.Items.Item[2]
+    smgBounce,            // ImageList.Items.Item[3]
+    smgMachine,           // ImageList.Items.Item[4]
+    smgEnemyAttacker2,    // ImageList.Items.Item[5]
+    smgEnemyAttacker3,    // ImageList.Items.Item[6]
+    smgEnemyMeteor,       // ImageList.Items.Item[7]
+    smgBounce2,           // ImageList.Items.Item[8]
+    smgEnemyDisk2,        // ImageList.Items.Item[9]
+    smgLogo,              // ImageList.Items.Item[10]
+    smgExplosion,         // ImageList.Items.Item[11]
+    smgBackgroundPlanet1, // ImageList.Items.Item[12]
+    smgMatrix,            // ImageList.Items.Item[13]
+    smgStar1,             // ImageList.Items.Item[14]
+    smgStar2,             // ImageList.Items.Item[15]
+    smgStar3,             // ImageList.Items.Item[16]
+    smgBackgroundBlue,    // ImageList.Items.Item[17]
+    smgBackgroundRed,     // ImageList.Items.Item[18]
+    smgBackgroundYellow,  // ImageList.Items.Item[19]
+    smgHintergrundRot     // ImageList.Items.Item[20]
   );
 
   // DirectX\Sound.dxw

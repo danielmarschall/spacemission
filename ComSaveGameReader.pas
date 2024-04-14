@@ -37,7 +37,7 @@ begin
       FLevel    := StrToInt(sl.Strings[4]);
       FGameMode := TGameMode(StrToInt(sl.Strings[5]));
     end
-    else if (sl.Strings[0] = '[SpaceMission Savegame, Format 1.2]') then
+    else if SameText(sl.Strings[0], '[SpaceMission Savegame, Format 1.2]') then
     begin
       FScore    := StrToInt(sl.Strings[1]);
       FLife     := StrToInt(sl.Strings[2]);

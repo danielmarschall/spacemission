@@ -281,7 +281,7 @@ begin
       end;
       {$ENDREGION}
     end
-    else if (sl.Strings[0] = '[SpaceMission Level, Format 1.2]') then
+    else if SameText(sl.Strings[0], '[SpaceMission Level, Format 1.2]') then
     begin
       {$REGION 'Level format 1.2'}
       LevelEditorLength := DefaultLevelLength;
