@@ -84,23 +84,27 @@ Anmerkungen:
 - Die Reihenfolge der Zeilen ist beliebig. Die erste Zeile muss jedoch exakt stimmen.
 - Leere Zeilen sind erlaubt
 - Width ist Länge der Karte (Default: 1200, nur für Leveleditor relevant)
-- Enemy tttttt = Gegner Typ (1=Attacker, 2=Attacker2, 3=Attacker3, 4=Meteor, 5=UFO, 6=UFO2, 7=Boss)
-- Enemy xxxxxx = Gegner X-Koordinate (muss durch 48 teilbar sein)
-- Enemy yyyyyy = Gegner Y-Koordinate (muss durch 32 teilbar sein)
-- Enemy llllll = Gegner Leben (keine relevanz für Kometen)
+- Enemy `tttttt` = Gegner Typ (1=Attacker, 2=Attacker2, 3=Attacker3, 4=Meteor, 5=UFO, 6=UFO2, 7=Boss)
+- Enemy `xxxxxx` = Gegner X-Koordinate (muss durch 48 teilbar sein)
+- Enemy `yyyyyy` = Gegner Y-Koordinate (muss durch 32 teilbar sein)
+- Enemy `llllll` = Gegner Leben (keine relevanz für Kometen)
 
 ## Aufbau von Spielständen:
 
     [SpaceMission Savegame, Format 1.2]
-    Punkte
-    Leben
-    Levelnummer
-    Spielart (1=Normal, 2=Zufall)
+    Score  3000
+    Lives  6
+    Level  1
+    Mode   2   (1=Normal, 2=Zufall)
+    Width  ...
+    Enemy  ...		
+    ; Kommentar-Zeile
 
 Anmerkungen:
 - Alle Dateien müssen den Namen "[Name].sav" haben.
 - Die Reihenfolge der Zeilen ist fest vorgegeben. Die erste Zeile muss exakt stimmen.
 - Kommentare sind nicht erlaubt
+- Eine Savedatei ist eine erweiterte Leveldatei. Die Gegner müssen nicht zwingend auf dem Raster 48/32 liegen.
 
 ## License
 

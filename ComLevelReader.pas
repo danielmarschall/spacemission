@@ -2,6 +2,9 @@ unit ComLevelReader;
 
 interface
 
+uses
+  Classes;
+
 const
   NumEnemyTypes = 7;
 
@@ -24,10 +27,13 @@ type
     lifes: integer;
   end;
 
-  TLevelData = class(TObject)
+  TLevelData = class(TPersistent)
   strict private
     procedure SortEnemies;
+  strict protected
+    procedure AssignTo(Dest: TPersistent); override;
   public
+    RasterErzwingen: boolean;
     LevelEditorLength: integer;
     EnemyAdventTable: array of TEnemyAdvent;
     function IndexOfEnemy(x,y:integer;enemyType:TEnemyType;lifes:integer): integer;
@@ -37,8 +43,30 @@ type
     function CountEnemies: integer;
     function HasBoss: boolean;
     procedure Clear;
-    procedure Load(filename: string);
-    procedure Save(filename: string);
+    procedure LoadFromStrings(sl: TStrings); // version 0.3 - version 1.2 files
+    procedure LoadFromFile(filename: string); // version 0.2 - version 1.2 files
+    procedure SaveToStrings(sl: TStrings);
+    procedure SaveToFile(filename: string);
+    destructor Destroy; override;
+  end;
+
+  TGameMode = (gmUnknown, gmLevels, gmRandom);
+
+  TSaveData = class(TPersistent)
+  strict protected
+    procedure AssignTo(Dest: TPersistent); override;
+  public
+    Score: integer;
+    Life: integer;
+    Level: integer;
+    GameMode: TGameMode;
+    LevelData: TLevelData;
+    procedure Clear;
+    procedure LoadFromStrings(sl: TStrings);
+    procedure LoadFromFile(filename: string);
+    procedure SaveToStrings(sl: TStrings);
+    procedure SaveToFile(filename: string);
+    destructor Destroy; override;
   end;
 
 function GetLevelFileName(lev: integer): string;
@@ -46,7 +74,7 @@ function GetLevelFileName(lev: integer): string;
 implementation
 
 uses
-  SysUtils, StrUtils, Classes, Global;
+  SysUtils, StrUtils, Global;
 
 const
   DefaultLevelLength = 1200;
@@ -59,6 +87,28 @@ begin
 end;
 
 { TLevelData }
+
+procedure TLevelData.AssignTo(Dest: TPersistent);
+var
+  DestLevelData: TLevelData;
+  i: integer;
+begin
+  DestLevelData := Dest as TLevelData;
+  if Assigned(DestLevelData) then
+  begin
+    DestLevelData.RasterErzwingen := Self.RasterErzwingen;
+    DestLevelData.LevelEditorLength := Self.LevelEditorLength;
+    SetLength(DestLevelData.EnemyAdventTable, Length(Self.EnemyAdventTable));
+    for i := 0 to Length(Self.EnemyAdventTable) do
+    begin
+      DestLevelData.EnemyAdventTable[i] := Self.EnemyAdventTable[i];
+    end;
+  end
+  else
+  begin
+    inherited;
+  end;
+end;
 
 procedure TLevelData.Clear;
 begin
@@ -88,6 +138,12 @@ begin
   DeleteEnemy(IndexOfEnemy(x, y, enemyType, lifes));
 end;
 
+destructor TLevelData.Destroy;
+begin
+  Clear;
+  inherited;
+end;
+
 function TLevelData.HasBoss: boolean;
 var
   i: integer;
@@ -108,8 +164,12 @@ begin
   SetLength(EnemyAdventTable, Length(EnemyAdventTable)+1);
 
   if enemyType = etEnemyMeteor then lifes := 0;
-  if x mod RasterW <> 0 then raise Exception.CreateFmt('X-Koordinate muss ohne Rest durch %d teilbar sein', [RasterW]);
-  if y mod RasterH <> 0 then raise Exception.CreateFmt('Y-Koordinate muss ohne Rest durch %d teilbar sein', [RasterH]);
+  if RasterErzwingen then
+  begin
+    if x mod RasterW <> 0 then raise Exception.CreateFmt('X-Koordinate muss ohne Rest durch %d teilbar sein', [RasterW]);
+    if y mod RasterH <> 0 then raise Exception.CreateFmt('Y-Koordinate muss ohne Rest durch %d teilbar sein', [RasterH]);
+  end;
+  if lifes > MaxPossibleEnemyLives then lifes := MaxPossibleEnemyLives;
 
   EnemyAdventTable[Length(EnemyAdventTable)-1].x         := x;
   EnemyAdventTable[Length(EnemyAdventTable)-1].y         := y;
@@ -136,21 +196,134 @@ begin
   result := -1;
 end;
 
-procedure TLevelData.Load(filename: string);
+procedure TLevelData.LoadFromStrings(sl: TStrings);
 var
-  sl, sl2: TStringList;
   curline: integer;
-  ergebnis: string;
   z, act: integer;
-  i, j: integer;
-  temp: string;
-  m: array[1..6] of tstrings;
+  sl2: TStringList;
   tmpX, tmpY, tmpLifes: integer;
   tmpEnemy: TEnemyType;
   tmpRest: string;
+  ergebnis: string;
 begin
   Clear;
 
+  RasterErzwingen := true;
+
+  if sl.Strings[0] = '; SpaceMission 0.3' then
+  begin
+    {$REGION 'Backwards compatibility level format 0.3 (convert to 0.4)'}
+    sl.Strings[0] := '; SpaceMission 0.4';
+    sl.Insert(1, '; LEV-File');
+    {$ENDREGION}
+  end;
+
+  if (sl.Strings[0] = '; SpaceMission 0.4') and
+     (sl.Strings[1] = '; LEV-File') then
+  begin
+    {$REGION 'Backwards compatibility level format 0.4 (convert to 1.0)'}
+    sl2 := TStringList.Create;
+    try
+      z := 0;
+      act := 0;
+      while z < sl.Count do
+      begin
+        inc(z);
+        if z > 2 then inc(act);
+        if act = 5 then act := 1;
+        ergebnis := sl.Strings[z-1];
+        if ergebnis = '; SpaceMission 0.4' then
+          sl2.Add('; SpaceMission 1.0')
+        else
+        begin
+          if (ergebnis = '30000') and (z = 3) then
+            sl2.Add(IntTostr(DefaultLevelLength))
+          else
+          begin
+            //if not (((ergebnis = '0') and (z = 4)) or ((ergebnis = '-624') and (z = 5)) or ((ergebnis = '222') and (z = 6)) or ((ergebnis = '3') and (z = 7))) then
+            if (z < 4) or (z > 7) then
+            begin
+              if act = 4 then
+                sl2.Add(inttostr(strtoint(ergebnis) + 32 - (5 * (strtoint(ergebnis) div 37))))
+              else
+                sl2.Add(Ergebnis);
+            end;
+          end;
+        end;
+      end;
+      sl.Text := sl2.Text;
+    finally
+      FreeAndNil(sl2);
+    end;
+    {$ENDREGION}
+  end;
+
+  if (sl.Strings[0] = '; SpaceMission 1.0') and
+     (sl.Strings[1] = '; LEV-File') then
+  begin
+    {$REGION 'Level format 1.0'}
+    LevelEditorLength := StrToInt(sl.Strings[2]);
+    curline := 3;
+    while curline < sl.Count do
+    begin
+      tmpEnemy := TEnemyType(strtoint(sl.Strings[curline]));
+      Inc(curline);
+      tmpX := strtoint(sl.Strings[curline]);
+      Inc(curline);
+      tmpY := strtoint(sl.Strings[curline]);
+      Inc(curline);
+      tmpLifes := strtoint(sl.Strings[curline]);
+      Inc(curline);
+      AddEnemy(tmpX, tmpY, tmpEnemy, tmpLifes);
+    end;
+    {$ENDREGION}
+  end
+  else if (SameText(sl.Strings[0], '[SpaceMission Level, Format 1.2]')) or
+          (SameText(sl.Strings[0], '[SpaceMission Savegame, Format 1.2]')) then
+  begin
+    RasterErzwingen := SameText(sl.Strings[0], '[SpaceMission Level, Format 1.2]');
+    {$REGION 'Level format 1.2'}
+    LevelEditorLength := DefaultLevelLength;
+    for curline := 1 to sl.Count-1 do
+    begin
+      // 1234567890123456789012345678901234567890
+      // 123456 123456 123456 123456 123456 ; Kommentar
+      if (sl.Strings[curline].Trim = '') or
+         (Copy(sl.Strings[curline], 1, 1) = ';') then
+        // Do nothing
+      else if Copy(sl.Strings[curline], 1, 6).TrimRight = 'Width' then
+      begin
+        LevelEditorLength := StrToInt(TrimRight(Copy(sl.Strings[curline], 8, 6)))
+      end
+      else if Copy(sl.Strings[curline], 1, 6).TrimRight = 'Enemy' then
+      begin
+        tmpEnemy := TEnemyType(strtoint(TrimRight(Copy(sl.Strings[curline], 8, 6))));
+        tmpX     := strtoint(TrimRight(Copy(sl.Strings[curline], 15, 6)));
+        tmpY     := strtoint(TrimRight(Copy(sl.Strings[curline], 22, 6)));
+        tmpLifes := strtoint(TrimRight(Copy(sl.Strings[curline], 29, 6)));
+        tmpRest  := Copy(sl.Strings[curline], 36, Length(sl.Strings[curline])-36+1);
+        if (Copy(tmpRest, 1, 1) <> ';') and (Trim(tmpRest) <> '') then
+          raise Exception.CreateFmt('Zeile %d ist ungültig (Zusatzinfo am Ende)', [curline+1]);
+        AddEnemy(tmpX, tmpY, tmpEnemy, tmpLifes);
+      end;
+    end;
+    {$ENDREGION}
+  end
+  else
+  begin
+    raise Exception.Create('Level-Format nicht unterstützt oder Datei ist beschädigt');
+  end;
+
+  SortEnemies; // Sortierung nach X-Koordinate ist sehr wichtig für das Spiel!
+end;
+
+procedure TLevelData.LoadFromFile(filename: string);
+var
+  sl: TStringList;
+  i, j: integer;
+  temp: string;
+  m: array[1..6] of tstrings;
+begin
   sl := TStringList.Create;
   try
     if EndsText('A1.lev', filename) then
@@ -213,147 +386,49 @@ begin
       sl.LoadFromFile(filename);
     end;
 
-    if sl.Strings[0] = '; SpaceMission 0.3' then
-    begin
-      {$REGION 'Backwards compatibility level format 0.3 (convert to 0.4)'}
-      sl.Strings[0] := '; SpaceMission 0.4';
-      sl.Insert(1, '; LEV-File');
-      {$ENDREGION}
-    end;
-
-    if (sl.Strings[0] = '; SpaceMission 0.4') and
-       (sl.Strings[1] = '; LEV-File') then
-    begin
-      {$REGION 'Backwards compatibility level format 0.4 (convert to 1.0)'}
-      sl2 := TStringList.Create;
-      try
-        z := 0;
-        act := 0;
-        while z < sl.Count do
-        begin
-          inc(z);
-          if z > 2 then inc(act);
-          if act = 5 then act := 1;
-          ergebnis := sl.Strings[z-1];
-          if ergebnis = '; SpaceMission 0.4' then
-            sl2.Add('; SpaceMission 1.0')
-          else
-          begin
-            if (ergebnis = '30000') and (z = 3) then
-              sl2.Add(IntTostr(DefaultLevelLength))
-            else
-            begin
-              //if not (((ergebnis = '0') and (z = 4)) or ((ergebnis = '-624') and (z = 5)) or ((ergebnis = '222') and (z = 6)) or ((ergebnis = '3') and (z = 7))) then
-              if (z < 4) or (z > 7) then
-              begin
-                if act = 4 then
-                  sl2.Add(inttostr(strtoint(ergebnis) + 32 - (5 * (strtoint(ergebnis) div 37))))
-                else
-                  sl2.Add(Ergebnis);
-              end;
-            end;
-          end;
-        end;
-        sl.Text := sl2.Text;
-      finally
-        FreeAndNil(sl2);
-      end;
-      {$ENDREGION}
-    end;
-
-    if (sl.Strings[0] = '; SpaceMission 1.0') and
-       (sl.Strings[1] = '; LEV-File') then
-    begin
-      {$REGION 'Level format 1.0'}
-      LevelEditorLength := StrToInt(sl.Strings[2]);
-      curline := 3;
-      while curline < sl.Count do
-      begin
-        tmpEnemy := TEnemyType(strtoint(sl.Strings[curline]));
-        Inc(curline);
-        tmpX := strtoint(sl.Strings[curline]);
-        Inc(curline);
-        tmpY := strtoint(sl.Strings[curline]);
-        Inc(curline);
-        tmpLifes := strtoint(sl.Strings[curline]);
-        Inc(curline);
-        AddEnemy(tmpX, tmpY, tmpEnemy, tmpLifes);
-      end;
-      {$ENDREGION}
-    end
-    else if SameText(sl.Strings[0], '[SpaceMission Level, Format 1.2]') then
-    begin
-      {$REGION 'Level format 1.2'}
-      LevelEditorLength := DefaultLevelLength;
-      for curline := 1 to sl.Count-1 do
-      begin
-        // 1234567890123456789012345678901234567890
-        // 123456 123456 123456 123456 123456 ; Kommentar
-        if (sl.Strings[curline].Trim = '') or
-           (Copy(sl.Strings[curline], 1, 1) = ';') then
-          // Do nothing
-        else if Copy(sl.Strings[curline], 1, 6).TrimRight = 'Width' then
-        begin
-          LevelEditorLength := StrToInt(TrimRight(Copy(sl.Strings[curline], 8, 6)))
-        end
-        else if Copy(sl.Strings[curline], 1, 6).TrimRight = 'Enemy' then
-        begin
-          tmpEnemy := TEnemyType(strtoint(TrimRight(Copy(sl.Strings[curline], 8, 6))));
-          tmpX     := strtoint(TrimRight(Copy(sl.Strings[curline], 15, 6)));
-          tmpY     := strtoint(TrimRight(Copy(sl.Strings[curline], 22, 6)));
-          tmpLifes := strtoint(TrimRight(Copy(sl.Strings[curline], 29, 6)));
-          tmpRest  := Copy(sl.Strings[curline], 36, Length(sl.Strings[curline])-36+1);
-          if (Copy(tmpRest, 1, 1) <> ';') and (Trim(tmpRest) <> '') then
-            raise Exception.CreateFmt('Zeile %d ist ungültig (Zusatzinfo am Ende)', [curline+1]);
-          AddEnemy(tmpX, tmpY, tmpEnemy, tmpLifes);
-        end
-        else
-        begin
-          raise Exception.CreateFmt('Zeile %d ist ungültig (Unbekannter Zeilentyp)', [curline+1]);
-        end;
-      end;
-      {$ENDREGION}
-    end
-    else
-    begin
-      raise Exception.Create('Level-Format nicht unterstützt oder Datei ist beschädigt');
-    end;
+    LoadFromStrings(sl);
   finally
     FreeAndNil(sl);
   end;
-  SortEnemies; // Sortierung nach X-Koordinate ist sehr wichtig für das Spiel!
 end;
 
-procedure TLevelData.Save(filename: string);
+procedure TLevelData.SaveToStrings(sl: TStrings);
+var
+  i: integer;
+begin
+  sl.Clear;
+  sl.Add('[SpaceMission Level, Format 1.2]');
+  sl.Add(
+    'Width'.PadRight(6, ' ')+
+    ' '+
+    IntToStr(LevelEditorLength)+
+    ' '
+  );
+  SortEnemies;
+  for i := 0 to Length(EnemyAdventTable)-1 do
+  begin
+    sl.Add(
+      'Enemy'.PadRight(6, ' ')+
+      ' '+
+      IntToStr(Ord(EnemyAdventTable[i].enemyType)).PadRight(6, ' ')+
+      ' '+
+      IntToStr(EnemyAdventTable[i].x).PadRight(6, ' ')+
+      ' '+
+      IntToStr(EnemyAdventTable[i].y).PadRight(6, ' ')+
+      ' '+
+      IntToStr(EnemyAdventTable[i].lifes).PadRight(6, ' ')+
+      ' '
+    );
+  end;
+end;
+
+procedure TLevelData.SaveToFile(filename: string);
 var
   sl: TStringList;
-  i: integer;
 begin
   sl := TStringList.Create;
   try
-    sl.Add('[SpaceMission Level, Format 1.2]');
-    sl.Add(
-      'Width'.PadRight(6, ' ')+
-      ' '+
-      IntToStr(LevelEditorLength)+
-      ' '
-    );
-    SortEnemies;
-    for i := 0 to Length(EnemyAdventTable)-1 do
-    begin
-      sl.Add(
-        'Enemy'.PadRight(6, ' ')+
-        ' '+
-        IntToStr(Ord(EnemyAdventTable[i].enemyType)).PadRight(6, ' ')+
-        ' '+
-        IntToStr(EnemyAdventTable[i].x).PadRight(6, ' ')+
-        ' '+
-        IntToStr(EnemyAdventTable[i].y).PadRight(6, ' ')+
-        ' '+
-        IntToStr(EnemyAdventTable[i].lifes).PadRight(6, ' ')+
-        ' '
-      );
-    end;
+    SaveToStrings(sl);
     sl.SaveToFile(filename);
   finally
     FreeAndNil(sl);
@@ -383,6 +458,141 @@ begin
         EnemyAdventTable[i + 1] := e;
       end;
     end;
+  end;
+end;
+
+{ TSaveData }
+
+procedure TSaveData.AssignTo(Dest: TPersistent);
+var
+  DestSaveData: TSaveData;
+begin
+  DestSaveData := Dest as TSaveData;
+  if Assigned(DestSaveData) then
+  begin
+    DestSaveData.Score := Self.Score;
+    DestSaveData.Life := Self.Life;
+    DestSaveData.Level := Self.Level;
+    DestSaveData.GameMode := Self.GameMode;
+    if not Assigned(DestSaveData.LevelData) then DestSaveData.LevelData := TLevelData.Create;
+    DestSaveData.LevelData.Assign(Self.LevelData);
+  end
+  else
+  begin
+    inherited;
+  end;
+end;
+
+procedure TSaveData.Clear;
+begin
+  Score := 0;
+  Life := 0;
+  Level := 0;
+  GameMode := gmUnknown;
+  FreeAndNil(LevelData);
+end;
+
+destructor TSaveData.Destroy;
+begin
+  Clear;
+  inherited;
+end;
+
+procedure TSaveData.SaveToStrings(sl: TStrings);
+var
+  sl2: TStringList;
+begin
+  sl2 := TStringList.Create;
+  try
+    sl.Add('[SpaceMission Savegame, Format 1.2]');
+    sl.Add('Score  ' + IntToStr(Score));
+    sl.Add('Lives  ' + IntToStr(Life));
+    sl.Add('Level  ' + IntToStr(Level));
+    sl.Add('Mode   ' + IntToStr(Ord(GameMode)));
+    LevelData.SaveToStrings(sl2);
+    sl2.Delete(0); // Signature
+    sl.AddStrings(sl2);
+  finally
+    FreeAndNil(sl2);
+  end;
+end;
+
+procedure TSaveData.LoadFromStrings(sl: TStrings);
+var
+  curline: Integer;
+begin
+  if (sl.Strings[0] = '; SpaceMission 1.0') and
+     (sl.Strings[1] = '; SAV-File') then
+  begin
+    Score    := StrToInt(sl.Strings[2]);
+    Life     := StrToInt(sl.Strings[3]);
+    Level    := StrToInt(sl.Strings[4]);
+    GameMode := TGameMode(StrToInt(sl.Strings[5]));
+    if Assigned(LevelData) then FreeAndNil(LevelData);
+  end
+  else if SameText(sl.Strings[0], '[SpaceMission Savegame, Format 1.2]') then
+  begin
+    Score    := 0;
+    Life     := 0;
+    Level    := 0;
+    GameMode := gmUnknown;
+    for curline := 1 to sl.Count-1 do
+    begin
+      // 1234567890123456789012345678901234567890
+      // 123456 123456 123456 123456 123456 ; Kommentar
+      if (sl.Strings[curline].Trim = '') or
+         (Copy(sl.Strings[curline], 1, 1) = ';') then
+        // Do nothing
+      else if Copy(sl.Strings[curline], 1, 6).TrimRight = 'Score' then
+      begin
+        Score := StrToInt(TrimRight(Copy(sl.Strings[curline], 8, 6)))
+      end
+      else if Copy(sl.Strings[curline], 1, 6).TrimRight = 'Lives' then
+      begin
+        Life := StrToInt(TrimRight(Copy(sl.Strings[curline], 8, 6)))
+      end
+      else if Copy(sl.Strings[curline], 1, 6).TrimRight = 'Level' then
+      begin
+        Level := StrToInt(TrimRight(Copy(sl.Strings[curline], 8, 6)))
+      end
+      else if Copy(sl.Strings[curline], 1, 6).TrimRight = 'Mode' then
+      begin
+        GameMode := TGameMode(StrToInt(TrimRight(Copy(sl.Strings[curline], 8, 6))))
+      end;
+    end;
+    if Assigned(LevelData) then FreeAndNil(LevelData);
+    LevelData := TLevelData.Create;
+    LevelData.LoadFromStrings(sl);
+  end
+  else
+  begin
+    raise Exception.Create('Spielstand-Format nicht unterstützt oder Datei beschädigt');
+  end;
+end;
+
+procedure TSaveData.LoadFromFile(filename: string);
+var
+  sl: TStringList;
+begin
+  sl := TStringList.Create;
+  try
+    sl.LoadFromFile(filename);
+    LoadFromStrings(sl);
+  finally
+    FreeAndNil(sl);
+  end;
+end;
+
+procedure TSaveData.SaveToFile(filename: string);
+var
+  sl: TStringList;
+begin
+  sl := TStringList.Create;
+  try
+    SaveToStrings(sl);
+    sl.SaveToFile(filename);
+  finally
+    FreeAndNil(sl);
   end;
 end;
 

@@ -6,6 +6,8 @@ const
   ProgramVersion = '1.2';
   RasterW = 48;
   RasterH = 32;
+  MaxPossibleEnemyLives = 999;
+  MaxPossibleLevels = 9999;
 
 type
   // DirectX\Music.dxm

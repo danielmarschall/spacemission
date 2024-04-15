@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, ExtCtrls, Menus, DIB, DXClass, DXSprite, DXDraws, DXInput, DXSounds,
   ShellAPI, wininet, DirectX{$IF CompilerVersion >= 23.0},
-  System.UITypes{$IFEND}, ComLevelReader, ComSaveGameReader, DirectMusic, Global;
+  System.UITypes{$IFEND}, ComLevelReader, DirectMusic, Global;
 
 type
   TGameScene = (
@@ -251,7 +251,6 @@ type
     FFrame, FAngle, FCounter, FEnemyAdventPos: Integer;
     PlayerSprite: TPlayerSprite;
     TimerCS: TRTLCriticalSection;
-    LevelData: TLevelData;
     procedure StartScene(Scene: TGameScene);
     procedure EndScene;
     procedure BlinkStart;
@@ -279,8 +278,10 @@ type
     FLife: integer;
     FLifeAtLevelStart: integer;
     FScoreAtLevelStart: integer;
+    FLevelDataAlreadyLoadedAtLevelStart: boolean;
     FLevel: integer;
     FGameMode: TGameMode;
+    FLevelDataAlreadyLoaded: boolean;
     FBossLife: integer;
     FRestEnemies: integer;
     FCheat: boolean;
@@ -294,6 +295,7 @@ type
     dxinput: tdxinput;
     dxtimer: tdxtimer;
     { Level-Routinen }
+    LevelData: TLevelData;
     procedure NewLevel(lev: integer);
     procedure ResetLevelData;
     { Musik-Routinen }
@@ -647,6 +649,7 @@ begin
     begin
       Dead;
       inc(mainform.FLevel);
+      MainForm.FLevelDataAlreadyLoaded := false;
       MainForm.FNextScene := gsNewLevel;
       MainForm.PlaySound(smsSceneMov, false);
       MainForm.PalleteAnim(RGBQuad(0, 0, 0), 300);
@@ -1330,16 +1333,21 @@ begin
   SoundInit;
   MusicInit;
   ResetLevelData;
-  if (paramcount = 0) and (fileexists(paramstr(1))) then // (paramcount > 0)
+  if (paramcount > 0) and (fileexists(paramstr(1))) and (ExtractFileExt(paramstr(1)).ToLower = '.sav') then
   begin
     SavGame := TSaveData.Create;
     try
       try
-        SavGame.Load(paramstr(1));
-        mainform.FScore := SavGame.FScore;
-        mainform.FLife := SavGame.FLife;
-        mainform.FLevel := SavGame.FLevel;
-        mainform.FGameMode := SavGame.FGameMode;
+        SavGame.LoadFromFile(paramstr(1));
+        mainform.FScore := SavGame.Score;
+        mainform.FLife := SavGame.Life;
+        mainform.FLevel := SavGame.Level;
+        mainform.FGameMode := SavGame.GameMode;
+        MainForm.FLevelDataAlreadyLoaded := true; // do not call NewLevel() in StartSceneNewLevel
+        if Assigned(SavGame.LevelData) then
+        begin
+          mainform.LevelData.Assign(SavGame.LevelData);
+        end;
       except
         on E: Exception do
         begin
@@ -1734,11 +1742,13 @@ begin
   FLife := StartLives;
   FLevel := 0;
   FScore := 0;
+  FLevelDataAlreadyLoaded := false;
   FNotSave := true;
   Cheat.enabled := false;
   Neustart.enabled := false;
   GamePause.enabled := false;
   GameStart.enabled := false;
+  Spielstand.Enabled := true;
   Spielgeschwindigkeit.enabled := false;
   mainform.Visible := true;
   MusicSwitchTrack(smmTitle);
@@ -1750,9 +1760,11 @@ procedure TMainForm.StartSceneMain;
 begin
   sleep(500);
   FCounter := 0;
-  NewLevel(FLevel);
-  FLifeAtLevelStart := FLife;
-  FScoreAtLevelStart := FScore;
+  if not FLevelDataAlreadyLoaded then NewLevel(FLevel);
+  FRestEnemies := Length(LevelData.EnemyAdventTable);
+  FLifeAtLevelStart := FLife;     // Das ist wichtig, wenn man neu starten möchte
+  FScoreAtLevelStart := FScore;   //
+  FLevelDataAlreadyLoadedAtLevelStart := FLevelDataAlreadyLoaded;
   BossExists := false;
   MusicSwitchTrack(smmGame);
   FEnemyAdventPos := 0;
@@ -1838,6 +1850,7 @@ begin
   Neustart.enabled := true;
   GamePause.enabled := true;
   GameStart.enabled := true;
+  Spielstand.Enabled := true;
   Spielgeschwindigkeit.enabled := true;
 end;
 
@@ -1846,6 +1859,7 @@ begin
   sleep(500);
   FNotSave := true;
   Cheat.enabled := false;
+  Spielstand.Enabled := false; // Wenn man speichert, würde man LevelAdventTable vom vorherigen Level machen, das wär müll!
   Spielgeschwindigkeit.enabled := false;
   Neustart.enabled := false;
   GamePause.enabled := false;
@@ -1858,6 +1872,7 @@ begin
   sleep(500);
   FNotSave := true;
   Cheat.enabled := false;
+  Spielstand.Enabled := false; // Wenn man speichert, würde man LevelAdventTable vom vorherigen Level machen, das wär müll!
   Spielgeschwindigkeit.enabled := false;
   Neustart.enabled := false;
   GamePause.enabled := false;
@@ -1910,6 +1925,7 @@ const
 var
   act: integer;
   Enemies: array[1..27] of TEnemyType;
+  numEnemies: integer;
   e: TEnemyAdvent;
   bossPosition: integer;
 begin
@@ -1944,9 +1960,9 @@ begin
     Enemies[25] := etEnemyMeteor;
     Enemies[26] := etEnemyUFO;
     Enemies[27] := etEnemyAttacker;
-    FRestEnemies := lev*ADDITIONAL_ENEMIES_PER_LEVEL;
-    SetLength(LevelData.EnemyAdventTable, FRestEnemies);
-    for act := 0 to FRestEnemies-1 do
+    numEnemies := lev*ADDITIONAL_ENEMIES_PER_LEVEL;
+    SetLength(LevelData.EnemyAdventTable, numEnemies);
+    for act := 0 to numEnemies-1 do
     begin
       e.enemyType := Enemies[min(random(lev+2)+1, High(Enemies))];
       if e.enemyType = etEnemyAttacker2 then
@@ -1984,12 +2000,12 @@ begin
     else if lev < 10 then
     begin
       // Level 5-9: Boss is at the end of the level
-      bossPosition := FRestEnemies-1;
+      bossPosition := numEnemies-1;
     end
     else
     begin
       // Starting with Level 10: Boss at 75% of the level
-      bossPosition := round(0.75 * FRestEnemies);
+      bossPosition := round(0.75 * numEnemies);
     end;
 
     if bossPosition >= 0 then
@@ -2001,8 +2017,6 @@ begin
       e.lifes := lev*5;
       LevelData.EnemyAdventTable[bossPosition] := e;
     end;
-
-    Assert(FRestEnemies = Length(LevelData.EnemyAdventTable));
     {$ENDREGION}
   end
   else
@@ -2011,8 +2025,7 @@ begin
     if fileexists(GetLevelFileName(lev)) then
     begin
       try
-        LevelData.Load(GetLevelFileName(lev));
-        FRestEnemies := Length(LevelData.EnemyAdventTable);
+        LevelData.LoadFromFile(GetLevelFileName(lev));
       except
         showmessage(Format(LNG_LEVEL_INVALID, [lev]));
         ResetLevelData;
@@ -2083,7 +2096,6 @@ begin
       //PlaySound('Frage', False);
       exit;
     end;
-    NewLevel(FLevel);
     PlaySound(smsSceneMov, False);
     PalleteAnim(RGBQuad(0, 0, 0), 300);
     Sleep(200);
@@ -2141,20 +2153,19 @@ begin
   if FNextScene=gsNone then
   begin
     SpriteEngine.Draw;
+    DXDraw.Surface.Canvas.Brush.Style := bsClear;
+    DXDraw.Surface.Canvas.Font.Size := 20;
     if MainForm.flife > 0 then
     begin
-      DXDraw.Surface.Canvas.Brush.Style := bsClear;
-      DXDraw.Surface.Canvas.Font.Size := 20;
-      DXDraw.Surface.Canvas.Font.Color := clOlive;
-
       {$REGION 'Anzeige Punkte'}
+      DXDraw.Surface.Canvas.Font.Color := clOlive;
       DXDraw.Surface.Canvas.Textout(9, 9, 'Punkte: ' + FloatToStrF(FScore,ffNumber,14,0));
       DXDraw.Surface.Canvas.Font.Color := clYellow;
       DXDraw.Surface.Canvas.Textout(10, 10, 'Punkte: ' + FloatToStrF(FScore,ffNumber,14,0));
-      DXDraw.Surface.Canvas.Font.Color := clMaroon;
       {$ENDREGION}
 
       {$REGION 'Anzeige Level'}
+      DXDraw.Surface.Canvas.Font.Color := clMaroon;
       DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-141, 9, 'Level: ' + IntToStr(MainForm.flevel));
       DXDraw.Surface.Canvas.Font.Color := clRed;
       DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-140, 10, 'Level: ' + IntToStr(MainForm.flevel));
@@ -2335,10 +2346,13 @@ begin
   Neustart.enabled := false;
   GamePause.enabled := false;
   GameStart.enabled := true;
+  Spielstand.Enabled := false; // Wenn man speichert, würde man LevelAdventTable vom vorherigen Level machen, das wär müll!
   Spielgeschwindigkeit.enabled := false;
   BossExists := false;
   Spielgeschwindigkeit.enabled := false;
-  if ((FGameMode=gmLevels) and (not fileexists(GetLevelFileName(FLevel)))) {or ((FGameMode=gmRandom) and (FLevel > 25))} then
+  if ((FGameMode=gmLevels) and (not fileexists(GetLevelFileName(FLevel))))
+     // or ((FGameMode=gmRandom) and (FLevel > 25))
+     or (FLevel > MaxPossibleLevels) then
   begin
     //PlaySound('SceneMov', False);
     PalleteAnim(RGBQuad(0, 0, 0), 300);
@@ -2440,15 +2454,11 @@ begin
 end;
 
 procedure TMainForm.LevelNeuStarten;
-var
-  tmpLifeAtLevelStart, tmpScoreAtLevelStart: integer;
 begin
-  NewLevel(FLevel);
-  tmpLifeAtLevelStart := FLifeAtLevelStart;
-  tmpScoreAtLevelStart := FScoreAtLevelStart;
   FNextScene := gsNewLevel;
-  FLife := tmpLifeAtLevelStart;
-  FScore := tmpScoreAtLevelStart;
+  FLife := FLifeAtLevelStart;
+  FScore := FScoreAtLevelStart;
+  FLevelDataAlreadyLoaded := FLevelDataAlreadyLoaded;
 end;
 
 procedure TMainForm.NeustartClick(Sender: TObject);

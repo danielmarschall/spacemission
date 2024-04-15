@@ -4,8 +4,8 @@ object MainForm: TMainForm
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Leveleditor'
-  ClientHeight = 519
-  ClientWidth = 749
+  ClientHeight = 518
+  ClientWidth = 745
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -35,8 +35,8 @@ object MainForm: TMainForm
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 500
-    Width = 749
+    Top = 499
+    Width = 745
     Height = 19
     Panels = <>
     SimplePanel = True
@@ -44,15 +44,19 @@ object MainForm: TMainForm
       ' Zeigen Sie mit dem Mauszeiger auf eine Einheit, um deren Eigens' +
       'chaften anzuzeigen...'
     OnMouseMove = DXDrawMouseMove
+    ExplicitTop = 498
+    ExplicitWidth = 741
   end
   object SidePanel: TPanel
-    Left = 640
+    Left = 636
     Top = 0
     Width = 109
-    Height = 500
+    Height = 499
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitLeft = 632
+    ExplicitHeight = 498
     object Bevel1: TBevel
       Left = 4
       Top = 200
@@ -2005,8 +2009,8 @@ object MainForm: TMainForm
       Top = 355
       Width = 81
       Height = 22
-      MaxValue = 999
-      MinValue = 1
+      MaxValue = 0
+      MinValue = 0
       TabOrder = 8
       Value = 1
     end

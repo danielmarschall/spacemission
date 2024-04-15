@@ -222,6 +222,10 @@ begin
 
   { VCL-Ersatz ende }
 
+  LivesEdit.MinValue := 1;
+  LivesEdit.MaxValue := MaxPossibleEnemyLives;
+  LivesEdit.Value := 1;
+
   Enemy1.Checked := true;
   EnemyClick(Enemy1);
   // Leeres Level am Anfang braucht keine Beenden-Bestätigung.
@@ -233,10 +237,10 @@ begin
   LevData := TLevelData.create;
   ProgramInit;
   DestroyLevel;
-  if (paramcount > 0) and (fileexists(paramstr(1))) then
+  if (paramcount > 0) and (fileexists(paramstr(1))) and (ExtractFileExt(paramstr(1)).ToLower = '.lev') then
   begin
     try
-      LevData.Load(paramstr(1));
+      LevData.LoadFromFile(paramstr(1));
     except
       on E: Exception do
       begin
@@ -252,11 +256,11 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
-  LevData.Free;
-  //spriteengine.Free;
-  dxtimer.Free;
-  imagelist.Free;
-  dxdraw.free;
+  FreeAndNil(LevData);
+  //FreeAndNil(spriteengine);
+  FreeAndNil(dxtimer);
+  FreeAndNil(imagelist);
+  FreeAndNil(dxdraw);
 end;
 
 procedure TMainForm.BeendenClick(Sender: TObject);
@@ -450,8 +454,11 @@ end;
 
 procedure TMainForm.FormShow(Sender: TObject);
 begin
-  SplashForm.Hide;
-  SplashForm.Free;
+  if Assigned(SplashForm) then
+  begin
+    SplashForm.Hide;
+    FreeAndNil(SplashForm);
+  end;
 
   dxtimer.Enabled := true;
   dxtimer.ActiveOnly := true;
@@ -499,7 +506,7 @@ begin
     begin
       for i := 1 to NumEnemyTypes do
       begin
-        for j := 0 to 999 do
+        for j := 0 to MaxPossibleEnemyLives do
         begin
           if boss then
           begin
@@ -542,7 +549,7 @@ begin
   begin
     for i := 1 to NumEnemyTypes do
     begin
-      for j := 0 to 999 do
+      for j := 0 to MaxPossibleEnemyLives do
       begin
         if boss and (TEnemyType(i) = etEnemyBoss) then
         begin
@@ -617,12 +624,12 @@ var
   i: integer;
 begin
   // Just for internal/development purposes
-  for i := 1 to 9999 do
+  for i := 1 to MaxPossibleLevels do
   begin
     if FileExists('Levels\Level '+IntToStr(i)+'.lev') then
     begin
-      LevData.Load('Levels\Level '+IntToStr(i)+'.lev');
-      LevData.Save('Levels\Level '+IntToStr(i)+'.lev');
+      LevData.LoadFromFile('Levels\Level '+IntToStr(i)+'.lev');
+      LevData.SaveToFile('Levels\Level '+IntToStr(i)+'.lev');
     end;
   end;
 end;
@@ -677,7 +684,7 @@ begin
   breaked := false;
   for i := 1 to NumEnemyTypes do
   begin
-    for j := 0 to 999 do
+    for j := 0 to MaxPossibleEnemyLives do
     begin
       if boss and (TEnemyType(i) = etEnemyBoss) then
       begin

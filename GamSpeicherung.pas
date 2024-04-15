@@ -52,7 +52,7 @@ var
 implementation
 
 uses
-  Global, GamMain, ComSaveGameReader, ActiveX, ShlObj;
+  Global, GamMain, ComLevelReader, ActiveX, ShlObj;
 
 {$R *.DFM}
 
@@ -172,11 +172,16 @@ begin
     exit;}
   SavGame := TSaveData.Create;
   try
-    SavGame.Load(IncludeTrailingPathDelimiter(GetSpielstandVerzeichnis)+LevelListBox.Items.strings[LevelListBox.itemindex]+'.sav');
-    mainform.FScore := SavGame.FScore;
-    mainform.FLife := SavGame.FLife;
-    mainform.FLevel := SavGame.FLevel;
-    mainform.FGameMode := SavGame.FGameMode;
+    SavGame.LoadFromFile(IncludeTrailingPathDelimiter(GetSpielstandVerzeichnis)+LevelListBox.Items.strings[LevelListBox.itemindex]+'.sav');
+    mainform.FScore := SavGame.Score;
+    mainform.FLife := SavGame.Life;
+    mainform.FLevel := SavGame.Level;
+    mainform.FGameMode := SavGame.GameMode;
+    MainForm.FLevelDataAlreadyLoaded := true; // do not call NewLevel() in StartSceneNewLevel
+    if Assigned(SavGame.LevelData) then
+    begin
+      MainForm.LevelData.Assign(SavGame.LevelData);
+    end;
   finally
     FreeAndNil(SavGame);
   end;
@@ -222,11 +227,13 @@ begin
 
   SavGame := TSaveData.Create;
   try
-    SavGame.FScore := mainform.FScore;
-    SavGame.FLife := mainform.FLife;
-    SavGame.FLevel := mainform.FLevel;
-    SavGame.FGameMode := mainform.FGameMode;
-    SavGame.Save(IncludeTrailingPathDelimiter(GetSpielstandVerzeichnis)+LevelName.text+'.sav');
+    SavGame.Score := mainform.FScoreAtLevelStart;//mainform.FScore;
+    SavGame.Life := mainform.FLifeAtLevelStart;//mainform.FLife;
+    SavGame.Level := mainform.FLevel;
+    SavGame.GameMode := mainform.FGameMode;
+    if not Assigned(SavGame.LevelData) then SavGame.LevelData := TLevelData.Create;
+    SavGame.LevelData.Assign(mainForm.LevelData);
+    SavGame.SaveToFile(IncludeTrailingPathDelimiter(GetSpielstandVerzeichnis)+LevelName.text+'.sav');
   finally
     FreeAndNil(SavGame);
   end;
@@ -238,6 +245,7 @@ procedure TSpeicherungForm.LevelListBoxClick(Sender: TObject);
 var
   SavGame: TSaveData;
   Punkte, Leben, Level: integer;
+  BeinhaltetLevelDaten: boolean;
   Art: TGameMode;
 begin
   ladenbtn.enabled := true;
@@ -267,11 +275,12 @@ begin
   SavGame := TSaveData.Create;
   try
     try
-      SavGame.Load(IncludeTrailingPathDelimiter(GetSpielstandVerzeichnis)+LevelListBox.Items.strings[LevelListBox.itemindex]+'.sav');
-      Punkte := SavGame.FScore;
-      Leben := SavGame.FLife;
-      Level := SavGame.FLevel;
-      Art := SavGame.FGameMode;
+      SavGame.LoadFromFile(IncludeTrailingPathDelimiter(GetSpielstandVerzeichnis)+LevelListBox.Items.strings[LevelListBox.itemindex]+'.sav');
+      Punkte := SavGame.Score;
+      Leben := SavGame.Life;
+      Level := SavGame.Level;
+      Art := SavGame.GameMode;
+      BeinhaltetLevelDaten := Assigned(SavGame.LevelData);
     except
       liu.visible := true;
       ladenbtn.enabled := false;
@@ -288,9 +297,11 @@ begin
   li4a.visible := true;
   li4b.visible := true;
   if Art = gmLevels then
-    li1.caption := 'Das Level ist ein normales Level.'
+    li1.caption := 'Das Level ist ein norm. Level'
   else
-    li1.caption := 'Das Level ist ein Zufallslevel.';
+    li1.caption := 'Das Level ist ein Zufallslevel';
+  if BeinhaltetLevelDaten then
+    li1.Caption := li1.Caption + ' mit Karte';
   li3b.caption := inttostr(Level);
   li4b.caption := inttostr(Leben);
   li2b.caption := inttostr(Punkte);

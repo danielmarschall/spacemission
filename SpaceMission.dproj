@@ -1034,7 +1034,6 @@
         </DCCReference>
         <DCCReference Include="ComLevelReader.pas"/>
         <DCCReference Include="Global.pas"/>
-        <DCCReference Include="ComSaveGameReader.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

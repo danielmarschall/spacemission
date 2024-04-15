@@ -26,6 +26,7 @@ SpaceMission 1.2:
 - Anzeige Restliche Einheiten ist nun Einzeige Einheiten gesamt, d.h. auch die, die auf dem Bildschirm sind (außer Boss)
 - Zufallslevel: Zufallslevel größer als Level 25 ist nun möglich.
 - Man kann nun nicht mehr "Game over" gehen. Das Level startet neu, wenn man gestorben ist.
+- Spielstände beinhalten nun die Original-Leveldateien, sodass das wiederherzustellende Spiel exakt gleich aussieht
 
 Version 1.1:
 - Bugfixes

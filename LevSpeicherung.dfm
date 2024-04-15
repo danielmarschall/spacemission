@@ -3,8 +3,8 @@ object SpeicherungForm: TSpeicherungForm
   Top = 153
   BorderStyle = bsDialog
   Caption = 'Levels'
-  ClientHeight = 408
-  ClientWidth = 445
+  ClientHeight = 424
+  ClientWidth = 447
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,6 +12,7 @@ object SpeicherungForm: TSpeicherungForm
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   Position = poMainFormCenter
+  OnCreate = FormCreate
   OnHide = FormHide
   OnShow = FormShow
   TextHeight = 13
@@ -25,23 +26,23 @@ object SpeicherungForm: TSpeicherungForm
   object Label2: TLabel
     Left = 8
     Top = 72
-    Width = 58
+    Width = 34
     Height = 13
-    Caption = 'Spielst'#228'nde:'
+    Caption = 'Levels:'
   end
   object Label3: TLabel
     Left = 8
     Top = 336
-    Width = 92
+    Width = 67
     Height = 13
-    Caption = 'Levelinformationen:'
+    Caption = 'Informationen:'
   end
   object Label1: TLabel
     Left = 8
     Top = 20
-    Width = 78
+    Width = 55
     Height = 13
-    Caption = 'Spielstandname:'
+    Caption = 'Levelname:'
   end
   object LadenBtn: TButton
     Left = 336
@@ -83,7 +84,7 @@ object SpeicherungForm: TSpeicherungForm
   end
   object AbbrechenBtn: TButton
     Left = 336
-    Top = 376
+    Top = 391
     Width = 105
     Height = 25
     Cancel = True
@@ -106,7 +107,7 @@ object SpeicherungForm: TSpeicherungForm
     Left = 112
     Top = 336
     Width = 201
-    Height = 65
+    Height = 80
     BevelOuter = bvLowered
     Color = clWindow
     TabOrder = 6
@@ -186,9 +187,9 @@ object SpeicherungForm: TSpeicherungForm
     Top = 16
     Width = 201
     Height = 22
-    MaxValue = 9999
-    MinValue = 1
+    MaxValue = 0
+    MinValue = 0
     TabOrder = 7
-    Value = 1
+    Value = 0
   end
 end

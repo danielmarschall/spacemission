@@ -2,7 +2,9 @@ program SpaceMission;
 
 uses
   Windows,
-  {$IF CompilerVersion >= 23.0}System.UITypes,{$IFEND}
+  {$IF CompilerVersion >= 23.0}
+  System.UITypes,
+  {$IFEND }
   Forms,
   Dialogs,
   SysUtils,
@@ -12,8 +14,7 @@ uses
   ComInfo in 'ComInfo.pas' {InfoForm},
   GamCheat in 'GamCheat.pas' {CheatForm},
   ComLevelReader in 'ComLevelReader.pas',
-  Global in 'Global.pas',
-  ComSaveGameReader in 'ComSaveGameReader.pas';
+  Global in 'Global.pas';
 
 {$R *.RES}
 

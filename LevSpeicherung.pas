@@ -38,6 +38,7 @@ type
     procedure AbbrechenBtnClick(Sender: TObject);
     procedure LevelNameChange(Sender: TObject);
     procedure FormHide(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   public
     procedure SearchLevels;
     function RightStr(str: string; count: integer): string;
@@ -68,7 +69,7 @@ begin
   liw.visible := true;
   LadenBtn.enabled := false;
   LoeschenBtn.enabled := false;
-  for i := 1 to 9999 do
+  for i := 1 to MaxPossibleLevels do
   begin
     if fileexists(GetLevelFileName(i)) then
       LevelListBox.items.Add(ChangeFileExt(ExtractFileName(GetLevelFileName(i)),''));
@@ -111,7 +112,7 @@ begin
     exit;}
 
   MainForm.DestroyLevel;
-  MainForm.LevData.Load(
+  MainForm.LevData.LoadFromFile(
     IncludeTrailingPathDelimiter(ExtractFilePath(GetLevelFileName(1)))+
     LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
 
@@ -159,7 +160,7 @@ begin
 
   // Speichern
   MainForm.LevData.LevelEditorLength := MainForm.ScrollBar.Max;
-  MainForm.LevData.Save(GetLevelFileName(LevelNumber.Value));
+  MainForm.LevData.SaveToFile(GetLevelFileName(LevelNumber.Value));
 
   // Nacharbeiten
   MainForm.LevChanged := false;
@@ -196,7 +197,7 @@ begin
   LevelData := TLevelData.Create;
   try
     try
-      LevelData.Load(IncludeTrailingPathDelimiter(ExtractFilePath(GetLevelFileName(1)))+
+      LevelData.LoadFromFile(IncludeTrailingPathDelimiter(ExtractFilePath(GetLevelFileName(1)))+
         LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
 
       boss := false;
@@ -256,6 +257,13 @@ end;
 procedure TSpeicherungForm.LevelNameChange(Sender: TObject);
 begin
   {...}
+end;
+
+procedure TSpeicherungForm.FormCreate(Sender: TObject);
+begin
+  LevelNumber.MinValue := 1;
+  LevelNumber.MaxValue := MaxPossibleLevels;
+  LevelNumber.Value := 1;
 end;
 
 procedure TSpeicherungForm.FormHide(Sender: TObject);
