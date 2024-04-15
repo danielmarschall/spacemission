@@ -1,6 +1,7 @@
 [SpaceMission Level, Format 1.2]
-; Level 17 by Andreas Kübelsbeck #6
-Width  1200 
+Name   Level 17
+Author Andreas Kübelsbeck
+Width  1200
 Enemy  3      144    128    1      
 Enemy  3      336    352    1      
 Enemy  4      432    128    0      

@@ -1,6 +1,7 @@
 [SpaceMission Level, Format 1.2]
-; Level 25 by Patrick Büssecker #12
-Width  1200 
+Name   Level 25
+Author Patrick Büssecker
+Width  1200
 Enemy  4      240    32     0      
 Enemy  1      336    96     5      
 Enemy  4      384    288    0      

@@ -1,6 +1,7 @@
 [SpaceMission Level, Format 1.2]
-; Level 7 by Andreas Kübelsbeck #2
-Width  1200 
+Name   Level 7
+Author Andreas Kübelsbeck
+Width  1200
 Enemy  1      48     256    1      
 Enemy  1      144    416    1      
 Enemy  1      192    96     1      

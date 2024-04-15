@@ -1,6 +1,7 @@
 [SpaceMission Level, Format 1.2]
-; Level 19 by Andreas Kübelsbeck #8
-Width  1200 
+Name   Level 19
+Author Andreas Kübelsbeck
+Width  1200
 Enemy  1      240    128    1      
 Enemy  1      288    64     1      
 Enemy  1      480    288    1      

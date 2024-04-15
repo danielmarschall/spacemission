@@ -1,6 +1,7 @@
 [SpaceMission Level, Format 1.2]
-; Level 28 by Daniel Marschall #1
-Width  1200 
+Name   Level 28
+Author Daniel Marschall
+Width  1200
 Enemy  5      96     128    1      
 Enemy  2      240    224    30     
 Enemy  4      288    352    0      

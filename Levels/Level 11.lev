@@ -1,6 +1,7 @@
 [SpaceMission Level, Format 1.2]
-; Level 11 by Andreas Kübelsbeck #3
-Width  1200 
+Name   Level 11
+Author Andreas Kübelsbeck
+Width  1200
 Enemy  1      48     192    1      
 Enemy  1      96     256    1      
 Enemy  5      240    128    3      

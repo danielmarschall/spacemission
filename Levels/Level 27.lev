@@ -1,6 +1,7 @@
 [SpaceMission Level, Format 1.2]
-; Level 27 by Patrick Büssecker #14
-Width  1200 
+Name   Level 27
+Author Patrick Büssecker
+Width  1200
 Enemy  4      48     32     0      
 Enemy  4      288    384    0      
 Enemy  4      480    288    0      

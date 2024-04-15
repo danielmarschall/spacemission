@@ -1,6 +1,7 @@
 [SpaceMission Level, Format 1.2]
-; Level 20 by Andreas Kübelsbeck #9
-Width  1200 
+Name   Level 20
+Author Andreas Kübelsbeck
+Width  1200
 Enemy  1      96     352    1      
 Enemy  1      240    224    1      
 Enemy  1      528    32     1      

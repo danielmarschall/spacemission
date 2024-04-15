@@ -1,6 +1,7 @@
 [SpaceMission Level, Format 1.2]
-; Level 4 by Patrick Büssecker #3
-Width  1200 
+Name   Level 4
+Author Patrick Büssecker
+Width  1200
 Enemy  1      480    224    1      
 Enemy  1      528    160    1      
 Enemy  5      528    192    1      

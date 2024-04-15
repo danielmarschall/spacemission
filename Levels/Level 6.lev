@@ -1,6 +1,7 @@
 [SpaceMission Level, Format 1.2]
-; Level 6 by Patrick Büssecker #4
-Width  1200 
+Name   Level 6
+Author Patrick Büssecker
+Width  1200
 Enemy  1      576    64     1      
 Enemy  1      576    160    1      
 Enemy  1      576    224    1      

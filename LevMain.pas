@@ -256,11 +256,11 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
+  FreeAndNil(dxdraw);
   FreeAndNil(LevData);
   //FreeAndNil(spriteengine);
   FreeAndNil(dxtimer);
   FreeAndNil(imagelist);
-  FreeAndNil(dxdraw);
 end;
 
 procedure TMainForm.BeendenClick(Sender: TObject);
@@ -270,12 +270,12 @@ end;
 
 procedure TMainForm.DXDrawInitialize(Sender: TObject);
 begin
-  DXTimer.Enabled := True;
+  if Assigned(DXTimer) then DXTimer.Enabled := True;
 end;
 
 procedure TMainForm.DXDrawFinalize(Sender: TObject);
 begin
-  DXTimer.Enabled := False;
+  if Assigned(DXTimer) then DXTimer.Enabled := False;
 end;
 
 procedure TMainForm.DXTimerTimer(Sender: TObject; LagCount: Integer);

@@ -1,6 +1,7 @@
 [SpaceMission Level, Format 1.2]
-; Level 24 by Andreas Kübelsbeck #12
-Width  1200 
+Name   Level 24
+Author Andreas Kübelsbeck
+Width  1200
 Enemy  1      192    64     1      
 Enemy  1      288    64     1      
 Enemy  1      288    192    1      

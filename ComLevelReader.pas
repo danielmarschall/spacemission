@@ -35,6 +35,8 @@ type
   public
     RasterErzwingen: boolean;
     LevelEditorLength: integer;
+    LevelName: string;
+    LevelAuthor: string;
     EnemyAdventTable: array of TEnemyAdvent;
     function IndexOfEnemy(x,y:integer;enemyType:TEnemyType;lifes:integer): integer;
     procedure AddEnemy(x,y:integer;enemyType:TEnemyType;lifes:integer);
@@ -98,6 +100,8 @@ begin
   begin
     DestLevelData.RasterErzwingen := Self.RasterErzwingen;
     DestLevelData.LevelEditorLength := Self.LevelEditorLength;
+    DestLevelData.LevelName := Self.LevelName;
+    DestLevelData.LevelAuthor := Self.LevelAuthor;
     SetLength(DestLevelData.EnemyAdventTable, Length(Self.EnemyAdventTable));
     for i := 0 to Length(Self.EnemyAdventTable) do
     begin
@@ -114,6 +118,8 @@ procedure TLevelData.Clear;
 begin
   SetLength(EnemyAdventTable, 0);
   LevelEditorLength := DefaultLevelLength;
+  LevelName := '';
+  LevelAuthor := '';
 end;
 
 function TLevelData.CountEnemies: integer;
@@ -208,7 +214,11 @@ var
 begin
   Clear;
 
-  RasterErzwingen := true;
+  RasterErzwingen := true; // wichtig für AddEnemy()
+
+  LevelEditorLength := DefaultLevelLength;
+  LevelName := '';
+  LevelAuthor := '';
 
   if sl.Strings[0] = '; SpaceMission 0.3' then
   begin
@@ -283,7 +293,6 @@ begin
   begin
     RasterErzwingen := SameText(sl.Strings[0], '[SpaceMission Level, Format 1.2]');
     {$REGION 'Level format 1.2'}
-    LevelEditorLength := DefaultLevelLength;
     for curline := 1 to sl.Count-1 do
     begin
       // 1234567890123456789012345678901234567890
@@ -294,6 +303,14 @@ begin
       else if Copy(sl.Strings[curline], 1, 6).TrimRight = 'Width' then
       begin
         LevelEditorLength := StrToInt(TrimRight(Copy(sl.Strings[curline], 8, 6)))
+      end
+      else if Copy(sl.Strings[curline], 1, 6).TrimRight = 'Name' then
+      begin
+        LevelName := TrimRight(Copy(sl.Strings[curline], 8, Length(sl.Strings[curline])))
+      end
+      else if Copy(sl.Strings[curline], 1, 6).TrimRight = 'Author' then
+      begin
+        LevelAuthor := TrimRight(Copy(sl.Strings[curline], 8, Length(sl.Strings[curline])))
       end
       else if Copy(sl.Strings[curline], 1, 6).TrimRight = 'Enemy' then
       begin
@@ -399,6 +416,8 @@ begin
   sl.Clear;
   sl.Add('[SpaceMission Level, Format 1.2]');
   sl.Add('Width  ' + IntToStr(LevelEditorLength));
+  if LevelName   <> '' then sl.Add('Name   ' + LevelName);
+  if LevelAuthor <> '' then sl.Add('Author ' + LevelAuthor);
   SortEnemies;
   for i := 0 to Length(EnemyAdventTable)-1 do
   begin

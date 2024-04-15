@@ -1,6 +1,7 @@
 [SpaceMission Level, Format 1.2]
-; Level 9 by Patrick Büssecker #6
-Width  1200 
+Name   Level 9
+Author Patrick Büssecker
+Width  1200
 Enemy  4      240    128    0      
 Enemy  4      288    352    0      
 Enemy  1      384    64     2      

@@ -1515,12 +1515,12 @@ end;
 
 procedure TMainForm.DXDrawInitialize(Sender: TObject);
 begin
-  DXTimer.Enabled := True;
+  if Assigned(DXTimer) then DXTimer.Enabled := True;
 end;
 
 procedure TMainForm.DXDrawFinalize(Sender: TObject);
 begin
-  DXTimer.Enabled := False;
+  if Assigned(DXTimer) then DXTimer.Enabled := False;
 end;
 
 procedure TMainForm.DXTimerActivate(Sender: TObject);

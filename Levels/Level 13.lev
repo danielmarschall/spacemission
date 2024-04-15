@@ -1,6 +1,7 @@
 [SpaceMission Level, Format 1.2]
-; Level 13 by Patrick Büssecker #10
-Width  1200 
+Name   Level 13
+Author Patrick Büssecker
+Width  1200
 Enemy  1      336    32     4      
 Enemy  1      336    224    4      
 Enemy  4      336    256    0      

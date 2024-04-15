@@ -1,6 +1,7 @@
 [SpaceMission Level, Format 1.2]
-; Level 21 by Andreas Kübelsbeck #10
-Width  1200 
+Name   Level 21
+Author Andreas Kübelsbeck
+Width  1200
 Enemy  6      96     64     10     
 Enemy  6      240    320    10     
 Enemy  4      432    32     0      

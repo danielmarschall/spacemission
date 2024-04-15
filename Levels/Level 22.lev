@@ -1,6 +1,7 @@
 [SpaceMission Level, Format 1.2]
-; Level 22 by Patrick Büssecker #09
-Width  1200 
+Name   Level 22
+Author Patrick Büssecker
+Width  1200
 Enemy  1      384    32     1      
 Enemy  1      384    64     1      
 Enemy  1      384    96     1      

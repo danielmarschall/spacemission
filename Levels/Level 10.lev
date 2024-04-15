@@ -1,6 +1,7 @@
 [SpaceMission Level, Format 1.2]
-; Level 10 by Patrick Büssecker #7
-Width  1200 
+Name   Level 10
+Author Patrick Büssecker
+Width  1200
 Enemy  4      192    32     0      
 Enemy  4      336    288    0      
 Enemy  4      384    96     0      
