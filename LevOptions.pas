@@ -16,6 +16,10 @@ type
     ElLabel1: TLabel;
     ElLabel2: TLabel;
     Groesse: TSpinEdit;
+    Label2: TLabel;
+    Label3: TLabel;
+    LevName: TEdit;
+    LevAuthor: TEdit;
     procedure ElPopupButton1Click(Sender: TObject);
     procedure ElPopupButton2Click(Sender: TObject);
     procedure FormHide(Sender: TObject);
@@ -36,11 +40,15 @@ uses LevMain;
 procedure TLevelForm.Aktualisieren;
 begin
   Groesse.Value := MainForm.ScrollBar.Max;
+  LevName.Text := MainForm.LevData.LevelName;
+  LevAuthor.Text := MainForm.LevData.LevelAuthor;
 end;
 
 procedure TLevelForm.ElPopupButton1Click(Sender: TObject);
 begin
   MainForm.ScrollBar.Max := Groesse.Value;
+  MainForm.LevData.LevelName := LevName.Text;
+  MainForm.LevData.LevelAuthor := LevAuthor.Text;
   MainForm.AnzeigeAct;
   close;
 end;

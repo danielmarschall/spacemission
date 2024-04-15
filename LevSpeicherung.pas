@@ -25,6 +25,7 @@ type
     li2b: TLabel;
     li2a: TLabel;
     li3b: TLabel;
+    li4: TLabel;
     liu: TLabel;
     liw: TLabel;
     LevelNumber: TSpinEdit;
@@ -66,6 +67,7 @@ begin
   li1b.visible := false;
   li2b.visible := false;
   li3b.visible := false;
+  li4.visible := false;
   liw.visible := true;
   LadenBtn.enabled := false;
   LoeschenBtn.enabled := false;
@@ -88,6 +90,7 @@ begin
     li1b.visible := false;
     li2b.visible := false;
     li3b.visible := false;
+    li4.visible := false;
     liu.visible := false;
     liw.visible := true;
     LadenBtn.enabled := false;
@@ -182,6 +185,7 @@ begin
   li1b.visible := false;
   li2b.visible := false;
   li3b.visible := false;
+  li4.visible := false;
   liu.visible := false;
   liw.visible := false;
   if (LevelListBox.items.count=0) or (LevelListBox.itemindex = -1) then
@@ -216,6 +220,7 @@ begin
       li1b.visible := true;
       li2b.visible := true;
       li3b.visible := true;
+      li4.visible := true;
       LadenBtn.enabled := true;
       LoeschenBtn.enabled := true;
       li1b.caption := inttostr(anzahlEinheiten);
@@ -224,6 +229,7 @@ begin
       else
         li2b.caption := 'Nein';
       li3b.caption := IntToStr(LevelData.LevelEditorLength) + ' Felder';
+      li4.Caption := Trim(LevelData.LevelName + ' von ' + LevelData.LevelAuthor);
     finally
       FreeAndNil(LevelData);
     end;

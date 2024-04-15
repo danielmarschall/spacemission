@@ -415,9 +415,9 @@ var
 begin
   sl.Clear;
   sl.Add('[SpaceMission Level, Format 1.2]');
-  sl.Add('Width  ' + IntToStr(LevelEditorLength));
   if LevelName   <> '' then sl.Add('Name   ' + LevelName);
   if LevelAuthor <> '' then sl.Add('Author ' + LevelAuthor);
+  sl.Add('Width  ' + IntToStr(LevelEditorLength));
   SortEnemies;
   for i := 0 to Length(EnemyAdventTable)-1 do
   begin

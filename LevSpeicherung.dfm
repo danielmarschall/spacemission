@@ -181,6 +181,13 @@ object SpeicherungForm: TSpeicherungForm
       ParentFont = False
       Visible = False
     end
+    object li4: TLabel
+      Left = 8
+      Top = 56
+      Width = 118
+      Height = 13
+      Caption = 'Name / Autor unbekannt'
+    end
   end
   object LevelNumber: TSpinEdit
     Left = 112

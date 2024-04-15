@@ -49,6 +49,20 @@ object LevelForm: TLevelForm
       Height = 13
       Caption = 'Gr'#246#223'e des Spielfeldes:'
     end
+    object Label2: TLabel
+      Left = 16
+      Top = 136
+      Width = 124
+      Height = 13
+      Caption = 'Interner Name des Levels:'
+    end
+    object Label3: TLabel
+      Left = 16
+      Top = 168
+      Width = 57
+      Height = 13
+      Caption = 'Level-Autor:'
+    end
     object Panel1: TPanel
       Left = 16
       Top = 56
@@ -95,6 +109,20 @@ object LevelForm: TLevelForm
       MinValue = 100
       TabOrder = 1
       Value = 1200
+    end
+    object LevName: TEdit
+      Left = 167
+      Top = 133
+      Width = 178
+      Height = 21
+      TabOrder = 2
+    end
+    object LevAuthor: TEdit
+      Left = 167
+      Top = 160
+      Width = 178
+      Height = 21
+      TabOrder = 3
     end
   end
 end

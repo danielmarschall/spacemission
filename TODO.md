@@ -8,7 +8,6 @@ Geplant für 1.2:
 			"MyGames" überschreibt somit "ProgramFiles" in der Logik
 			Bei Auflistungen müssen "MyGames" und "ProgramFiles" beide ausgelesen und vereint werden
 - Leveleditor "Testen" Button, um die Mission gleich zu testen (dieser erstellt am besten eine temporäre ".sav" datei, die per commandline mit SpaceMission.exe aufgerufen wird)
-- LevelEditor: Implement "Titel" and "Author" in Level Load/Save dialog and "Level settings" dialog to change it
 
 Kleinigkeiten:
 - Es wäre schön, wenn die größe der Spezialhintergründe (Planeten) abhängig von wäre, wie weit entfernt sie ist (Layer 1,2,3)
