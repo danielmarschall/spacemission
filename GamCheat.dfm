@@ -55,6 +55,7 @@ object CheatForm: TCheatForm
     Width = 115
     Height = 25
     Caption = 'OK'
+    Default = True
     TabOrder = 1
     OnClick = OKBtnClick
   end
@@ -63,6 +64,7 @@ object CheatForm: TCheatForm
     Top = 200
     Width = 113
     Height = 25
+    Cancel = True
     Caption = 'Abbrechen'
     TabOrder = 2
     OnClick = AbbBtnClick

@@ -19,6 +19,11 @@ SpaceMission 1.2:
 - Boss besiegen gibt nun 10.000 Punkte anstelle 1.000
 - Neue LEV und SAV Dateiformate
 - "ESC" Taste pausiert das Spiel und öffnet das Menü
+- "Neu starten" Menüpunkt startet nun das Level neu mit den bei Levelstart vorhandenen Punkten und Leben, anstelle von ganz vorne neu zu beginnen
+- Zufallslevel: Ab sofort 1 Einheit weniger pro Level
+- Zufallslevel: Ab sofort Level 1-4 ohne Boss, Level 5-9 mit Boss am Ende, und ab Level 10 Boss in der Mitte vom Level
+- Zufallslevel: Bei höheren Levels ist die Lebensenergie von Gegnern nun auf 20 gedeckelt
+- Anzeige Restliche Einheiten ist nun Einzeige Einheiten gesamt, d.h. auch die, die auf dem Bildschirm sind (außer Boss)
 
 Version 1.1:
 - Bugfixes

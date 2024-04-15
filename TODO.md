@@ -1,6 +1,17 @@
 
 # SpaceMission TODO
 
+Geplant für 1.2:
+- !!! Großes Problem: "Levels" Ordner wird in Program Files sein und ist damit unveränderbar. Aber wo werden die Benutzer ihr Level hinspeichern können?
+- Leveleditor "Testen" Button, um die Mission gleich zu testen
+- Spielstände sollten die Level-Information beinhalten, sodass man weiß, bei welchem Level man weiterspielen muss
+
+Kleinigkeiten:
+- Es wäre schön, wenn die größe der Spezialhintergründe (Planeten) abhängig von wäre, wie weit entfernt sie ist (Layer 1,2,3)
+- wenn man getroffen ist, sollte man blinken, sodass man sieht, ab wann man wieder verwundbar ist
+
+--- 
+
 2024 Review:
 - GitHub MarkDown Dokumente auch in Spacemission anzeigen, vielleicht in einem TMemo
 - Release 1.2 with EV CodeSign

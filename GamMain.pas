@@ -276,6 +276,8 @@ type
     FScore: Integer;
     FNotSave: boolean;
     FLife: integer;
+    FLifeAtLevelStart: integer;
+    FScoreAtLevelStart: integer;
     FLevel: integer;
     FGameMode: TGameMode;
     FBossLife: integer;
@@ -328,7 +330,7 @@ const
   conmittel = 1000 div 60; // 16
   conschwer = 1350 div 60; // 22
   conmaster = 2000 div 60; // 33
-  lives = 6;
+  StartLives = 6;
   DEFAULT_ANIMSPEED = 15/1000;
   ADDITIONAL_ENEMIES_PER_LEVEL = 75;
 
@@ -1161,7 +1163,6 @@ begin
     State := pesExploding; // not pesDead for the boss!
     FCounter := 0;
     Inc(MainForm.FScore, 100000);
-    BossExists := false;
     dec(MainForm.FBossLife);
   end
   else
@@ -1726,7 +1727,7 @@ begin
   sleep(500);
   FCheat := false;
   BossExists := false;
-  FLife := Lives;
+  FLife := StartLives;
   FLevel := 0;
   FScore := 0;
   FNotSave := true;
@@ -1746,6 +1747,8 @@ begin
   sleep(500);
   FCounter := 0;
   NewLevel(FLevel);
+  FLifeAtLevelStart := FLife;
+  FScoreAtLevelStart := FScore;
   BossExists := false;
   MusicSwitchTrack(smmGame);
   FEnemyAdventPos := 0;
@@ -1902,6 +1905,7 @@ var
   act: integer;
   Enemies: array[1..27] of TEnemyType;
   e: TEnemyAdvent;
+  bossPosition: integer;
 begin
   ResetLevelData;
   if FGameMode = gmRandom then
@@ -1934,9 +1938,9 @@ begin
     Enemies[25] := etEnemyMeteor;
     Enemies[26] := etEnemyUFO;
     Enemies[27] := etEnemyAttacker;
-    FRestEnemies := lev*ADDITIONAL_ENEMIES_PER_LEVEL+1;
+    FRestEnemies := lev*ADDITIONAL_ENEMIES_PER_LEVEL;
     SetLength(LevelData.EnemyAdventTable, FRestEnemies);
-    for act := 0 to lev*ADDITIONAL_ENEMIES_PER_LEVEL-1 do
+    for act := 0 to FRestEnemies-1 do
     begin
       e.enemyType := Enemies[min(random(lev+2)+1, High(Enemies))];
       if e.enemyType = etEnemyAttacker2 then
@@ -1951,16 +1955,44 @@ begin
       end
       else
       begin
-        e.lifes := random(lev)+1;
+        if lev > 20 then
+        begin
+          e.lifes := random(20)+1;
+        end
+        else
+        begin
+          e.lifes := random(lev)+1;
+        end;
       end;
 
       LevelData.EnemyAdventTable[act] := e;
     end;
-    e.enemyType := etEnemyBoss;
-    e.x := lev*75*30{O_o} div lev;
-    e.y := (dxdraw.surfaceheight div 2) - (MainForm.GetSpriteGraphic(smgEnemyBoss).height div 2);
-    e.lifes := lev*5;
-    LevelData.EnemyAdventTable[lev*ADDITIONAL_ENEMIES_PER_LEVEL] := e;
+
+    if lev < 5 then
+    begin
+      // Level 1-4: No boss
+      bossPosition := -1;
+    end
+    else if lev < 10 then
+    begin
+      // Level 5-9: Boss is at the end of the level
+      bossPosition := FRestEnemies-1;
+    end
+    else
+    begin
+      // Starting with Level 10: Boss is in the middle of the level
+      bossPosition := FRestEnemies div 2;
+    end;
+
+    if bossPosition >= 0 then
+    begin
+      e.enemyType := etEnemyBoss;
+      e.x := lev*75*30{O_o} div lev;
+      e.y := (dxdraw.surfaceheight div 2) - (MainForm.GetSpriteGraphic(smgEnemyBoss).height div 2);
+      e.lifes := lev*5;
+      LevelData.EnemyAdventTable[bossPosition] := e;
+    end;
+
     Assert(FRestEnemies = Length(LevelData.EnemyAdventTable));
     {$ENDREGION}
   end
@@ -2054,6 +2086,7 @@ procedure TMainForm.SceneMain;
 var
   Enemy: TSprite;
   spriteClass: TEnemyClass;
+  tmpEnemyAnzeige: integer;
 begin
   case FInterval of
     giLeicht: SpriteEngine.Move(conleicht);
@@ -2104,13 +2137,21 @@ begin
       DXDraw.Surface.Canvas.Brush.Style := bsClear;
       DXDraw.Surface.Canvas.Font.Size := 20;
       DXDraw.Surface.Canvas.Font.Color := clOlive;
+
+      {$REGION 'Anzeige Punkte'}
       DXDraw.Surface.Canvas.Textout(9, 9, 'Punkte: ' + FloatToStrF(FScore,ffNumber,14,0));
       DXDraw.Surface.Canvas.Font.Color := clYellow;
       DXDraw.Surface.Canvas.Textout(10, 10, 'Punkte: ' + FloatToStrF(FScore,ffNumber,14,0));
       DXDraw.Surface.Canvas.Font.Color := clMaroon;
+      {$ENDREGION}
+
+      {$REGION 'Anzeige Level'}
       DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-141, 9, 'Level: ' + IntToStr(MainForm.flevel));
       DXDraw.Surface.Canvas.Font.Color := clRed;
       DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-140, 10, 'Level: ' + IntToStr(MainForm.flevel));
+      {$ENDREGION}
+
+      {$REGION 'Lebensanzeige'}
       if FLife<0 then mainform.FLife := 0;
       if FCheat then
       begin
@@ -2130,6 +2171,10 @@ begin
         end;
         if Flife = 1 then BlinkUpdate;
       end;
+      {$ENDREGION}
+
+      {$REGION 'Anzeige Einheiten und Boss Leben'}
+
       {if BossExists and (FBossLife>0) then
       begin
         DXDraw.Surface.Canvas.Font.Color := clPurple;
@@ -2145,18 +2190,22 @@ begin
           DXDraw.Surface.Canvas.Font.Color := clFuchsia;
           DXDraw.Surface.Canvas.Textout(450, 440, 'Einheiten: ' + IntToStr(RestlicheEinheiten));
         end;}
+
+      tmpEnemyAnzeige := EnemyCounter{Auf Bildschirm} + FRestEnemies{In der Warteschlange};
+      if BossExists then Dec(tmpEnemyAnzeige);
+
       if BossExists and (FBossLife>0) then
       begin
-        if (FRestEnemies>0) then
+        if (tmpEnemyAnzeige>0) then
         begin
           DXDraw.Surface.Canvas.Font.Color := clGreen;
           DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-81, 'Boss: ' + IntToStr(FBossLife));
-          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Einheiten: ' + IntToStr(FRestEnemies));
+          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Einheiten: ' + IntToStr(tmpEnemyAnzeige));
           DXDraw.Surface.Canvas.Font.Color := clLime;
           DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-80, 'Boss: ' + IntToStr(FBossLife));
-          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Einheiten: ' + IntToStr(FRestEnemies));
+          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Einheiten: ' + IntToStr(tmpEnemyAnzeige));
         end;
-        if (FRestEnemies<1) then
+        if (tmpEnemyAnzeige<1) then
         begin
           DXDraw.Surface.Canvas.Font.Color := clGreen;
           DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Boss: ' + IntToStr(FBossLife));
@@ -2164,13 +2213,16 @@ begin
           DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Boss: ' + IntToStr(FBossLife));
         end;
       end;
-      if (FRestEnemies>0) and not Bossexists then
+      if (tmpEnemyAnzeige>0) and not Bossexists then
       begin
         DXDraw.Surface.Canvas.Font.Color := clGreen;
-        DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Einheiten: ' + IntToStr(FRestEnemies));
+        DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Einheiten: ' + IntToStr(tmpEnemyAnzeige));
         DXDraw.Surface.Canvas.Font.Color := clLime;
-        DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Einheiten: ' + IntToStr(FRestEnemies));
+        DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Einheiten: ' + IntToStr(tmpEnemyAnzeige));
       end;
+      {$ENDREGION}
+
+      {$REGION 'Anzeige Mission erfolgreich/gescheitert'}
       if (EnemyCounter=0) and (FRestEnemies=0) and ((BossExists and (FBossLife=0)) or not BossExists) then
       begin
         DXDraw.Surface.Canvas.Font.Color := clGreen;
@@ -2182,6 +2234,7 @@ begin
         inc(FCounter);
         if FCounter>150{200} then PlayerSprite.FlyAway;
       end;
+      {$ENDREGION}
     end
     else
     begin
@@ -2378,13 +2431,15 @@ begin
 end;
 
 procedure TMainForm.NeustartClick(Sender: TObject);
+var
+  tmpLifeAtLevelStart, tmpScoreAtLevelStart: integer;
 begin
-  FLife := Lives;
-  FLevel := 1; // ???
-  FScore := 0;
-  EnemyCounter := 0;
+  NewLevel(FLevel);
+  tmpLifeAtLevelStart := FLifeAtLevelStart;
+  tmpScoreAtLevelStart := FScoreAtLevelStart;
   StartScene(gsMain);
-  MusicSwitchTrack(smmGame);
+  FLife := tmpLifeAtLevelStart;
+  FScore := tmpScoreAtLevelStart;
 end;
 
 procedure TMainForm.LeichtClick(Sender: TObject);
