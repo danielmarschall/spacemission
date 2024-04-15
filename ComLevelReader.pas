@@ -214,8 +214,6 @@ var
 begin
   Clear;
 
-  RasterErzwingen := true; // wichtig für AddEnemy()
-
   LevelEditorLength := DefaultLevelLength;
   LevelName := '';
   LevelAuthor := '';
@@ -291,7 +289,6 @@ begin
   else if (SameText(sl.Strings[0], '[SpaceMission Level, Format 1.2]')) or
           (SameText(sl.Strings[0], '[SpaceMission Savegame, Format 1.2]')) then
   begin
-    RasterErzwingen := SameText(sl.Strings[0], '[SpaceMission Level, Format 1.2]');
     {$REGION 'Level format 1.2'}
     for curline := 1 to sl.Count-1 do
     begin
@@ -576,6 +573,7 @@ begin
     end;
     if Assigned(LevelData) then FreeAndNil(LevelData);
     LevelData := TLevelData.Create;
+    LevelData.RasterErzwingen := false;
     LevelData.LoadFromStrings(sl);
   end
   else

@@ -240,6 +240,7 @@ begin
   if (paramcount > 0) and (fileexists(paramstr(1))) and (ExtractFileExt(paramstr(1)).ToLower = '.lev') then
   begin
     try
+      LevData.RasterErzwingen := true;
       LevData.LoadFromFile(paramstr(1));
     except
       on E: Exception do
@@ -628,6 +629,7 @@ begin
   begin
     if FileExists('Levels\Level '+IntToStr(i)+'.lev') then
     begin
+      LevData.RasterErzwingen := true;
       LevData.LoadFromFile('Levels\Level '+IntToStr(i)+'.lev');
       LevData.SaveToFile('Levels\Level '+IntToStr(i)+'.lev');
     end;

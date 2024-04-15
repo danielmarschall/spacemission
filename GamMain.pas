@@ -2025,6 +2025,7 @@ begin
     if fileexists(GetLevelFileName(lev)) then
     begin
       try
+        LevelData.RasterErzwingen := false;
         LevelData.LoadFromFile(GetLevelFileName(lev));
       except
         showmessage(Format(LNG_LEVEL_INVALID, [lev]));

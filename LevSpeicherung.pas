@@ -115,6 +115,7 @@ begin
     exit;}
 
   MainForm.DestroyLevel;
+  MainForm.LevData.RasterErzwingen := true;
   MainForm.LevData.LoadFromFile(
     IncludeTrailingPathDelimiter(ExtractFilePath(GetLevelFileName(1)))+
     LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
@@ -201,6 +202,7 @@ begin
   LevelData := TLevelData.Create;
   try
     try
+      LevelData.RasterErzwingen := true;
       LevelData.LoadFromFile(IncludeTrailingPathDelimiter(ExtractFilePath(GetLevelFileName(1)))+
         LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
 
