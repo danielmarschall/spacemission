@@ -271,6 +271,7 @@ type
     procedure StartSceneNewLevel;
     procedure SceneNewLevel;
     procedure EndSceneNewLevel;
+    procedure LevelNeuStarten;
   public
     FNextScene: TGameScene;
     FScore: Integer;
@@ -623,17 +624,20 @@ begin
     begin
       FCounter := 0;
       State := pesDeadVanished;
-      Visible := false;
+      Visible := false; // Cannot use "Dead;" because we need to still be able to handle pesDeadVanished
     end;
   end
   else if State = pesDeadVanished then
   begin
     if FCounter>2000 then
     begin
+      MainForm.LevelNeuStarten;
+      (*
       MainForm.FNextScene := gsGameOver;
       MainForm.PlaySound(smsSceneMov, false);
       MainForm.PalleteAnim(RGBQuad(0, 0, 0), 300);
       Sleep(200);
+      *)
     end;
   end
   else if State = pesFlyaway then
@@ -2329,7 +2333,7 @@ begin
   Spielgeschwindigkeit.enabled := false;
   BossExists := false;
   Spielgeschwindigkeit.enabled := false;
-  if ((FGameMode=gmLevels) and (not fileexists(GetLevelFileName(FLevel)))) or ((FGameMode=gmRandom) and (FLevel > 25)) then
+  if ((FGameMode=gmLevels) and (not fileexists(GetLevelFileName(FLevel)))) {or ((FGameMode=gmRandom) and (FLevel > 25))} then
   begin
     //PlaySound('SceneMov', False);
     PalleteAnim(RGBQuad(0, 0, 0), 300);
@@ -2430,16 +2434,21 @@ begin
   speicherungform.showmodal;
 end;
 
-procedure TMainForm.NeustartClick(Sender: TObject);
+procedure TMainForm.LevelNeuStarten;
 var
   tmpLifeAtLevelStart, tmpScoreAtLevelStart: integer;
 begin
   NewLevel(FLevel);
   tmpLifeAtLevelStart := FLifeAtLevelStart;
   tmpScoreAtLevelStart := FScoreAtLevelStart;
-  StartScene(gsMain);
+  FNextScene := gsNewLevel;
   FLife := tmpLifeAtLevelStart;
   FScore := tmpScoreAtLevelStart;
+end;
+
+procedure TMainForm.NeustartClick(Sender: TObject);
+begin
+  LevelNeuStarten;
 end;
 
 procedure TMainForm.LeichtClick(Sender: TObject);

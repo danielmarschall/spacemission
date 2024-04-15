@@ -4,7 +4,11 @@
 Geplant für 1.2:
 - !!! Großes Problem: "Levels" Ordner wird in Program Files sein und ist damit unveränderbar. Aber wo werden die Benutzer ihr Level hinspeichern können?
 - Leveleditor "Testen" Button, um die Mission gleich zu testen
-- Spielstände sollten die Level-Information beinhalten, sodass man weiß, bei welchem Level man weiterspielen muss
+- Spielstände sollten die Level-Information beinhalten (also TLevelData), sodass man weiß, bei welchem Level man weiterspielen muss
+	also am besten eine ".lev" datei speichern anstelle einer ".sav" datei, mit den zusatzinfos "punkte,level,leben,modus"
+
+PROBLEM:
+- PROBLEM: große level: da ist ewig lang nix!
 
 Kleinigkeiten:
 - Es wäre schön, wenn die größe der Spezialhintergründe (Planeten) abhängig von wäre, wie weit entfernt sie ist (Layer 1,2,3)
