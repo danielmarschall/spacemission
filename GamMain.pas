@@ -1905,6 +1905,8 @@ end;
 procedure TMainForm.NewLevel(lev: integer);
 resourcestring
   LNG_LEVEL_INVALID = 'Das Level Nr. %d ist ungültig!'+#13#10+'Das Programm wird beendet.';
+const
+  RandomLevelMaxEnemyLives = 10;
 var
   act: integer;
   Enemies: array[1..27] of TEnemyType;
@@ -1951,7 +1953,9 @@ begin
       begin
         e.enemyType := Enemies[min(random(lev+2)+1, High(Enemies))]; {O_o}
       end;
-      e.x := act*30 + random(85-(lev+(random(lev))*2)){O_o};
+      e.x := 85-(lev+(random(lev))*2){O_o};
+      if e.x < 1 then e.x := 1; // passiert bei großen Levels
+      e.x := act*30 + random(e.x);
       e.y := random(dxdraw.surfaceheight);
       if e.enemyType = etEnemyAttacker2 then
       begin
@@ -1959,9 +1963,9 @@ begin
       end
       else
       begin
-        if lev > 20 then
+        if lev > RandomLevelMaxEnemyLives then
         begin
-          e.lifes := random(20)+1;
+          e.lifes := random(RandomLevelMaxEnemyLives)+1;
         end
         else
         begin
@@ -1984,14 +1988,15 @@ begin
     end
     else
     begin
-      // Starting with Level 10: Boss is in the middle of the level
-      bossPosition := FRestEnemies div 2;
+      // Starting with Level 10: Boss at 75% of the level
+      bossPosition := round(0.75 * FRestEnemies);
     end;
 
     if bossPosition >= 0 then
     begin
       e.enemyType := etEnemyBoss;
-      e.x := lev*75*30{O_o} div lev;
+      //e.x := lev*75*30{O_o} div lev;
+      e.x := LevelData.EnemyAdventTable[bossPosition-1].x;
       e.y := (dxdraw.surfaceheight div 2) - (MainForm.GetSpriteGraphic(smgEnemyBoss).height div 2);
       e.lifes := lev*5;
       LevelData.EnemyAdventTable[bossPosition] := e;

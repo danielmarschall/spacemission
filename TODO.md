@@ -7,9 +7,6 @@ Geplant für 1.2:
 - Spielstände sollten die Level-Information beinhalten (also TLevelData), sodass man weiß, bei welchem Level man weiterspielen muss
 	also am besten eine ".lev" datei speichern anstelle einer ".sav" datei, mit den zusatzinfos "punkte,level,leben,modus"
 
-PROBLEM:
-- PROBLEM: große level: da ist ewig lang nix!
-
 Kleinigkeiten:
 - Es wäre schön, wenn die größe der Spezialhintergründe (Planeten) abhängig von wäre, wie weit entfernt sie ist (Layer 1,2,3)
 - wenn man getroffen ist, sollte man blinken, sodass man sieht, ab wann man wieder verwundbar ist
