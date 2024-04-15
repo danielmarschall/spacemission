@@ -177,7 +177,7 @@ begin
     mainform.FLife := SavGame.Life;
     mainform.FLevel := SavGame.Level;
     mainform.FGameMode := SavGame.GameMode;
-    MainForm.FLevelDataAlreadyLoaded := true; // do not call NewLevel() in StartSceneNewLevel
+    MainForm.FLevelDataAlreadyLoaded := true; // do not call NewLevel() in StartSceneMain
     if Assigned(SavGame.LevelData) then
     begin
       MainForm.LevelData.Assign(SavGame.LevelData);

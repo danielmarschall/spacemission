@@ -38,31 +38,23 @@ Kleinigkeiten:
 - "Throwback" nach einem hit
 - weniger startmenüeinträge wegen windows 10
 - versioninfo
-- Bug: 2 Taskleisteneinträge
 - Multilingual
 - SplashScreens: als BMP
-- Intro : Enter anstelle Leertaste
 - Pause : Bildschirm soll grau werden
 - Hintergrund besser und Abwechslungsreicher
 - Neues DX: FPS-Limiter für Sprite-Animationen -- not a bug: liegt an spielgeschwindigkeit
-- Verschiedene Schwierigkeitsstufen (Geschwindigkeiten)
 - Boss schwieriger machen
 - Neues UFO das im Kreis fliegt
-- Endloses Zufallsspiel
 - Full screen bug beheben + Skalierung verbessern
 - Medikits, Unverwundbarkeits-Items
 - Limitierung der Schüsse (Kanone wird heiß)
 - Bessere Sounds
-- Quellcode optimieren, keine Compilerwarnungen mehr
 - Levels besser machen
-- Ordnerstruktur vereinfachen (nicht für alles einen Unterordner)
-- Nicht mehr auf die Existenz jeder einzelnen Datei prüfen
 - InnoSetup: Nicht mehr so viele Verknüpfungen (wegen Win10)
 - Que: Gibt es eine neuere Version des Shoot-Samples (nicht mehr vorhanden in aktueller DelphiX)
 
 SPIEL:
 - Nach Treffer, zurückgeschleudert werden
-- Vollbildwechsel geht nicht
 - Tastenspeere bei runter+links+shot
 - Schutzverletzung bei Spielstände aufr
 

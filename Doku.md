@@ -72,9 +72,9 @@ verbessert! Das Installationsprogramm wurde mit InnoSetup erstellt.
 ## Aufbau von Leveldateien:
 
     [SpaceMission Level, Format 1.2]
-    Width  1200
     Name   ...
     Author ...
+    Width  ... (Stadnard 1200; nur für Leveleditor relevant)
     Enemy  tttttt xxxxxx yyyyyy llllll
     Enemy  tttttt xxxxxx yyyyyy llllll ; Kommentarzeile am Ende einer Gegner-Zeile
     Enemy  tttttt xxxxxx yyyyyy llllll
@@ -85,7 +85,6 @@ Anmerkungen:
 - Alle Dateien müssen den Namen "Level [Level-Nr].lev" haben.
 - Die Reihenfolge der Zeilen ist beliebig. Die erste Zeile muss jedoch exakt stimmen.
 - Leere Zeilen sind erlaubt
-- Width ist Länge der Karte (Default: 1200, nur für Leveleditor relevant)
 - Enemy `tttttt` = Gegner Typ (1=Attacker, 2=Attacker2, 3=Attacker3, 4=Meteor, 5=UFO, 6=UFO2, 7=Boss)
 - Enemy `xxxxxx` = Gegner X-Koordinate (muss durch 48 teilbar sein)
 - Enemy `yyyyyy` = Gegner Y-Koordinate (muss durch 32 teilbar sein)
@@ -98,16 +97,16 @@ Anmerkungen:
     Lives  6
     Level  1
     Mode   2   (1=Normal, 2=Zufall)
+    Name   ... (des Levels)
+    Author ... (des Levels)
     Width  ...
-    Name   ...
-    Author ...
     Enemy  ...		
     ; Kommentar-Zeile
 
 Anmerkungen:
 - Alle Dateien müssen den Namen "[Name].sav" haben.
 - Die Reihenfolge der Zeilen ist fest vorgegeben. Die erste Zeile muss exakt stimmen.
-- Kommentare sind nicht erlaubt
+- Leere Zeilen sind erlaubt
 - Eine Savedatei ist eine erweiterte Leveldatei. Die Gegner müssen nicht zwingend auf dem Raster 48/32 liegen.
 
 ## License
