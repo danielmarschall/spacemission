@@ -3,7 +3,12 @@
 
 Geplant für 1.2:
 - !!! Großes Problem: "Levels" Ordner wird in Program Files sein und ist damit unveränderbar. Aber wo werden die Benutzer ihr Level hinspeichern können?
+			Hier am besten so vorgehen:
+			LEV+SAV Auflistungen: Zuerst gucken, ob eine Leveldatei mit der Levelnummer in "MyGames" liegt, und ansonsten bei "ProgramFiles" gucken
+			"MyGames" überschreibt somit "ProgramFiles" in der Logik
+			Bei Auflistungen müssen "MyGames" und "ProgramFiles" beide ausgelesen und vereint werden
 - Leveleditor "Testen" Button, um die Mission gleich zu testen (dieser erstellt am besten eine temporäre ".sav" datei, die per commandline mit SpaceMission.exe aufgerufen wird)
+- Levelformat könnte zusatzinfos wie "titel" und "autor" beinhalten, die auch im leveleditor einstellbar sein müssen
 
 Kleinigkeiten:
 - Es wäre schön, wenn die größe der Spezialhintergründe (Planeten) abhängig von wäre, wie weit entfernt sie ist (Layer 1,2,3)
