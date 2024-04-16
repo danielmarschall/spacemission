@@ -278,7 +278,6 @@ type
     FLife: integer;
     FLifeAtLevelStart: integer;
     FScoreAtLevelStart: integer;
-    FLevelDataAlreadyLoadedAtLevelStart: boolean;
     FLevel: integer;
     FGameMode: TGameMode;
     FLevelDataAlreadyLoaded: boolean;
@@ -649,7 +648,7 @@ begin
     begin
       Dead;
       inc(mainform.FLevel);
-      MainForm.FLevelDataAlreadyLoaded := false;
+      MainForm.FLevelDataAlreadyLoaded := false; // allow NewLevel() to work again
       MainForm.FNextScene := gsNewLevel;
       MainForm.PlaySound(smsSceneMov, false);
       MainForm.PalleteAnim(RGBQuad(0, 0, 0), 300);
@@ -1742,13 +1741,12 @@ begin
   FLife := StartLives;
   FLevel := 0;
   FScore := 0;
-  FLevelDataAlreadyLoaded := false;
+  FLevelDataAlreadyLoaded := false; // do allow NewLevel() to work again
   FNotSave := true;
   Cheat.enabled := false;
   Neustart.enabled := false;
   GamePause.enabled := false;
   GameStart.enabled := false;
-  Spielstand.Enabled := true;
   Spielgeschwindigkeit.enabled := false;
   mainform.Visible := true;
   MusicSwitchTrack(smmTitle);
@@ -1764,7 +1762,6 @@ begin
   FRestEnemies := Length(LevelData.EnemyAdventTable);
   FLifeAtLevelStart := FLife;     // Das ist wichtig, wenn man neu starten möchte
   FScoreAtLevelStart := FScore;   //
-  FLevelDataAlreadyLoadedAtLevelStart := FLevelDataAlreadyLoaded;
   BossExists := false;
   MusicSwitchTrack(smmGame);
   FEnemyAdventPos := 0;
@@ -1850,16 +1847,14 @@ begin
   Neustart.enabled := true;
   GamePause.enabled := true;
   GameStart.enabled := true;
-  Spielstand.Enabled := true;
   Spielgeschwindigkeit.enabled := true;
 end;
 
 procedure TMainForm.StartSceneGameOver;
 begin
   sleep(500);
-  FNotSave := true;
+  FNotSave := true; // Wenn man speichert, würde man LevelAdventTable vom vorherigen Level machen, das wär müll!
   Cheat.enabled := false;
-  Spielstand.Enabled := false; // Wenn man speichert, würde man LevelAdventTable vom vorherigen Level machen, das wär müll!
   Spielgeschwindigkeit.enabled := false;
   Neustart.enabled := false;
   GamePause.enabled := false;
@@ -1870,9 +1865,8 @@ end;
 procedure TMainForm.StartSceneWin;
 begin
   sleep(500);
-  FNotSave := true;
+  FNotSave := true; // Wenn man speichert, würde man LevelAdventTable vom vorherigen Level machen, das wär müll!
   Cheat.enabled := false;
-  Spielstand.Enabled := false; // Wenn man speichert, würde man LevelAdventTable vom vorherigen Level machen, das wär müll!
   Spielgeschwindigkeit.enabled := false;
   Neustart.enabled := false;
   GamePause.enabled := false;
@@ -2034,6 +2028,7 @@ begin
     end;
     {$ENDREGION}
   end;
+  FLevelDataAlreadyLoaded := true; // nicht nochmal NewLevel() aufrufen. Erst wieder wenn man gewonnen hat.
 end;
 
 procedure TMainForm.SceneTitle;
@@ -2342,12 +2337,11 @@ end;
 procedure TMainForm.StartSceneNewLevel;
 begin
   sleep(500);
-  FNotSave := false;
+  FNotSave := true; // Wenn man speichert, würde man LevelAdventTable vom vorherigen Level machen, das wär müll!
   Cheat.enabled := false;
   Neustart.enabled := false;
   GamePause.enabled := false;
   GameStart.enabled := true;
-  Spielstand.Enabled := false; // Wenn man speichert, würde man LevelAdventTable vom vorherigen Level machen, das wär müll!
   Spielgeschwindigkeit.enabled := false;
   BossExists := false;
   Spielgeschwindigkeit.enabled := false;
@@ -2459,7 +2453,6 @@ begin
   FNextScene := gsNewLevel;
   FLife := FLifeAtLevelStart;
   FScore := FScoreAtLevelStart;
-  FLevelDataAlreadyLoaded := FLevelDataAlreadyLoaded;
 end;
 
 procedure TMainForm.NeustartClick(Sender: TObject);
