@@ -40,9 +40,10 @@ type
     procedure LevelNameChange(Sender: TObject);
     procedure FormHide(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+  private
+    function GetListBoxSelectedLevelNumber: integer;
   public
     procedure SearchLevels;
-    function RightStr(str: string; count: integer): string;
   end;
 
 var
@@ -55,9 +56,13 @@ uses
 
 {$R *.DFM}
 
+resourcestring
+  SLevelListBox = 'Level %d';
+
 procedure TSpeicherungForm.SearchLevels;
 var
   i: integer;
+  fil: string;
 begin
   //SpinEdit.Value := 1;
   LevelListBox.items.clear;
@@ -68,17 +73,20 @@ begin
   li2b.visible := false;
   li3b.visible := false;
   li4.visible := false;
+  liu.Visible := false;
   liw.visible := true;
   LadenBtn.enabled := false;
   LoeschenBtn.enabled := false;
   for i := 1 to MaxPossibleLevels do
   begin
-    if fileexists(GetLevelFileName(i)) then
-      LevelListBox.items.Add(ChangeFileExt(ExtractFileName(GetLevelFileName(i)),''));
+    fil := GetLevelFileName(i, false);
+    if fileexists(fil) then LevelListBox.items.Add(Format(SLevelListBox, [i]));
   end;
 end;
 
 procedure TSpeicherungForm.LoeschenBtnClick(Sender: TObject);
+var
+  fil: string;
 begin
   if LevelListBox.ItemIndex = -1 then exit;
 
@@ -95,13 +103,16 @@ begin
     liw.visible := true;
     LadenBtn.enabled := false;
     LoeschenBtn.enabled := false;
-    deletefile(IncludeTrailingPathDelimiter(ExtractFilePath(GetLevelFileName(1)))+
-      LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
+    fil := GetLevelFileName(GetListBoxSelectedLevelNumber,false);
+    if not fileexists(fil) then raise Exception.Create('Leveldatei nicht gefunden');
+    deletefile(fil);
     SearchLevels;
   end;
 end;
 
 procedure TSpeicherungForm.LadenBtnClick(Sender: TObject);
+var
+  fil: string;
 begin
   if LevelListBox.ItemIndex = -1 then exit;
 
@@ -116,19 +127,13 @@ begin
 
   MainForm.DestroyLevel;
   MainForm.LevData.RasterErzwingen := true;
-  MainForm.LevData.LoadFromFile(
-    IncludeTrailingPathDelimiter(ExtractFilePath(GetLevelFileName(1)))+
-    LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
-
+  fil := GetLevelFileName(GetListBoxSelectedLevelNumber,false);
+  if not fileexists(fil) then raise Exception.Create('Leveldatei nicht gefunden');
+  MainForm.LevData.LoadFromFile(fil);
   MainForm.RefreshFromLevData;
   MainForm.LevChanged := false;
   MainForm.AnzeigeAct;
   close;
-end;
-
-function TSpeicherungForm.RightStr(str: string; count: integer): string;
-begin
-  result := copy(str, length(str)-(count-1), count);
 end;
 
 procedure TSpeicherungForm.SpeichernBtnClick(Sender: TObject);
@@ -156,7 +161,7 @@ begin
       exit;
     end;
   end;}
-  if LevelListBox.items.IndexOf('Level ' + inttostr(LevelNumber.Value)) > -1 then
+  if LevelListBox.items.IndexOf(Format(SLevelListBox, [LevelNumber.Value])) > -1 then
   begin
     if MessageDlg('Level ist bereits vorhanden. Ersetzen?', mtConfirmation, mbYesNoCancel, 0) <> mrYes then
       exit;
@@ -164,7 +169,7 @@ begin
 
   // Speichern
   MainForm.LevData.LevelEditorLength := MainForm.ScrollBar.Max;
-  MainForm.LevData.SaveToFile(GetLevelFileName(LevelNumber.Value));
+  MainForm.LevData.SaveToFile(GetLevelFileName(LevelNumber.Value,true));
 
   // Nacharbeiten
   MainForm.LevChanged := false;
@@ -177,8 +182,8 @@ var
   LevelData: TLevelData;
   boss: boolean;
   i: Integer;
-  temp: string;
   anzahlEinheiten: integer;
+  fil: string;
 begin
   li1a.visible := false;
   li2a.visible := false;
@@ -196,15 +201,16 @@ begin
     liw.visible := true;
     exit;
   end;
-  temp := LevelListBox.Items.strings[LevelListBox.itemindex];
-  LevelNumber.Value := strtoint(RightStr(temp, length(temp)-Length('Level ')));
+  LevelNumber.Value := GetListBoxSelectedLevelNumber;
 
   LevelData := TLevelData.Create;
   try
     try
       LevelData.RasterErzwingen := true;
-      LevelData.LoadFromFile(IncludeTrailingPathDelimiter(ExtractFilePath(GetLevelFileName(1)))+
-        LevelListBox.Items.strings[LevelListBox.itemindex]+'.lev');
+
+      fil := GetLevelFileName(GetListBoxSelectedLevelNumber,false);
+      if not fileexists(fil) then raise Exception.Create('Leveldatei nicht gefunden');
+      LevelData.LoadFromFile(fil);
 
       boss := false;
       anzahlEinheiten := Length(LevelData.EnemyAdventTable);
@@ -250,6 +256,22 @@ procedure TSpeicherungForm.FormShow(Sender: TObject);
 begin
   mainform.dxtimer.enabled := false;
   SearchLevels;
+end;
+
+function TSpeicherungForm.GetListBoxSelectedLevelNumber: integer;
+var
+  i: integer;
+begin
+  result := -1;
+  if LevelListBox.itemindex = -1 then exit;
+  for i := 1 to MaxPossibleLevels do
+  begin
+    if LevelListBox.Items.strings[LevelListBox.itemindex] = Format(SLevelListBox, [i]) then
+    begin
+      result := i;
+      exit;
+    end;
+  end;
 end;
 
 procedure TSpeicherungForm.DsFancyButton2Click(Sender: TObject);

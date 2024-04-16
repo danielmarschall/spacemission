@@ -10,7 +10,7 @@ SpaceMission 1.2:
 - Removed "Full Screen" feature, because it never really worked.
 - Heavily improved and refactored source code.
 - Bugfix: Two windows in task bar
-- Spielstände werden in den Ordner "Gespeicherte Spiele" gesichert, so wie von Windows definiert!
+- Spielstände und eigene Levels werden in den Ordner "Gespeicherte Spiele" gesichert, so wie von Windows definiert!
 - Einstellungen werden in Registry gesichert anstelle in eine INI-Datei
 - Level Editor: "Quelltext" Fenster entfernt
 - Level Editor: Show Enemy Name in the Status Bar

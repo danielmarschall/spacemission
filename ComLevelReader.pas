@@ -71,21 +71,72 @@ type
     destructor Destroy; override;
   end;
 
-function GetLevelFileName(lev: integer): string;
+function GetLevelFileName(lev: integer; forceuserdir: boolean): string;
 
 implementation
 
 uses
-  SysUtils, StrUtils, Global;
+  SysUtils, StrUtils, Global, Windows;
 
-const
-  DefaultLevelLength = 1200;
+function GetLevelFileName(lev: integer; forceuserdir: boolean): string;
 
-function GetLevelFileName(lev: integer): string;
+  function _GetLevelVerzeichnisSystem: string;
+  begin
+    // Für die Auslieferungs-Levels
+    result := OwnDirectory + 'Levels';
+  end;
+
+  function _GetLevelVerzeichnisUser: string;
+  begin
+    try
+      result := GetKnownFolderPath(FOLDERID_SavedGames);
+    except
+      result := '';
+    end;
+    if result = '' then
+    begin
+      // Pre Vista
+      result := OwnDirectory + 'Levels';
+    end
+    else
+    begin
+      result := IncludeTrailingPathDelimiter(result);
+      result := result + 'SpaceMission';
+    end;
+    result := IncludeTrailingPathDelimiter(result);
+    ForceDirectories(result);
+  end;
+
+  function _GetLevelFileNameUser(lev: integer): string;
+  var
+    old, new: string;
+  begin
+    new := IncludeTrailingPathDelimiter(_GetLevelVerzeichnisUser)+'Level '+inttostr(lev)+'.lev'; // Version 0.3+ Level Files
+    old := IncludeTrailingPathDelimiter(_GetLevelVerzeichnisUser)+'Lev'+inttostr(lev)+'A1.lev'; // Version 0.2 Level Files
+    if fileexists(new) then exit(new);
+    if fileexists(old) then exit(old);
+    exit(new);
+  end;
+
+  function _GetLevelFileNameSystem(lev: integer): string;
+  var
+    old, new: string;
+  begin
+    new := IncludeTrailingPathDelimiter(_GetLevelVerzeichnisSystem)+'Level '+inttostr(lev)+'.lev'; // Version 0.3+ Level Files
+    old := IncludeTrailingPathDelimiter(_GetLevelVerzeichnisSystem)+'Lev'+inttostr(lev)+'A1.lev'; // Version 0.2 Level Files
+    if fileexists(new) then exit(new);
+    if fileexists(old) then exit(old);
+    exit(new);
+  end;
+
+var
+  usr, sys: string;
 begin
-  result := OwnDirectory+'Levels\Level '+inttostr(lev)+'.lev'; // Version 0.3+ Level Files
-  if not FileExists(Result) then
-    result := OwnDirectory+'Levels\Lev'+inttostr(lev)+'A1.lev'; // Version 0.2 Level Files
+  usr := _GetLevelFileNameUser(lev);
+  sys := _GetLevelFileNameSystem(lev);
+  if fileexists(usr) or forceuserdir then exit(usr);
+  if fileexists(sys) then exit(sys);
+  exit(usr);
 end;
 
 { TLevelData }

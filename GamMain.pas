@@ -279,9 +279,6 @@ type
     FBossLife: integer;
     Crash: boolean;
     crashsound: boolean;
-    FLifeAtLevelStart: integer;
-    FScoreAtLevelStart: integer;
-    FLevelDataAlreadyLoaded: boolean;
   public
     FNextScene: TGameScene;
     FScore: Integer;
@@ -289,7 +286,9 @@ type
     FLife: integer;
     FLevel: integer;
     FGameMode: TGameMode;
-
+    FLifeAtLevelStart: integer;
+    FScoreAtLevelStart: integer;
+    FLevelDataAlreadyLoaded: boolean;
     FRestEnemies: integer;
     FCheat: boolean;
     { VCL-Ersatz }
@@ -2015,11 +2014,11 @@ begin
   else
   begin
     {$REGION 'Normal game'}
-    if fileexists(GetLevelFileName(lev)) then
+    if fileexists(GetLevelFileName(lev,false)) then
     begin
       try
         LevelData.RasterErzwingen := false;
-        LevelData.LoadFromFile(GetLevelFileName(lev));
+        LevelData.LoadFromFile(GetLevelFileName(lev,false));
       except
         showmessage(Format(LNG_LEVEL_INVALID, [lev]));
         ResetLevelData;
@@ -2086,7 +2085,7 @@ begin
   if (isButton1 in DXInput.States) or (isButton2 in DXInput.States) then
   begin
     FLevel := 1;
-    if ((FGameMode=gmLevels) and not fileexists(GetLevelFileName(FLevel))) or ((FGameMode=gmRandom) and (FLevel > 20)) then
+    if ((FGameMode=gmLevels) and not fileexists(GetLevelFileName(FLevel,false))) or ((FGameMode=gmRandom) and (FLevel > 20)) then
     begin
       //PlaySound('Frage', False);
       exit;
@@ -2327,7 +2326,7 @@ begin
   GameStart.enabled := true;
   Spielgeschwindigkeit.enabled := false;
   Spielgeschwindigkeit.enabled := false;
-  if ((FGameMode=gmLevels) and (not fileexists(GetLevelFileName(FLevel))))
+  if ((FGameMode=gmLevels) and (not fileexists(GetLevelFileName(FLevel,false))))
      // or ((FGameMode=gmRandom) and (FLevel > 25))
      or (FLevel > MaxPossibleLevels) then
   begin

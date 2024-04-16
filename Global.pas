@@ -9,6 +9,7 @@ const
   MaxPossibleEnemyLives = 999;
   MaxPossibleLevels = 9999;
   RegistrySettingsKey = 'SOFTWARE\ViaThinkSoft\SpaceMission\Settings';
+  DefaultLevelLength = 1200;
 
 type
   // DirectX\Music.dxm
@@ -61,10 +62,37 @@ type
 
 function OwnDirectory: string;
 
+const
+  FOLDERID_SavedGames: TGuid = '{4C5C32FF-BB9D-43b0-B5B4-2D72E54EAAA4}';
+
+function GetKnownFolderPath(const rfid: TGUID): string;
+
 implementation
 
 uses
-  SysUtils;
+  SysUtils, ActiveX, ShlObj;
+
+function GetKnownFolderPath(const rfid: TGUID): string;
+var
+  OutPath: PWideChar;
+begin
+  // https://www.delphipraxis.net/135471-unit-zur-verwendung-von-shgetknownfolderpath.html
+  if ShGetKnownFolderPath(rfid, 0, 0, OutPath) {>= 0} = S_OK then
+  begin
+    Result := OutPath;
+    // From MSDN
+    // ppszPath [out]
+    // Type: PWSTR*
+    // When this method returns, contains the address of a pointer to a null-terminated Unicode string that specifies the path of the known folder
+    // The calling process is responsible for freeing this resource once it is no longer needed by calling CoTaskMemFree.
+    // The returned path does not include a trailing backslash. For example, "C:\Users" is returned rather than "C:\Users\".
+    CoTaskMemFree(OutPath);
+  end
+  else
+  begin
+    Result := '';
+  end;
+end;
 
 function OwnDirectory: string;
 begin
