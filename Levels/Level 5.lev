@@ -2,6 +2,7 @@
 Name   Level 5
 Author Andreas Kübelsbeck
 Width  1200
+;      Type   XCoord YCoord Lives
 Enemy  5      336    96     1      
 Enemy  5      336    384    1      
 Enemy  5      912    352    1      

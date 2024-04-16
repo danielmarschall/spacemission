@@ -416,6 +416,7 @@ begin
   if LevelAuthor <> '' then sl.Add('Author ' + LevelAuthor);
   sl.Add('Width  ' + IntToStr(LevelEditorLength));
   SortEnemies;
+  sl.Add(';      Type   XCoord YCoord Lives');
   for i := 0 to Length(EnemyAdventTable)-1 do
   begin
     sl.Add(

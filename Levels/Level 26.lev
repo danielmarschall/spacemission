@@ -2,6 +2,7 @@
 Name   Level 26
 Author Patrick Büssecker
 Width  1200
+;      Type   XCoord YCoord Lives
 Enemy  5      240    128    1      
 Enemy  5      240    160    1      
 Enemy  5      240    192    1      

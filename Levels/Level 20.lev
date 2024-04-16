@@ -2,6 +2,7 @@
 Name   Level 20
 Author Andreas Kübelsbeck
 Width  1200
+;      Type   XCoord YCoord Lives
 Enemy  1      96     352    1      
 Enemy  1      240    224    1      
 Enemy  1      528    32     1      

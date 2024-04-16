@@ -2,6 +2,7 @@
 Name   Level 9
 Author Patrick Büssecker
 Width  1200
+;      Type   XCoord YCoord Lives
 Enemy  4      240    128    0      
 Enemy  4      288    352    0      
 Enemy  1      384    64     2      

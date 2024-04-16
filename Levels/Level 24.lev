@@ -2,6 +2,7 @@
 Name   Level 24
 Author Andreas Kübelsbeck
 Width  1200
+;      Type   XCoord YCoord Lives
 Enemy  1      192    64     1      
 Enemy  1      288    64     1      
 Enemy  1      288    192    1      

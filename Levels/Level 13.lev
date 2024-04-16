@@ -2,6 +2,7 @@
 Name   Level 13
 Author Patrick Büssecker
 Width  1200
+;      Type   XCoord YCoord Lives
 Enemy  1      336    32     4      
 Enemy  1      336    224    4      
 Enemy  4      336    256    0      

@@ -2,6 +2,7 @@
 Name   Level 15
 Author Andreas Kübelsbeck
 Width  1200
+;      Type   XCoord YCoord Lives
 Enemy  3      0      64     6      
 Enemy  3      192    224    6      
 Enemy  3      432    96     6      

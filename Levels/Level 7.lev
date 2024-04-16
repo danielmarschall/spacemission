@@ -2,6 +2,7 @@
 Name   Level 7
 Author Andreas Kübelsbeck
 Width  1200
+;      Type   XCoord YCoord Lives
 Enemy  1      48     256    1      
 Enemy  1      144    416    1      
 Enemy  1      192    96     1      

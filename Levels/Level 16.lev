@@ -2,6 +2,7 @@
 Name   Level 16
 Author Patrick Büssecker
 Width  1200
+;      Type   XCoord YCoord Lives
 Enemy  4      192    64     0      
 Enemy  4      192    384    0      
 Enemy  4      240    256    0      

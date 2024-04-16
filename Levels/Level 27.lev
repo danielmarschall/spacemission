@@ -2,6 +2,7 @@
 Name   Level 27
 Author Patrick Büssecker
 Width  1200
+;      Type   XCoord YCoord Lives
 Enemy  4      48     32     0      
 Enemy  4      288    384    0      
 Enemy  4      480    288    0      

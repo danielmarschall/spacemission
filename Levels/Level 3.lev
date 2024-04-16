@@ -2,6 +2,7 @@
 Name   Level 3
 Author Patrick Büssecker
 Width  1200
+;      Type   XCoord YCoord Lives
 Enemy  1      624    64     1      
 Enemy  1      624    192    1      
 Enemy  1      624    256    1      

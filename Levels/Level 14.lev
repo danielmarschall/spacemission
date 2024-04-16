@@ -2,6 +2,7 @@
 Name   Level 14
 Author Andreas Kübelsbeck
 Width  1200
+;      Type   XCoord YCoord Lives
 Enemy  1      96     224    4      
 Enemy  1      240    384    4      
 Enemy  1      336    32     4      

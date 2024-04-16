@@ -2,6 +2,7 @@
 Name   Level 8
 Author Patrick Büssecker
 Width  1200
+;      Type   XCoord YCoord Lives
 Enemy  4      240    288    0      
 Enemy  4      336    64     0      
 Enemy  1      432    160    2      

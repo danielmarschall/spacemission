@@ -2,6 +2,7 @@
 Name   Level 29
 Author Daniel Marschall
 Width  1200
+;      Type   XCoord YCoord Lives
 Enemy  1      96     0      1      
 Enemy  1      96     64     1      
 Enemy  1      144    32     1      

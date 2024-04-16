@@ -2,6 +2,7 @@
 Name   Level 11
 Author Andreas Kübelsbeck
 Width  1200
+;      Type   XCoord YCoord Lives
 Enemy  1      48     192    1      
 Enemy  1      96     256    1      
 Enemy  5      240    128    3      

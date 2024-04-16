@@ -2,6 +2,7 @@
 Name   Level 4
 Author Patrick Büssecker
 Width  1200
+;      Type   XCoord YCoord Lives
 Enemy  1      480    224    1      
 Enemy  1      528    160    1      
 Enemy  5      528    192    1      

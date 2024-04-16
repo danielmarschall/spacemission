@@ -2,6 +2,7 @@
 Name   Level 12
 Author Patrick Büssecker
 Width  1200
+;      Type   XCoord YCoord Lives
 Enemy  4      288    32     0      
 Enemy  4      384    416    0      
 Enemy  1      480    96     3      

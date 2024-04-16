@@ -2,6 +2,7 @@
 Name   Level 1
 Author Daniel Marschall
 Width  1200
+;      Type   XCoord YCoord Lives
 Enemy  5      144    32     1      
 Enemy  5      144    384    1      
 Enemy  5      240    128    1      
