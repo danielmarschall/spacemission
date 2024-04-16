@@ -275,20 +275,21 @@ type
     { Diverse temporäre Variablen }
     Crash2: integer;
     EnemyCounter: integer;
-    BossExists: boolean;
+    FBossImLevel: boolean;
+    FBossLife: integer;
     Crash: boolean;
     crashsound: boolean;
+    FLifeAtLevelStart: integer;
+    FScoreAtLevelStart: integer;
+    FLevelDataAlreadyLoaded: boolean;
   public
     FNextScene: TGameScene;
     FScore: Integer;
     FNotSave: boolean;
     FLife: integer;
-    FLifeAtLevelStart: integer;
-    FScoreAtLevelStart: integer;
     FLevel: integer;
     FGameMode: TGameMode;
-    FLevelDataAlreadyLoaded: boolean;
-    FBossLife: integer;
+
     FRestEnemies: integer;
     FCheat: boolean;
     { VCL-Ersatz }
@@ -1736,7 +1737,6 @@ procedure TMainForm.StartSceneTitle;
 begin
   sleep(500);
   FCheat := false;
-  BossExists := false;
   FLife := StartLives;
   FLevel := 0;
   FScore := 0;
@@ -1759,7 +1759,8 @@ begin
   FCounter := 0;
   if not FLevelDataAlreadyLoaded then NewLevel(FLevel);
   FRestEnemies := Length(LevelData.EnemyAdventTable);
-  BossExists := LevelData.HasBoss;
+  FBossImLevel := LevelData.HasBoss;
+  FBossLife := -1; // Boss noch nicht aufgetaucht
   FLifeAtLevelStart := FLife;     // Das ist wichtig, wenn man neu starten möchte
   FScoreAtLevelStart := FScore;   //
   MusicSwitchTrack(smmGame);
@@ -1858,7 +1859,6 @@ begin
   Neustart.enabled := false;
   GamePause.enabled := false;
   MusicSwitchTrack(smmScene);
-  BossExists := false;
 end;
 
 procedure TMainForm.StartSceneWin;
@@ -1870,7 +1870,6 @@ begin
   Neustart.enabled := false;
   GamePause.enabled := false;
   MusicSwitchTrack(smmScene);
-  BossExists := false;
 end;
 
 procedure TMainForm.EndScene;
@@ -2191,26 +2190,10 @@ begin
 
       {$REGION 'Anzeige Einheiten und Boss Leben'}
 
-      {if BossExists and (FBossLife>0) then
-      begin
-        DXDraw.Surface.Canvas.Font.Color := clPurple;
-        DXDraw.Surface.Canvas.Textout(449, 439, 'Boss: ' + IntToStr(FBossLife));
-        DXDraw.Surface.Canvas.Font.Color := clFuchsia;
-        DXDraw.Surface.Canvas.Textout(450, 440, 'Boss: ' + IntToStr(FBossLife));
-      end
-      else
-        if RestlicheEinheiten>0 then
-        begin
-          DXDraw.Surface.Canvas.Font.Color := clPurple;
-          DXDraw.Surface.Canvas.Textout(449, 439, 'Einheiten: ' + IntToStr(RestlicheEinheiten));
-          DXDraw.Surface.Canvas.Font.Color := clFuchsia;
-          DXDraw.Surface.Canvas.Textout(450, 440, 'Einheiten: ' + IntToStr(RestlicheEinheiten));
-        end;}
-
       tmpEnemyAnzeige := EnemyCounter{Auf Bildschirm} + FRestEnemies{In der Warteschlange};
-      if BossExists then Dec(tmpEnemyAnzeige);
+      if FBossImLevel then Dec(tmpEnemyAnzeige);
 
-      if BossExists and (FBossLife>0) then
+      if FBossLife > 0 then
       begin
         if (tmpEnemyAnzeige>0) then
         begin
@@ -2220,16 +2203,16 @@ begin
           DXDraw.Surface.Canvas.Font.Color := clLime;
           DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-80, 'Boss: ' + IntToStr(FBossLife));
           DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Einheiten: ' + IntToStr(tmpEnemyAnzeige));
-        end;
-        if (tmpEnemyAnzeige<1) then
+        end
+        else
         begin
           DXDraw.Surface.Canvas.Font.Color := clGreen;
           DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Boss: ' + IntToStr(FBossLife));
           DXDraw.Surface.Canvas.Font.Color := clLime;
           DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Boss: ' + IntToStr(FBossLife));
         end;
-      end;
-      if (tmpEnemyAnzeige>0) and not Bossexists then
+      end
+      else if (FBossLife<=0) and (tmpEnemyAnzeige>0) then
       begin
         DXDraw.Surface.Canvas.Font.Color := clGreen;
         DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Einheiten: ' + IntToStr(tmpEnemyAnzeige));
@@ -2239,7 +2222,7 @@ begin
       {$ENDREGION}
 
       {$REGION 'Anzeige Mission erfolgreich/gescheitert'}
-      if (EnemyCounter=0) and (FRestEnemies=0) and ((BossExists and (FBossLife=0)) or not BossExists) then
+      if (EnemyCounter=0) and (FRestEnemies=0) and ((FBossImLevel and (FBossLife=0)) or not FBossImLevel) then
       begin
         DXDraw.Surface.Canvas.Font.Color := clGreen;
         DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-251, dxdraw.surfaceheight-41, 'Mission erfolgreich!');
@@ -2343,7 +2326,6 @@ begin
   GamePause.enabled := false;
   GameStart.enabled := true;
   Spielgeschwindigkeit.enabled := false;
-  BossExists := false;
   Spielgeschwindigkeit.enabled := false;
   if ((FGameMode=gmLevels) and (not fileexists(GetLevelFileName(FLevel))))
      // or ((FGameMode=gmRandom) and (FLevel > 25))
