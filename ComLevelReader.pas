@@ -76,7 +76,12 @@ function GetLevelFileName(lev: integer; forceuserdir: boolean): string;
 implementation
 
 uses
-  SysUtils, StrUtils, Global, Windows;
+  SysUtils, StrUtils, Global, Windows, System.Types;
+
+const
+  // { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 products(2) spacemission(8) file-format(1) lev-sav-v12(1) }
+  // https://hosted.oidplus.com/viathinksoft/?goto=oid%3A1.3.6.1.4.1.37476.2.8.1.1
+  OID_LEVSAV_VER12 = '1.3.6.1.4.1.37476.2.8.1.1';
 
 function GetLevelFileName(lev: integer; forceuserdir: boolean): string;
 
@@ -137,6 +142,33 @@ begin
   if fileexists(usr) or forceuserdir then exit(usr);
   if fileexists(sys) then exit(sys);
   exit(usr);
+end;
+
+// this is just an example, there are many
+// different ways you can implement this
+// more efficiently, ie using a TStringBuilder,
+// or even modifying the String in-place...
+function CollapseSpaces(const S: string): string;
+var
+  P: PChar;
+  AddSpace: Boolean;
+begin
+  Result := '';
+  AddSpace := False;
+  P := PChar(S);
+  while P^ <> #0 do
+  begin
+    while CharInSet(P^, [#1..' ']) do Inc(P);
+    if P^ = #0 then Exit;
+    if AddSpace then
+      Result := Result + ' '
+    else
+      AddSpace := True;
+    repeat
+      Result := Result + P^;
+      Inc(P);
+    until P^ <= ' ';
+  end;
 end;
 
 { TLevelData }
@@ -260,8 +292,9 @@ var
   sl2: TStringList;
   tmpX, tmpY, tmpLifes: integer;
   tmpEnemy: TEnemyType;
-  tmpRest: string;
   ergebnis: string;
+  ary: TStringDynArray;
+  sLine: string;
 begin
   Clear;
 
@@ -269,16 +302,16 @@ begin
   LevelName := '';
   LevelAuthor := '';
 
-  if sl.Strings[0] = '; SpaceMission 0.3' then
+  if sl.Strings[0] = '; SpaceMission 0.3' then // do not localize
   begin
     {$REGION 'Backwards compatibility level format 0.3 (convert to 0.4)'}
-    sl.Strings[0] := '; SpaceMission 0.4';
-    sl.Insert(1, '; LEV-File');
+    sl.Strings[0] := '; SpaceMission 0.4'; // do not localize
+    sl.Insert(1, '; LEV-File'); // do not localize
     {$ENDREGION}
   end;
 
-  if (sl.Strings[0] = '; SpaceMission 0.4') and
-     (sl.Strings[1] = '; LEV-File') then
+  if (sl.Strings[0] = '; SpaceMission 0.4') and // do not localize
+     (sl.Strings[1] = '; LEV-File') then // do not localize
   begin
     {$REGION 'Backwards compatibility level format 0.4 (convert to 1.0)'}
     sl2 := TStringList.Create;
@@ -317,8 +350,8 @@ begin
     {$ENDREGION}
   end;
 
-  if (sl.Strings[0] = '; SpaceMission 1.0') and
-     (sl.Strings[1] = '; LEV-File') then
+  if (sl.Strings[0] = '; SpaceMission 1.0') and // do not localize
+     (sl.Strings[1] = '; LEV-File') then // do not localize
   begin
     {$REGION 'Level format 1.0'}
     LevelEditorLength := StrToInt(sl.Strings[2]);
@@ -337,37 +370,35 @@ begin
     end;
     {$ENDREGION}
   end
-  else if (SameText(sl.Strings[0], '[SpaceMission Level, Format 1.2]')) or
-          (SameText(sl.Strings[0], '[SpaceMission Savegame, Format 1.2]')) then
+  else if (SameText(sl.Strings[0], '['+OID_LEVSAV_VER12+']')) then
   begin
     {$REGION 'Level format 1.2'}
     for curline := 1 to sl.Count-1 do
     begin
-      // 1234567890123456789012345678901234567890
-      // 123456 123456 123456 123456 123456 ; Kommentar
-      if (sl.Strings[curline].Trim = '') or
-         (Copy(sl.Strings[curline], 1, 1) = ';') then
-        // Do nothing
-      else if Copy(sl.Strings[curline], 1, 6).TrimRight = 'Width' then
+      sLine := sl.Strings[curline].Trim;
+      if (sLine = '') or (Copy(sLine, 1, 1) = ';') then continue;
+      ary := SplitString(CollapseSpaces(sLine), ' ');
+      if ary[0] = 'Width' then // do not localize
       begin
-        LevelEditorLength := StrToInt(TrimRight(Copy(sl.Strings[curline], 8, 6)))
+        LevelEditorLength := StrToInt(ary[1]);
+        if (Length(ary) > 2) and (Copy(ary[2], 1, 1) <> ';') then
+          raise Exception.CreateFmt('Zeile %d ist ungültig (Zusatzinfo am Ende)', [curline+1]);
       end
-      else if Copy(sl.Strings[curline], 1, 6).TrimRight = 'Name' then
+      else if ary[0] = 'Name' then // do not localize
       begin
-        LevelName := TrimRight(Copy(sl.Strings[curline], 8, Length(sl.Strings[curline])))
+        LevelName := Copy(sLine, Length(ary[0])+2, Length(sLine));
       end
-      else if Copy(sl.Strings[curline], 1, 6).TrimRight = 'Author' then
+      else if ary[0] = 'Author' then // do not localize
       begin
-        LevelAuthor := TrimRight(Copy(sl.Strings[curline], 8, Length(sl.Strings[curline])))
+        LevelAuthor := Copy(sLine, Length(ary[0])+2, Length(sLine));
       end
-      else if Copy(sl.Strings[curline], 1, 6).TrimRight = 'Enemy' then
+      else if ary[0] = 'Enemy' then // do not localize
       begin
-        tmpEnemy := TEnemyType(strtoint(TrimRight(Copy(sl.Strings[curline], 8, 6))));
-        tmpX     := strtoint(TrimRight(Copy(sl.Strings[curline], 15, 6)));
-        tmpY     := strtoint(TrimRight(Copy(sl.Strings[curline], 22, 6)));
-        tmpLifes := strtoint(TrimRight(Copy(sl.Strings[curline], 29, 6)));
-        tmpRest  := Copy(sl.Strings[curline], 36, Length(sl.Strings[curline])-36+1);
-        if (Copy(tmpRest, 1, 1) <> ';') and (Trim(tmpRest) <> '') then
+        tmpEnemy := TEnemyType(strtoint(ary[1]));
+        tmpX     := strtoint(ary[2]);
+        tmpY     := strtoint(ary[3]);
+        tmpLifes := strtoint(ary[4]);
+        if (Length(ary) > 5) and (Copy(ary[5], 1, 1) <> ';') then
           raise Exception.CreateFmt('Zeile %d ist ungültig (Zusatzinfo am Ende)', [curline+1]);
         AddEnemy(tmpX, tmpY, tmpEnemy, tmpLifes);
       end;
@@ -391,7 +422,7 @@ var
 begin
   sl := TStringList.Create;
   try
-    if EndsText('A1.lev', filename) then
+    if EndsText('A1.lev', filename) then // do not localize
     begin
       {$REGION 'Backwards compatibility level format 0.2 (split into 5-6 files; convert to 0.3)'}
       m[1] := TStringList.create;
@@ -410,7 +441,7 @@ begin
         m[1].strings[0] := '-624';
         if m[6].Text = '' then m[6].Text := '30000';
 
-        sl.Add('; SpaceMission 0.3');
+        sl.Add('; SpaceMission 0.3'); // do not localize
         sl.Add(temp);
         for j := 0 to m[1].count-2 do
         begin
@@ -462,16 +493,16 @@ var
   i: integer;
 begin
   sl.Clear;
-  sl.Add('[SpaceMission Level, Format 1.2]');
-  if LevelName   <> '' then sl.Add('Name   ' + LevelName);
-  if LevelAuthor <> '' then sl.Add('Author ' + LevelAuthor);
-  sl.Add('Width  ' + IntToStr(LevelEditorLength));
+  sl.Add('['+OID_LEVSAV_VER12+']');
+  if LevelName   <> '' then sl.Add('Name   ' + LevelName); // do not localize
+  if LevelAuthor <> '' then sl.Add('Author ' + LevelAuthor); // do not localize
+  sl.Add('Width  ' + IntToStr(LevelEditorLength)); // do not localize
   SortEnemies;
   sl.Add(';      Type   XCoord YCoord Lives');
   for i := 0 to Length(EnemyAdventTable)-1 do
   begin
-    sl.Add(
-      'Enemy'.PadRight(6, ' ')+
+    sl.Add(Trim(
+      'Enemy'.PadRight(6, ' ')+ // do not localize
       ' '+
       IntToStr(Ord(EnemyAdventTable[i].enemyType)).PadRight(6, ' ')+
       ' '+
@@ -481,7 +512,7 @@ begin
       ' '+
       IntToStr(EnemyAdventTable[i].lifes).PadRight(6, ' ')+
       ' '
-    );
+    ));
   end;
 end;
 
@@ -567,13 +598,13 @@ var
 begin
   sl2 := TStringList.Create;
   try
-    sl.Add('[SpaceMission Savegame, Format 1.2]');
-    sl.Add('Score  ' + IntToStr(Score));
-    sl.Add('Lives  ' + IntToStr(Life));
-    sl.Add('Level  ' + IntToStr(Level));
-    sl.Add('Mode   ' + IntToStr(Ord(GameMode)));
+    sl.Add('['+OID_LEVSAV_VER12+']');
+    sl.Add('Score  ' + IntToStr(Score)); // do not localize
+    sl.Add('Lives  ' + IntToStr(Life)); // do not localize
+    sl.Add('Level  ' + IntToStr(Level)); // do not localize
+    sl.Add('Mode   ' + IntToStr(Ord(GameMode))); // do not localize
     LevelData.SaveToStrings(sl2);
-    sl2.Delete(0); // Signature
+    sl2.Delete(0); // Delete additional level signature
     sl.AddStrings(sl2);
   finally
     FreeAndNil(sl2);
@@ -583,9 +614,11 @@ end;
 procedure TSaveData.LoadFromStrings(sl: TStrings);
 var
   curline: Integer;
+  ary: TStringDynArray;
+  sLine: string;
 begin
-  if (sl.Strings[0] = '; SpaceMission 1.0') and
-     (sl.Strings[1] = '; SAV-File') then
+  if (sl.Strings[0] = '; SpaceMission 1.0') and // do not localize
+     (sl.Strings[1] = '; SAV-File') then // do not localize
   begin
     Score    := StrToInt(sl.Strings[2]);
     Life     := StrToInt(sl.Strings[3]);
@@ -593,7 +626,7 @@ begin
     GameMode := TGameMode(StrToInt(sl.Strings[5]));
     if Assigned(LevelData) then FreeAndNil(LevelData);
   end
-  else if SameText(sl.Strings[0], '[SpaceMission Savegame, Format 1.2]') then
+  else if SameText(sl.Strings[0], '['+OID_LEVSAV_VER12+']') then
   begin
     Score    := 0;
     Life     := 0;
@@ -601,26 +634,32 @@ begin
     GameMode := gmUnknown;
     for curline := 1 to sl.Count-1 do
     begin
-      // 1234567890123456789012345678901234567890
-      // 123456 123456 123456 123456 123456 ; Kommentar
-      if (sl.Strings[curline].Trim = '') or
-         (Copy(sl.Strings[curline], 1, 1) = ';') then
-        // Do nothing
-      else if Copy(sl.Strings[curline], 1, 6).TrimRight = 'Score' then
+      sLine := sl.Strings[curline].Trim;
+      if (sLine = '') or (Copy(sLine, 1, 1) = ';') then continue;
+      ary := SplitString(CollapseSpaces(sLine), ' ');
+      if ary[0] = 'Score' then // do not localize
       begin
-        Score := StrToInt(TrimRight(Copy(sl.Strings[curline], 8, 6)))
+        Score := StrToInt(ary[1]);
+        if (Length(ary) > 2) and (Copy(ary[2], 1, 1) <> ';') then
+          raise Exception.CreateFmt('Zeile %d ist ungültig (Zusatzinfo am Ende)', [curline+1]);
       end
-      else if Copy(sl.Strings[curline], 1, 6).TrimRight = 'Lives' then
+      else if ary[0] = 'Lives' then // do not localize
       begin
-        Life := StrToInt(TrimRight(Copy(sl.Strings[curline], 8, 6)))
+        Life := StrToInt(ary[1]);
+        if (Length(ary) > 2) and (Copy(ary[2], 1, 1) <> ';') then
+          raise Exception.CreateFmt('Zeile %d ist ungültig (Zusatzinfo am Ende)', [curline+1]);
       end
-      else if Copy(sl.Strings[curline], 1, 6).TrimRight = 'Level' then
+      else if ary[0] = 'Level' then // do not localize
       begin
-        Level := StrToInt(TrimRight(Copy(sl.Strings[curline], 8, 6)))
+        Level := StrToInt(ary[1]);
+        if (Length(ary) > 2) and (Copy(ary[2], 1, 1) <> ';') then
+          raise Exception.CreateFmt('Zeile %d ist ungültig (Zusatzinfo am Ende)', [curline+1]);
       end
-      else if Copy(sl.Strings[curline], 1, 6).TrimRight = 'Mode' then
+      else if ary[0] = 'Mode' then // do not localize
       begin
-        GameMode := TGameMode(StrToInt(TrimRight(Copy(sl.Strings[curline], 8, 6))))
+        GameMode := TGameMode(StrToInt(ary[1]));
+        if (Length(ary) > 2) and (Copy(ary[2], 1, 1) <> ';') then
+          raise Exception.CreateFmt('Zeile %d ist ungültig (Zusatzinfo am Ende)', [curline+1]);
       end;
     end;
     if Assigned(LevelData) then FreeAndNil(LevelData);

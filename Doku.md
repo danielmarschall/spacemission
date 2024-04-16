@@ -71,13 +71,15 @@ verbessert! Das Installationsprogramm wurde mit InnoSetup erstellt.
 
 ## Aufbau von Leveldateien:
 
-    [SpaceMission Level, Format 1.2]
+[Beschreibung auf OIDplus](https://hosted.oidplus.com/viathinksoft/?goto=oid%3A1.3.6.1.4.1.37476.2.8.1.1)
+
+    [1.3.6.1.4.1.37476.2.8.1.1]
     Name   ...
     Author ...
-    Width  ... (Stadnard 1200; nur für Leveleditor relevant)
-    Enemy  tttttt xxxxxx yyyyyy llllll
-    Enemy  tttttt xxxxxx yyyyyy llllll ; Kommentarzeile am Ende einer Gegner-Zeile
-    Enemy  tttttt xxxxxx yyyyyy llllll
+    Width  ... (Standard 1200; nur für Leveleditor relevant)
+    Enemy  <Typ> <XCoord> <YCoord> <Leben>
+    Enemy  <Typ> <XCoord> <YCoord> <Leben>; Kommentarzeile am Ende einer Gegner-Zeile
+    Enemy  <Typ> <XCoord> <YCoord> <Leben>
     Enemy  ...
     ; Kommentar-Zeile
 
@@ -85,14 +87,16 @@ Anmerkungen:
 - Alle Dateien müssen den Namen "Level [Level-Nr].lev" haben.
 - Die Reihenfolge der Zeilen ist beliebig. Die erste Zeile muss jedoch exakt stimmen.
 - Leere Zeilen sind erlaubt
-- Enemy `tttttt` = Gegner Typ (1=Attacker, 2=Attacker2, 3=Attacker3, 4=Meteor, 5=UFO, 6=UFO2, 7=Boss)
-- Enemy `xxxxxx` = Gegner X-Koordinate (muss durch 48 teilbar sein)
-- Enemy `yyyyyy` = Gegner Y-Koordinate (muss durch 32 teilbar sein)
-- Enemy `llllll` = Gegner Leben (keine relevanz für Kometen)
+- Enemy `<Typ>` = Gegner Typ (1=Attacker, 2=Attacker2, 3=Attacker3, 4=Meteor, 5=UFO, 6=UFO2, 7=Boss)
+- Enemy `<XCoord>` = Gegner X-Koordinate (muss durch 48 teilbar sein, wenn Level mit Leveleditor bearbeitet werden soll)
+- Enemy `<YCoord>` = Gegner Y-Koordinate (muss durch 32 teilbar sein, wenn Level mit Leveleditor bearbeitet werden soll)
+- Enemy `<Leben>` = Gegner Leben (keine relevanz für Kometen)
 
 ## Aufbau von Spielständen:
 
-    [SpaceMission Savegame, Format 1.2]
+[Beschreibung auf OIDplus](https://hosted.oidplus.com/viathinksoft/?goto=oid%3A1.3.6.1.4.1.37476.2.8.1.1)
+
+    [1.3.6.1.4.1.37476.2.8.1.1]
     Score  3000
     Lives  6
     Level  1

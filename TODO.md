@@ -4,7 +4,6 @@
 Geplant für 1.2:
 - Leveleditor "Testen" Button, um die Mission gleich zu testen (dieser erstellt am besten eine temporäre ".sav" datei, die per commandline mit SpaceMission.exe aufgerufen wird)
 - Bei jedem Levelaufstieg 1 Leben geben, alternativ 2 Medikits pro Level
-- SpaceMission OID 1.3.6.1.4.1.37476.2.8 in Dateiformat Signatur schreiben
 
 Kleinigkeiten:
 - Es wäre schön, wenn die größe der Spezialhintergründe (Planeten) abhängig von wäre, wie weit entfernt sie ist (Layer 1,2,3)
