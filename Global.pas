@@ -8,6 +8,7 @@ const
   RasterH = 32;
   MaxPossibleEnemyLives = 999;
   MaxPossibleLevels = 9999;
+  RegistrySettingsKey = 'SOFTWARE\ViaThinkSoft\SpaceMission\Settings';
 
 type
   // DirectX\Music.dxm

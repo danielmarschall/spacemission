@@ -271,6 +271,13 @@ type
     procedure SceneNewLevel;
     procedure EndSceneNewLevel;
     procedure LevelNeuStarten;
+  private
+    { Diverse temporäre Variablen }
+    Crash2: integer;
+    EnemyCounter: integer;
+    BossExists: boolean;
+    Crash: boolean;
+    crashsound: boolean;
   public
     FNextScene: TGameScene;
     FScore: Integer;
@@ -337,10 +344,6 @@ const
   ADDITIONAL_ENEMIES_PER_LEVEL = 75;
 
 {$R *.DFM}
-
-var
-  Crash2, EnemyCounter: integer;
-  BossExists, Crash, crashsound: boolean;
 
 const
   DXInputButton = [isButton1, isButton2, isButton3,
@@ -557,10 +560,10 @@ begin
   if mainform.FCheat then exit;
   if (Sprite is TEnemy) or (Sprite is TEnemyTama) then
   begin
-    if not crash then
+    if not mainform.crash then
     begin
       dec(MainForm.FLife);
-      Crash := true;
+      mainform.Crash := true;
       if MainForm.Flife=0 then
       begin
         MainForm.PlaySound(smsExplosion, false);
@@ -579,10 +582,10 @@ begin
     end
     else
     begin
-      if not crashsound then
+      if not mainform.crashsound then
       begin
         MainForm.PlaySound(smsHit, False);
-        crashsound := true;
+        mainform.crashsound := true;
       end;
     end;
   end;
@@ -713,13 +716,13 @@ constructor TEnemy.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent);
   FLife := ALifes;
-  inc(EnemyCounter);
+  inc(mainform.EnemyCounter);
 end;
 
 destructor TEnemy.Destroy;
 begin
   inherited Destroy;
-  dec(EnemyCounter);
+  dec(mainform.EnemyCounter);
 end;
 
 procedure TEnemy.Hit(AHitStrength: integer = 1);
@@ -1148,7 +1151,6 @@ begin
   Image := MainForm.GetSpriteGraphic(smgEnemyBoss);
   Width := Image.Width;
   Height := Image.Height;
-  BossExists := true;
   MainForm.MusicSwitchTrack(smmBoss);
   AnimCount := Image.PatternCount;
   AnimLooped := True;
@@ -1283,8 +1285,8 @@ begin
   dxdraw.Align := alClient;
   dxdraw.Left := 0;
   dxdraw.Top := 0;
-  dxdraw.Width := mainform.ClientWidth;
-  dxdraw.Height := mainform.ClientHeight;
+  dxdraw.Width := ClientWidth;
+  dxdraw.Height := ClientHeight;
   dxdraw.AutoInitialize := False;
   dxdraw.AutoSize := False;
   dxdraw.Color := clBlack;
@@ -1338,14 +1340,14 @@ begin
     try
       try
         SavGame.LoadFromFile(paramstr(1));
-        mainform.FScore := SavGame.Score;
-        mainform.FLife := SavGame.Life;
-        mainform.FLevel := SavGame.Level;
-        mainform.FGameMode := SavGame.GameMode;
-        MainForm.FLevelDataAlreadyLoaded := true; // do not call NewLevel() in StartSceneMain
+        FScore := SavGame.Score;
+        FLife := SavGame.Life;
+        FLevel := SavGame.Level;
+        FGameMode := SavGame.GameMode;
+        FLevelDataAlreadyLoaded := true; // do not call NewLevel() in StartSceneMain
         if Assigned(SavGame.LevelData) then
         begin
-          mainform.LevelData.Assign(SavGame.LevelData);
+          LevelData.Assign(SavGame.LevelData);
         end;
       except
         on E: Exception do
@@ -1358,7 +1360,7 @@ begin
     finally
       FreeAndNil(SavGame);
     end;
-    mainform.FNextScene := gsNewLevel;
+    FNextScene := gsNewLevel;
     exit;
   end;
   GameStartClick(GameStart);
@@ -1584,9 +1586,6 @@ begin
   FBlinkTime := GetTickCount;
 end;
 
-const
-  RegistrySettingsKey = 'SOFTWARE\ViaThinkSoft\SpaceMission\Settings';
-
 procedure TMainForm.WriteOptions;
 var
   Reg: TRegistry;
@@ -1760,9 +1759,9 @@ begin
   FCounter := 0;
   if not FLevelDataAlreadyLoaded then NewLevel(FLevel);
   FRestEnemies := Length(LevelData.EnemyAdventTable);
+  BossExists := LevelData.HasBoss;
   FLifeAtLevelStart := FLife;     // Das ist wichtig, wenn man neu starten möchte
   FScoreAtLevelStart := FScore;   //
-  BossExists := false;
   MusicSwitchTrack(smmGame);
   FEnemyAdventPos := 0;
   FFrame := -4;
@@ -2151,7 +2150,7 @@ begin
     SpriteEngine.Draw;
     DXDraw.Surface.Canvas.Brush.Style := bsClear;
     DXDraw.Surface.Canvas.Font.Size := 20;
-    if MainForm.flife > 0 then
+    if flife > 0 then
     begin
       {$REGION 'Anzeige Punkte'}
       DXDraw.Surface.Canvas.Font.Color := clOlive;
@@ -2162,13 +2161,13 @@ begin
 
       {$REGION 'Anzeige Level'}
       DXDraw.Surface.Canvas.Font.Color := clMaroon;
-      DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-141, 9, 'Level: ' + IntToStr(MainForm.flevel));
+      DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-141, 9, 'Level: ' + IntToStr(flevel));
       DXDraw.Surface.Canvas.Font.Color := clRed;
-      DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-140, 10, 'Level: ' + IntToStr(MainForm.flevel));
+      DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-140, 10, 'Level: ' + IntToStr(flevel));
       {$ENDREGION}
 
       {$REGION 'Lebensanzeige'}
-      if FLife<0 then mainform.FLife := 0;
+      if FLife<0 then FLife := 0;
       if FCheat then
       begin
         DXDraw.Surface.Canvas.Font.Color := clPurple;
@@ -2181,9 +2180,9 @@ begin
         if ((Flife = 1) and ((FBlink div 300) mod 2=0)) or (Flife <> 1) then
         begin
           DXDraw.Surface.Canvas.Font.Color := clPurple;
-          DXDraw.Surface.Canvas.Textout(9, dxdraw.surfaceheight-41, 'Leben: ' + IntToStr(MainForm.flife));
+          DXDraw.Surface.Canvas.Textout(9, dxdraw.surfaceheight-41, 'Leben: ' + IntToStr(flife));
           DXDraw.Surface.Canvas.Font.Color := clFuchsia;
-          DXDraw.Surface.Canvas.Textout(10, dxdraw.surfaceheight-40, 'Leben: ' + IntToStr(MainForm.flife));
+          DXDraw.Surface.Canvas.Textout(10, dxdraw.surfaceheight-40, 'Leben: ' + IntToStr(flife));
         end;
         if Flife = 1 then BlinkUpdate;
       end;
