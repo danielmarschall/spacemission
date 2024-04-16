@@ -1926,12 +1926,12 @@ begin
   if FGameMode = gmRandom then
   begin
     {$REGION 'Random game'}
-    Enemies[1] := etEnemyAttacker;
-    Enemies[2] := etEnemyMeteor;
-    Enemies[3] := etEnemyUFO;
-    Enemies[4] := etEnemyAttacker;
-    Enemies[5] := etEnemyMeteor;
-    Enemies[6] := etEnemyUFO;
+    Enemies[1] := etEnemyAttacker;     // ab Lev 1
+    Enemies[2] := etEnemyMeteor;       // ab Lev 1
+    Enemies[3] := etEnemyUFO;          // ab Lev 1
+    Enemies[4] := etEnemyAttacker;     // ab Lev 2
+    Enemies[5] := etEnemyMeteor;       // ab Lev 3
+    Enemies[6] := etEnemyUFO;          // ...
     Enemies[7] := etEnemyAttacker;
     Enemies[8] := etEnemyMeteor;
     Enemies[9] := etEnemyUFO;
@@ -1960,7 +1960,8 @@ begin
       e.enemyType := Enemies[min(random(lev+2)+1, High(Enemies))];
       if e.enemyType = etEnemyAttacker2 then
       begin
-        e.enemyType := Enemies[min(random(lev+2)+1, High(Enemies))]; {O_o}
+        //e.enemyType := Enemies[min(random(lev+2)+1, High(Enemies))];
+        if Random(2) = 0 then e.enemyType := etEnemyAttacker3;
       end;
       e.x := 85-(lev+(random(lev))*2){O_o};
       if e.x < 1 then e.x := 1; // passiert bei großen Levels

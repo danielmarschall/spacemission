@@ -23,11 +23,13 @@ SpaceMission 1.2:
 - Zufallslevel: Ab sofort 1 Einheit weniger pro Level
 - Zufallslevel: Ab sofort Level 1-4 ohne Boss, Level 5-9 mit Boss am Ende, und ab Level 10 Boss in der Mitte vom Level
 - Zufallslevel: Bei höheren Levels ist die Lebensenergie von Gegnern nun auf 10 gedeckelt
+- Zufallslevel: Attackierer 2 kommt nun häufiger vor
 - Anzeige Restliche Einheiten ist nun Einzeige Einheiten gesamt, d.h. auch die, die auf dem Bildschirm sind (außer Boss)
 - Zufallslevel: Zufallslevel größer als Level 25 ist nun möglich.
 - Man kann nun nicht mehr "Game over" gehen. Das Level startet neu, wenn man gestorben ist.
 - Spielstände beinhalten nun die Original-Leveldateien, sodass das wiederherzustellende Spiel exakt gleich aussieht
 - Leveleditor: Eigenschaften "Level-Name" und "Level Autor" hinzugefügt.
+- Aus technischen Gründen ist es nicht mehr möglich zu speichern, wenn die Anzeige "Level ..., Weiter mit Leertaste" kommt. Man kann jedoch das Level starten und sofort dann mit F4 speichern.
 
 Version 1.1:
 - Bugfixes
