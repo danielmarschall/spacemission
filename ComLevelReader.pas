@@ -378,21 +378,21 @@ begin
       sLine := sl.Strings[curline].Trim;
       if (sLine = '') or (Copy(sLine, 1, 1) = ';') then continue;
       ary := SplitString(CollapseSpaces(sLine), ' ');
-      if ary[0] = 'Width' then // do not localize
+      if SameText(ary[0], 'Width') then // do not localize
       begin
         LevelEditorLength := StrToInt(ary[1]);
         if (Length(ary) > 2) and (Copy(ary[2], 1, 1) <> ';') then
           raise Exception.CreateFmt('Zeile %d ist ungültig (Zusatzinfo am Ende)', [curline+1]);
       end
-      else if ary[0] = 'Name' then // do not localize
+      else if SameText(ary[0], 'Name') then // do not localize
       begin
-        LevelName := Copy(sLine, Length(ary[0])+2, Length(sLine));
+        LevelName := Trim(Copy(sLine, Length(ary[0])+2, Length(sLine)));
       end
-      else if ary[0] = 'Author' then // do not localize
+      else if SameText(ary[0], 'Author') then // do not localize
       begin
-        LevelAuthor := Copy(sLine, Length(ary[0])+2, Length(sLine));
+        LevelAuthor := Trim(Copy(sLine, Length(ary[0])+2, Length(sLine)));
       end
-      else if ary[0] = 'Enemy' then // do not localize
+      else if SameText(ary[0], 'Enemy') then // do not localize
       begin
         tmpEnemy := TEnemyType(strtoint(ary[1]));
         tmpX     := strtoint(ary[2]);
@@ -637,25 +637,25 @@ begin
       sLine := sl.Strings[curline].Trim;
       if (sLine = '') or (Copy(sLine, 1, 1) = ';') then continue;
       ary := SplitString(CollapseSpaces(sLine), ' ');
-      if ary[0] = 'Score' then // do not localize
+      if SameText(ary[0], 'Score') then // do not localize
       begin
         Score := StrToInt(ary[1]);
         if (Length(ary) > 2) and (Copy(ary[2], 1, 1) <> ';') then
           raise Exception.CreateFmt('Zeile %d ist ungültig (Zusatzinfo am Ende)', [curline+1]);
       end
-      else if ary[0] = 'Lives' then // do not localize
+      else if SameText(ary[0], 'Lives') then // do not localize
       begin
         Life := StrToInt(ary[1]);
         if (Length(ary) > 2) and (Copy(ary[2], 1, 1) <> ';') then
           raise Exception.CreateFmt('Zeile %d ist ungültig (Zusatzinfo am Ende)', [curline+1]);
       end
-      else if ary[0] = 'Level' then // do not localize
+      else if SameText(ary[0], 'Level') then // do not localize
       begin
         Level := StrToInt(ary[1]);
         if (Length(ary) > 2) and (Copy(ary[2], 1, 1) <> ';') then
           raise Exception.CreateFmt('Zeile %d ist ungültig (Zusatzinfo am Ende)', [curline+1]);
       end
-      else if ary[0] = 'Mode' then // do not localize
+      else if SameText(ary[0], 'Mode') then // do not localize
       begin
         GameMode := TGameMode(StrToInt(ary[1]));
         if (Length(ary) > 2) and (Copy(ary[2], 1, 1) <> ';') then
