@@ -30,6 +30,7 @@ SpaceMission 1.2:
 - Spielstände beinhalten nun die Original-Leveldateien, sodass das wiederherzustellende Spiel exakt gleich aussieht
 - Leveleditor: Eigenschaften "Level-Name" und "Level Autor" hinzugefügt.
 - Aus technischen Gründen ist es nicht mehr möglich zu speichern, wenn die Anzeige "Level ..., Weiter mit Leertaste" kommt. Man kann jedoch das Level starten und sofort dann mit F4 speichern.
+- Der Leveleditor hat nun eine "Level testen" Funktion
 
 Version 1.1:
 - Bugfixes

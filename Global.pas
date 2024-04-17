@@ -10,6 +10,13 @@ const
   MaxPossibleLevels = 9999;
   RegistrySettingsKey = 'SOFTWARE\ViaThinkSoft\SpaceMission\Settings';
   DefaultLevelLength = 1200;
+  StartLives = 6;
+  conleicht =  650 div 60; // 10
+  conmittel = 1000 div 60; // 16
+  conschwer = 1350 div 60; // 22
+  conmaster = 2000 div 60; // 33
+  DEFAULT_ANIMSPEED = 15/1000;
+  ADDITIONAL_ENEMIES_PER_LEVEL = 75;
 
 type
   // DirectX\Music.dxm
@@ -65,12 +72,14 @@ function OwnDirectory: string;
 const
   FOLDERID_SavedGames: TGuid = '{4C5C32FF-BB9D-43b0-B5B4-2D72E54EAAA4}';
 
+// Useful functions
 function GetKnownFolderPath(const rfid: TGUID): string;
+function KillTask(ExeFileName: string): Integer;
 
 implementation
 
 uses
-  SysUtils, ActiveX, ShlObj;
+  Windows, SysUtils, ActiveX, ShlObj, TlHelp32;
 
 function GetKnownFolderPath(const rfid: TGUID): string;
 var
@@ -92,6 +101,35 @@ begin
   begin
     Result := '';
   end;
+end;
+
+// https://stackoverflow.com/questions/43774320/how-to-kill-a-process-by-name
+function KillTask(ExeFileName: string): Integer;
+const
+  PROCESS_TERMINATE = $0001;
+var
+  ContinueLoop: BOOL;
+  FSnapshotHandle: THandle;
+  FProcessEntry32: TProcessEntry32;
+begin
+  Result := 0;
+  FSnapshotHandle := CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+  FProcessEntry32.dwSize := SizeOf(FProcessEntry32);
+  ContinueLoop := Process32First(FSnapshotHandle, FProcessEntry32);
+
+  while Integer(ContinueLoop) <> 0 do
+  begin
+    if ((UpperCase(ExtractFileName(FProcessEntry32.szExeFile)) =
+      UpperCase(ExeFileName)) or (UpperCase(FProcessEntry32.szExeFile) =
+      UpperCase(ExeFileName))) then
+      Result := Integer(TerminateProcess(
+                        OpenProcess(PROCESS_TERMINATE,
+                                    BOOL(0),
+                                    FProcessEntry32.th32ProcessID),
+                                    0));
+     ContinueLoop := Process32Next(FSnapshotHandle, FProcessEntry32);
+  end;
+  CloseHandle(FSnapshotHandle);
 end;
 
 function OwnDirectory: string;

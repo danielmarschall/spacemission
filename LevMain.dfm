@@ -44,8 +44,6 @@ object MainForm: TMainForm
       ' Zeigen Sie mit dem Mauszeiger auf eine Einheit, um deren Eigens' +
       'chaften anzuzeigen...'
     OnMouseMove = DXDrawMouseMove
-    ExplicitTop = 498
-    ExplicitWidth = 741
   end
   object SidePanel: TPanel
     Left = 636
@@ -55,8 +53,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = 632
-    ExplicitHeight = 498
     object Bevel1: TBevel
       Left = 4
       Top = 200
@@ -2025,6 +2021,9 @@ object MainForm: TMainForm
         ShortCut = 16462
         OnClick = NeuClick
       end
+      object N2: TMenuItem
+        Caption = '-'
+      end
       object Level: TMenuItem
         Caption = '&Laden/Speichern...'
         ShortCut = 16463
@@ -2034,6 +2033,10 @@ object MainForm: TMainForm
         Caption = 'Alle Leveldateien aktualisieren'
         Visible = False
         OnClick = AlleLeveldateienaktualisieren1Click
+      end
+      object Leveltesten1: TMenuItem
+        Caption = 'Level testen'
+        OnClick = Leveltesten1Click
       end
       object N1: TMenuItem
         Caption = '-'

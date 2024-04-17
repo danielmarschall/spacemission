@@ -2,7 +2,6 @@
 # SpaceMission TODO
 
 Geplant für 1.2:
-- Leveleditor "Testen" Button, um die Mission gleich zu testen (dieser erstellt am besten eine temporäre ".sav" datei, die per commandline mit SpaceMission.exe aufgerufen wird)
 - Bei jedem Levelaufstieg 1 Leben geben, alternativ 2 Medikits pro Level
 
 Kleinigkeiten:

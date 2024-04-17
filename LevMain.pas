@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, MMSystem,
   Dialogs, StdCtrls, ExtCtrls, Menus, DIB, DXClass, DXSprite, DXDraws,
   DXSounds, Spin, ComCtrls{$IF CompilerVersion >= 23.0}, System.UITypes,
-  WinAPI.DirectDraw{$ENDIF}, DirectX, ComLevelReader, Global;
+  WinAPI.DirectDraw{$ENDIF}, DirectX, ComLevelReader, Global, IOUtils;
 
 type
   TMainForm = class(TDXForm)
@@ -48,6 +48,8 @@ type
     SidePanel: TPanel;
     LivesEdit: TSpinEdit;
     AlleLeveldateienaktualisieren1: TMenuItem;
+    N2: TMenuItem;
+    Leveltesten1: TMenuItem;
     procedure DXDrawFinalize(Sender: TObject);
     procedure DXDrawInitialize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -69,6 +71,9 @@ type
     procedure ScrollBarScroll(Sender: TObject; ScrollCode: TScrollCode;
       var ScrollPos: Integer);
     procedure AlleLeveldateienaktualisieren1Click(Sender: TObject);
+    procedure Leveltesten1Click(Sender: TObject);
+  private
+    function GetTestlevelFilename: string;
   public
     { VCL-Ersatz }
     spriteengine: tdxspriteengine;
@@ -105,7 +110,7 @@ var
 implementation
 
 uses
-  LevSplash, LevSpeicherung, ComInfo, LevOptions;
+  LevSplash, LevSpeicherung, ComInfo, LevOptions, ShellAPI;
 
 {$R *.DFM}
 
@@ -256,12 +261,18 @@ begin
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
+var
+  tmp: string;
 begin
   FreeAndNil(dxdraw);
   FreeAndNil(LevData);
   //FreeAndNil(spriteengine);
   FreeAndNil(dxtimer);
   FreeAndNil(imagelist);
+  tmp := GetTestlevelFilename;
+
+  // SpaceMission.exe only loads a file once, so we can delete any test level
+  if FileExists(tmp) then DeleteFile(GetTestlevelFilename);
 end;
 
 procedure TMainForm.BeendenClick(Sender: TObject);
@@ -453,6 +464,32 @@ begin
   speicherungform.showmodal;
 end;
 
+procedure TMainForm.Leveltesten1Click(Sender: TObject);
+var
+  sav: TSaveData;
+  tmp: string;
+begin
+  KillTask('SpaceMission.exe');
+
+  sav := TSaveData.Create;
+  try
+    sav.Score := 0;
+    sav.Life := 6;
+    if Assigned(SpeicherungForm) then
+      sav.Level := SpeicherungForm.LevelNumber.Value
+    else
+      sav.Level := 1;
+    sav.GameMode := gmLevels;
+    sav.LevelData := TlevelData.Create;
+    sav.LevelData.Assign(LevData);
+    tmp := GetTestlevelFilename;
+    sav.SaveToFile(tmp);
+    ShellExecute(Handle, 'open', PChar(OwnDirectory+'SpaceMission.exe'), PChar('"'+tmp+'"'), PChar(OwnDirectory), SW_NORMAL);
+  finally
+    FreeAndNil(sav);
+  end;
+end;
+
 procedure TMainForm.FormShow(Sender: TObject);
 begin
   if Assigned(SplashForm) then
@@ -472,6 +509,11 @@ begin
     result := imagelist.Items.Items[Ord(Sprite)-1]
   else
     result := nil;
+end;
+
+function TMainForm.GetTestlevelFilename: string;
+begin
+  result := IncludeTrailingPathDelimiter(TPath.GetTempPath) + 'SpaceMissionTest.sav';
 end;
 
 procedure TMainForm.InformationenClick(Sender: TObject);

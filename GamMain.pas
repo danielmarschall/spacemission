@@ -334,15 +334,6 @@ implementation
 uses
   GamSplash, GamSpeicherung, ComInfo, GamCheat, MMSystem, Registry;
 
-const
-  conleicht =  650 div 60; // 10
-  conmittel = 1000 div 60; // 16
-  conschwer = 1350 div 60; // 22
-  conmaster = 2000 div 60; // 33
-  StartLives = 6;
-  DEFAULT_ANIMSPEED = 15/1000;
-  ADDITIONAL_ENEMIES_PER_LEVEL = 75;
-
 {$R *.DFM}
 
 const
@@ -1262,10 +1253,6 @@ end;
 { TMainForm }
 
 procedure TMainForm.FormCreate(Sender: TObject);
-resourcestring
-  SFileError = 'Die Datei kann von SpaceMission nicht geöffnet werden!';
-var
-  SavGame: TSaveData;
 begin
   Randomize;
 
@@ -1333,36 +1320,7 @@ begin
   DXInit;
   SoundInit;
   MusicInit;
-  ResetLevelData;
-  if (paramcount > 0) and (fileexists(paramstr(1))) and (ExtractFileExt(paramstr(1)).ToLower = '.sav') then
-  begin
-    SavGame := TSaveData.Create;
-    try
-      try
-        SavGame.LoadFromFile(paramstr(1));
-        FScore := SavGame.Score;
-        FLife := SavGame.Life;
-        FLevel := SavGame.Level;
-        FGameMode := SavGame.GameMode;
-        FLevelDataAlreadyLoaded := true; // do not call NewLevel() in StartSceneMain
-        if Assigned(SavGame.LevelData) then
-        begin
-          LevelData.Assign(SavGame.LevelData);
-        end;
-      except
-        on E: Exception do
-        begin
-          showmessage(SFileError + ' ' +E.Message);
-          GameStartClick(GameStart);
-          exit;
-        end;
-      end;
-    finally
-      FreeAndNil(SavGame);
-    end;
-    FNextScene := gsNewLevel;
-    exit;
-  end;
+
   GameStartClick(GameStart);
 end;
 
@@ -2463,6 +2421,10 @@ begin
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
+resourcestring
+  SFileError = 'Die Datei kann von SpaceMission nicht geöffnet werden!';
+var
+  SavGame: TSaveData;
 begin
   if Assigned(SplashForm) then
   begin
@@ -2472,6 +2434,38 @@ begin
 
   dxtimer.Enabled := true;
   dxtimer.ActiveOnly := true;
+
+  ResetLevelData;
+  if (paramcount > 0) and (fileexists(paramstr(1))) and (ExtractFileExt(paramstr(1)).ToLower = '.sav') then
+  begin
+    SavGame := TSaveData.Create;
+    try
+      try
+        SavGame.LoadFromFile(paramstr(1));
+        FScore := SavGame.Score;
+        FLife := SavGame.Life;
+        FLevel := SavGame.Level;
+        FGameMode := SavGame.GameMode;
+        FLevelDataAlreadyLoaded := true; // do not call NewLevel() in StartSceneMain
+        if Assigned(SavGame.LevelData) then
+        begin
+          LevelData.Assign(SavGame.LevelData);
+        end;
+      except
+        on E: Exception do
+        begin
+          showmessage(SFileError + ' ' +E.Message);
+          GameStartClick(GameStart);
+          exit;
+        end;
+      end;
+    finally
+      FreeAndNil(SavGame);
+    end;
+    //FNextScene := gsNewLevel;
+    StartScene(gsNewLevel);
+    exit;
+  end;
 end;
 
 procedure TMainForm.InformationenClick(Sender: TObject);
