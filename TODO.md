@@ -3,7 +3,6 @@
 
 Geplant für 1.2:
 - Bei jedem Levelaufstieg 1 Leben geben, alternativ 2 Medikits pro Level
-- DEvTools DirectPlay abschalten
 
 Kleinigkeiten:
 - Es wäre schön, wenn die größe der Spezialhintergründe (Planeten) abhängig von wäre, wie weit entfernt sie ist (Layer 1,2,3)
