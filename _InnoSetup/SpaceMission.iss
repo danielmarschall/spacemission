@@ -1,8 +1,6 @@
 ; SpaceMission Setup Script for InnoSetup
 ; by Daniel Marschall
 
-; http://www.daniel-marschall.de/
-
 ; Shut-Down Game?!
 
 [Setup]
