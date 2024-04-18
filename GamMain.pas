@@ -2495,10 +2495,10 @@ begin
   FreeAndNil(spriteengine);
   FreeAndNil(dxdraw);
   FreeAndNil(wavelist);
+  FreeAndNil(dxmusic);
   FreeAndNil(dxsound);
   //FreeAndNil(dxinput);
   FreeAndNil(dxtimer);
-  FreeAndNil(dxmusic);
   DeleteCriticalSection(TimerCS);
   FreeAndNil(LevelData);
 end;

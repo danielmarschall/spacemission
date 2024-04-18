@@ -3,6 +3,7 @@
 
 Geplant für 1.2:
 - Bei jedem Levelaufstieg 1 Leben geben, alternativ 2 Medikits pro Level
+- DEvTools DirectPlay abschalten
 
 Kleinigkeiten:
 - Es wäre schön, wenn die größe der Spezialhintergründe (Planeten) abhängig von wäre, wie weit entfernt sie ist (Layer 1,2,3)
@@ -59,3 +60,8 @@ LEVELEDITOR:
 - Langsam, manchmal sogar Deadlock
 - ggf. auch Autor in LVL Datei packen und Kommentare in Datei erlauben
 - Delphi IDE: Form Height ändern sich automatisch, es wird immer größer.
+- "unsaubere" levels akzeptieren! komet mit 1+ leben, einheiten, die nicht auf der linie sind.
+- "rückgängig" funktion
+- Probleme mit Schiebebildchen...  (was meinte ich damit?)
+- Wenn Level gelöscht, dass gerade geladen ist, dann LevChanged = true!
+- Boss überschneidet Einheiten ?

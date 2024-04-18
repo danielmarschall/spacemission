@@ -64,6 +64,7 @@ var
   i: integer;
   fil: string;
 begin
+  // TODO: slow
   //SpinEdit.Value := 1;
   LevelListBox.items.clear;
   li1a.visible := false;
