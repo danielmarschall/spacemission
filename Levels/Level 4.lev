@@ -3,18 +3,18 @@ Name   Level 4
 Author Patrick Büssecker
 Width  1200
 ;      Type   XCoord YCoord Lives
-Enemy  1      480    224    1      
-Enemy  1      528    160    1      
-Enemy  5      528    192    1      
-Enemy  5      528    256    1      
-Enemy  1      528    288    1      
-Enemy  6      1248   96     2      
-Enemy  6      1248   352    2      
-Enemy  1      1872   96     2      
-Enemy  1      1872   224    2      
-Enemy  1      1872   352    2      
-Enemy  5      2400   64     2      
-Enemy  5      2400   384    2      
-Enemy  1      2976   192    4      
-Enemy  1      2976   224    4      
-Enemy  1      2976   256    4      
+Enemy  1      480    224    1
+Enemy  1      528    160    1
+Enemy  5      528    192    1
+Enemy  5      528    256    1
+Enemy  1      528    288    1
+Enemy  6      1248   96     2
+Enemy  6      1248   352    2
+Enemy  1      1872   96     2
+Enemy  1      1872   224    2
+Enemy  1      1872   352    2
+Enemy  5      2400   64     2
+Enemy  5      2400   384    2
+Enemy  1      2976   192    4
+Enemy  1      2976   224    4
+Enemy  1      2976   256    4

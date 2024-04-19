@@ -3,16 +3,16 @@ Name   Level 3
 Author Patrick Büssecker
 Width  1200
 ;      Type   XCoord YCoord Lives
-Enemy  1      624    64     1      
-Enemy  1      624    192    1      
-Enemy  1      624    256    1      
-Enemy  1      624    384    1      
-Enemy  5      1104   128    1      
-Enemy  5      1104   160    1      
-Enemy  5      1104   288    1      
-Enemy  5      1104   320    1      
-Enemy  1      1584   160    1      
-Enemy  1      1584   256    1      
-Enemy  6      2160   160    2      
-Enemy  6      2160   224    2      
-Enemy  6      2160   288    2      
+Enemy  1      624    64     1
+Enemy  1      624    192    1
+Enemy  1      624    256    1
+Enemy  1      624    384    1
+Enemy  5      1104   128    1
+Enemy  5      1104   160    1
+Enemy  5      1104   288    1
+Enemy  5      1104   320    1
+Enemy  1      1584   160    1
+Enemy  1      1584   256    1
+Enemy  6      2160   160    2
+Enemy  6      2160   224    2
+Enemy  6      2160   288    2
