@@ -1,0 +1,8 @@
+body {
+	color:#EEE;
+	background-color:#222;
+}
+
+a:link, a:hover, a:active, a:visited {
+	color:yellow;
+}

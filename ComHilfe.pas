@@ -23,7 +23,7 @@ var
 implementation
 
 uses
-  MarkDownProcessor, ShellAPI;
+  MarkDownProcessor, ShellAPI, Global;
 
 {$R *.dfm}
 
@@ -43,21 +43,34 @@ end;
 procedure THilfeForm.ShowMarkDownHelp(AMarkDownFile: string);
 var
   md: TMarkdownProcessor;
-  sl: TStringList;
+  slHtml, slCss: TStringList;
+  cssFile: string;
 begin
-  sl := TStringList.Create();
+  slHtml := TStringList.Create();
+  slCss := TStringList.Create();
   try
-    sl.LoadFromFile(AMarkDownFile);
+    slHtml.LoadFromFile(AMarkDownFile);
+    cssFile := OwnDirectory + 'Help.css';
+    if FileExists(cssFile) then
+      slCss.LoadFromFile(cssFile);
     md := TMarkdownProcessor.CreateDialect(mdCommonMark);
     try
       //md.AllowUnsafe := true;
-      sl.Text := md.process(UTF8ToString(RawByteString(sl.Text)));
-      ShowHTMLHelp(sl.Text);
+      ShowHTMLHelp(
+        '<html>'+
+        '<head>'+
+        '<style>'+slCss.Text+'</style>'+
+        '</head>'+
+        '<body>'+
+        md.process(UTF8ToString(RawByteString(slHtml.Text)))+
+        '</body>'+
+        '</html>');
     finally
       FreeAndNil(md);
     end;
   finally
-    FreeAndNil(sl);
+    FreeAndNil(slHtml);
+    FreeAndNil(slCss);
   end;
 end;
 
@@ -71,6 +84,14 @@ begin
   begin
     // Links in default Browser anzeigen
     ShellExecute(handle, 'open', PChar(string(URL)), '', '', SW_NORMAL);
+    Cancel := true;
+  end
+  else if SameText(ExtractFileExt(URL), '.md') then
+  begin
+    if SameText(Copy(URL,1,6), 'about:') then
+      ShowMarkDownHelp(Copy(URL,7,Length(URL)))
+    else
+      ShowMarkDownHelp(URL);
     Cancel := true;
   end
   else

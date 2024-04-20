@@ -1,5 +1,7 @@
 # SpaceMission 1.2 Dokumentation
 
+Bitte auch lesen: [Was ist neu in Version 1.2?](CHANGELOG.md)
+
 ## Beschreibung
 SpaceMission ist ein klassisches Weltraumspiel, beidem Sie durch einen Kometenhagel fliegen,
 UFOs und andere Raumschiffe abschießen müssen. Es gibt seit Version 1.1 31 Levels, die
