@@ -36,6 +36,7 @@ SpaceMission 1.2:
 - Bugfix: Wenn man pause gemacht hat und fenster wechselt und wieder zurückwechselt, wurde Pause aufgehoben.
 - Bugfix: Zwei Fenster wurden in der Taskleiste angezeigt
 - "Vollbild" und "Breitbild" Feature entfernt, da es nie richtig funktioniert hat
+- Level Editor kann nun über das Hauptmenü aufgerufen werden
 
 Version 1.1:
 - Bugfixes

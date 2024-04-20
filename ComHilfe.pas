@@ -51,7 +51,7 @@ begin
     md := TMarkdownProcessor.CreateDialect(mdCommonMark);
     try
       //md.AllowUnsafe := true;
-      sl.Text := md.process(UTF8Decode(sl.Text));
+      sl.Text := md.process(UTF8ToString(RawByteString(sl.Text)));
       ShowHTMLHelp(sl.Text);
     finally
       FreeAndNil(md);

@@ -3,6 +3,7 @@
 
 ## Geplant für 1.2
 
+- versioninfo fehlt bei delphi 12
 - Release 1.2 with EV CodeSign
 
 ## Geplant für 1.3
@@ -11,7 +12,6 @@
 - Neue Einheit: Medikit item
 - Neue Einheit: Ufo, das im Kreis fliegt und nicht weggeht
 - Bei Pause => Entweder alles grau werden lassen, oder vielleicht ganz groß Pause in die Bildschirmmitte schreiben
-- Level-Editor in die SpaceMission.exe rein und über Hauptmenü aufrufen?
 - Vorbereitung auf Multilingualität (all strings in resourcestrings), ggf. sogar schon auf Englisch übersetzen
 - SplashScreens: als BMP
 
@@ -51,7 +51,6 @@
 ## Repro, Unklar, Fragen
 
 - Was ist wenn man mission erfolgreich hatte und dann doch stirbt?
-- versioninfo fehlt bei delphi 12?
 - Kartengröße bleibt bei "Neu"
 - Que: Gibt es eine neuere Version des Shoot-Samples (nicht mehr vorhanden in aktueller DelphiX)
 - Tastenspeere bei runter+links+shot

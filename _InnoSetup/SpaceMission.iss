@@ -36,11 +36,10 @@ LanguageID=$0407
 
 [Tasks]
 Name: "desktopicon"; Description: "Erstelle eine Verknüpfung auf dem &Desktop"; GroupDescription: "Programmverknüpfungen:"; MinVersion: 4,4
-Name: "levedit"; Description: "Installiere den &Leveleditor"; GroupDescription: "Zusatzprogramme:"; MinVersion: 4,4
 
 [Files]
 Source: "..\SpaceMission.exe"; DestDir: "{app}"; Flags: ignoreversion signonce
-Source: "..\LevEdit.exe"; DestDir: "{app}"; Flags: ignoreversion signonce; Tasks: levedit
+Source: "..\LevEdit.exe"; DestDir: "{app}"; Flags: ignoreversion signonce
 Source: "..\Doku.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Changelog.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\DirectX\Graphics.dxg"; DestDir: "{app}\DirectX"; Flags: ignoreversion
@@ -50,17 +49,15 @@ Source: "..\Levels\*.lev"; DestDir: "{app}\Levels"; Flags: ignoreversion
 
 ;[Dirs]
 ;Name: "{group}\Webseiten"
-;Name: "{group}\Ordner"
 
 [Icons]
 ;Name: "{group}\Webseiten\Daniel Marschall"; Filename: "https://www.daniel-marschall.de/"
 ;Name: "{group}\Webseiten\ViaThinkSoft"; Filename: "https://www.viathinksoft.de/"
 ;Name: "{group}\Webseiten\Projektseite auf ViaThinkSoft"; Filename: "https://www.viathinksoft.de/index.php?page=projektanzeige&seite=projekt-19"
 Name: "{group}\SpaceMission"; Filename: "{app}\SpaceMission.exe"
-Name: "{group}\Leveleditor"; Filename: "{app}\LevEdit.exe"; Tasks: levedit
-;Name: "{group}\Ordner\Levelordner"; Filename: "{app}\Levels\"
+Name: "{group}\SpaceMission Level Editor"; Filename: "{app}\LevEdit.exe"
 Name: "{userdesktop}\SpaceMission"; Filename: "{app}\SpaceMission.exe"; MinVersion: 4,4; Tasks: desktopicon
-;Name: "{group}\SpaceMission deinstallieren"; Filename: "{uninstallexe}"
+Name: "{userdesktop}\SpaceMission Level Editor"; Filename: "{app}\LevEdit.exe"; MinVersion: 4,4; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\SpaceMission.exe"; Description: "SpaceMission starten"; Flags: nowait postinstall skipifsilent

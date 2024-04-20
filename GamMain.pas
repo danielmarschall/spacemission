@@ -1914,9 +1914,13 @@ begin
   FLevelDataAlreadyLoaded := true; // nicht nochmal NewLevel() aufrufen. Erst wieder wenn man gewonnen hat.
 end;
 
+var
+  TitleWasPressed: TDxInputState = isButton32;
+
 procedure TMainForm.SceneTitle;
 var
   Logo: TPictureCollectionItem;
+  colo1, colo2: TColor;
 begin
   DXDraw.Surface.Fill(0);
   Logo := GetSpriteGraphic(smgLogo);
@@ -1926,36 +1930,91 @@ begin
     2, 80, Fangle * 4);
   inc(Fangle);
 
-  if (isDown in MainForm.DXInput.States) and (FGameMode=gmLevels) then FGameMode := gmRandom;
-  if ((isUp in MainForm.DXInput.States) and (FGameMode=gmRandom)) or (FGameMode=gmUnknown) then FGameMode := gmLevels;
+  if FGameMode = gmUnknown then FGameMode := gmLevels;
+
+  if (isUp in MainForm.DXInput.States) then TitleWasPressed := isUp;
+  if (TitleWasPressed=isUp) and not (isUp in MainForm.DXInput.States) then
+  begin
+    TitleWasPressed := isButton32;
+    if (Ord(FGameMode) <> 1) then
+      FGameMode := TGameMode(Ord(FGameMode)-1);
+  end;
+
+  // TODO: Wenn man schnell die Taste drückt, dann kommt es manchmal nicht an!
+  if (isDown in MainForm.DXInput.States) then TitleWasPressed := isDown;
+  if (TitleWasPressed=isDown) and not (isDown in MainForm.DXInput.States) then
+  begin
+    TitleWasPressed := isButton32;
+    if (FGameMode <> High(TGameMode)) then
+      FGameMode := TGameMode(Ord(FGameMode)+1);
+  end;
+
   DXDraw.Surface.Canvas.Brush.Style := bsClear;
   DXDraw.Surface.Canvas.Font.Size := 30;
+
+  {$REGION 'Menu point: Normal Level'}
   if FGameMode = gmLevels then
   begin
-    DXDraw.Surface.Canvas.Font.Color := clMaroon;
-    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)-52, 'Normales Spiel');
-    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-187, (dxdraw.surfaceheight div 2)-52, '>');
-    DXDraw.Surface.Canvas.Font.Color := clRed;
-    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2)-50, 'Normales Spiel');
-    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, (dxdraw.surfaceheight div 2)-50, '>');
-    DXDraw.Surface.Canvas.Font.Color := clOlive;
-    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)-2, 'Zufallslevel');
-    DXDraw.Surface.Canvas.Font.Color := clYellow;
-    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2), 'Zufallslevel');
+    colo1 := clMaroon;
+    colo2 := clRed;
   end
   else
   begin
-    DXDraw.Surface.Canvas.Font.Color := clOlive;
-    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)-52, 'Normales Spiel');
-    DXDraw.Surface.Canvas.Font.Color := clYellow;
-    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2)-50, 'Normales Spiel');
-    DXDraw.Surface.Canvas.Font.Color := clMaroon;
-    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)-2, 'Zufallslevel');
-    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-187, (dxdraw.surfaceheight div 2)-2, '>');
-    DXDraw.Surface.Canvas.Font.Color := clRed;
-    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2), 'Zufallslevel');
-    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, (dxdraw.surfaceheight div 2), '>');
+    colo1 := clOlive;
+    colo2 := clYellow;
   end;
+  DXDraw.Surface.Canvas.Font.Color := colo1;
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)-52, 'Normales Spiel');
+  if FGameMode = gmLevels then
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, (dxdraw.surfaceheight div 2)-52, '>');
+  DXDraw.Surface.Canvas.Font.Color := colo2;
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2)-50, 'Normales Spiel');
+  if FGameMode = gmLevels then
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, (dxdraw.surfaceheight div 2)-50, '>');
+  {$ENDREGION}
+
+  {$REGION 'Menu point: Random Level'}
+  if FGameMode = gmRandom then
+  begin
+    colo1 := clMaroon;
+    colo2 := clRed;
+  end
+  else
+  begin
+    colo1 := clOlive;
+    colo2 := clYellow;
+  end;
+  DXDraw.Surface.Canvas.Font.Color := colo1;
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)-2, 'Zufallslevel');
+  if FGameMode = gmRandom then
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-187, (dxdraw.surfaceheight div 2)-2, '>');
+  DXDraw.Surface.Canvas.Font.Color := colo2;
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2), 'Zufallslevel');
+  if FGameMode = gmRandom then
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, (dxdraw.surfaceheight div 2), '>');
+  {$ENDREGION}
+
+  {$REGION 'Menu point: Level Editor'}
+  if FGameMode = gmEditor then
+  begin
+    colo1 := clMaroon;
+    colo2 := clRed;
+  end
+  else
+  begin
+    colo1 := clOlive;
+    colo2 := clYellow;
+  end;
+  DXDraw.Surface.Canvas.Font.Color := colo1;
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)+48, 'Level-Editor');
+  if FGameMode = gmEditor then
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, (dxdraw.surfaceheight div 2)+48, '>');
+  DXDraw.Surface.Canvas.Font.Color := colo2;
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2)+50, 'Level-Editor');
+  if FGameMode = gmEditor then
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, (dxdraw.surfaceheight div 2)+50, '>');
+  {$ENDREGION}
+
   { if (FBlink div 300) mod 2=0 then
   begin
     DXDraw.Surface.Canvas.Font.Color := clGreen;
@@ -1970,7 +2029,14 @@ begin
   if (isButton1 in DXInput.States) or (isButton2 in DXInput.States) then
   begin
     FLevel := 1;
-    if ((FGameMode=gmLevels) and not GetLevelFileName(FLevel,false).found) or ((FGameMode=gmRandom) and (FLevel > 20)) then
+    if FGameMode = gmEditor then
+    begin
+      ShellExecute(0, 'open', PChar(OwnDirectory+'LevEdit.exe'), '', PChar(OwnDirectory), SW_NORMAL);
+      Close;
+      exit;
+    end;
+    if ((FGameMode=gmLevels) and not GetLevelFileName(FLevel,false).found) or
+       ((FGameMode=gmRandom) and (FLevel > MaxPossibleLevels)) then
     begin
       //PlaySound('Frage', False);
       exit;

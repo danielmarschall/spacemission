@@ -52,7 +52,7 @@ type
     destructor Destroy; override;
   end;
 
-  TGameMode = (gmUnknown, gmLevels, gmRandom);
+  TGameMode = (gmUnknown, gmLevels, gmRandom, gmEditor);
 
   TSaveData = class(TPersistent)
   strict protected
