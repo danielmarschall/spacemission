@@ -42,6 +42,7 @@ Name: "levedit"; Description: "Installiere den &Leveleditor"; GroupDescription: 
 Source: "..\SpaceMission.exe"; DestDir: "{app}"; Flags: ignoreversion signonce
 Source: "..\LevEdit.exe"; DestDir: "{app}"; Flags: ignoreversion signonce; Tasks: levedit
 Source: "..\Doku.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Changelog.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\DirectX\Graphics.dxg"; DestDir: "{app}\DirectX"; Flags: ignoreversion
 Source: "..\DirectX\Music.dxm"; DestDir: "{app}\DirectX"; Flags: ignoreversion
 Source: "..\DirectX\Sound.dxw"; DestDir: "{app}\DirectX"; Flags: ignoreversion

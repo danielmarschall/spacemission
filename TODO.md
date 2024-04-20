@@ -1,30 +1,29 @@
 
 # SpaceMission TODO
 
-## Geplant für 1.2
+## Geplant fÃ¼r 1.2
 
-- GitHub MarkDown Dokumente auch in Spacemission anzeigen, vielleicht in einem TMemo
 - Release 1.2 with EV CodeSign
 
-## Geplant für 1.3
+## Geplant fÃ¼r 1.3
 
 - Bei jedem Levelaufstieg 1 Leben geben, alternativ 2 Medikits pro Level
 - Neue Einheit: Medikit item
 - Neue Einheit: Ufo, das im Kreis fliegt und nicht weggeht
-- Bei Pause => Entweder alles grau werden lassen, oder vielleicht ganz groß Pause in die Bildschirmmitte schreiben
-- Level-Editor in die SpaceMission.exe rein und über Hauptmenü aufrufen?
-- Vorbereitung auf Multilingualität (all strings in resourcestrings), ggf. sogar schon auf Englisch übersetzen
+- Bei Pause => Entweder alles grau werden lassen, oder vielleicht ganz groÃŸ Pause in die Bildschirmmitte schreiben
+- Level-Editor in die SpaceMission.exe rein und Ã¼ber HauptmenÃ¼ aufrufen?
+- Vorbereitung auf MultilingualitÃ¤t (all strings in resourcestrings), ggf. sogar schon auf Englisch Ã¼bersetzen
 - SplashScreens: als BMP
 
 ## Kleinigkeiten
 
-- Es wäre schön, wenn die größe der Spezialhintergründe (Planeten) abhängig von wäre, wie weit entfernt sie ist (Layer 1,2,3)
+- Es wÃ¤re schÃ¶n, wenn die grÃ¶ÃŸe der SpezialhintergrÃ¼nde (Planeten) abhÃ¤ngig von wÃ¤re, wie weit entfernt sie ist (Layer 1,2,3)
 - wenn man getroffen ist, sollte man blinken, sodass man sieht, ab wann man wieder verwundbar ist
 - Improve Sound effects
 - Hintergrund besser und Abwechslungsreicher
 - Levels besser
-- Schrift rechts (Boss: X) soll rechtsbündig sein
-- Punkte: Integer-Höchstwert erkennen und dann nicht mehr weiterzählen!
+- Schrift rechts (Boss: X) soll rechtsbÃ¼ndig sein
+- Punkte: Integer-HÃ¶chstwert erkennen und dann nicht mehr weiterzÃ¤hlen!
 - lev: anzeige - welche datei offen ist!
 - punktegebung optimieren
 
@@ -34,38 +33,38 @@
 - Neue Einheit: Geld Geschenk item
 - Boss schwieriger machen: Er soll auch nach links und rechts gehen?
 - Spiellogik: Wenn man gegen einen gegner fliegt, soll er schaden haben!
-- Cooldown für Laser? Limitierung der Schüsse (Kanone wird heiß).
+- Cooldown fÃ¼r Laser? Limitierung der SchÃ¼sse (Kanone wird heiÃŸ).
 - Highscore Liste
-- "Throwback" nach einem hit. Nach Treffer, zurückgeschleudert werden
+- "Throwback" nach einem hit. Nach Treffer, zurÃ¼ckgeschleudert werden
 - "unsaubere" levels akzeptieren! komet mit 1+ leben, einheiten, die nicht auf der linie sind.
 - Netzwerkspiel?
 - Leveleditor: Ober - / Unterfelder? (was meinte ich damit?)
-- Leveleditor: Höchstens 9999 enemies?
-- Leveleditor "rückgängig" funktion
+- Leveleditor: HÃ¶chstens 9999 enemies?
+- Leveleditor "rÃ¼ckgÃ¤ngig" funktion
 - Cheat for next Level ect. (Johnny Crash?)
-- Verschiedene Dinge bei schnelligkeit anders?! z.B. Boss-Explore, Schießende  Einheiten (Tamas)
+- Verschiedene Dinge bei schnelligkeit anders?! z.B. Boss-Explore, SchieÃŸende  Einheiten (Tamas)
 - Tama 1 must damage PL. Sprite!
 - Tama 2 must damage EN. Sprite!
-- Tama 1 und Tama 2 müssten sich gegenseitig kaputt machen?
-- Speicherung: Umbenennen – Button?
+- Tama 1 und Tama 2 mÃ¼ssten sich gegenseitig kaputt machen?
+- Speicherung: Umbenennen â€“ Button?
 
 ## Repro, Unklar, Fragen
 
 - Was ist wenn man mission erfolgreich hatte und dann doch stirbt?
 - versioninfo fehlt bei delphi 12?
-- Kartengröße bleibt bei "Neu"
+- KartengrÃ¶ÃŸe bleibt bei "Neu"
 - Que: Gibt es eine neuere Version des Shoot-Samples (nicht mehr vorhanden in aktueller DelphiX)
 - Tastenspeere bei runter+links+shot
 - "Beenden ohne Speichern?" bei leerem Level
 - Leveleditor performance oder deadlock probleme?
 - Leveleditor Probleme mit Schiebebildchen...  (was meinte ich damit?)
-- Leveleditor Wenn Level gelöscht, dass gerade geladen ist, dann LevChanged = true!
-- Leveleditor Boss überschneidet Einheiten ?
-- Bei Musik am Anfang bei nicht Focus Anfangsquäker?
-- Zeitverschiebung: Texpl dauert länger als Tboss.kill;
-- Cheat1 (unverwundbarkeit) mit Kollisionsgeräusch?
+- Leveleditor Wenn Level gelÃ¶scht, dass gerade geladen ist, dann LevChanged = true!
+- Leveleditor Boss Ã¼berschneidet Einheiten ?
+- Bei Musik am Anfang bei nicht Focus AnfangsquÃ¤ker?
+- Zeitverschiebung: Texpl dauert lÃ¤nger als Tboss.kill;
+- Cheat1 (unverwundbarkeit) mit KollisionsgerÃ¤usch?
 - Wenn 0 Levels ? Procedur in MainMenu verbessern!
-- Wenn Kollision von PlayerSprite vorrüber ist, muss der KollisionsTimer sofort wieder auf Null gehen!
+- Wenn Kollision von PlayerSprite vorrÃ¼ber ist, muss der KollisionsTimer sofort wieder auf Null gehen!
 - Wenn keine Soundkarte dann auch kein Sound!
 - Spielgeschw. & BGSpeed vereinen
 - Dec(live) bei attacker1 manchmal kein Ton?
@@ -73,8 +72,8 @@
 - Rnd: Soll Boss-Live auch RND?
 - leicht, mittel, schwer: falsche fps bei langsameren karten
 - auch mit einer symbolleiste mit ordnersymbol bei lev (oder sm)?
-- lev: überall ok = focus!
+- lev: Ã¼berall ok = focus!
 - lev: bei vielen einheiten wird das arsch-langsam? algo verbessern? 
-- systemmodus auswählen (move rechnungen ausführen?) oder ein rechenlabel mit dem status anzeigen
+- systemmodus auswÃ¤hlen (move rechnungen ausfÃ¼hren?) oder ein rechenlabel mit dem status anzeigen
 - SM: Soll bei Verwaltung lieber statt dem ersten satz bei status was anderes hin? Levelart: Normales Level.
      Wenn es bleiben soll, dann den satz verbessern. Das Level ist ein  Zufallslevel

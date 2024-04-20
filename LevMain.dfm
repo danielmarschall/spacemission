@@ -2057,9 +2057,20 @@ object MainForm: TMainForm
     object Hilfe: TMenuItem
       Caption = '&Hilfe'
       object Hilfe1: TMenuItem
-        Caption = 'Hilfe'
+        Caption = 'Allgemeines'
         GroupIndex = 1
-        OnClick = Hilfe1Click
+        Hint = 'Doku.md'
+        OnClick = HilfeTopicClick
+      end
+      object WasgibtesNeues1: TMenuItem
+        Caption = 'Was gibt es Neues?'
+        GroupIndex = 1
+        Hint = 'Changelog.md'
+        OnClick = HilfeTopicClick
+      end
+      object N4: TMenuItem
+        Caption = '-'
+        GroupIndex = 1
       end
       object AufUpdatesprfen1: TMenuItem
         Caption = 'Auf Updates pr'#252'fen...'

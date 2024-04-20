@@ -217,6 +217,8 @@ type
     CheckUpdates: TMenuItem;
     Master: TMenuItem;
     Hilfe1: TMenuItem;
+    N1: TMenuItem;
+    Wasgibtesneues1: TMenuItem;
     procedure DXDrawFinalize(Sender: TObject);
     procedure DXDrawInitialize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -242,7 +244,7 @@ type
     procedure CheckUpdatesClick(Sender: TObject);
     procedure MasterClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure Hilfe1Click(Sender: TObject);
+    procedure HilfeTopicClick(Sender: TObject);
   private
     ProgrammGestartet: boolean;
     FInterval: TGameInterval;
@@ -1260,14 +1262,23 @@ begin
     result := nil;
 end;
 
-procedure TMainForm.Hilfe1Click(Sender: TObject);
+procedure TMainForm.HilfeTopicClick(Sender: TObject);
+// Please keep this code in-sync with LevMain.pas
+var
+  bakTimerEnabled: boolean;
 begin
-  HilfeForm.Caption := TMenuItem(Sender).Caption;
-  HilfeForm.Caption := StringReplace(HilfeForm.Caption, '&&', #1, [rfReplaceAll]);
-  HilfeForm.Caption := StringReplace(HilfeForm.Caption, '&', '', [rfReplaceAll]);
-  HilfeForm.Caption := StringReplace(HilfeForm.Caption, #1, '&', [rfReplaceAll]);
-  HilfeForm.ShowMarkDownHelp(OwnDirectory+'Doku.md');
-  HilfeForm.ShowModal;
+  bakTimerEnabled := dxtimer.Enabled;
+  try
+    dxtimer.Enabled := false;
+    HilfeForm.Caption := TMenuItem(Sender).Caption;
+    HilfeForm.Caption := StringReplace(HilfeForm.Caption, '&&', #1, [rfReplaceAll]);
+    HilfeForm.Caption := StringReplace(HilfeForm.Caption, '&', '', [rfReplaceAll]);
+    HilfeForm.Caption := StringReplace(HilfeForm.Caption, #1, '&', [rfReplaceAll]);
+    HilfeForm.ShowMarkDownHelp(OwnDirectory+TMenuItem(Sender).Hint);
+    HilfeForm.ShowModal;
+  finally
+    dxtimer.Enabled := bakTimerEnabled;
+  end;
 end;
 
 procedure TMainForm.GamePauseClick(Sender: TObject);

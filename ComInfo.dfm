@@ -152,8 +152,6 @@ object InfoForm: TInfoForm
     Default = True
     TabOrder = 0
     OnClick = OkBtnClick
-    ExplicitLeft = 270
-    ExplicitTop = 303
   end
   object MemoMitwirkende: TMemo
     Left = 8
@@ -165,7 +163,7 @@ object InfoForm: TInfoForm
       
         'SpaceMission wurde von Daniel Marschall auf Basis eines Codebeis' +
         'piels '
-      'von  Hiroyuki Hori f'#252'r DelphiX 2000 entwickelt.'
+      'von Hiroyuki Hori f'#252'r DelphiX 2000 entwickelt.'
       ''
       'Entwickelt mit Embarcadero Delphi.'
       'Setup erstellt mit InnoSetup.'
@@ -176,13 +174,17 @@ object InfoForm: TInfoForm
       '(C) Copyright 1996-2000 by Hiroyuki Hori'
       '(C) Copyright 2004-2023 by Jaro Benes.'
       ''
-      'Musik von Savage Peachers Software, Grafikquellen unbekannt.'
+      'sowie Delphi MarkDown'
+      'Source: https://github.com/grahamegrieve/delphi-markdown'
+      '(c) 2011+, Health Intersections Pty Ltd'
+      'Apache 2.0 Lizenz'
+      ''
+      'Musik von Savage Peachers Software.'
+      'Sound- und Grafikquellen unbekannt.'
       'Levels von Daniel Marschall, Patrick B'#252'ssecker und Andreas '
       'K'#252'belsbeck.')
     ReadOnly = True
     ScrollBars = ssVertical
     TabOrder = 1
-    ExplicitWidth = 369
-    ExplicitHeight = 121
   end
 end

@@ -46,13 +46,19 @@ var
   sl: TStringList;
 begin
   sl := TStringList.Create();
-  sl.LoadFromFile(AMarkDownFile);
-  md := TMarkdownProcessor.CreateDialect(mdCommonMark);
-  //md.AllowUnsafe := true;
-  sl.Text := md.process(sl.Text);
-  ShowHTMLHelp(sl.Text);
-  md.Free;
-  sl.Free;
+  try
+    sl.LoadFromFile(AMarkDownFile);
+    md := TMarkdownProcessor.CreateDialect(mdCommonMark);
+    try
+      //md.AllowUnsafe := true;
+      sl.Text := md.process(UTF8Decode(sl.Text));
+      ShowHTMLHelp(sl.Text);
+    finally
+      FreeAndNil(md);
+    end;
+  finally
+    FreeAndNil(sl);
+  end;
 end;
 
 procedure THilfeForm.WebBrowser1BeforeNavigate2(ASender: TObject;

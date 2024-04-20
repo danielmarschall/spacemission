@@ -2,76 +2,49 @@
 
 ## Beschreibung
 SpaceMission ist ein klassisches Weltraumspiel, beidem Sie durch einen Kometenhagel fliegen,
-UFOs und andere Raumschiffe abschießen müssen. Es gibt seit Version 1.1 31 Levels, die
-von meinen Mitarbeitern erstellt wurden. Außerdem gibt es Zufallslevels, das heißt, dass Levels
+UFOs und andere Raumschiffe abschieÃŸen mÃ¼ssen. Es gibt seit Version 1.1 31 Levels, die
+von meinen Mitarbeitern erstellt wurden. AuÃŸerdem gibt es Zufallslevels, das heiÃŸt, dass Levels
 vom Computer durch Zufall erstellt werden. Diese Zufallslevels sind besonders gut. In der
 Version 1.1 gibt es nun auch einen neuen Leveleditor, mit denen Sie Ihre eigenen Levels
-erstellen können. Viel Spaß mit SpaceMission.
+erstellen kÃ¶nnen. Viel SpaÃŸ mit SpaceMission.
 
-## Gute Levels gesucht:
-Wenn Sie gute Levels erstellt haben und diese in der nächsten Version veröffentlichen möchten, senden
-Sie sie bitte per E-Mail an info@daniel-marschall.de . Wenn Sie gut sind, werde ich sie
-veröffentlichen.
+### Gute Levels gesucht:
+Wenn Sie gute Levels erstellt haben und diese in der nÃ¤chsten Version verÃ¶ffentlichen mÃ¶chten,
+senden Sie sie bitte per E-Mail an info@daniel-marschall.de
 
-## Bedienung:
+## Bedienung/Steuerung
+### SpaceMission
+Im MenÃ¼ wÃ¤hlen Sie den MenÃ¼punkt mit den Pfeiltasten aus. DrÃ¼cken Sie die Leertaste,
+um fortzufahren. Im Spiel steuern Sie das Raumschiff mit den Pfeiltasten. Mit der
+Leertaste schieÃŸen Sie.
 
-### SpaceMission:
-Im Menü wählen Sie den Menüpunkt mit den Pfeiltasten aus. Drücken Sie die Leertaste,
-um fortzufahren.Im Spiel steuern Sie das Raumschiff mit den Pfeiltasten. Mit der
-Leertaste schießen Sie.
-
-### Leveleditor:
-Wählen Sie rechts einen Einheitentyp aus, unten können Sie die Leben einstellen.
-Kometen sind unzerstörbar und haben somit keine Leben. Anschließend setzen Sie mit
+### Leveleditor
+WÃ¤hlen Sie rechts einen Einheitentyp aus, unten kÃ¶nnen Sie die Leben einstellen.
+Kometen sind unzerstÃ¶rbar und haben somit keine Leben. AnschlieÃŸend setzen Sie mit
 der Linken Maustaste eine Einheit auf das Spielfeld. Klicken Sie mit der rechten
-Maustaste auf eine Einheit, um sie zu löschen. Wenn Sie die Leben einer Einheit löschen
-möchten, müssen Sie sie löschen und wieder neu setzen.
+Maustaste auf eine Einheit, um sie zu lÃ¶schen. Wenn Sie die Leben einer Einheit lÃ¶schen
+mÃ¶chten, mÃ¼ssen Sie sie lÃ¶schen und wieder neu setzen.
 
-## Mitwirkende:
+## Quelltext
+Der Quelltext des Spiels ist Ã¶ffentlich. SpaceMission kann von jedem verÃ¤ndert
+oder weiterentwickelt werden. Voraussetzung ist die Programmier-Umgebung Embarcadero Delphi.
 
-Programmierung:
-- Daniel Marschall
+Quelltext unter www.github.com/danielmarschall/spacemission
 
-Levels:
-- Patrick Büssecker
-- Andreas Kübelsbeck
-- Daniel Marschall
 
-Beispiel & Ressourcen:
-- Hiroyuki Hori
+## Aufbau von Spielstand- und Leveldateien
+Savegame- und Level-Dateien teilen das gleiche Format; eine Savedatei ist eine erweiterte Leveldatei.
 
-Grafik:
-- Daniel Marschall
-- SW-Software
-- Hiroyuki Hori
-- Creative
-- MD-Technologie
-
-Sound:
-- SW-Software
-- Hiroyuki Hori
-- Garfield
-
-Musik:
-- Savage Peachers Software
-
-Programmsymbole:
-- Daniel Marschall
-- Hutchins
-- Westwood
-- Borland
-
-Entwickelt mit Embarcadero Delphi unter Verwendung von unDelphiX von Hiroyuki Hori + Jaro Benes.
-Installer von InnoSetup. Sicherheits-Zertifikat von HickelSOFT.
-
-## Aufbau von Leveldateien:
-
-[Beschreibung auf OIDplus](https://hosted.oidplus.com/viathinksoft/?goto=oid%3A1.3.6.1.4.1.37476.2.8.1.1)
+[Beschreibung der OID auf OIDplus](https://hosted.oidplus.com/viathinksoft/?goto=oid%3A1.3.6.1.4.1.37476.2.8.1.1)
 
     [1.3.6.1.4.1.37476.2.8.1.1]
+    Score  ...  (nur vorhanden wenn Datei ein Spielstand ist)
+    Lives  ...  (nur vorhanden wenn Datei ein Spielstand ist)
+    Level  ...  (nur vorhanden wenn Datei ein Spielstand ist)
+    Mode   ...  (nur vorhanden wenn Datei ein Spielstand ist; 1=Normal, 2=Zufall)
     Name   ...
     Author ...
-    Width  ... (Standard 1200; nur für Leveleditor relevant)
+    Width  ...  (Standard 1200; nur fÃ¼r Leveleditor relevant)
     Enemy  <Typ> <XCoord> <YCoord> <Leben>
     Enemy  <Typ> <XCoord> <YCoord> <Leben>; Kommentarzeile am Ende einer Gegner-Zeile
     Enemy  <Typ> <XCoord> <YCoord> <Leben>
@@ -79,44 +52,28 @@ Installer von InnoSetup. Sicherheits-Zertifikat von HickelSOFT.
     ; Kommentar-Zeile
 
 Anmerkungen:
-- Alle Dateien müssen den Namen "Level [Level-Nr].lev" haben.
+- Alle Level-Dateien mÃ¼ssen den Namen "Level [Level-Nr].lev" haben, bzw. alle Spielstanddateien mÃ¼ssen "[Name].sav" lauten.
 - Die Reihenfolge der Zeilen ist beliebig. Die erste Zeile muss jedoch exakt stimmen.
 - Leere Zeilen sind erlaubt
 - Enemy `<Typ>` = Gegner Typ (1=Attacker, 2=Attacker2, 3=Attacker3, 4=Meteor, 5=UFO, 6=UFO2, 7=Boss)
 - Enemy `<XCoord>` = Gegner X-Koordinate (muss durch 48 teilbar sein, wenn Level mit Leveleditor bearbeitet werden soll)
 - Enemy `<YCoord>` = Gegner Y-Koordinate (muss durch 32 teilbar sein, wenn Level mit Leveleditor bearbeitet werden soll)
-- Enemy `<Leben>` = Gegner Leben (keine relevanz für Kometen)
-
-## Aufbau von Spielständen:
-
-[Beschreibung auf OIDplus](https://hosted.oidplus.com/viathinksoft/?goto=oid%3A1.3.6.1.4.1.37476.2.8.1.1)
-
-    [1.3.6.1.4.1.37476.2.8.1.1]
-    Score  3000
-    Lives  6
-    Level  1
-    Mode   2   (1=Normal, 2=Zufall)
-    Name   ... (des Levels)
-    Author ... (des Levels)
-    Width  ...
-    Enemy  ...		
-    ; Kommentar-Zeile
-
-Anmerkungen:
-- Alle Dateien müssen den Namen "[Name].sav" haben.
-- Die Reihenfolge der Zeilen ist fest vorgegeben. Die erste Zeile muss exakt stimmen.
-- Leere Zeilen sind erlaubt
-- Eine Savedatei ist eine erweiterte Leveldatei. Die Gegner müssen nicht zwingend auf dem Raster 48/32 liegen.
+- Enemy `<Leben>` = Gegner Leben (keine relevanz fÃ¼r Kometen)
 
 ## Cheat
 
-There is also a cheat code for infinite lifes: It is the name of the country singer who released the song "Man in Black" in 1971.
+Bitte beachten Sie, dass die Verwendung von Cheats Ihnen den SpielspaÃŸ verderben kann!
 
-## License
+Wenn Sie dennoch Cheats anwenden mÃ¶chten:
 
-Licensed under the terms of the Apache 2.0 license.
+- Cheat fÃ¼r unendliche Leben: CountrysÃ¤nger der "Man in Black" in 1971 verÃ¶ffentlicht hat.
 
-## Author
+## Lizenzbedingungen
 
-Homepage: http://www.daniel-marschall.de/
-E-Mail: info@daniel-marschall.de
+Lizenziert unter den Bedingungen der Apache 2.0 Lizenz,
+d.h. die Weitergabe ist ausdrÃ¼cklich erwÃ¼nscht!
+
+## Autor
+
+Homepage: www.daniel-marschall.de
+E-Mail:  info@daniel-marschall.de

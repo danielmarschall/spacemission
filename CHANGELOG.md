@@ -1,36 +1,41 @@
 # Changelog
 
 SpaceMission 1.2:
-- Window is now at Screen center instead of Desktop Center
-- Removed "level converter" and instead changed level-loading functions to accept level formats 0.2, 0.3, 0.4, and 1.0
-- Fix lag when usic changes. Now using DirectX DirectMusic to play music.
-- Bugfix: Pause wurde nicht in Caption geschrieben
-- Bugfix: Wenn man pause gemacht hat und fenster wechselt und wieder zurückwechselt, wurde Pause aufgehoben.
-- DPlayX.dll is no longer loaded, to avoid that Windows show a warning that DirectPlay is not installed
-- Removed "Full Screen" feature, because it never really worked.
-- Heavily improved and refactored source code.
-- Bugfix: Two windows in task bar
-- Spielstände und eigene Levels werden in den Ordner "Gespeicherte Spiele" gesichert, so wie von Windows definiert!
-- Einstellungen werden in Registry gesichert anstelle in eine INI-Datei
-- Level Editor: "Quelltext" Fenster entfernt
-- Level Editor: Show Enemy Name in the Status Bar
-- Level File Format no longer requires being sorted by X coordinates
-- Level File Format no longer requires having meteroids 0 lives. (Lifes will be ignored)
-- Boss besiegen gibt nun 10.000 Punkte anstelle 1.000
-- Neue LEV und SAV Dateiformate
+- Inhaltliche Änderungen am Spiel:
+	- Boss besiegen gibt nun 10.000 Punkte anstelle 1.000
+	- "Neu starten" Menüpunkt startet nun das Level neu mit den bei Levelstart vorhandenen Punkten und Leben, anstelle von ganz vorne neu zu beginnen
+	- Anzeige Restliche Einheiten ist nun Einzeige Einheiten gesamt, d.h. auch die, die auf dem Bildschirm sind (außer Boss)
+	- Man kann nun nicht mehr "Game over" gehen. Das Level startet neu, wenn man gestorben ist.
+	- Aus technischen Gründen ist es nicht mehr möglich zu speichern, wenn die Anzeige "Level ..., Weiter mit Leertaste" kommt. Man kann jedoch das Level starten und sofort dann mit F4 speichern.
+- Zufallslevel:
+	- Ab sofort 1 Einheit weniger pro Level
+	- Ab sofort Level 1-4 ohne Boss, Level 5-9 mit Boss am Ende, und ab Level 10 Boss in der Mitte vom Level
+	- Bei höheren Levels ist die Lebensenergie von Gegnern nun auf 10 gedeckelt
+	- Attackierer 2 kommt nun häufiger vor
+	- Zufallslevel größer als Level 25 ist nun möglich.
+- Änderungen am Level Editor:
+	- "Quelltext" Fenster entfernt
+	- Gegner-Typ-Name steht nun in der Statusleiste unten
+	- Der Leveleditor hat nun eine "Level testen" Funktion
+- Technische Änderungen:
+	- Es wird nun DirectMusic anstelle MCI zum Abspielen von Musik verwendet. Der Klang ist besser und es gibt weniger Lags.
+	- Fenster sind nun in Bildschirm-Mitte und nicht mehr Desktop-Mitte (das macht einen Unterschied bei Multi-Monitor-Systemen).
+	- DPlayX.dll wird nicht länger geladen, sodass Windows 11 keine Warnung zeigt, dass DirectPlay nicht installiert ist
+	- Spielstände und eigene Levels werden in den Ordner "Gespeicherte Spiele" gesichert (anstelle in den mittlerweile geschützten Programmdateien-Ordner)
+	- Einstellungen werden in die Windows Registry gesichert anstelle in eine INI-Datei
+	- Quellcode stark verbessert und "redactored"
+- Neue LEV und SAV Dateiformate.
+	- LEV und SAV Dateien teilen sich das gleiche Format.
+	- Es gibt keinen Zwang mehr, die Gegner nach X-Koordinaten zu sortieren.
+	- Jeder Gegner wird in einer einzelnen Zeile dargestellt; das Format ist daher sehr übersichtlich
+	- Spielstände beinhalten nun die Original-Leveldateien, sodass das wiederherzustellende Spiel exakt gleich aussieht
+	- Eigenschaften "Level-Name" und "Level Autor" hinzugefügt.
 - "ESC" Taste pausiert das Spiel und öffnet das Menü
-- "Neu starten" Menüpunkt startet nun das Level neu mit den bei Levelstart vorhandenen Punkten und Leben, anstelle von ganz vorne neu zu beginnen
-- Zufallslevel: Ab sofort 1 Einheit weniger pro Level
-- Zufallslevel: Ab sofort Level 1-4 ohne Boss, Level 5-9 mit Boss am Ende, und ab Level 10 Boss in der Mitte vom Level
-- Zufallslevel: Bei höheren Levels ist die Lebensenergie von Gegnern nun auf 10 gedeckelt
-- Zufallslevel: Attackierer 2 kommt nun häufiger vor
-- Anzeige Restliche Einheiten ist nun Einzeige Einheiten gesamt, d.h. auch die, die auf dem Bildschirm sind (außer Boss)
-- Zufallslevel: Zufallslevel größer als Level 25 ist nun möglich.
-- Man kann nun nicht mehr "Game over" gehen. Das Level startet neu, wenn man gestorben ist.
-- Spielstände beinhalten nun die Original-Leveldateien, sodass das wiederherzustellende Spiel exakt gleich aussieht
-- Leveleditor: Eigenschaften "Level-Name" und "Level Autor" hinzugefügt.
-- Aus technischen Gründen ist es nicht mehr möglich zu speichern, wenn die Anzeige "Level ..., Weiter mit Leertaste" kommt. Man kann jedoch das Level starten und sofort dann mit F4 speichern.
-- Der Leveleditor hat nun eine "Level testen" Funktion
+- "Level-Konverter" entfernt. Anstelle lesen das Level-Editor und das Spiel nun alle Formate seit SpaceMission 0.2 ein.
+- Bugfix: Pause wurde nicht in Titelzeile geschrieben, wenn das Spiel pausiert wurde
+- Bugfix: Wenn man pause gemacht hat und fenster wechselt und wieder zurückwechselt, wurde Pause aufgehoben.
+- Bugfix: Zwei Fenster wurden in der Taskleiste angezeigt
+- "Vollbild" und "Breitbild" Feature entfernt, da es nie richtig funktioniert hat
 
 Version 1.1:
 - Bugfixes

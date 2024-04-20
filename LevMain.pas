@@ -53,6 +53,8 @@ type
     Hilfe1: TMenuItem;
     N3: TMenuItem;
     AufUpdatesprfen1: TMenuItem;
+    N4: TMenuItem;
+    WasgibtesNeues1: TMenuItem;
     procedure DXDrawFinalize(Sender: TObject);
     procedure DXDrawInitialize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -75,7 +77,7 @@ type
       var ScrollPos: Integer);
     procedure AlleLeveldateienaktualisieren1Click(Sender: TObject);
     procedure Leveltesten1Click(Sender: TObject);
-    procedure Hilfe1Click(Sender: TObject);
+    procedure HilfeTopicClick(Sender: TObject);
     procedure AufUpdatesprfen1Click(Sender: TObject);
   private
     function GetTestlevelFilename: string;
@@ -521,14 +523,23 @@ begin
   result := IncludeTrailingPathDelimiter(TPath.GetTempPath) + 'SpaceMissionTest.sav';
 end;
 
-procedure TMainForm.Hilfe1Click(Sender: TObject);
+procedure TMainForm.HilfeTopicClick(Sender: TObject);
+// Please keep this code in-sync with GamMain.pas
+var
+  bakTimerEnabled: boolean;
 begin
-  HilfeForm.Caption := TMenuItem(Sender).Caption;
-  HilfeForm.Caption := StringReplace(HilfeForm.Caption, '&&', #1, [rfReplaceAll]);
-  HilfeForm.Caption := StringReplace(HilfeForm.Caption, '&', '', [rfReplaceAll]);
-  HilfeForm.Caption := StringReplace(HilfeForm.Caption, #1, '&', [rfReplaceAll]);
-  HilfeForm.ShowMarkDownHelp(OwnDirectory+'Doku.md');
-  HilfeForm.ShowModal;
+  bakTimerEnabled := dxtimer.Enabled;
+  try
+    dxtimer.Enabled := false;
+    HilfeForm.Caption := TMenuItem(Sender).Caption;
+    HilfeForm.Caption := StringReplace(HilfeForm.Caption, '&&', #1, [rfReplaceAll]);
+    HilfeForm.Caption := StringReplace(HilfeForm.Caption, '&', '', [rfReplaceAll]);
+    HilfeForm.Caption := StringReplace(HilfeForm.Caption, #1, '&', [rfReplaceAll]);
+    HilfeForm.ShowMarkDownHelp(OwnDirectory+TMenuItem(Sender).Hint);
+    HilfeForm.ShowModal;
+  finally
+    dxtimer.Enabled := bakTimerEnabled;
+  end;
 end;
 
 procedure TMainForm.InformationenClick(Sender: TObject);

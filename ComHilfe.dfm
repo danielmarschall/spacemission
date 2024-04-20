@@ -1,7 +1,6 @@
 object HilfeForm: THilfeForm
   Left = 0
   Top = 0
-  BorderStyle = bsDialog
   ClientHeight = 441
   ClientWidth = 624
   Color = clBtnFace
@@ -20,10 +19,6 @@ object HilfeForm: THilfeForm
     Align = alClient
     TabOrder = 0
     OnBeforeNavigate2 = WebBrowser1BeforeNavigate2
-    ExplicitLeft = 200
-    ExplicitTop = 184
-    ExplicitWidth = 300
-    ExplicitHeight = 150
     ControlData = {
       4C0000007E400000942D00000000000000000000000000000000000000000000
       000000004C000000000000000000000001000000E0D057007335CF11AE690800
