@@ -210,7 +210,7 @@ begin
     LevelName.setfocus;
     exit;
   end;
-  for i := 0 to length(LevelName.text) do
+  for i := 1 to length(LevelName.text) do
   begin
     if (copy(LevelName.text, i, 1) = '\') or
       (copy(LevelName.text, i, 1) = '/') or

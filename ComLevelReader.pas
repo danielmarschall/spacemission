@@ -211,7 +211,7 @@ begin
     DestLevelData.LevelName := Self.LevelName;
     DestLevelData.LevelAuthor := Self.LevelAuthor;
     SetLength(DestLevelData.EnemyAdventTable, Length(Self.EnemyAdventTable));
-    for i := 0 to Length(Self.EnemyAdventTable) do
+    for i := 0 to Length(Self.EnemyAdventTable)-1 do
     begin
       DestLevelData.EnemyAdventTable[i] := Self.EnemyAdventTable[i];
     end;
