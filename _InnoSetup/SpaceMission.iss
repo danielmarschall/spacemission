@@ -47,20 +47,20 @@ Source: "..\DirectX\Music.dxm"; DestDir: "{app}\DirectX"; Flags: ignoreversion
 Source: "..\DirectX\Sound.dxw"; DestDir: "{app}\DirectX"; Flags: ignoreversion
 Source: "..\Levels\*.lev"; DestDir: "{app}\Levels"; Flags: ignoreversion
 
-[Dirs]
-Name: "{group}\Webseiten"
-Name: "{group}\Ordner"
+;[Dirs]
+;Name: "{group}\Webseiten"
+;Name: "{group}\Ordner"
 
 [Icons]
-Name: "{group}\Webseiten\Daniel Marschall"; Filename: "https://www.daniel-marschall.de/"
-Name: "{group}\Webseiten\ViaThinkSoft"; Filename: "https://www.viathinksoft.de/"
-Name: "{group}\Webseiten\Projektseite auf ViaThinkSoft"; Filename: "https://www.viathinksoft.de/index.php?page=projektanzeige&seite=projekt-19"
+;Name: "{group}\Webseiten\Daniel Marschall"; Filename: "https://www.daniel-marschall.de/"
+;Name: "{group}\Webseiten\ViaThinkSoft"; Filename: "https://www.viathinksoft.de/"
+;Name: "{group}\Webseiten\Projektseite auf ViaThinkSoft"; Filename: "https://www.viathinksoft.de/index.php?page=projektanzeige&seite=projekt-19"
 Name: "{group}\SpaceMission"; Filename: "{app}\SpaceMission.exe"
 ;Name: "{group}\Dokumentation"; Filename: "{app}\Dokumentation.pdf"
 Name: "{group}\Leveleditor"; Filename: "{app}\LevEdit.exe"; Tasks: levedit
-Name: "{group}\Ordner\Levelordner"; Filename: "{app}\Levels\"
+;Name: "{group}\Ordner\Levelordner"; Filename: "{app}\Levels\"
 Name: "{userdesktop}\SpaceMission"; Filename: "{app}\SpaceMission.exe"; MinVersion: 4,4; Tasks: desktopicon
-Name: "{group}\SpaceMission deinstallieren"; Filename: "{uninstallexe}"
+;Name: "{group}\SpaceMission deinstallieren"; Filename: "{uninstallexe}"
 
 [Run]
 Filename: "{app}\SpaceMission.exe"; Description: "SpaceMission starten"; Flags: nowait postinstall skipifsilent
