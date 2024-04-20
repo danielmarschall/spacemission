@@ -122,13 +122,13 @@ object MainForm: TMainForm
       object Hilfe1: TMenuItem
         Caption = 'Allgemeines'
         GroupIndex = 1
-        Hint = 'Doku.md'
+        Hint = 'Help\Allgemeines.md'
         OnClick = HilfeTopicClick
       end
       object Wasgibtesneues1: TMenuItem
         Caption = 'Was gibt es Neues?'
         GroupIndex = 1
-        Hint = 'Changelog.md'
+        Hint = 'Help\Neuerungen.md'
         OnClick = HilfeTopicClick
       end
       object N1: TMenuItem

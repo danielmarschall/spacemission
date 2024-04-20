@@ -12,6 +12,8 @@ type
     procedure WebBrowser1BeforeNavigate2(ASender: TObject;
       const pDisp: IDispatch; const URL, Flags, TargetFrameName, PostData,
       Headers: OleVariant; var Cancel: WordBool);
+  private
+    FDirectory: string;
   public
     procedure ShowHTMLHelp(AHTML: string);
     procedure ShowMarkDownHelp(AMarkDownFile: string);
@@ -46,11 +48,12 @@ var
   slHtml, slCss: TStringList;
   cssFile: string;
 begin
+  FDirectory := ExtractFilePath(AMarkDownFile);
   slHtml := TStringList.Create();
   slCss := TStringList.Create();
   try
     slHtml.LoadFromFile(AMarkDownFile);
-    cssFile := OwnDirectory + 'Help.css';
+    cssFile := IncludeTrailingPathDelimiter(FDirectory) + 'Style.css';
     if FileExists(cssFile) then
       slCss.LoadFromFile(cssFile);
     md := TMarkdownProcessor.CreateDialect(mdCommonMark);
@@ -89,7 +92,7 @@ begin
   else if SameText(ExtractFileExt(URL), '.md') then
   begin
     if SameText(Copy(URL,1,6), 'about:') then
-      ShowMarkDownHelp(Copy(URL,7,Length(URL)))
+      ShowMarkDownHelp(IncludeTrailingPathDelimiter(FDirectory) + Copy(URL,7,Length(URL)))
     else
       ShowMarkDownHelp(URL);
     Cancel := true;
