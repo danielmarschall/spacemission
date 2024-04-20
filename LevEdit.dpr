@@ -15,7 +15,8 @@ uses
   ComInfo in 'ComInfo.pas' {InfoForm},
   LevOptions in 'LevOptions.pas' {LevelForm},
   ComLevelReader in 'ComLevelReader.pas',
-  Global in 'Global.pas';
+  Global in 'Global.pas',
+  ComHilfe in 'ComHilfe.pas' {HilfeForm};
 
 {$R *.RES}
 
@@ -47,6 +48,7 @@ begin
   Application.CreateForm(TSpeicherungForm, SpeicherungForm);
   Application.CreateForm(TInfoForm, InfoForm);
   Application.CreateForm(TLevelForm, LevelForm);
+  Application.CreateForm(THilfeForm, HilfeForm);
   Application.Run;
 end.
 

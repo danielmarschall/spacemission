@@ -14,7 +14,8 @@ uses
   ComInfo in 'ComInfo.pas' {InfoForm},
   GamCheat in 'GamCheat.pas' {CheatForm},
   ComLevelReader in 'ComLevelReader.pas',
-  Global in 'Global.pas';
+  Global in 'Global.pas',
+  ComHilfe in 'ComHilfe.pas' {HilfeForm};
 
 {$R *.RES}
 
@@ -46,6 +47,7 @@ begin
   Application.CreateForm(TSpeicherungForm, SpeicherungForm);
   Application.CreateForm(TInfoForm, InfoForm);
   Application.CreateForm(TCheatForm, CheatForm);
+  Application.CreateForm(THilfeForm, HilfeForm);
   Application.Run;
 end.
 

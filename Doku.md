@@ -40,11 +40,6 @@ Levels:
 Beispiel & Ressourcen:
 - Hiroyuki Hori
 
-Sprachunterstützung:
-- Borland (Turbo Delphi Explorer)
-- Hiroyuki Hori (DelphiX 2000)
-- InnoSetup (Setup)
-
 Grafik:
 - Daniel Marschall
 - SW-Software
@@ -66,8 +61,8 @@ Programmsymbole:
 - Westwood
 - Borland
 
-Das Programm wurde mit Delphi 6 Personal entwickelt und wurde mit einigen VCLs
-verbessert! Das Installationsprogramm wurde mit InnoSetup erstellt.
+Entwickelt mit Embarcadero Delphi unter Verwendung von unDelphiX von Hiroyuki Hori + Jaro Benes.
+Installer von InnoSetup. Sicherheits-Zertifikat von HickelSOFT.
 
 ## Aufbau von Leveldateien:
 
@@ -112,6 +107,10 @@ Anmerkungen:
 - Die Reihenfolge der Zeilen ist fest vorgegeben. Die erste Zeile muss exakt stimmen.
 - Leere Zeilen sind erlaubt
 - Eine Savedatei ist eine erweiterte Leveldatei. Die Gegner müssen nicht zwingend auf dem Raster 48/32 liegen.
+
+## Cheat
+
+There is also a cheat code for infinite lifes: It is the name of the country singer who released the song "Man in Black" in 1971.
 
 ## License
 

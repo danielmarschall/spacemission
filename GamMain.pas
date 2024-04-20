@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, ExtCtrls, Menus, DIB, DXClass, DXSprite, DXDraws, DXInput, DXSounds,
-  ShellAPI, wininet, DirectX{$IF CompilerVersion >= 23.0},
+  ShellAPI, DirectX{$IF CompilerVersion >= 23.0},
   System.UITypes{$IFEND}, ComLevelReader, DirectMusic, Global;
 
 type
@@ -216,6 +216,7 @@ type
     Cheat: TMenuItem;
     CheckUpdates: TMenuItem;
     Master: TMenuItem;
+    Hilfe1: TMenuItem;
     procedure DXDrawFinalize(Sender: TObject);
     procedure DXDrawInitialize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -241,6 +242,7 @@ type
     procedure CheckUpdatesClick(Sender: TObject);
     procedure MasterClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure Hilfe1Click(Sender: TObject);
   private
     ProgrammGestartet: boolean;
     FInterval: TGameInterval;
@@ -332,7 +334,8 @@ var
 implementation
 
 uses
-  GamSplash, GamSpeicherung, ComInfo, GamCheat, MMSystem, Registry;
+  GamSplash, GamSpeicherung, ComInfo, GamCheat, MMSystem, Registry,
+  ComHilfe;
 
 {$R *.DFM}
 
@@ -342,87 +345,6 @@ const
     isButton12, isButton13, isButton14, isButton15, isButton16, isButton17, isButton18,
     isButton19, isButton20, isButton21, isButton22, isButton23, isButton24, isButton25,
     isButton26, isButton27, isButton28, isButton29, isButton30, isButton31, isButton32];
-
-// https://www.delphipraxis.net/post43515.html
-function GetHTML(AUrl: string): string;
-var
-  databuffer : array[0..4095] of char;
-  ResStr : string;
-  hSession, hfile: hInternet;
-  dwindex,dwcodelen,dwread,dwNumber: cardinal;
-  dwcode : array[1..20] of char;
-  res    : pchar;
-  Str    : pchar;
-begin
-  ResStr:='';
-  if (system.pos('http://',lowercase(AUrl))=0) and
-     (system.pos('https://',lowercase(AUrl))=0) then
-     AUrl:='http://'+AUrl;
-
-  // Hinzugefügt
-  application.ProcessMessages;
-
-  hSession:=InternetOpen('InetURL:/1.0',
-                         INTERNET_OPEN_TYPE_PRECONFIG,
-                         nil,
-                         nil,
-                         0);
-  if assigned(hsession) then
-  begin
-    // Hinzugefügt
-    application.ProcessMessages;
-
-    hfile:=InternetOpenUrl(
-           hsession,
-           pchar(AUrl),
-           nil,
-           0,
-           INTERNET_FLAG_RELOAD,
-           0);
-    dwIndex  := 0;
-    dwCodeLen := 10;
-
-    // Hinzugefügt
-    application.ProcessMessages;
-
-    HttpQueryInfo(hfile,
-                  HTTP_QUERY_STATUS_CODE,
-                  @dwcode,
-                  dwcodeLen,
-                  dwIndex);
-    res := pchar(@dwcode);
-    dwNumber := sizeof(databuffer)-1;
-    if (res ='200') or (res ='302') then
-    begin
-      while (InternetReadfile(hfile,
-                              @databuffer,
-                              dwNumber,
-                              DwRead)) do
-      begin
-
-        // Hinzugefügt
-        application.ProcessMessages;
-
-        if dwRead =0 then
-          break;
-        databuffer[dwread]:=#0;
-        Str := pchar(@databuffer);
-        resStr := resStr + Str;
-      end;
-    end
-    else
-      ResStr := 'Status:'+res;
-    if assigned(hfile) then
-      InternetCloseHandle(hfile);
-  end;
-
-  // Hinzugefügt
-  application.ProcessMessages;
-
-  InternetCloseHandle(hsession);
-  Result := resStr;
-end;
-
 
 { TBackground }
 
@@ -1338,6 +1260,16 @@ begin
     result := nil;
 end;
 
+procedure TMainForm.Hilfe1Click(Sender: TObject);
+begin
+  HilfeForm.Caption := TMenuItem(Sender).Caption;
+  HilfeForm.Caption := StringReplace(HilfeForm.Caption, '&&', #1, [rfReplaceAll]);
+  HilfeForm.Caption := StringReplace(HilfeForm.Caption, '&', '', [rfReplaceAll]);
+  HilfeForm.Caption := StringReplace(HilfeForm.Caption, #1, '&', [rfReplaceAll]);
+  HilfeForm.ShowMarkDownHelp(OwnDirectory+'Doku.md');
+  HilfeForm.ShowModal;
+end;
+
 procedure TMainForm.GamePauseClick(Sender: TObject);
 begin
   GamePause.Checked := not GamePause.Checked;
@@ -1373,26 +1305,8 @@ begin
 end;
 
 procedure TMainForm.CheckUpdatesClick(Sender: TObject);
-var
-  cont: string;
 begin
-  cont := GetHTML('https://www.viathinksoft.de/update/?id=spacemission');
-  if copy(cont, 0, 7) = 'Status:' then
-  begin
-    Application.MessageBox('Ein Fehler ist aufgetreten. Wahrscheinlich ist keine Internetverbindung aufgebaut, oder der der ViaThinkSoft-Server vorübergehend offline.', 'Fehler', MB_OK + MB_ICONERROR)
-  end
-  else
-  begin
-    if cont <> ProgramVersion then
-    begin
-      if Application.MessageBox('Eine neue Programmversion ist vorhanden. Möchten Sie diese jetzt herunterladen?', 'Information', MB_YESNO + MB_ICONASTERISK) = ID_YES then
-        shellexecute(application.handle, 'open', pchar('https://www.viathinksoft.de/update/?id=@spacemission'), '', '', sw_normal);
-    end
-    else
-    begin
-      Application.MessageBox('Es ist keine neue Programmversion vorhanden.', 'Information', MB_OK + MB_ICONASTERISK);
-    end;
-  end;
+  CheckForUpdates('spacemission');
 end;
 
 procedure TMainForm.BeendenClick(Sender: TObject);

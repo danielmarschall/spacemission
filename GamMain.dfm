@@ -119,6 +119,11 @@ object MainForm: TMainForm
     end
     object Hilfe: TMenuItem
       Caption = '&Hilfe'
+      object Hilfe1: TMenuItem
+        Caption = 'Hilfe'
+        GroupIndex = 1
+        OnClick = Hilfe1Click
+      end
       object CheckUpdates: TMenuItem
         Caption = 'Auf Updates pr'#252'fen...'
         GroupIndex = 1

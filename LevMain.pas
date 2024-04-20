@@ -50,6 +50,9 @@ type
     AlleLeveldateienaktualisieren1: TMenuItem;
     N2: TMenuItem;
     Leveltesten1: TMenuItem;
+    Hilfe1: TMenuItem;
+    N3: TMenuItem;
+    AufUpdatesprfen1: TMenuItem;
     procedure DXDrawFinalize(Sender: TObject);
     procedure DXDrawInitialize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -72,6 +75,8 @@ type
       var ScrollPos: Integer);
     procedure AlleLeveldateienaktualisieren1Click(Sender: TObject);
     procedure Leveltesten1Click(Sender: TObject);
+    procedure Hilfe1Click(Sender: TObject);
+    procedure AufUpdatesprfen1Click(Sender: TObject);
   private
     function GetTestlevelFilename: string;
   public
@@ -110,7 +115,7 @@ var
 implementation
 
 uses
-  LevSplash, LevSpeicherung, ComInfo, LevOptions, ShellAPI;
+  LevSplash, LevSpeicherung, ComInfo, LevOptions, ShellAPI, ComHilfe;
 
 {$R *.DFM}
 
@@ -516,6 +521,16 @@ begin
   result := IncludeTrailingPathDelimiter(TPath.GetTempPath) + 'SpaceMissionTest.sav';
 end;
 
+procedure TMainForm.Hilfe1Click(Sender: TObject);
+begin
+  HilfeForm.Caption := TMenuItem(Sender).Caption;
+  HilfeForm.Caption := StringReplace(HilfeForm.Caption, '&&', #1, [rfReplaceAll]);
+  HilfeForm.Caption := StringReplace(HilfeForm.Caption, '&', '', [rfReplaceAll]);
+  HilfeForm.Caption := StringReplace(HilfeForm.Caption, #1, '&', [rfReplaceAll]);
+  HilfeForm.ShowMarkDownHelp(OwnDirectory+'Doku.md');
+  HilfeForm.ShowModal;
+end;
+
 procedure TMainForm.InformationenClick(Sender: TObject);
 begin
   mainform.dxtimer.enabled := false;
@@ -695,6 +710,11 @@ begin
     SLabel4b.Font.Color := $00009600;
     SLabel4b.Caption := 'Ja';
   end;
+end;
+
+procedure TMainForm.AufUpdatesprfen1Click(Sender: TObject);
+begin
+  CheckForUpdates('spacemission');
 end;
 
 procedure TMainForm.NeuClick(Sender: TObject);

@@ -41,7 +41,7 @@ Name: "levedit"; Description: "Installiere den &Leveleditor"; GroupDescription: 
 [Files]
 Source: "..\SpaceMission.exe"; DestDir: "{app}"; Flags: ignoreversion signonce
 Source: "..\LevEdit.exe"; DestDir: "{app}"; Flags: ignoreversion signonce; Tasks: levedit
-;Source: "..\Dokumentation.pdf"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Doku.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\DirectX\Graphics.dxg"; DestDir: "{app}\DirectX"; Flags: ignoreversion
 Source: "..\DirectX\Music.dxm"; DestDir: "{app}\DirectX"; Flags: ignoreversion
 Source: "..\DirectX\Sound.dxw"; DestDir: "{app}\DirectX"; Flags: ignoreversion
@@ -56,7 +56,6 @@ Source: "..\Levels\*.lev"; DestDir: "{app}\Levels"; Flags: ignoreversion
 ;Name: "{group}\Webseiten\ViaThinkSoft"; Filename: "https://www.viathinksoft.de/"
 ;Name: "{group}\Webseiten\Projektseite auf ViaThinkSoft"; Filename: "https://www.viathinksoft.de/index.php?page=projektanzeige&seite=projekt-19"
 Name: "{group}\SpaceMission"; Filename: "{app}\SpaceMission.exe"
-;Name: "{group}\Dokumentation"; Filename: "{app}\Dokumentation.pdf"
 Name: "{group}\Leveleditor"; Filename: "{app}\LevEdit.exe"; Tasks: levedit
 ;Name: "{group}\Ordner\Levelordner"; Filename: "{app}\Levels\"
 Name: "{userdesktop}\SpaceMission"; Filename: "{app}\SpaceMission.exe"; MinVersion: 4,4; Tasks: desktopicon

@@ -4,7 +4,6 @@
 ## Geplant für 1.2
 
 - GitHub MarkDown Dokumente auch in Spacemission anzeigen, vielleicht in einem TMemo
-- "Doku" in Hilfemenü einbinden, ggf. auch den Leveleditor ins Menü machen
 - Release 1.2 with EV CodeSign
 
 ## Geplant für 1.3
@@ -14,7 +13,7 @@
 - Neue Einheit: Ufo, das im Kreis fliegt und nicht weggeht
 - Bei Pause => Entweder alles grau werden lassen, oder vielleicht ganz groß Pause in die Bildschirmmitte schreiben
 - Level-Editor in die SpaceMission.exe rein und über Hauptmenü aufrufen?
-- Vorbereitung auf Multilingualität (all strings in resourcestrings)
+- Vorbereitung auf Multilingualität (all strings in resourcestrings), ggf. sogar schon auf Englisch übersetzen
 - SplashScreens: als BMP
 
 ## Kleinigkeiten
@@ -41,14 +40,14 @@
 - "unsaubere" levels akzeptieren! komet mit 1+ leben, einheiten, die nicht auf der linie sind.
 - Netzwerkspiel?
 - Leveleditor: Ober - / Unterfelder? (was meinte ich damit?)
-- Leveleditor: Höchstens 9999en?
+- Leveleditor: Höchstens 9999 enemies?
+- Leveleditor "rückgängig" funktion
 - Cheat for next Level ect. (Johnny Crash?)
 - Verschiedene Dinge bei schnelligkeit anders?! z.B. Boss-Explore, Schießende  Einheiten (Tamas)
 - Tama 1 must damage PL. Sprite!
 - Tama 2 must damage EN. Sprite!
 - Tama 1 und Tama 2 müssten sich gegenseitig kaputt machen?
 - Speicherung: Umbenennen – Button?
-- Multilingual
 
 ## Repro, Unklar, Fragen
 
@@ -59,7 +58,6 @@
 - Tastenspeere bei runter+links+shot
 - "Beenden ohne Speichern?" bei leerem Level
 - Leveleditor performance oder deadlock probleme?
-- Leveleditor "rückgängig" funktion
 - Leveleditor Probleme mit Schiebebildchen...  (was meinte ich damit?)
 - Leveleditor Wenn Level gelöscht, dass gerade geladen ist, dann LevChanged = true!
 - Leveleditor Boss überschneidet Einheiten ?

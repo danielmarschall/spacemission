@@ -9,3 +9,7 @@ VCL_DELPHIX_D6
 	(C) Copyright 2004-2023 by Jaro Benes.
 	The rules governing the use of (un)DelphiX or other tools source code are based on the general Open Source Definition, available at http://www.opensource.org and with consideration shared rights.
 	This software is provided "as is" and is without warranty of any kind. The author(s) of this software does not warrant, guarantee or make any representations regarding the use or results of use of this software in terms of reliability, accuracy or fitness for purpose. You assume the entire risk of direct or indirect, consequential or inconsequential results from the correct or incorrect usage of this software even if the author has been informed of the possibilities of such damage. Neither the author nor anybody connected to this software in any way can assume any responsibility. 
+
+VCL_MARKDOWN
+	https://github.com/grahamegrieve/delphi-markdown/tree/master
+	Apache 2.0 License

@@ -75,11 +75,12 @@ const
 // Useful functions
 function GetKnownFolderPath(const rfid: TGUID): string;
 function KillTask(ExeFileName: string): Integer;
+procedure CheckForUpdates(ViaThinkSoftProjectName: string);
 
 implementation
 
 uses
-  Windows, SysUtils, ActiveX, ShlObj, TlHelp32;
+  Windows, SysUtils, ActiveX, ShlObj, TlHelp32, wininet, Forms, ShellAPI;
 
 function GetKnownFolderPath(const rfid: TGUID): string;
 var
@@ -135,6 +136,109 @@ end;
 function OwnDirectory: string;
 begin
   result := extractfilepath(paramstr(0));
+end;
+
+// https://www.delphipraxis.net/post43515.html
+function GetHTML(AUrl: string): string;
+var
+  databuffer : array[0..4095] of char;
+  ResStr : string;
+  hSession, hfile: hInternet;
+  dwindex,dwcodelen,dwread,dwNumber: cardinal;
+  dwcode : array[1..20] of char;
+  res    : pchar;
+  Str    : pchar;
+begin
+  ResStr:='';
+  if (system.pos('http://',lowercase(AUrl))=0) and
+     (system.pos('https://',lowercase(AUrl))=0) then
+     AUrl:='http://'+AUrl;
+
+  // Hinzugefügt
+  if Assigned(Application) then Application.ProcessMessages;
+
+  hSession:=InternetOpen('InetURL:/1.0',
+                         INTERNET_OPEN_TYPE_PRECONFIG,
+                         nil,
+                         nil,
+                         0);
+  if assigned(hsession) then
+  begin
+    // Hinzugefügt
+    if Assigned(Application) then application.ProcessMessages;
+
+    hfile:=InternetOpenUrl(
+           hsession,
+           pchar(AUrl),
+           nil,
+           0,
+           INTERNET_FLAG_RELOAD,
+           0);
+    dwIndex  := 0;
+    dwCodeLen := 10;
+
+    // Hinzugefügt
+    if Assigned(Application) then application.ProcessMessages;
+
+    HttpQueryInfo(hfile,
+                  HTTP_QUERY_STATUS_CODE,
+                  @dwcode,
+                  dwcodeLen,
+                  dwIndex);
+    res := pchar(@dwcode);
+    dwNumber := sizeof(databuffer)-1;
+    if (res ='200') or (res ='302') then
+    begin
+      while (InternetReadfile(hfile,
+                              @databuffer,
+                              dwNumber,
+                              DwRead)) do
+      begin
+
+        // Hinzugefügt
+        if Assigned(Application) then application.ProcessMessages;
+
+        if dwRead =0 then
+          break;
+        databuffer[dwread]:=#0;
+        Str := pchar(@databuffer);
+        resStr := resStr + Str;
+      end;
+    end
+    else
+      ResStr := 'Status:'+res;
+    if assigned(hfile) then
+      InternetCloseHandle(hfile);
+  end;
+
+  // Hinzugefügt
+  if Assigned(Application) then application.ProcessMessages;
+
+  InternetCloseHandle(hsession);
+  Result := resStr;
+end;
+
+procedure CheckForUpdates(ViaThinkSoftProjectName: string);
+var
+  cont: string;
+begin
+  cont := GetHTML('https://www.viathinksoft.de/update/?id='+ViaThinkSoftProjectName);
+  if copy(cont, 0, 7) = 'Status:' then
+  begin
+    Application.MessageBox('Ein Fehler ist aufgetreten. Wahrscheinlich ist keine Internetverbindung aufgebaut, oder der der ViaThinkSoft-Server vorübergehend offline.', 'Fehler', MB_OK + MB_ICONERROR)
+  end
+  else
+  begin
+    if cont <> ProgramVersion then
+    begin
+      if Application.MessageBox('Eine neue Programmversion ist vorhanden. Möchten Sie diese jetzt herunterladen?', 'Information', MB_YESNO + MB_ICONASTERISK) = ID_YES then
+        shellexecute(application.handle, 'open', pchar('https://www.viathinksoft.de/update/?id=@'+ViaThinkSoftProjectName), '', '', sw_normal);
+    end
+    else
+    begin
+      Application.MessageBox('Es ist keine neue Programmversion vorhanden.', 'Information', MB_OK + MB_ICONASTERISK);
+    end;
+  end;
 end;
 
 end.
