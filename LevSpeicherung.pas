@@ -58,13 +58,13 @@ uses
 
 resourcestring
   SLevelListBox = 'Level %d';
+  SSelbsterstellt = 'Selbsterstellt';
 
 procedure TSpeicherungForm.SearchLevels;
 var
   i: integer;
-  fil: string;
+  fil: TLevelFile;
 begin
-  // TODO: slow
   //SpinEdit.Value := 1;
   LevelListBox.items.clear;
   li1a.visible := false;
@@ -81,13 +81,19 @@ begin
   for i := 1 to MaxPossibleLevels do
   begin
     fil := GetLevelFileName(i, false);
-    if fileexists(fil) then LevelListBox.items.Add(Format(SLevelListBox, [i]));
+    if fil.found then
+    begin
+      if fil.isUser then
+        LevelListBox.items.Add(Format(SLevelListBox, [i])+' ('+SSelbsterstellt+')')
+      else
+        LevelListBox.items.Add(Format(SLevelListBox, [i]));
+    end;
   end;
 end;
 
 procedure TSpeicherungForm.LoeschenBtnClick(Sender: TObject);
 var
-  fil: string;
+  fil: TLevelFile;
 begin
   if LevelListBox.ItemIndex = -1 then exit;
 
@@ -105,15 +111,15 @@ begin
     LadenBtn.enabled := false;
     LoeschenBtn.enabled := false;
     fil := GetLevelFileName(GetListBoxSelectedLevelNumber,false);
-    if not fileexists(fil) then raise Exception.Create('Leveldatei nicht gefunden');
-    deletefile(fil);
+    if not fil.found then raise Exception.Create('Leveldatei nicht gefunden');
+    deletefile(fil.fileLocation);
     SearchLevels;
   end;
 end;
 
 procedure TSpeicherungForm.LadenBtnClick(Sender: TObject);
 var
-  fil: string;
+  fil: TLevelFile;
 begin
   if LevelListBox.ItemIndex = -1 then exit;
 
@@ -129,8 +135,8 @@ begin
   MainForm.DestroyLevel;
   MainForm.LevData.RasterErzwingen := true;
   fil := GetLevelFileName(GetListBoxSelectedLevelNumber,false);
-  if not fileexists(fil) then raise Exception.Create('Leveldatei nicht gefunden');
-  MainForm.LevData.LoadFromFile(fil);
+  if not fil.found then raise Exception.Create('Leveldatei nicht gefunden');
+  MainForm.LevData.LoadFromFile(fil.fileLocation);
   MainForm.RefreshFromLevData;
   MainForm.LevChanged := false;
   MainForm.AnzeigeAct;
@@ -170,7 +176,7 @@ begin
 
   // Speichern
   MainForm.LevData.LevelEditorLength := MainForm.ScrollBar.Max;
-  MainForm.LevData.SaveToFile(GetLevelFileName(LevelNumber.Value,true));
+  MainForm.LevData.SaveToFile(GetLevelFileName(LevelNumber.Value,true).fileLocation);
 
   // Nacharbeiten
   MainForm.LevChanged := false;
@@ -184,7 +190,7 @@ var
   boss: boolean;
   i: Integer;
   anzahlEinheiten: integer;
-  fil: string;
+  fil: TLevelFile;
 begin
   li1a.visible := false;
   li2a.visible := false;
@@ -210,8 +216,8 @@ begin
       LevelData.RasterErzwingen := true;
 
       fil := GetLevelFileName(GetListBoxSelectedLevelNumber,false);
-      if not fileexists(fil) then raise Exception.Create('Leveldatei nicht gefunden');
-      LevelData.LoadFromFile(fil);
+      if not fil.found then raise Exception.Create('Leveldatei nicht gefunden');
+      LevelData.LoadFromFile(fil.fileLocation);
 
       boss := false;
       anzahlEinheiten := Length(LevelData.EnemyAdventTable);
@@ -267,7 +273,8 @@ begin
   if LevelListBox.itemindex = -1 then exit;
   for i := 1 to MaxPossibleLevels do
   begin
-    if LevelListBox.Items.strings[LevelListBox.itemindex] = Format(SLevelListBox, [i]) then
+    if (LevelListBox.Items.strings[LevelListBox.itemindex] = Format(SLevelListBox, [i])) or
+       (LevelListBox.Items.strings[LevelListBox.itemindex] = Format(SLevelListBox, [i])+' ('+SSelbstErstellt+')') then
     begin
       result := i;
       exit;

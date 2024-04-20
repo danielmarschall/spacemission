@@ -71,7 +71,14 @@ type
     destructor Destroy; override;
   end;
 
-function GetLevelFileName(lev: integer; forceuserdir: boolean): string;
+  TLevelFile = record
+    levelNumber: integer;
+    fileLocation: string;
+    isUser: boolean;
+    found: boolean;
+  end;
+
+function GetLevelFileName(lev: integer; forceuserdir: boolean): TLevelFile;
 
 implementation
 
@@ -83,7 +90,7 @@ const
   // https://hosted.oidplus.com/viathinksoft/?goto=oid%3A1.3.6.1.4.1.37476.2.8.1.1
   OID_LEVSAV_VER12 = '1.3.6.1.4.1.37476.2.8.1.1';
 
-function GetLevelFileName(lev: integer; forceuserdir: boolean): string;
+function GetLevelFileName(lev: integer; forceuserdir: boolean): TLevelFile;
 
   function _GetLevelVerzeichnisSystem: string;
   begin
@@ -136,12 +143,30 @@ function GetLevelFileName(lev: integer; forceuserdir: boolean): string;
 
 var
   usr, sys: string;
+  bfound: boolean;
 begin
+  result.levelNumber := lev;
   usr := _GetLevelFileNameUser(lev);
   sys := _GetLevelFileNameSystem(lev);
-  if fileexists(usr) or forceuserdir then exit(usr);
-  if fileexists(sys) then exit(sys);
-  exit(usr);
+  bfound := fileexists(usr);
+  if bfound or forceuserdir then
+  begin
+    result.isUser := true;
+    result.fileLocation := usr;
+    result.found := bfound;
+    exit;
+  end;
+  bfound := fileexists(sys);
+  if bfound then
+  begin
+    result.isUser := false;
+    result.fileLocation := sys;
+    result.found := bfound;
+    exit;
+  end;
+  result.isUser := true;
+  result.fileLocation := usr;
+  result.found := false;
 end;
 
 // this is just an example, there are many

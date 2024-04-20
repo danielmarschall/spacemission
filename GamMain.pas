@@ -1877,6 +1877,7 @@ var
   numEnemies: integer;
   e: TEnemyAdvent;
   bossPosition: integer;
+  levFile: TLevelFile;
 begin
   ResetLevelData;
   if FGameMode = gmRandom then
@@ -1972,11 +1973,12 @@ begin
   else
   begin
     {$REGION 'Normal game'}
-    if fileexists(GetLevelFileName(lev,false)) then
+    levFile := GetLevelFileName(lev,false);
+    if levFile.found then
     begin
       try
         LevelData.RasterErzwingen := false;
-        LevelData.LoadFromFile(GetLevelFileName(lev,false));
+        LevelData.LoadFromFile(levFile.fileLocation);
       except
         showmessage(Format(LNG_LEVEL_INVALID, [lev]));
         ResetLevelData;
@@ -2043,7 +2045,7 @@ begin
   if (isButton1 in DXInput.States) or (isButton2 in DXInput.States) then
   begin
     FLevel := 1;
-    if ((FGameMode=gmLevels) and not fileexists(GetLevelFileName(FLevel,false))) or ((FGameMode=gmRandom) and (FLevel > 20)) then
+    if ((FGameMode=gmLevels) and not GetLevelFileName(FLevel,false).found) or ((FGameMode=gmRandom) and (FLevel > 20)) then
     begin
       //PlaySound('Frage', False);
       exit;
@@ -2284,7 +2286,7 @@ begin
   GameStart.enabled := true;
   Spielgeschwindigkeit.enabled := false;
   Spielgeschwindigkeit.enabled := false;
-  if ((FGameMode=gmLevels) and (not fileexists(GetLevelFileName(FLevel,false))))
+  if ((FGameMode=gmLevels) and not GetLevelFileName(FLevel,false).found)
      // or ((FGameMode=gmRandom) and (FLevel > 25))
      or (FLevel > MaxPossibleLevels) then
   begin

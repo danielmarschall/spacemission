@@ -7,7 +7,7 @@ const
   RasterW = 48;
   RasterH = 32;
   MaxPossibleEnemyLives = 999;
-  MaxPossibleLevels = 9999;
+  MaxPossibleLevels = 999;
   RegistrySettingsKey = 'SOFTWARE\ViaThinkSoft\SpaceMission\Settings';
   DefaultLevelLength = 1200;
   StartLives = 6;
