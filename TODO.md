@@ -3,7 +3,6 @@
 
 ## Geplant für 1.2
 
-- versioninfo fehlt bei delphi 12
 - Release 1.2 with EV CodeSign
 
 ## Geplant für 1.3
@@ -46,7 +45,7 @@
 - Tama 1 must damage PL. Sprite!
 - Tama 2 must damage EN. Sprite!
 - Tama 1 und Tama 2 müssten sich gegenseitig kaputt machen?
-- Speicherung: Umbenennen – Button?
+- Speicherung: Umbenennen - Button?
 
 ## Repro, Unklar, Fragen
 
@@ -62,7 +61,7 @@
 - Bei Musik am Anfang bei nicht Focus Anfangsquäker?
 - Zeitverschiebung: Texpl dauert länger als Tboss.kill;
 - Cheat1 (unverwundbarkeit) mit Kollisionsgeräusch?
-- Wenn 0 Levels ? Procedur in MainMenu verbessern!
+- Wenn 0 Levels => Procedur in MainMenu verbessern!
 - Wenn Kollision von PlayerSprite vorrüber ist, muss der KollisionsTimer sofort wieder auf Null gehen!
 - Wenn keine Soundkarte dann auch kein Sound!
 - Spielgeschw. & BGSpeed vereinen
@@ -75,4 +74,4 @@
 - lev: bei vielen einheiten wird das arsch-langsam? algo verbessern? 
 - systemmodus auswählen (move rechnungen ausführen?) oder ein rechenlabel mit dem status anzeigen
 - SM: Soll bei Verwaltung lieber statt dem ersten satz bei status was anderes hin? Levelart: Normales Level.
-     Wenn es bleiben soll, dann den satz verbessern. Das Level ist ein  Zufallslevel
+     Wenn es bleiben soll, dann den satz verbessern. Das Level ist ein Zufallslevel
