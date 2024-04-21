@@ -56,8 +56,8 @@ Source: "..\Levels\*.lev"; DestDir: "{app}\Levels"; Flags: ignoreversion
 ;Name: "{group}\Webseiten\Projektseite auf ViaThinkSoft"; Filename: "https://www.viathinksoft.de/index.php?page=projektanzeige&seite=projekt-19"
 Name: "{group}\SpaceMission"; Filename: "{app}\SpaceMission.exe"
 Name: "{group}\SpaceMission Level Editor"; Filename: "{app}\LevEdit.exe"
-Name: "{userdesktop}\SpaceMission"; Filename: "{app}\SpaceMission.exe"; MinVersion: 4,4; Tasks: desktopicon
-Name: "{userdesktop}\SpaceMission Level Editor"; Filename: "{app}\LevEdit.exe"; MinVersion: 4,4; Tasks: desktopicon
+Name: "{autodesktop}\SpaceMission"; Filename: "{app}\SpaceMission.exe"; MinVersion: 4,4; Tasks: desktopicon
+Name: "{autodesktop}\SpaceMission Level Editor"; Filename: "{app}\LevEdit.exe"; MinVersion: 4,4; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\SpaceMission.exe"; Description: "SpaceMission starten"; Flags: nowait postinstall skipifsilent
