@@ -1940,7 +1940,6 @@ begin
       FGameMode := TGameMode(Ord(FGameMode)-1);
   end;
 
-  // TODO: Wenn man schnell die Taste drückt, dann kommt es manchmal nicht an!
   if (isDown in MainForm.DXInput.States) then TitleWasPressed := isDown;
   if (TitleWasPressed=isDown) and not (isDown in MainForm.DXInput.States) then
   begin

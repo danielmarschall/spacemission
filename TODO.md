@@ -1,10 +1,6 @@
 
 # SpaceMission TODO
 
-## Geplant für 1.2
-
-- Release 1.2 with EV CodeSign
-
 ## Geplant für 1.3
 
 - Bei jedem Levelaufstieg 1 Leben geben, alternativ 2 Medikits pro Level

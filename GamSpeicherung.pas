@@ -97,8 +97,8 @@ begin
   try
     while (res = 0) do
     begin
-      // Anmerkung: Contains() ist nicht case-sensitive
-      if (sr.name <> '.') and (sr.name <> '..') and not LevelListBox.Items.Contains(ChangeFileExt(sr.Name, '')) then
+      // Anmerkung: Contains() oder IndexOf() sind nicht case-sensitive
+      if (sr.name <> '.') and (sr.name <> '..') and (LevelListBox.Items.IndexOf(ChangeFileExt(sr.Name, ''))=-1) then
         LevelListBox.items.Add(ChangeFileExt(sr.Name, ''));
       res := FindNext(sr);
     end;
