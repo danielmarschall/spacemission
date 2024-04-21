@@ -1370,7 +1370,7 @@ end;
 
 procedure TMainForm.CheckUpdatesClick(Sender: TObject);
 begin
-  CheckForUpdates('spacemission');
+  CheckForUpdates('spacemission', ProgramVersion);
 end;
 
 procedure TMainForm.BeendenClick(Sender: TObject);

@@ -73,7 +73,7 @@ const
 // Useful functions
 function GetKnownFolderPath(const rfid: TGUID): string;
 function KillTask(ExeFileName: string): Integer;
-procedure CheckForUpdates(ViaThinkSoftProjectName: string);
+procedure CheckForUpdates(ViaThinkSoftProjectName: string; AVersion: string);
 
 implementation
 
@@ -136,16 +136,16 @@ begin
   result := extractfilepath(paramstr(0));
 end;
 
-// https://www.delphipraxis.net/post43515.html
-function GetHTML(AUrl: string): string;
+// https://www.delphipraxis.net/post43515.html , fixed , works for Delphi 12 Athens
+function GetHTML(AUrl: string): RawByteString;
 var
-  databuffer : array[0..4095] of char;
-  ResStr : string;
+  databuffer : array[0..4095] of ansichar; // SIC! ansichar!
+  ResStr : ansistring; // SIC! ansistring
   hSession, hfile: hInternet;
   dwindex,dwcodelen,dwread,dwNumber: cardinal;
   dwcode : array[1..20] of char;
   res    : pchar;
-  Str    : pchar;
+  Str    : pansichar; // SIC! pansichar
 begin
   ResStr:='';
   if (system.pos('http://',lowercase(AUrl))=0) and
@@ -185,7 +185,7 @@ begin
                   dwIndex);
     res := pchar(@dwcode);
     dwNumber := sizeof(databuffer)-1;
-    if (res ='200') or (res ='302') then
+    if (res ='200') or (res = '302') then
     begin
       while (InternetReadfile(hfile,
                               @databuffer,
@@ -199,12 +199,12 @@ begin
         if dwRead =0 then
           break;
         databuffer[dwread]:=#0;
-        Str := pchar(@databuffer);
+        Str := pansichar(@databuffer);
         resStr := resStr + Str;
       end;
     end
     else
-      ResStr := 'Status:'+res;
+      ResStr := 'Status:'+AnsiString(res);
     if assigned(hfile) then
       InternetCloseHandle(hfile);
   end;
@@ -216,9 +216,9 @@ begin
   Result := resStr;
 end;
 
-procedure CheckForUpdates(ViaThinkSoftProjectName: string);
+procedure CheckForUpdates(ViaThinkSoftProjectName: string; AVersion: string);
 var
-  cont: string;
+  cont: RawByteString;
 begin
   cont := GetHTML('https://www.viathinksoft.de/update/?id='+ViaThinkSoftProjectName);
   if copy(cont, 0, 7) = 'Status:' then
@@ -227,7 +227,7 @@ begin
   end
   else
   begin
-    if cont <> ProgramVersion then
+    if string(cont) <> AVersion then
     begin
       if Application.MessageBox('Eine neue Programmversion ist vorhanden. Möchten Sie diese jetzt herunterladen?', 'Information', MB_YESNO + MB_ICONASTERISK) = ID_YES then
         shellexecute(application.handle, 'open', pchar('https://www.viathinksoft.de/update/?id=@'+ViaThinkSoftProjectName), '', '', sw_normal);

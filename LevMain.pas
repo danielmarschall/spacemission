@@ -731,7 +731,7 @@ end;
 
 procedure TMainForm.AufUpdatesprfen1Click(Sender: TObject);
 begin
-  CheckForUpdates('spacemission');
+  CheckForUpdates('spacemission', ProgramVersion);
 end;
 
 procedure TMainForm.NeuClick(Sender: TObject);
