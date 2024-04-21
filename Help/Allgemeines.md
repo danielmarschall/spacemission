@@ -57,7 +57,7 @@ Anmerkungen:
 - Alle Level-Dateien müssen den Namen "Level [Level-Nr].lev" haben, bzw. alle Spielstanddateien müssen "[Name].sav" lauten.
 - Die Reihenfolge der Zeilen ist beliebig. Die erste Zeile muss jedoch exakt stimmen.
 - Leere Zeilen sind erlaubt
-- Enemy `<Typ>` = Gegner Typ (1=Attacker, 2=Attacker2, 3=Attacker3, 4=Meteor, 5=UFO, 6=UFO2, 7=Boss)
+- Enemy `<Typ>` = Gegner Typ (1=Attacker, 2=Attacker2, 3=Attacker3, 4=Meteor, 5=UFO, 6=UFO2, 7=Boss, 8=Medikit)
 - Enemy `<XCoord>` = Gegner X-Koordinate (muss durch 48 teilbar sein, wenn Level mit Leveleditor bearbeitet werden soll)
 - Enemy `<YCoord>` = Gegner Y-Koordinate (muss durch 32 teilbar sein, wenn Level mit Leveleditor bearbeitet werden soll)
 - Enemy `<Leben>` = Gegner Leben (keine relevanz für Kometen)

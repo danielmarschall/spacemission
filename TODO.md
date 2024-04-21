@@ -3,8 +3,6 @@
 
 ## Geplant für 1.3
 
-- Bei jedem Levelaufstieg 1 Leben geben, alternativ 2 Medikits pro Level
-- Neue Einheit: Medikit item
 - Neue Einheit: Ufo, das im Kreis fliegt und nicht weggeht
 - Bei Pause => Entweder alles grau werden lassen, oder vielleicht ganz groß Pause in die Bildschirmmitte schreiben
 - Vorbereitung auf Multilingualität (all strings in resourcestrings), ggf. sogar schon auf Englisch übersetzen

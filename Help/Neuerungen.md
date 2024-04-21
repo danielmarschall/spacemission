@@ -1,5 +1,9 @@
 # Changelog
 
+SpaceMission 1.3 WIP:
+- Neue Einheit: Medikit Item
+- Zufallslevel: 1 Medikit wird bei jedem Level dazugegeben (am Anfang)
+
 SpaceMission 1.2:
 - Inhaltliche Änderungen am Spiel:
 	- Boss besiegen gibt nun 10.000 Punkte anstelle 1.000

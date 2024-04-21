@@ -52,7 +52,7 @@ type
     constructor Create(AParent: TSprite); override;
   end;
 
-  TPlayerOrEnemyState = (
+  TPlayerOrEnemyOrItemState = (
     pesUnknown,
     pesNormal,
     pesExploding, // only boss, as preparation of pesDead
@@ -63,12 +63,12 @@ type
     pesHovering // only some kind of enemies
   );
 
-  TPlayerOrEnemy = class abstract (TImageSprite)
+  TPlayerOrEnemyOrItem = class abstract (TImageSprite)
   strict protected
-    State: TPlayerOrEnemyState;
+    State: TPlayerOrEnemyOrItemState;
   end;
 
-  TPlayerSprite = class(TPlayerOrEnemy)
+  TPlayerSprite = class(TPlayerOrEnemyOrItem)
   private
     FTamaCount: Integer; // accessed by TPlayerTamaSprite.Destroy
   strict private
@@ -95,7 +95,7 @@ type
   end;
 
   TEnemyClass = class of TEnemy;
-  TEnemy = class abstract (TPlayerOrEnemy)
+  TEnemy = class abstract (TPlayerOrEnemyOrItem)
   strict protected
     FCounter: Integer;
     FLife: integer;
@@ -190,6 +190,20 @@ type
     procedure HitEnemy(ADead: Boolean); override;
   public
     constructor Create(AParent: TSprite; ALifes: integer); override;
+  end;
+
+  TItemClass = class of TItem;
+  TItem = class abstract (TPlayerOrEnemyOrItem)
+  strict protected
+    procedure DoMove(MoveCount: Integer); override;
+  public
+    procedure Collected; virtual;
+  end;
+
+  TItemMedikit = class(TItem)
+  public
+    procedure Collected; override;
+    constructor Create(AParent: TSprite); override;
   end;
 
   TMainForm = class(TDXForm)
@@ -473,7 +487,11 @@ end;
 procedure TPlayerSprite.DoCollision(Sprite: TSprite; var Done: Boolean);
 begin
   if mainform.FCheat then exit;
-  if (Sprite is TEnemy) or (Sprite is TEnemyTama) then
+  if (Sprite is TItem) then
+  begin
+    TItem(Sprite).Collected;
+  end
+  else if (Sprite is TEnemy) or (Sprite is TEnemyTama) then
   begin
     if not mainform.crash then
     begin
@@ -1174,6 +1192,41 @@ begin
   inc(FCounter, MoveCount);
 end;
 
+{ TItem }
+
+procedure TItem.Collected;
+begin
+  MainForm.PlaySound(smsItemCollected, false);
+  Dead;
+end;
+
+procedure TItem.DoMove(MoveCount: Integer);
+begin
+  X := X - MoveCount*(250/1000);
+  if X < -Width then Dead;
+end;
+
+{ TItemMedikit }
+
+procedure TItemMedikit.Collected;
+begin
+  Inc(MainForm.FLife);
+  inherited;
+end;
+
+constructor TItemMedikit.Create(AParent: TSprite);
+begin
+  inherited Create(AParent);
+  State := pesNormal;
+  Image := MainForm.GetSpriteGraphic(smgItemMedikit);
+  Width := Image.Width;
+  Height := Image.Height;
+  AnimCount := Image.PatternCount;
+  AnimLooped := True;
+  AnimSpeed := DEFAULT_ANIMSPEED;
+  PixelCheck := True;
+end;
+
 { TMainForm }
 
 procedure TMainForm.FormCreate(Sender: TObject);
@@ -1801,7 +1854,7 @@ var
   Enemies: array[1..27] of TEnemyType;
   numEnemies: integer;
   e: TEnemyAdvent;
-  bossPosition: integer;
+  bossPosition, medikitPosition: integer;
   levFile: TLevelFile;
 begin
   ResetLevelData;
@@ -1893,6 +1946,11 @@ begin
       e.lifes := lev*5;
       LevelData.EnemyAdventTable[bossPosition] := e;
     end;
+
+    medikitPosition := 0;
+    LevelData.EnemyAdventTable[medikitPosition].enemyType := etItemMedikit;
+    LevelData.EnemyAdventTable[medikitPosition].lifes := 0;
+
     {$ENDREGION}
   end
   else
@@ -2050,7 +2108,7 @@ end;
 procedure TMainForm.SceneMain;
 var
   Enemy: TSprite;
-  spriteClass: TEnemyClass;
+  spriteClass: TClass;
   tmpEnemyAnzeige: integer;
 begin
   case FInterval of
@@ -2078,10 +2136,17 @@ begin
         etEnemyUFO:       spriteClass := TEnemyUFO;
         etEnemyUFO2:      spriteClass := TEnemyUFO2;
         etEnemyBoss:      spriteClass := TEnemyBoss;
+        etItemMedikit:    spriteClass := TItemMedikit;
       end;
       if spriteClass <> nil then
       begin
-        Enemy := spriteClass.Create(SpriteEngine.Engine, lifes);
+        Enemy := nil;
+        if spriteClass.InheritsFrom(TEnemy) then
+          Enemy := TEnemyClass(spriteClass).Create(SpriteEngine.Engine, lifes)
+        else if spriteClass.InheritsFrom(TItem) then
+          Enemy := TItemClass(spriteClass).Create(SpriteEngine.Engine)
+        else
+          Assert(False);
         Enemy.x := dxdraw.surfacewidth;
         //Enemy.y := y;
         if y <> 0 then

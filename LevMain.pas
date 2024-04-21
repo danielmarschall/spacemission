@@ -55,6 +55,7 @@ type
     AufUpdatesprfen1: TMenuItem;
     N4: TMenuItem;
     WasgibtesNeues1: TMenuItem;
+    Enemy8: TRadioButton;
     procedure DXDrawFinalize(Sender: TObject);
     procedure DXDrawInitialize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -169,8 +170,12 @@ begin
   if AEnemyType = etEnemyUFO then Image := MainForm.GetSpriteGraphic(smgEnemyDisk);
   if AEnemyType = etEnemyUFO2 then Image := MainForm.GetSpriteGraphic(smgEnemyDisk2);
   if AEnemyType = etEnemyBoss then Image := MainForm.GetSpriteGraphic(smgEnemyBoss);
+  if AEnemyType = etItemMedikit then Image := MainForm.GetSpriteGraphic(smgItemMedikit);
 
-  if AEnemyType = etEnemyMeteor then FLives := 0 else FLives := ALives;
+  if not EnemyTypeHasLives(AEnemyType) then
+    FLives := 0
+  else
+    FLives := ALives;
   FEnemyType := AEnemyType;
   Width := Image.Width;
   Height := Image.Height;
@@ -558,7 +563,8 @@ end;
 procedure TMainForm.DXDrawMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 var
-  i, j, k, l, ex, ey: integer;
+  i: TEnemyType;
+  j, k, l, ex, ey: integer;
   ok, breaked: boolean;
 begin
   ex := trunc(x/RasterW) * RasterW;
@@ -573,7 +579,7 @@ begin
       ok := false // boss already exists
     else
     begin
-      for i := 1 to NumEnemyTypes do
+      for i := Low(TEnemyType) to High(TEnemyType) do
       begin
         for j := 0 to MaxPossibleEnemyLives do
         begin
@@ -593,7 +599,7 @@ begin
             end;
             if not ok then break;
           end;
-          if LevData.IndexOfEnemy(ex + (ScrollP * RasterW), ey, TEnemyType(i), j) <> -1 then
+          if LevData.IndexOfEnemy(ex + (ScrollP * RasterW), ey, i, j) <> -1 then
           begin
             ok := false;
             break;
@@ -604,7 +610,7 @@ begin
     end;
     if ok then
     begin
-      if SelectedEnemyType <> etEnemyMeteor then
+      if EnemyTypeHasLives(SelectedEnemyType) then
         LevData.AddEnemy(ex + (ScrollP * RasterW), ey, SelectedEnemyType, LivesEdit.Value)
       else
         LevData.AddEnemy(ex + (ScrollP * RasterW), ey, SelectedEnemyType, 0);
@@ -616,19 +622,19 @@ begin
   { Löschen }
   else if Button = mbRight then
   begin
-    for i := 1 to NumEnemyTypes do
+    for i := Low(TEnemyType) to High(TEnemyType) do
     begin
       for j := 0 to MaxPossibleEnemyLives do
       begin
-        if boss and (TEnemyType(i) = etEnemyBoss) then
+        if boss and (i = etEnemyBoss) then
         begin
           for k := 0 to 3 do
           begin
             for l := 0 to 1 do
             begin
-              if LevData.IndexOfEnemy(ex + ((ScrollP - k) * RasterW), ey - (RasterH * l), TEnemyType(i), j) <> -1 then
+              if LevData.IndexOfEnemy(ex + ((ScrollP - k) * RasterW), ey - (RasterH * l), i, j) <> -1 then
               begin
-                LevData.DeleteEnemy(ex + ((ScrollP - k) * RasterW), ey - (RasterH * l), TEnemyType(i), j);
+                LevData.DeleteEnemy(ex + ((ScrollP - k) * RasterW), ey - (RasterH * l), i, j);
                 Boss := false;
                 dec(NumEnemys);
                 breaked := true;
@@ -638,10 +644,10 @@ begin
             if breaked then break;
           end;
         end;
-        if LevData.IndexOfEnemy(ex + (ScrollP * RasterW), ey, TEnemyType(i), j) <> -1 then
+        if LevData.IndexOfEnemy(ex + (ScrollP * RasterW), ey, i, j) <> -1 then
         begin
-          LevData.DeleteEnemy(ex + (ScrollP * RasterW), ey, TEnemyType(i), j);
-          if TEnemyType(i) = etEnemyBoss then Boss := false;
+          LevData.DeleteEnemy(ex + (ScrollP * RasterW), ey, i, j);
+          if i = etEnemyBoss then Boss := false;
           dec(NumEnemys);
           breaked := true;
           break;
@@ -660,8 +666,8 @@ var
 begin
   et := SelectedEnemyType;
   Image1.Left := -(87 * (Ord(et) - 1)) + 1;
-  LivesEdit.Enabled := et <> etEnemyMeteor;
-  LivesLabel.Enabled := et <> etEnemyMeteor;
+  LivesEdit.Enabled := EnemyTypeHasLives(et);
+  LivesLabel.Enabled := EnemyTypeHasLives(et);
 end;
 
 procedure TMainForm.EnemyCreateSprite(x, y: integer; AEnemyType: TEnemyType; ALives: integer);
@@ -741,7 +747,8 @@ resourcestring
   status_lives = 'Leben: ';
   status_nolives = 'Einheit hat keine Lebensangabe';
 var
-  ex, ey, i, j, k, l: integer;
+  i: TEnemyType;
+  ex, ey, j, k, l: integer;
   lifes: integer;
   enemyType: TEnemyType;
   enemyName: string;
@@ -757,17 +764,17 @@ begin
   lifes := -1;
   enemyType := etUnknown;
   breaked := false;
-  for i := 1 to NumEnemyTypes do
+  for i := Low(TEnemyType) to High(TEnemyType) do
   begin
     for j := 0 to MaxPossibleEnemyLives do
     begin
-      if boss and (TEnemyType(i) = etEnemyBoss) then
+      if boss and (i = etEnemyBoss) then
       begin
         for k := 0 to 3 do
         begin
           for l := 0 to 1 do
           begin
-            if LevData.IndexOfEnemy(ex + ((ScrollP - k) * RasterW), ey - (RasterH * l), TEnemyType(i), j) <> -1 then
+            if LevData.IndexOfEnemy(ex + ((ScrollP - k) * RasterW), ey - (RasterH * l), i, j) <> -1 then
             begin
               lifes := j;
               breaked := true;
@@ -777,10 +784,10 @@ begin
           if breaked then break;
         end;
       end;
-      if (breaked = false) and (LevData.IndexOfEnemy(ex + (ScrollP * RasterW), ey, TEnemyType(i), j) <> -1) then
+      if (breaked = false) and (LevData.IndexOfEnemy(ex + (ScrollP * RasterW), ey, i, j) <> -1) then
       begin
         lifes := j;
-        enemyType := TEnemyType(i);
+        enemyType := i;
         breaked := true;
         break;
       end;
@@ -796,6 +803,7 @@ begin
     else if Ord(enemyType) = 5 then enemyName := Enemy5.Caption
     else if Ord(enemyType) = 6 then enemyName := Enemy6.Caption
     else if Ord(enemyType) = 7 then enemyName := Enemy7.Caption
+    else if Ord(enemyType) = 8 then enemyName := Enemy8.Caption
     else enemyName := '???';
     if lifes > 0 then
       StatusBar.SimpleText := ' ' + enemyName + ' - ' + status_lives + inttostr(lifes)
@@ -833,6 +841,7 @@ begin
   else if Enemy5.Checked then result := etEnemyUFO
   else if Enemy6.Checked then result := etEnemyUFO2
   else if Enemy7.Checked then result := etEnemyBoss
+  else if Enemy8.Checked then result := etItemMedikit
   else result := etUnknown;
 end;
 

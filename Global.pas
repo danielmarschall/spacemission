@@ -51,7 +51,8 @@ type
     smgBackgroundBlue,    // ImageList.Items.Item[17]
     smgBackgroundRed,     // ImageList.Items.Item[18]
     smgBackgroundYellow,  // ImageList.Items.Item[19]
-    smgHintergrundRot     // ImageList.Items.Item[20]
+    smgHintergrundRot,    // ImageList.Items.Item[20]
+    smgItemMedikit        // ImageList.Items.Item[21]
   );
 
   // DirectX\Sound.dxw
@@ -61,10 +62,7 @@ type
     smsExplosion,     // WaveList.Items.Item[1]
     smsHit,           // WaveList.Items.Item[2]
     smsShoot,         // WaveList.Items.Item[3]
-    smsDanger,        // WaveList.Items.Item[4]
-    smsEnde,          // WaveList.Items.Item[5]
-    smsFrage,         // WaveList.Items.Item[6]
-    smsLevIntro       // WaveList.Items.Item[7]
+    smsItemCollected  // WaveList.Items.Item[4]
   );
 
 function OwnDirectory: string;

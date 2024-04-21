@@ -5,10 +5,15 @@ interface
 uses
   Classes;
 
-const
-  NumEnemyTypes = 7;
-
 type
+  // If you add a new enemy or item, please edit
+  // - ComLevelReader.pas : EnemyTypeHasLives()
+  // - GamMain.pas : TMainForm.SceneMain
+  // - LevMain.pas : * GUI
+  //                 * TMainForm.SelectedEnemyType
+  //                 * TEnemy.Create
+  //                 * TMainForm.DXDrawMouseMove
+  //                 * TMainForm.DXDrawMouseDown
   TEnemyType = (
     etUnknown,
     etEnemyAttacker,
@@ -17,7 +22,8 @@ type
     etEnemyMeteor,
     etEnemyUFO,
     etEnemyUFO2,
-    etEnemyBoss
+    etEnemyBoss,
+    etItemMedikit
   );
 
   TEnemyAdvent = record
@@ -79,6 +85,8 @@ type
   end;
 
 function GetLevelFileName(lev: integer; forceuserdir: boolean): TLevelFile;
+
+function EnemyTypeHasLives(et: TEnemyType): boolean;
 
 implementation
 
@@ -722,6 +730,11 @@ begin
   finally
     FreeAndNil(sl);
   end;
+end;
+
+function EnemyTypeHasLives(et: TEnemyType): boolean;
+begin
+  result := (et <> etEnemyMeteor) and (et <> etItemMedikit);
 end;
 
 end.

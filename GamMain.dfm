@@ -4,8 +4,8 @@ object MainForm: TMainForm
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'SpaceMission'
-  ClientHeight = 562
-  ClientWidth = 640
+  ClientHeight = 561
+  ClientWidth = 636
   Color = clBlack
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clYellow
