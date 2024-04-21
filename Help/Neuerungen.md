@@ -1,6 +1,6 @@
 # Changelog
 
-SpaceMission 1.3 WIP:
+SpaceMission 1.2.1:
 - Neue Einheit: Medikit Item
 - Zufallslevel: 1 Medikit wird bei jedem Level dazugegeben (am Anfang)
 - BUGFIX: Nach dem der Boss besiegt wurde, war die angezeigte Gegner-Anzeige eins zu wenig oder ist verschwunden

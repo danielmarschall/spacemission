@@ -1,14 +1,13 @@
-# SpaceMission 1.2 Dokumentation
+# SpaceMission 1.2.1 Dokumentation
 
-Bitte auch lesen: [Was ist neu in Version 1.2?](Neuerungen.md)
+Bitte auch lesen: [Was ist neu in Version 1.2.1?](Neuerungen.md)
 
 ## Beschreibung
 SpaceMission ist ein klassisches Weltraumspiel, beidem Sie durch einen Kometenhagel fliegen,
-UFOs und andere Raumschiffe abschießen müssen. Es gibt seit Version 1.1 31 Levels, die
-von meinen Mitarbeitern erstellt wurden. Außerdem gibt es Zufallslevels, das heißt, dass Levels
-vom Computer durch Zufall erstellt werden. Diese Zufallslevels sind besonders gut. In der
-Version 1.1 gibt es nun auch einen neuen Leveleditor, mit denen Sie Ihre eigenen Levels
-erstellen können. Viel Spaß mit SpaceMission.
+UFOs und andere Raumschiffe abschießen müssen. Es gibt 31 Levels sowie
+Zufallslevels, d.h. Levels die vom Computer durch Zufall erstellt werden.
+Mit dem eingebauten Leveleditor können Sie auch Ihre eigenen Levels
+erstellen. Viel Spaß mit SpaceMission.
 
 ### Gute Levels gesucht:
 Wenn Sie gute Levels erstellt haben und diese in der nächsten Version veröffentlichen möchten,
