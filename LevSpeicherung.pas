@@ -168,7 +168,8 @@ begin
       exit;
     end;
   end;}
-  if LevelListBox.items.IndexOf(Format(SLevelListBox, [LevelNumber.Value])) > -1 then
+  if (LevelListBox.items.IndexOf(Format(SLevelListBox, [LevelNumber.Value])) > -1) or
+     (LevelListBox.items.IndexOf(Format(SLevelListBox, [LevelNumber.Value])+' ('+SSelbsterstellt+')') > -1) then
   begin
     if MessageDlg('Level ist bereits vorhanden. Ersetzen?', mtConfirmation, mbYesNoCancel, 0) <> mrYes then
       exit;

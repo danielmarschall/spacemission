@@ -3,6 +3,8 @@
 SpaceMission 1.3 WIP:
 - Neue Einheit: Medikit Item
 - Zufallslevel: 1 Medikit wird bei jedem Level dazugegeben (am Anfang)
+- BUGFIX: Nach dem der Boss besiegt wurde, war die angezeigte Gegner-Anzeige eins zu wenig oder ist verschwunden
+- BUGFIX: Leveleditor Speicherndialog Frage "Level ersetzen?" Abfrage kommt nun wieder, wenn man ein Selbsterstelltes Level überschreiben möchte
 
 SpaceMission 1.2:
 - Inhaltliche Änderungen am Spiel:
