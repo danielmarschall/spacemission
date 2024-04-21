@@ -2140,7 +2140,7 @@ begin
       {$REGION 'Anzeige Einheiten und Boss Leben'}
 
       tmpEnemyAnzeige := EnemyCounter{Auf Bildschirm} + FRestEnemies{In der Warteschlange};
-      if FBossImLevel then Dec(tmpEnemyAnzeige);
+      if FBossImLevel and (FBossLife<>0) then Dec(tmpEnemyAnzeige);
 
       if FBossLife > 0 then
       begin
