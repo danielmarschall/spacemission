@@ -1851,10 +1851,10 @@ const
   RandomLevelMaxEnemyLives = 10;
 var
   act: integer;
-  Enemies: array[1..27] of TEnemyType;
+  Enemies: array[1..32] of TEnemyType;
   numEnemies: integer;
   e: TEnemyAdvent;
-  bossPosition, medikitPosition: integer;
+  bossPosition: integer;
   levFile: TLevelFile;
 begin
   ResetLevelData;
@@ -1866,28 +1866,33 @@ begin
     Enemies[3] := etEnemyUFO;          // ab Lev 1
     Enemies[4] := etEnemyAttacker;     // ab Lev 2
     Enemies[5] := etEnemyMeteor;       // ab Lev 3
-    Enemies[6] := etEnemyUFO;          // ...
-    Enemies[7] := etEnemyAttacker;
-    Enemies[8] := etEnemyMeteor;
-    Enemies[9] := etEnemyUFO;
-    Enemies[10] := etEnemyAttacker;
-    Enemies[11] := etEnemyMeteor;
-    Enemies[12] := etEnemyUFO;
-    Enemies[13] := etEnemyAttacker;
-    Enemies[14] := etEnemyMeteor;
-    Enemies[15] := etEnemyUFO;
-    Enemies[16] := etEnemyAttacker3;
-    Enemies[17] := etEnemyAttacker;
-    Enemies[18] := etEnemyMeteor;
-    Enemies[19] := etEnemyUFO;
-    Enemies[20] := etEnemyUFO2;
-    Enemies[21] := etEnemyAttacker;
-    Enemies[22] := etEnemyMeteor;
-    Enemies[23] := etEnemyUFO;
-    Enemies[24] := etEnemyAttacker2;
-    Enemies[25] := etEnemyMeteor;
-    Enemies[26] := etEnemyUFO;
-    Enemies[27] := etEnemyAttacker;
+    Enemies[6] := etEnemyUFO;          // ab Lev 4
+    Enemies[7] := etEnemyAttacker;     // ab Lev 5
+    Enemies[8] := etEnemyMeteor;       // ab Lev 6
+    Enemies[9] := etEnemyUFO;          // ab Lev 7
+    Enemies[10] := etEnemyAttacker;    // ab Lev 8
+    Enemies[11] := etEnemyMeteor;      // ab Lev 9
+    Enemies[12] := etEnemyUFO;         // ab Lev 10
+    Enemies[13] := etEnemyAttacker;    // ab Lev 11
+    Enemies[14] := etEnemyMeteor;      // ab Lev 12
+    Enemies[15] := etEnemyUFO;         // ab Lev 13
+    Enemies[16] := etEnemyAttacker3;   // ab Lev 14
+    Enemies[17] := etEnemyAttacker;    // ab Lev 15
+    Enemies[18] := etEnemyMeteor;      // ab Lev 16
+    Enemies[19] := etEnemyUFO;         // ab Lev 17
+    Enemies[20] := etEnemyUFO2;        // ab Lev 18
+    Enemies[21] := etEnemyAttacker;    // ab Lev 19
+    Enemies[22] := etEnemyMeteor;      // ab Lev 20
+    Enemies[23] := etEnemyUFO;         // ab Lev 21
+    Enemies[24] := etEnemyAttacker2;   // ab Lev 22
+    Enemies[25] := etEnemyMeteor;      // ab Lev 23
+    Enemies[26] := etEnemyUFO;         // ab Lev 24
+    Enemies[27] := etEnemyAttacker;    // ab Lev 25
+    Enemies[28] := etEnemyAttacker;    // ab Lev 26
+    Enemies[29] := etEnemyAttacker2;   // ab Lev 27
+    Enemies[30] := etEnemyAttacker3;   // ab Lev 28
+    Enemies[31] := etEnemyUFO;         // ab Lev 29
+    Enemies[32] := etEnemyUFO2;        // ab Lev 30
     numEnemies := lev*ADDITIONAL_ENEMIES_PER_LEVEL;
     SetLength(LevelData.EnemyAdventTable, numEnemies);
     for act := 0 to numEnemies-1 do
@@ -1918,6 +1923,12 @@ begin
         end;
       end;
 
+      if (act-1) mod 200 = 0 then
+      begin
+        e.enemyType := etItemMedikit;
+        e.lifes := 0;
+      end;
+
       LevelData.EnemyAdventTable[act] := e;
     end;
 
@@ -1937,6 +1948,9 @@ begin
       bossPosition := round(0.75 * numEnemies);
     end;
 
+    if LevelData.EnemyAdventTable[bossPosition].enemyType = etItemMedikit then
+      Inc(bossPosition);
+
     if bossPosition >= 0 then
     begin
       e.enemyType := etEnemyBoss;
@@ -1946,10 +1960,6 @@ begin
       e.lifes := lev*5;
       LevelData.EnemyAdventTable[bossPosition] := e;
     end;
-
-    medikitPosition := 0;
-    LevelData.EnemyAdventTable[medikitPosition].enemyType := etItemMedikit;
-    LevelData.EnemyAdventTable[medikitPosition].lifes := 0;
 
     {$ENDREGION}
   end

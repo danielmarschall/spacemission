@@ -26,7 +26,7 @@ object MainForm: TMainForm
   object ScrollBar: TScrollBar
     Left = 0
     Top = 480
-    Width = 640
+    Width = 632
     Height = 17
     Max = 1200
     PageSize = 0

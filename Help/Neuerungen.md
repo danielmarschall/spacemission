@@ -2,7 +2,9 @@
 
 SpaceMission 1.2.1:
 - Neue Einheit: Medikit Item
-- Zufallslevel: 1 Medikit wird bei jedem Level dazugegeben (am Anfang)
+- Zufallslevel:
+	- Alle 200 Einheiten erhält man ein Medikit
+	- Ab Level 25 steigt die Anzahl an auftretenden stärkeren Gegnertypen
 - BUGFIX: Nach dem der Boss besiegt wurde, war die angezeigte Gegner-Anzeige eins zu wenig oder ist verschwunden
 - BUGFIX: Leveleditor Speicherndialog Frage "Level ersetzen?" Abfrage kommt nun wieder, wenn man ein Selbsterstelltes Level überschreiben möchte
 
