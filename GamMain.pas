@@ -65,7 +65,9 @@ type
 
   TPlayerOrEnemyOrItem = class abstract (TImageSprite)
   strict protected
-    State: TPlayerOrEnemyOrItemState;
+    FState: TPlayerOrEnemyOrItemState;
+  public
+    property State: TPlayerOrEnemyOrItemState read FState;
   end;
 
   TPlayerSprite = class(TPlayerOrEnemyOrItem)
@@ -293,8 +295,7 @@ type
     { Diverse temporäre Variablen }
     Crash2: integer;
     EnemyCounter: integer;
-    FBossImLevel: boolean;
-    FBossLife: integer;
+    FBoss: TEnemyBoss;
     Crash: boolean;
     crashsound: boolean;
   public
@@ -361,6 +362,9 @@ const
     isButton12, isButton13, isButton14, isButton15, isButton16, isButton17, isButton18,
     isButton19, isButton20, isButton21, isButton22, isButton23, isButton24, isButton25,
     isButton26, isButton27, isButton28, isButton29, isButton30, isButton31, isButton32];
+
+resourcestring
+  SWeiterMitLeertaste = 'Weiter mit Leertaste';
 
 { TBackground }
 
@@ -472,7 +476,7 @@ end;
 constructor TPlayerSprite.Create(AParent: TSprite);
 begin
   inherited Create(AParent);
-  State := pesEntering;
+  FState := pesEntering;
   Image := MainForm.GetSpriteGraphic(smgMachine);
   Width := Image.Width;
   Height := Image.Height;
@@ -502,7 +506,7 @@ begin
         MainForm.PlaySound(smsExplosion, false);
         Collisioned := false;
         FCounter := 0;
-        State := pesDead;
+        FState := pesDead;
         Done := false;
         Image := MainForm.GetSpriteGraphic(smgExplosion);
         Width := Image.Width;
@@ -560,7 +564,7 @@ begin
     if FCounter>200 then
     begin
       FCounter := 0;
-      State := pesDeadVanished;
+      FState := pesDeadVanished;
       Visible := false; // Cannot use "Dead;" because we need to still be able to handle pesDeadVanished
     end;
   end
@@ -593,14 +597,14 @@ begin
   else if State = pesEntering then
   begin
     X := X + MoveCount*(300/1000);
-    if X > 19 then State := pesNormal;
+    if X > 19 then FState := pesNormal;
   end;
   inc(FCounter, MoveCount);
 end;
 
 procedure TPlayerSprite.FlyAway;
 begin
-  State := pesFlyaway;
+  FState := pesFlyaway;
 end;
 
 { TPlayerTamaSprite }
@@ -705,7 +709,7 @@ end;
 constructor TEnemyMeteor.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
-  State := pesNormal;
+  FState := pesNormal;
   Image := MainForm.GetSpriteGraphic(smgEnemyMeteor);
   Width := Image.Width;
   Height := Image.Height;
@@ -733,7 +737,7 @@ end;
 constructor TEnemyUFO.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
-  State := pesNormal;
+  FState := pesNormal;
   Image := MainForm.GetSpriteGraphic(smgEnemyDisk);
   Width := Image.Width;
   Height := Image.Height;
@@ -748,7 +752,7 @@ begin
 
   if ADead then
   begin
-    State := pesDead;
+    FState := pesDead;
     FCounter := 0;
     Inc(MainForm.FScore, 1000);
     Image := MainForm.GetSpriteGraphic(smgExplosion);
@@ -779,7 +783,7 @@ begin
     X := X - MoveCount*(300/1000);
     if FCounter>200 then
     begin
-      State := pesDeadVanished;
+      FState := pesDeadVanished;
       Dead;
     end;
   end;
@@ -791,7 +795,7 @@ end;
 constructor TEnemyUFO2.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
-  State := pesNormal;
+  FState := pesNormal;
   Image := MainForm.GetSpriteGraphic(smgEnemyDisk2);
   Width := Image.Width;
   Height := Image.Height;
@@ -806,7 +810,7 @@ begin
 
   if ADead then
   begin
-    State := pesDead;
+    FState := pesDead;
     FCounter := 0;
     Inc(MainForm.FScore, 1000);
     Image := MainForm.GetSpriteGraphic(smgExplosion);
@@ -848,7 +852,7 @@ begin
     X := X - MoveCount*(300/1000);
     if FCounter>200 then
     begin
-      State := pesDeadVanished;
+      FState := pesDeadVanished;
       Dead;
     end;
   end;
@@ -860,7 +864,7 @@ end;
 constructor TEnemyAttacker.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
-  State := pesNormal;
+  FState := pesNormal;
   Image := MainForm.GetSpriteGraphic(smgEnemyAttacker);
   Width := Image.Width;
   Height := Image.Height;
@@ -876,7 +880,7 @@ begin
 
   if ADead then
   begin
-    State := pesDead;
+    FState := pesDead;
     FCounter := 0;
     Inc(MainForm.FScore, 1000);
     Image := MainForm.GetSpriteGraphic(smgExplosion);
@@ -906,7 +910,7 @@ begin
     X := X - MoveCount*(300/1000);
     if FCounter>200 then
     begin
-      State := pesDeadVanished;
+      FState := pesDeadVanished;
       Dead;
     end;
   end;
@@ -918,7 +922,7 @@ end;
 constructor TEnemyAttacker2.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
-  State := pesEntering;
+  FState := pesEntering;
   Image := MainForm.GetSpriteGraphic(smgEnemyAttacker2);
   Width := Image.Width;
   Height := Image.Height;
@@ -934,7 +938,7 @@ begin
 
   if ADead then
   begin
-    State := pesDead;
+    FState := pesDead;
     FCounter := 0;
     Inc(MainForm.FScore, 5000);
     Image := MainForm.GetSpriteGraphic(smgExplosion);
@@ -961,7 +965,7 @@ begin
     else
     begin
       Collisioned := True;
-      State := pesHovering;
+      FState := pesHovering;
       FPutTama := True;
     end;
     Y := Y + Cos256(FCounter div 15)*5;
@@ -1000,7 +1004,7 @@ begin
   begin
     if FCounter>200 then
     begin
-      State := pesDeadVanished;
+      FState := pesDeadVanished;
       Dead;
     end;
   end;
@@ -1012,7 +1016,7 @@ end;
 constructor TEnemyAttacker3.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
-  State := pesNormal;
+  FState := pesNormal;
   Image := MainForm.GetSpriteGraphic(smgEnemyAttacker3);
   Width := Image.Width;
   Height := Image.Height;
@@ -1028,7 +1032,7 @@ begin
 
   if ADead then
   begin
-    State := pesDead;
+    FState := pesDead;
     FCounter := 0;
     Inc(MainForm.FScore, 5000);
     Image := MainForm.GetSpriteGraphic(smgExplosion);
@@ -1068,7 +1072,7 @@ begin
   begin
     if FCounter>200 then
     begin
-      State := pesDeadVanished;
+      FState := pesDeadVanished;
       Dead;
     end;
   end;
@@ -1080,7 +1084,7 @@ end;
 constructor TEnemyBoss.Create(AParent: TSprite; ALifes: integer);
 begin
   inherited Create(AParent, ALifes);
-  State := pesEntering;
+  FState := pesEntering;
   Image := MainForm.GetSpriteGraphic(smgEnemyBoss);
   Width := Image.Width;
   Height := Image.Height;
@@ -1090,7 +1094,7 @@ begin
   AnimSpeed := DEFAULT_ANIMSPEED;
   PixelCheck := True;
   Collisioned := False;
-  MainForm.FBossLife := FLife;
+  MainForm.FBoss := Self;
   waiter1 := 0;
   waiter2 := 0;
 end;
@@ -1101,15 +1105,13 @@ begin
 
   if ADead then
   begin
-    State := pesExploding; // not pesDead for the boss!
+    FState := pesExploding; // not pesDead for the boss!
     FCounter := 0;
     Inc(MainForm.FScore, 100000);
-    dec(MainForm.FBossLife);
   end
   else
   begin
     Inc(MainForm.FScore, 100);
-    dec(MainForm.FBossLife);
   end;
 end;
 
@@ -1123,7 +1125,7 @@ begin
     else
     begin
       Collisioned := True;
-      State := pesHovering;
+      FState := pesHovering;
       FPutTama := True;
     end;
     Y := Y + Cos256(FCounter div 15)*5;
@@ -1177,7 +1179,7 @@ begin
       else
       begin
         Inc(MainForm.FScore, 10000);
-        State := pesDead;
+        FState := pesDead;
       end;
     end;
   end
@@ -1185,7 +1187,7 @@ begin
   begin
     if FCounter>4000 then
     begin
-      State := pesDeadVanished;
+      FState := pesDeadVanished;
       Dead;
     end;
   end;
@@ -1217,7 +1219,7 @@ end;
 constructor TItemMedikit.Create(AParent: TSprite);
 begin
   inherited Create(AParent);
-  State := pesNormal;
+  FState := pesNormal;
   Image := MainForm.GetSpriteGraphic(smgItemMedikit);
   Width := Image.Width;
   Height := Image.Height;
@@ -1704,8 +1706,6 @@ begin
   FCounter := 0;
   if not FLevelDataAlreadyLoaded then NewLevel(FLevel);
   FRestEnemies := Length(LevelData.EnemyAdventTable);
-  FBossImLevel := LevelData.HasBoss;
-  FBossLife := -1; // Boss noch nicht aufgetaucht
   FLifeAtLevelStart := FLife;     // Das ist wichtig, wenn man neu starten möchte
   FScoreAtLevelStart := FScore;   //
   MusicSwitchTrack(smmGame);
@@ -2125,9 +2125,9 @@ end;
 
 procedure TMainForm.SceneMain;
 resourcestring
-  SMissionSucsessful = 'Mission erfolgreich!';
+  SMissionSuccessful = 'Mission erfolgreich!';
   SMissionFailed = 'Mission gescheitert!';
-  SPunkte = 'Punkte: %s'; // TODO: Is %f or FloatToStrF() better for internationalization?
+  SPunkte = 'Punkte: %s';
   SLevel = 'Level: %d';
   SLifes = 'Leben: %d';
   SInfLifes = '';
@@ -2227,28 +2227,28 @@ begin
       {$REGION 'Anzeige Einheiten und Boss Leben'}
 
       tmpEnemyAnzeige := EnemyCounter{Auf Bildschirm} + FRestEnemies{In der Warteschlange};
-      if FBossImLevel and (FBossLife<>0) then Dec(tmpEnemyAnzeige);
+      if Assigned(FBoss) and (FBoss.State<>pesDeadVanished) then Dec(tmpEnemyAnzeige);
 
-      if FBossLife > 0 then
+      if Assigned(FBoss) and (FBoss.Life>0) then
       begin
         if (tmpEnemyAnzeige>0) then
         begin
           DXDraw.Surface.Canvas.Font.Color := clGreen;
-          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-81, Format(SBossLifes, [FBossLife]));
+          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-81, Format(SBossLifes, [FBoss.Life]));
           DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, Format(SEinheiten, [tmpEnemyAnzeige]));
           DXDraw.Surface.Canvas.Font.Color := clLime;
-          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-80, Format(SBossLifes, [FBossLife]));
+          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-80, Format(SBossLifes, [FBoss.Life]));
           DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, Format(SEinheiten, [tmpEnemyAnzeige]));
         end
         else
         begin
           DXDraw.Surface.Canvas.Font.Color := clGreen;
-          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, Format(SBossLifes, [FBossLife]));
+          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, Format(SBossLifes, [FBoss.Life]));
           DXDraw.Surface.Canvas.Font.Color := clLime;
-          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, Format(SBossLifes, [FBossLife]));
+          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, Format(SBossLifes, [FBoss.Life]));
         end;
       end
-      else if (FBossLife<=0) and (tmpEnemyAnzeige>0) then
+      else if tmpEnemyAnzeige>0 then
       begin
         DXDraw.Surface.Canvas.Font.Color := clGreen;
         DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, Format(SEinheiten, [tmpEnemyAnzeige]));
@@ -2258,12 +2258,12 @@ begin
       {$ENDREGION}
 
       {$REGION 'Anzeige Mission erfolgreich/gescheitert'}
-      if (EnemyCounter=0) and (FRestEnemies=0) and ((FBossImLevel and (FBossLife=0)) or not FBossImLevel) then
+      if (EnemyCounter=0) and (FRestEnemies=0) then
       begin
         DXDraw.Surface.Canvas.Font.Color := clGreen;
-        DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-251, dxdraw.surfaceheight-41, SMissionSucsessful);
+        DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-251, dxdraw.surfaceheight-41, SMissionSuccessful);
         DXDraw.Surface.Canvas.Font.Color := clLime;
-        DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-250, dxdraw.surfaceheight-40, SMissionSucsessful);
+        DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-250, dxdraw.surfaceheight-40, SMissionSuccessful);
         DXDraw.Surface.Canvas.Release;
         Sleep(1);
         inc(FCounter);
@@ -2283,6 +2283,8 @@ begin
 end;
 
 procedure TMainForm.SceneGameOver;
+resourcestring
+  SGameOver = 'Game Over!';
 begin
   DXDraw.Surface.Fill(0);
 
@@ -2293,16 +2295,16 @@ begin
   Brush.Style := bsClear;
   DXDraw.Surface.Canvas.Font.Size := 35;
   DXDraw.Surface.Canvas.Font.Color := clMaroon;
-  DXDraw.Surface.Canvas.Textout((dxdraw.surfacewidth div 2)-127, 98, 'Game over!');
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfacewidth div 2)-127, 98, SGameOver);
   DXDraw.Surface.Canvas.Font.Color := clRed;
-  DXDraw.Surface.Canvas.Textout((dxdraw.surfacewidth div 2)-125, 100, 'Game over!');
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfacewidth div 2)-125, 100, SGameOver);
   if (FBlink div 300) mod 2=0 then
   begin
     DXDraw.Surface.Canvas.Font.Size := 30;
     DXDraw.Surface.Canvas.Font.Color := clOlive;
-    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-187, dxdraw.surfaceheight-117, 'Weiter mit Leertaste');
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-187, dxdraw.surfaceheight-117, SWeiterMitLeertaste);
     DXDraw.Surface.Canvas.Font.Color := clYellow;
-    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, dxdraw.surfaceheight-115, 'Weiter mit Leertaste');
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, dxdraw.surfaceheight-115, SWeiterMitLeertaste);
   end;
   BlinkUpdate;
   DXDraw.Surface.Canvas.Release;
@@ -2318,6 +2320,8 @@ begin
 end;
 
 procedure TMainForm.SceneWin;
+resourcestring
+  SGewonnen = 'Gewonnen!';
 begin
   DXDraw.Surface.Fill(0);
 
@@ -2329,16 +2333,16 @@ begin
   DXDraw.Surface.Canvas.Brush.Style := bsClear;
   DXDraw.Surface.Canvas.Font.Size := 35;
   DXDraw.Surface.Canvas.Font.Color := clMaroon;
-  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-127, 98, 'Gewonnen!');
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-127, 98, SGewonnen);
   DXDraw.Surface.Canvas.Font.Color := clRed;
-  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-125, 100, 'Gewonnen!');
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-125, 100, SGewonnen);
   if (FBlink div 300) mod 2=0 then
   begin
     DXDraw.Surface.Canvas.Font.Size := 30;
     DXDraw.Surface.Canvas.Font.Color := clOlive;
-    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-187, dxdraw.surfaceheight-117, 'Weiter mit Leertaste');
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-187, dxdraw.surfaceheight-117, SWeiterMitLeertaste);
     DXDraw.Surface.Canvas.Font.Color := clYellow;
-    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, dxdraw.surfaceheight-115, 'Weiter mit Leertaste');
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, dxdraw.surfaceheight-115, SWeiterMitLeertaste);
   end;
   BlinkUpdate;
   DXDraw.Surface.Canvas.Release;

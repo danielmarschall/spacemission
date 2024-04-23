@@ -44,7 +44,6 @@
 
 ## Repro, Unklar, Fragen
 
-- Was ist wenn man mission erfolgreich hatte und dann doch stirbt?
 - Que: Gibt es eine neuere Version des Shoot-Samples (nicht mehr vorhanden in aktueller DelphiX)
 - Leveleditor performance oder deadlock probleme? bei vielen einheiten wird das sehr langsam? algo verbessern?
 - Leveleditor Probleme mit Schiebebildchen...  (was meinte ich damit?)
