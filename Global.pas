@@ -11,7 +11,7 @@ const
   RegistrySettingsKey = 'SOFTWARE\ViaThinkSoft\SpaceMission\Settings'; // do not localize
   MusicSettingKey = 'Music'; // do not localize
   SoundSettingKey = 'Sound'; // do not localize
-  SpeedSettingKey = 'Speed'; // do not localize
+  SpeedSettingKey = 'GameSpeed'; // do not localize
   DefaultLevelLength = 1200;
   StartLives = 6;
   conleicht =  650 div 60; // 10
@@ -24,6 +24,9 @@ const
   BossHeight = 2;
   SpaceMissionExe = 'SpaceMission.exe'; // do not localize
   LevEditExe = 'LevEdit.exe'; // do not localize
+  DxgFile = 'DirectX\Graphics.dxg'; // do not localize
+  DxwFile = 'DirectX\Sound.dxw'; // do not localize
+  DxmFile = 'DirectX\Music.dxm'; // do not localize
 
 type
   // DirectX\Music.dxm

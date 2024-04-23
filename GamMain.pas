@@ -250,18 +250,18 @@ type
     procedure LeichtClick(Sender: TObject);
     procedure MittelClick(Sender: TObject);
     procedure SchwerClick(Sender: TObject);
+    procedure MasterClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure InformationenClick(Sender: TObject);
     procedure CheatClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDestroy(Sender: TObject);
     procedure CheckUpdatesClick(Sender: TObject);
-    procedure MasterClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure HilfeTopicClick(Sender: TObject);
   private
     ProgrammGestartet: boolean;
-    FInterval: TGameInterval;
+    FSpeed: integer;
     FScene: TGameScene;
     FMusic: TSpaceMissionMusicTrack;
     FBlink: DWORD;
@@ -1353,8 +1353,6 @@ begin
 end;
 
 procedure TMainForm.DXInit;
-const
-  DxgFile = 'DirectX\Graphics.dxg'; // do not localize
 begin
   try
     Imagelist.Items.LoadFromFile(OwnDirectory+DxgFile);
@@ -1390,8 +1388,6 @@ begin
 end;
 
 procedure TMainForm.SoundInit;
-const
-  DxwFile = 'DirectX\Sound.dxw'; // do not localize
 begin
   if (WaveOutGetNumDevs < 1) or not FileExists(OwnDirectory+DxwFile) then
   begin
@@ -1417,8 +1413,6 @@ begin
 end;
 
 procedure TMainForm.MusicInit;
-const
-  DxmFile = 'DirectX\Music.dxm'; // do not localize
 var
   i: integer;
 begin
@@ -1543,7 +1537,8 @@ begin
     begin
       Reg.WriteBool(MusicSettingKey, OptionMusic.checked);
       Reg.WriteBool(SoundSettingKey, OptionSound.checked);
-      Reg.WriteInteger(SpeedSettingKey, Ord(FInterval));  // TODO : maybe it would be better to let the user change the real speed, so they can set their own custom one!
+      Reg.WriteInteger(SpeedSettingKey, Ord(FSpeed));
+      Reg.DeleteValue('Speed'); // deprecated. Replaced by GameSpeed
       Reg.CloseKey;
     end;
   finally
@@ -1571,9 +1566,14 @@ begin
         optionsound.checked := true; // default
 
       if Reg.ValueExists(SpeedSettingKey) then
-        FInterval := TGameInterval(Reg.ReadInteger(SpeedSettingKey))
+        FSpeed := Reg.ReadInteger(SpeedSettingKey)
       else
-        FInterval := giMittel; // default
+        FSpeed := conmittel; // default
+
+      Leicht.Checked := FSpeed = conleicht;
+      Mittel.Checked := FSpeed = conmittel;
+      Schwer.Checked := FSpeed = conschwer;
+      Master.Checked := FSpeed = conmaster;
 
       Reg.CloseKey;
     end;
@@ -2140,12 +2140,7 @@ var
   spriteClass: TClass;
   tmpEnemyAnzeige: integer;
 begin
-  case FInterval of
-    giLeicht: SpriteEngine.Move(conleicht);
-    giMittel: SpriteEngine.Move(conmittel);
-    giSchwer: SpriteEngine.Move(conschwer);
-    giMaster: SpriteEngine.Move(conmaster);
-  end;
+  SpriteEngine.Move(FSpeed);
   SpriteEngine.Dead;
   while (FEnemyAdventPos >= Low(LevelData.EnemyAdventTable)) and
     (FEnemyAdventPos <= High(LevelData.EnemyAdventTable)) and
@@ -2433,13 +2428,6 @@ begin
   WriteOptions;
 end;
 
-procedure TMainForm.MasterClick(Sender: TObject);
-begin
-  master.checked := true;
-  FInterval := giMaster;
-  writeoptions;
-end;
-
 procedure TMainForm.PlayMusic(Name: TSpaceMissionMusicTrack);
 begin
   if not OptionMusic.checked then exit;
@@ -2488,21 +2476,28 @@ end;
 procedure TMainForm.LeichtClick(Sender: TObject);
 begin
   leicht.checked := true;
-  FInterval := giLeicht;
+  FSpeed := conleicht;
   writeoptions;
 end;
 
 procedure TMainForm.MittelClick(Sender: TObject);
 begin
   mittel.checked := true;
-  FInterval := giMittel;
+  FSpeed := conmittel;
   writeoptions;
 end;
 
 procedure TMainForm.SchwerClick(Sender: TObject);
 begin
   schwer.checked := true;
-  FInterval := giSchwer;
+  FSpeed := conschwer;
+  writeoptions;
+end;
+
+procedure TMainForm.MasterClick(Sender: TObject);
+begin
+  master.checked := true;
+  FSpeed := conmaster;
   writeoptions;
 end;
 

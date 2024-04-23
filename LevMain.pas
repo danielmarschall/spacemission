@@ -186,7 +186,7 @@ end;
 
 procedure TMainForm.DXInit;
 begin
-  Imagelist.Items.LoadFromFile(OwnDirectory+'DirectX\Graphics.dxg'); // do not localize
+  Imagelist.Items.LoadFromFile(OwnDirectory+DxgFile);
   ImageList.Items.MakeColorTable;
   DXDraw.ColorTable := ImageList.Items.ColorTable;
   DXDraw.DefColorTable := ImageList.Items.ColorTable;

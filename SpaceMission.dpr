@@ -22,13 +22,22 @@ uses
 var
   Sem: THandle;
 
+
+resourcestring
+  SAlreadyStarted = 'Das Spiel wurde bereits gestartet.';
+  STitel = 'SpaceMission';
+  SFileMissing = '%s fehlt. Bitte installieren Sie SpaceMission erneut.';
+
+const
+  SemaphoreName = 'SpaceMission';
+
 begin
   { Programm schon gestartet? }
-  Sem := CreateSemaphore(nil, 0, 1, 'SpaceMission');
+  Sem := CreateSemaphore(nil, 0, 1, SemaphoreName);
   if (Sem <> 0) and (GetLastError = ERROR_ALREADY_EXISTS) then
   begin
     CloseHandle(Sem);
-    MessageDlg('Das Spiel wurde bereits gestartet.', mtInformation, [mbOK], 0);
+    MessageDlg(SAlreadyStarted, mtInformation, [mbOK], 0);
     exit;
   end;
   SplashForm := TSplashForm.Create(Application);
@@ -37,10 +46,10 @@ begin
   Application.Initialize;
   Application.ShowMainform := False;
   Application.MainFormOnTaskBar := true;
-  Application.Title := 'SpaceMission';
-  if not fileexists(OwnDirectory+'DirectX\Graphics.dxg') then
+  Application.Title := STitel;
+  if not fileexists(OwnDirectory+DxgFile) then
   begin
-    MessageDLG('DirectX\Graphics.dxg fehlt. Bitte installieren Sie SpaceMission erneut.', mtError, [mbOK], 0);
+    MessageDLG(Format(SFileMissing, [DxgFile]), mtError, [mbOK], 0);
     exit;
   end;
   Application.CreateForm(TMainForm, MainForm);

@@ -7,6 +7,8 @@ SpaceMission 1.2.1:
 	- Ab Level 25 steigt die Anzahl an auftretenden stärkeren Gegnertypen
 - BUGFIX: Nach dem der Boss besiegt wurde, war die angezeigte Gegner-Anzeige eins zu wenig oder ist verschwunden
 - BUGFIX: Leveleditor Speicherndialog Frage "Level ersetzen?" Abfrage kommt nun wieder, wenn man ein Selbsterstelltes Level überschreiben möchte
+- BUGFIX: Die Geschwindigkeitseinstellung im Menü wurde falsch angezeigt, wenn das Spiel gestartet wurde
+- Mit einer Registry-Änderung kann die Geschwindigkeit nun beliebig eingestellt werden. Registry Schlüssel "Computer\HKEY_CURRENT_USER\Software\ViaThinkSoft\SpaceMission\Settings", Schalter "GameSpeed". Standardwerte: Leicht 10, Mittel 16, Schwer 22, Meister 33.
 
 SpaceMission 1.2:
 - Inhaltliche Änderungen am Spiel:
