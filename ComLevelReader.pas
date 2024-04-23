@@ -11,7 +11,7 @@ type
   // - GamMain.pas : TMainForm.SceneMain
   // - LevMain.pas : * GUI
   //                 * TMainForm.SelectedEnemyType
-  //                 * TEnemy.Create
+  //                 * TEnemyOrItem.Create
   //                 * TMainForm.DXDrawMouseMove
   //                 * TMainForm.DXDrawMouseDown
   TEnemyType = (
@@ -96,14 +96,19 @@ uses
 const
   // { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 products(2) spacemission(8) file-format(1) lev-sav-v12(1) }
   // https://hosted.oidplus.com/viathinksoft/?goto=oid%3A1.3.6.1.4.1.37476.2.8.1.1
-  OID_LEVSAV_VER12 = '1.3.6.1.4.1.37476.2.8.1.1';
+  OID_LEVSAV_VER12 = '1.3.6.1.4.1.37476.2.8.1.1'; // do not localize
+
+resourcestring
+  SLevelFileFolder = 'Levels';
+  SLevelFileSubFolder = 'SpaceMission';
+  SExtraContentAfterLine = 'Zeile %d ist ungültig (Zusatzinfo am Ende)';
 
 function GetLevelFileName(lev: integer; forceuserdir: boolean): TLevelFile;
 
   function _GetLevelVerzeichnisSystem: string;
   begin
     // Für die Auslieferungs-Levels
-    result := OwnDirectory + 'Levels';
+    result := OwnDirectory + SLevelFileFolder;
   end;
 
   function _GetLevelVerzeichnisUser: string;
@@ -116,12 +121,12 @@ function GetLevelFileName(lev: integer; forceuserdir: boolean): TLevelFile;
     if result = '' then
     begin
       // Pre Vista
-      result := OwnDirectory + 'Levels';
+      result := OwnDirectory + SLevelFileFolder;
     end
     else
     begin
       result := IncludeTrailingPathDelimiter(result);
-      result := result + 'SpaceMission';
+      result := result + SLevelFileSubFolder;
     end;
     result := IncludeTrailingPathDelimiter(result);
     ForceDirectories(result);
@@ -131,8 +136,8 @@ function GetLevelFileName(lev: integer; forceuserdir: boolean): TLevelFile;
   var
     old, new: string;
   begin
-    new := IncludeTrailingPathDelimiter(_GetLevelVerzeichnisUser)+'Level '+inttostr(lev)+'.lev'; // Version 0.3+ Level Files
-    old := IncludeTrailingPathDelimiter(_GetLevelVerzeichnisUser)+'Lev'+inttostr(lev)+'A1.lev'; // Version 0.2 Level Files
+    new := IncludeTrailingPathDelimiter(_GetLevelVerzeichnisUser)+'Level '+inttostr(lev)+'.lev'; // Version 0.3+ Level Files // do not localize
+    old := IncludeTrailingPathDelimiter(_GetLevelVerzeichnisUser)+'Lev'+inttostr(lev)+'A1.lev'; // Version 0.2 Level Files // do not localize
     if fileexists(new) then exit(new);
     if fileexists(old) then exit(old);
     exit(new);
@@ -142,8 +147,8 @@ function GetLevelFileName(lev: integer; forceuserdir: boolean): TLevelFile;
   var
     old, new: string;
   begin
-    new := IncludeTrailingPathDelimiter(_GetLevelVerzeichnisSystem)+'Level '+inttostr(lev)+'.lev'; // Version 0.3+ Level Files
-    old := IncludeTrailingPathDelimiter(_GetLevelVerzeichnisSystem)+'Lev'+inttostr(lev)+'A1.lev'; // Version 0.2 Level Files
+    new := IncludeTrailingPathDelimiter(_GetLevelVerzeichnisSystem)+'Level '+inttostr(lev)+'.lev'; // Version 0.3+ Level Files // do not localize
+    old := IncludeTrailingPathDelimiter(_GetLevelVerzeichnisSystem)+'Lev'+inttostr(lev)+'A1.lev'; // Version 0.2 Level Files // do not localize
     if fileexists(new) then exit(new);
     if fileexists(old) then exit(old);
     exit(new);
@@ -282,14 +287,17 @@ begin
 end;
 
 procedure TLevelData.AddEnemy(x,y:integer;enemyType:TEnemyType;lifes:integer);
+resourcestring
+  SInvalidXCoord = 'X-Koordinate muss ohne Rest durch %d teilbar sein';
+  SInvalidYCoord = 'Y-Koordinate muss ohne Rest durch %d teilbar sein';
 begin
   SetLength(EnemyAdventTable, Length(EnemyAdventTable)+1);
 
   if enemyType = etEnemyMeteor then lifes := 0;
   if RasterErzwingen then
   begin
-    if x mod RasterW <> 0 then raise Exception.CreateFmt('X-Koordinate muss ohne Rest durch %d teilbar sein', [RasterW]);
-    if y mod RasterH <> 0 then raise Exception.CreateFmt('Y-Koordinate muss ohne Rest durch %d teilbar sein', [RasterH]);
+    if x mod LevEditRasterW <> 0 then raise Exception.CreateFmt(SInvalidXCoord, [LevEditRasterW]);
+    if y mod LevEditRasterH <> 0 then raise Exception.CreateFmt(SInvalidYCoord, [LevEditRasterH]);
   end;
   if lifes > MaxPossibleEnemyLives then lifes := MaxPossibleEnemyLives;
 
@@ -319,6 +327,9 @@ begin
 end;
 
 procedure TLevelData.LoadFromStrings(sl: TStrings);
+resourcestring
+  SInvalidLevelFile = 'Level-Format nicht unterstützt oder Datei ist beschädigt';
+  SEnemyTypeNotImplemented = 'Enemy Type %d not implemented';
 var
   curline: integer;
   z, act: integer;
@@ -328,6 +339,7 @@ var
   ergebnis: string;
   ary: TStringDynArray;
   sLine: string;
+  iEnemy: Integer;
 begin
   Clear;
 
@@ -357,8 +369,8 @@ begin
         if z > 2 then inc(act);
         if act = 5 then act := 1;
         ergebnis := sl.Strings[z-1];
-        if ergebnis = '; SpaceMission 0.4' then
-          sl2.Add('; SpaceMission 1.0')
+        if ergebnis = '; SpaceMission 0.4' then // do not localize
+          sl2.Add('; SpaceMission 1.0') // do not localize
         else
         begin
           if (ergebnis = '30000') and (z = 3) then
@@ -391,7 +403,10 @@ begin
     curline := 3;
     while curline < sl.Count do
     begin
-      tmpEnemy := TEnemyType(strtoint(sl.Strings[curline]));
+      iEnemy := strtoint(sl.Strings[curline]);
+      if TEnemyType(iEnemy) = etUnknown then // <-- for some reason, etUnknown will also be set if iEnemy is too large. This is actually good!
+        raise Exception.CreateFmt(SEnemyTypeNotImplemented, [iEnemy]);
+      tmpEnemy := TEnemyType(iEnemy);
       Inc(curline);
       tmpX := strtoint(sl.Strings[curline]);
       Inc(curline);
@@ -415,7 +430,7 @@ begin
       begin
         LevelEditorLength := StrToInt(ary[1]);
         if (Length(ary) > 2) and (Copy(ary[2], 1, 1) <> ';') then
-          raise Exception.CreateFmt('Zeile %d ist ungültig (Zusatzinfo am Ende)', [curline+1]);
+          raise Exception.CreateFmt(SExtraContentAfterLine, [curline+1]);
       end
       else if SameText(ary[0], 'Name') then // do not localize
       begin
@@ -427,12 +442,15 @@ begin
       end
       else if SameText(ary[0], 'Enemy') then // do not localize
       begin
-        tmpEnemy := TEnemyType(strtoint(ary[1]));
+        iEnemy := strtoint(ary[1]);
+        if TEnemyType(iEnemy) = etUnknown then // <-- for some reason, etUnknown will also be set if iEnemy is too large. This is actually good!
+          raise Exception.CreateFmt(SEnemyTypeNotImplemented, [iEnemy]);
+        tmpEnemy := TEnemyType(iEnemy);
         tmpX     := strtoint(ary[2]);
         tmpY     := strtoint(ary[3]);
         tmpLifes := strtoint(ary[4]);
         if (Length(ary) > 5) and (Copy(ary[5], 1, 1) <> ';') then
-          raise Exception.CreateFmt('Zeile %d ist ungültig (Zusatzinfo am Ende)', [curline+1]);
+          raise Exception.CreateFmt(SExtraContentAfterLine, [curline+1]);
         AddEnemy(tmpX, tmpY, tmpEnemy, tmpLifes);
       end;
     end;
@@ -440,7 +458,7 @@ begin
   end
   else
   begin
-    raise Exception.Create('Level-Format nicht unterstützt oder Datei ist beschädigt');
+    raise Exception.Create(SInvalidLevelFile);
   end;
 
   SortEnemies; // Sortierung nach X-Koordinate ist sehr wichtig für das Spiel!
@@ -522,6 +540,8 @@ begin
 end;
 
 procedure TLevelData.SaveToStrings(sl: TStrings);
+resourcestring
+  SLevelEnemyLineComment = ';      Type   XCoord YCoord Lives';
 var
   i: integer;
 begin
@@ -531,7 +551,7 @@ begin
   if LevelAuthor <> '' then sl.Add('Author ' + LevelAuthor); // do not localize
   sl.Add('Width  ' + IntToStr(LevelEditorLength)); // do not localize
   SortEnemies;
-  sl.Add(';      Type   XCoord YCoord Lives');
+  sl.Add(SLevelEnemyLineComment);
   for i := 0 to Length(EnemyAdventTable)-1 do
   begin
     sl.Add(Trim(
@@ -645,6 +665,8 @@ begin
 end;
 
 procedure TSaveData.LoadFromStrings(sl: TStrings);
+resourcestring
+  SInvalidFile = 'Spielstand-Format nicht unterstützt oder Datei beschädigt';
 var
   curline: Integer;
   ary: TStringDynArray;
@@ -674,25 +696,25 @@ begin
       begin
         Score := StrToInt(ary[1]);
         if (Length(ary) > 2) and (Copy(ary[2], 1, 1) <> ';') then
-          raise Exception.CreateFmt('Zeile %d ist ungültig (Zusatzinfo am Ende)', [curline+1]);
+          raise Exception.CreateFmt(SExtraContentAfterLine, [curline+1]);
       end
       else if SameText(ary[0], 'Lives') then // do not localize
       begin
         Life := StrToInt(ary[1]);
         if (Length(ary) > 2) and (Copy(ary[2], 1, 1) <> ';') then
-          raise Exception.CreateFmt('Zeile %d ist ungültig (Zusatzinfo am Ende)', [curline+1]);
+          raise Exception.CreateFmt(SExtraContentAfterLine, [curline+1]);
       end
       else if SameText(ary[0], 'Level') then // do not localize
       begin
         Level := StrToInt(ary[1]);
         if (Length(ary) > 2) and (Copy(ary[2], 1, 1) <> ';') then
-          raise Exception.CreateFmt('Zeile %d ist ungültig (Zusatzinfo am Ende)', [curline+1]);
+          raise Exception.CreateFmt(SExtraContentAfterLine, [curline+1]);
       end
       else if SameText(ary[0], 'Mode') then // do not localize
       begin
         GameMode := TGameMode(StrToInt(ary[1]));
         if (Length(ary) > 2) and (Copy(ary[2], 1, 1) <> ';') then
-          raise Exception.CreateFmt('Zeile %d ist ungültig (Zusatzinfo am Ende)', [curline+1]);
+          raise Exception.CreateFmt(SExtraContentAfterLine, [curline+1]);
       end;
     end;
     if Assigned(LevelData) then FreeAndNil(LevelData);
@@ -702,7 +724,7 @@ begin
   end
   else
   begin
-    raise Exception.Create('Spielstand-Format nicht unterstützt oder Datei beschädigt');
+    raise Exception.Create(SInvalidFile);
   end;
 end;
 

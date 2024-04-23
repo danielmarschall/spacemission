@@ -3,12 +3,15 @@ unit Global;
 interface
 
 const
-  ProgramVersion = '1.2';
-  RasterW = 48;
-  RasterH = 32;
+  ProgramVersion = '1.2.1';
+  LevEditRasterW = 48;
+  LevEditRasterH = 32;
   MaxPossibleEnemyLives = 999;
   MaxPossibleLevels = 999;
-  RegistrySettingsKey = 'SOFTWARE\ViaThinkSoft\SpaceMission\Settings';
+  RegistrySettingsKey = 'SOFTWARE\ViaThinkSoft\SpaceMission\Settings'; // do not localize
+  MusicSettingKey = 'Music'; // do not localize
+  SoundSettingKey = 'Sound'; // do not localize
+  SpeedSettingKey = 'Speed'; // do not localize
   DefaultLevelLength = 1200;
   StartLives = 6;
   conleicht =  650 div 60; // 10
@@ -16,7 +19,11 @@ const
   conschwer = 1350 div 60; // 22
   conmaster = 2000 div 60; // 33
   DEFAULT_ANIMSPEED = 15/1000;
-  ADDITIONAL_ENEMIES_PER_LEVEL = 75;
+  ADDITIONAL_ENEMIES_PER_LEVEL = 75; // Zufalls-Level
+  BossWidth = 4;
+  BossHeight = 2;
+  SpaceMissionExe = 'SpaceMission.exe'; // do not localize
+  LevEditExe = 'LevEdit.exe'; // do not localize
 
 type
   // DirectX\Music.dxm
@@ -68,7 +75,7 @@ type
 function OwnDirectory: string;
 
 const
-  FOLDERID_SavedGames: TGuid = '{4C5C32FF-BB9D-43b0-B5B4-2D72E54EAAA4}';
+  FOLDERID_SavedGames: TGuid = '{4C5C32FF-BB9D-43b0-B5B4-2D72E54EAAA4}'; // do not localize
 
 // Useful functions
 function GetKnownFolderPath(const rfid: TGUID): string;
@@ -78,7 +85,8 @@ procedure CheckForUpdates(ViaThinkSoftProjectName: string; AVersion: string);
 implementation
 
 uses
-  Windows, SysUtils, ActiveX, ShlObj, TlHelp32, wininet, Forms, ShellAPI;
+  Windows, SysUtils, Dialogs, ActiveX, ShlObj, TlHelp32, wininet, Forms, ShellAPI,
+  System.UITypes;
 
 function GetKnownFolderPath(const rfid: TGUID): string;
 var
@@ -148,14 +156,14 @@ var
   Str    : pansichar; // SIC! pansichar
 begin
   ResStr:='';
-  if (system.pos('http://',lowercase(AUrl))=0) and
-     (system.pos('https://',lowercase(AUrl))=0) then
-     AUrl:='http://'+AUrl;
+  if (system.pos('http://',lowercase(AUrl))=0) and // do not localize
+     (system.pos('https://',lowercase(AUrl))=0) then // do not localize
+     AUrl:='http://'+AUrl; // do not localize
 
   // Hinzugefügt
   if Assigned(Application) then Application.ProcessMessages;
 
-  hSession:=InternetOpen('InetURL:/1.0',
+  hSession:=InternetOpen('InetURL:/1.0', // do not localize
                          INTERNET_OPEN_TYPE_PRECONFIG,
                          nil,
                          nil,
@@ -185,7 +193,7 @@ begin
                   dwIndex);
     res := pchar(@dwcode);
     dwNumber := sizeof(databuffer)-1;
-    if (res ='200') or (res = '302') then
+    if (res ='200') or (res = '302') then // do not localize
     begin
       while (InternetReadfile(hfile,
                               @databuffer,
@@ -204,7 +212,7 @@ begin
       end;
     end
     else
-      ResStr := 'Status:'+AnsiString(res);
+      ResStr := 'Status:'+AnsiString(res); // do not localize
     if assigned(hfile) then
       InternetCloseHandle(hfile);
   end;
@@ -217,24 +225,28 @@ begin
 end;
 
 procedure CheckForUpdates(ViaThinkSoftProjectName: string; AVersion: string);
+resourcestring
+  SDownloadError = 'Ein Fehler ist aufgetreten. Wahrscheinlich ist keine Internetverbindung aufgebaut, oder der der ViaThinkSoft-Server vorübergehend offline.';
+  SNewProgramVersionAvailable = 'Eine neue Programmversion ist vorhanden. Möchten Sie diese jetzt herunterladen?';
+  SNoUpdateAvailable = 'Es ist keine neue Programmversion vorhanden.';
 var
   cont: RawByteString;
 begin
-  cont := GetHTML('https://www.viathinksoft.de/update/?id='+ViaThinkSoftProjectName);
+  cont := GetHTML('https://www.viathinksoft.de/update/?id='+ViaThinkSoftProjectName); // do not localize
   if copy(cont, 0, 7) = 'Status:' then
   begin
-    Application.MessageBox('Ein Fehler ist aufgetreten. Wahrscheinlich ist keine Internetverbindung aufgebaut, oder der der ViaThinkSoft-Server vorübergehend offline.', 'Fehler', MB_OK + MB_ICONERROR)
+    MessageDlg(SDownloadError, mtError, [mbOk], 0);
   end
   else
   begin
     if string(cont) <> AVersion then
     begin
-      if Application.MessageBox('Eine neue Programmversion ist vorhanden. Möchten Sie diese jetzt herunterladen?', 'Information', MB_YESNO + MB_ICONASTERISK) = ID_YES then
-        shellexecute(application.handle, 'open', pchar('https://www.viathinksoft.de/update/?id=@'+ViaThinkSoftProjectName), '', '', sw_normal);
+      if MessageDlg(SNewProgramVersionAvailable, mtConfirmation, mbYesNoCancel, 0) = mrYes then
+        shellexecute(application.handle, 'open', pchar('https://www.viathinksoft.de/update/?id=@'+ViaThinkSoftProjectName), '', '', sw_normal); // do not localize
     end
     else
     begin
-      Application.MessageBox('Es ist keine neue Programmversion vorhanden.', 'Information', MB_OK + MB_ICONASTERISK);
+      MessageDlg(SNoUpdateAvailable, mtInformation, [mbOk], 0);
     end;
   end;
 end;

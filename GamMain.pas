@@ -1230,6 +1230,8 @@ end;
 { TMainForm }
 
 procedure TMainForm.FormCreate(Sender: TObject);
+resourcestring
+  SAppTitle = 'SpaceMission %s';
 begin
   Randomize;
 
@@ -1292,7 +1294,7 @@ begin
 
   { Ende VCL-Ersatz }
 
-  Application.Title := 'SpaceMission '+ProgramVersion;
+  Application.Title := Format(SAppTitle, [ProgramVersion]);
   LoadOptions;
   DXInit;
   SoundInit;
@@ -1351,9 +1353,11 @@ begin
 end;
 
 procedure TMainForm.DXInit;
+const
+  DxgFile = 'DirectX\Graphics.dxg'; // do not localize
 begin
   try
-    Imagelist.Items.LoadFromFile(OwnDirectory+'DirectX\Graphics.dxg');
+    Imagelist.Items.LoadFromFile(OwnDirectory+DxgFile);
     ImageList.Items.MakeColorTable;
     DXDraw.ColorTable := ImageList.Items.ColorTable;
     DXDraw.DefColorTable := ImageList.Items.ColorTable;
@@ -1370,7 +1374,7 @@ end;
 
 procedure TMainForm.CheckUpdatesClick(Sender: TObject);
 begin
-  CheckForUpdates('spacemission', ProgramVersion);
+  CheckForUpdates('spacemission', ProgramVersion); // do not localize
 end;
 
 procedure TMainForm.BeendenClick(Sender: TObject);
@@ -1386,8 +1390,10 @@ begin
 end;
 
 procedure TMainForm.SoundInit;
+const
+  DxwFile = 'DirectX\Sound.dxw'; // do not localize
 begin
-  if (WaveOutGetNumDevs < 1) or not FileExists(OwnDirectory+'DirectX\Sound.dxw') then
+  if (WaveOutGetNumDevs < 1) or not FileExists(OwnDirectory+DxwFile) then
   begin
     OptionSound.Checked := false;
     OptionSound.Enabled := False;
@@ -1400,7 +1406,7 @@ begin
     begin
       try
         DXSound.Initialize;
-        WaveList.Items.LoadFromFile(OwnDirectory+'DirectX\Sound.dxw');
+        WaveList.Items.LoadFromFile(OwnDirectory+DxwFile);
       except
         OptionSound.enabled := False;
         WaveList.items.clear;
@@ -1411,10 +1417,12 @@ begin
 end;
 
 procedure TMainForm.MusicInit;
+const
+  DxmFile = 'DirectX\Music.dxm'; // do not localize
 var
   i: integer;
 begin
-  if (WaveOutGetNumDevs < 1) or not FileExists(OwnDirectory+'DirectX\Music.dxm') then
+  if (WaveOutGetNumDevs < 1) or not FileExists(OwnDirectory+DxmFile) then
   begin
     optionmusic.Checked := false;
     optionmusic.Enabled := False;
@@ -1422,7 +1430,7 @@ begin
   end;
 
   try
-    dxmusic.Midis.LoadFromFile(OwnDirectory+'DirectX\Music.dxm');
+    dxmusic.Midis.LoadFromFile(OwnDirectory+DxmFile);
     for i := 0 to dxmusic.Midis.Count-1 do
     begin
       if not dxmusic.Midis.Items[i].IsInitialized then
@@ -1476,9 +1484,11 @@ begin
 end;
 
 procedure TMainForm.DXTimerDeactivate(Sender: TObject);
+resourcestring
+  SPauseTitle = '%s [Pause]';
 begin
   TDxTimer(Sender).Tag := TDxTimer(Sender).Tag + 1;
-  Caption := Application.Title + ' [Pause]';
+  Caption := Format(SPauseTitle, [Application.Title]);
   PauseMusic(FMusic);
 end;
 
@@ -1531,9 +1541,9 @@ begin
     Reg.RootKey := HKEY_CURRENT_USER;
     if Reg.OpenKey(RegistrySettingsKey, true) then
     begin
-      Reg.WriteBool('Music', OptionMusic.checked);
-      Reg.WriteBool('Sound', OptionSound.checked);
-      Reg.WriteInteger('Speed', Ord(FInterval));
+      Reg.WriteBool(MusicSettingKey, OptionMusic.checked);
+      Reg.WriteBool(SoundSettingKey, OptionSound.checked);
+      Reg.WriteInteger(SpeedSettingKey, Ord(FInterval));  // TODO : maybe it would be better to let the user change the real speed, so they can set their own custom one!
       Reg.CloseKey;
     end;
   finally
@@ -1550,18 +1560,18 @@ begin
     Reg.RootKey := HKEY_CURRENT_USER;
     if Reg.OpenKey(RegistrySettingsKey, true) then
     begin
-      if Reg.ValueExists('Music') then
-        optionmusic.checked := Reg.ReadBool('Music')
+      if Reg.ValueExists(MusicSettingKey) then
+        optionmusic.checked := Reg.ReadBool(MusicSettingKey)
       else
         optionmusic.checked := true; // default
 
-      if Reg.ValueExists('Sound') then
-        optionsound.checked := Reg.ReadBool('Sound')
+      if Reg.ValueExists(SoundSettingKey) then
+        optionsound.checked := Reg.ReadBool(SoundSettingKey)
       else
         optionsound.checked := true; // default
 
-      if Reg.ValueExists('Speed') then
-        FInterval := TGameInterval(Reg.ReadInteger('Speed'))
+      if Reg.ValueExists(SpeedSettingKey) then
+        FInterval := TGameInterval(Reg.ReadInteger(SpeedSettingKey))
       else
         FInterval := giMittel; // default
 
@@ -1846,7 +1856,7 @@ end;
 
 procedure TMainForm.NewLevel(lev: integer);
 resourcestring
-  LNG_LEVEL_INVALID = 'Das Level Nr. %d ist ungültig!'+#13#10+'Das Programm wird beendet.';
+  SLevelInvalid = 'Das Level Nr. %d ist ungültig!'+#13#10+'Das Programm wird beendet.';
 const
   RandomLevelMaxEnemyLives = 10;
 var
@@ -1973,7 +1983,7 @@ begin
         LevelData.RasterErzwingen := false;
         LevelData.LoadFromFile(levFile.fileLocation);
       except
-        showmessage(Format(LNG_LEVEL_INVALID, [lev]));
+        showmessage(Format(SLevelInvalid, [lev]));
         ResetLevelData;
       end;
     end;
@@ -2098,7 +2108,7 @@ begin
     FLevel := 1;
     if FGameMode = gmEditor then
     begin
-      ShellExecute(0, 'open', PChar(OwnDirectory+'LevEdit.exe'), '', PChar(OwnDirectory), SW_NORMAL);
+      ShellExecute(0, 'open', PChar(OwnDirectory+LevEditExe), '', PChar(OwnDirectory), SW_NORMAL); // do not localize
       Close;
       exit;
     end;
@@ -2116,6 +2126,15 @@ begin
 end;
 
 procedure TMainForm.SceneMain;
+resourcestring
+  SMissionSucsessful = 'Mission erfolgreich!';
+  SMissionFailed = 'Mission gescheitert!';
+  SPunkte = 'Punkte: %s'; // TODO: Is %f or FloatToStrF() better for internationalization?
+  SLevel = 'Level: %d';
+  SLifes = 'Leben: %d';
+  SInfLifes = '';
+  SBossLifes = 'Boss: %d';
+  SEinheiten = 'Einheiten: %d';
 var
   Enemy: TSprite;
   spriteClass: TClass;
@@ -2178,16 +2197,16 @@ begin
     begin
       {$REGION 'Anzeige Punkte'}
       DXDraw.Surface.Canvas.Font.Color := clOlive;
-      DXDraw.Surface.Canvas.Textout(9, 9, 'Punkte: ' + FloatToStrF(FScore,ffNumber,14,0));
+      DXDraw.Surface.Canvas.Textout(9, 9, Format(SPunkte, [FloatToStrF(FScore,ffNumber,14,0)]));
       DXDraw.Surface.Canvas.Font.Color := clYellow;
-      DXDraw.Surface.Canvas.Textout(10, 10, 'Punkte: ' + FloatToStrF(FScore,ffNumber,14,0));
+      DXDraw.Surface.Canvas.Textout(10, 10, Format(SPunkte, [FloatToStrF(FScore,ffNumber,14,0)]));
       {$ENDREGION}
 
       {$REGION 'Anzeige Level'}
       DXDraw.Surface.Canvas.Font.Color := clMaroon;
-      DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-141, 9, 'Level: ' + IntToStr(flevel));
+      DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-141, 9, Format(SLevel, [flevel]));
       DXDraw.Surface.Canvas.Font.Color := clRed;
-      DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-140, 10, 'Level: ' + IntToStr(flevel));
+      DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-140, 10, Format(SLevel, [flevel]));
       {$ENDREGION}
 
       {$REGION 'Lebensanzeige'}
@@ -2195,18 +2214,18 @@ begin
       if FCheat then
       begin
         DXDraw.Surface.Canvas.Font.Color := clPurple;
-        DXDraw.Surface.Canvas.Textout(9, dxdraw.surfaceheight-41, 'Leben: ?');
+        DXDraw.Surface.Canvas.Textout(9, dxdraw.surfaceheight-41, SInfLifes);
         DXDraw.Surface.Canvas.Font.Color := clFuchsia;
-        DXDraw.Surface.Canvas.Textout(10, dxdraw.surfaceheight-40, 'Leben: ?');
+        DXDraw.Surface.Canvas.Textout(10, dxdraw.surfaceheight-40, SInfLifes);
       end
       else
       begin
         if ((Flife = 1) and ((FBlink div 300) mod 2=0)) or (Flife <> 1) then
         begin
           DXDraw.Surface.Canvas.Font.Color := clPurple;
-          DXDraw.Surface.Canvas.Textout(9, dxdraw.surfaceheight-41, 'Leben: ' + IntToStr(flife));
+          DXDraw.Surface.Canvas.Textout(9, dxdraw.surfaceheight-41, Format(SLifes, [flife]));
           DXDraw.Surface.Canvas.Font.Color := clFuchsia;
-          DXDraw.Surface.Canvas.Textout(10, dxdraw.surfaceheight-40, 'Leben: ' + IntToStr(flife));
+          DXDraw.Surface.Canvas.Textout(10, dxdraw.surfaceheight-40, Format(SLifes, [flife]));
         end;
         if Flife = 1 then BlinkUpdate;
       end;
@@ -2222,26 +2241,26 @@ begin
         if (tmpEnemyAnzeige>0) then
         begin
           DXDraw.Surface.Canvas.Font.Color := clGreen;
-          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-81, 'Boss: ' + IntToStr(FBossLife));
-          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Einheiten: ' + IntToStr(tmpEnemyAnzeige));
+          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-81, Format(SBossLifes, [FBossLife]));
+          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, Format(SEinheiten, [tmpEnemyAnzeige]));
           DXDraw.Surface.Canvas.Font.Color := clLime;
-          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-80, 'Boss: ' + IntToStr(FBossLife));
-          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Einheiten: ' + IntToStr(tmpEnemyAnzeige));
+          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-80, Format(SBossLifes, [FBossLife]));
+          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, Format(SEinheiten, [tmpEnemyAnzeige]));
         end
         else
         begin
           DXDraw.Surface.Canvas.Font.Color := clGreen;
-          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Boss: ' + IntToStr(FBossLife));
+          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, Format(SBossLifes, [FBossLife]));
           DXDraw.Surface.Canvas.Font.Color := clLime;
-          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Boss: ' + IntToStr(FBossLife));
+          DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, Format(SBossLifes, [FBossLife]));
         end;
       end
       else if (FBossLife<=0) and (tmpEnemyAnzeige>0) then
       begin
         DXDraw.Surface.Canvas.Font.Color := clGreen;
-        DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, 'Einheiten: ' + IntToStr(tmpEnemyAnzeige));
+        DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-191, dxdraw.surfaceheight-41, Format(SEinheiten, [tmpEnemyAnzeige]));
         DXDraw.Surface.Canvas.Font.Color := clLime;
-        DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, 'Einheiten: ' + IntToStr(tmpEnemyAnzeige));
+        DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-190, dxdraw.surfaceheight-40, Format(SEinheiten, [tmpEnemyAnzeige]));
       end;
       {$ENDREGION}
 
@@ -2249,9 +2268,9 @@ begin
       if (EnemyCounter=0) and (FRestEnemies=0) and ((FBossImLevel and (FBossLife=0)) or not FBossImLevel) then
       begin
         DXDraw.Surface.Canvas.Font.Color := clGreen;
-        DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-251, dxdraw.surfaceheight-41, 'Mission erfolgreich!');
+        DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-251, dxdraw.surfaceheight-41, SMissionSucsessful);
         DXDraw.Surface.Canvas.Font.Color := clLime;
-        DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-250, dxdraw.surfaceheight-40, 'Mission erfolgreich!');
+        DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-250, dxdraw.surfaceheight-40, SMissionSucsessful);
         DXDraw.Surface.Canvas.Release;
         Sleep(1);
         inc(FCounter);
@@ -2262,9 +2281,9 @@ begin
     else
     begin
       DXDraw.Surface.Canvas.Font.Color := clMaroon;
-      DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-251, dxdraw.surfaceheight-41, 'Mission gescheitert!');
+      DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-251, dxdraw.surfaceheight-41, SMissionFailed);
       DXDraw.Surface.Canvas.Font.Color := clRed;
-      DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-250, dxdraw.surfaceheight-40, 'Mission gescheitert!');
+      DXDraw.Surface.Canvas.Textout(dxdraw.surfacewidth-250, dxdraw.surfaceheight-40, SMissionFailed);
     end;
     DXDraw.Surface.Canvas.Release;
   end;

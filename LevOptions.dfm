@@ -69,6 +69,7 @@ object LevelForm: TLevelForm
       Width = 329
       Height = 57
       Color = clInfoBk
+      ParentBackground = False
       TabOrder = 0
       object ElLabel1: TLabel
         Left = 8
@@ -92,11 +93,13 @@ object LevelForm: TLevelForm
           'Die Spielfeldgr'#246#223'e wird nur von dem Leveleditor '#13#10'ben'#246'tigt. Das ' +
           #196'ndern dieser Gr'#246#223'e wirkt sich '#13#10'nicht auf die Gr'#246#223'e der Levels ' +
           'aus.'
+        Color = clInfoBk
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'MS Sans Serif'
         Font.Style = []
+        ParentColor = False
         ParentFont = False
       end
     end

@@ -40,6 +40,8 @@ uses
 const
   // Cheat1 = 'Kmkjk'+#39+'Khyc'; {Johnny Cash}
   Cheat1 = #75+#109+#107+#106+#107+#127+#39+#75+#104+#121+#99;
+
+resourcestring
   Cheat1Text = 'Unendlich Leben!';
 
 procedure TCheatForm.AbbBtnClick(Sender: TObject);
@@ -54,6 +56,10 @@ begin
 end;
 
 procedure TCheatForm.OKBtnClick(Sender: TObject);
+resourcestring
+  SCheatUnlocked = 'Dieser Cheat wurde freigeschaltet!';
+  SCheckAlreadyUnlocked = 'Dieser Cheat wurde bereits freigeschaltet!';
+  SNoCheat = 'Dies ist kein offizieller Cheat!';
 var
   temp: string;
   i, j: integer;
@@ -68,10 +74,10 @@ begin
   if lowercase(temp) = lowercase(Cheat1) then
   begin
     if mainform.FCheat then
-      showmessage('Dieser Cheat wurde bereits freigeschaltet!')
+      showmessage(SCheckAlreadyUnlocked)
     else
     begin
-      showmessage('Dieser Cheat wurde freigeschaltet!');
+      showmessage(SCheatUnlocked);
       mainform.FCheat := true;
       SearchCheats;
     end;
@@ -79,7 +85,7 @@ begin
   end
   else
   begin
-    showmessage('Dies ist kein offizieller Cheat!');
+    showmessage(SNoCheat);
     CheatEdit.text := '';
     CheatEdit.setfocus;
   end;
@@ -108,15 +114,18 @@ begin
 end;
 
 procedure TCheatForm.Label2Click(Sender: TObject);
+resourcestring
+  SDisableCheat = 'Diesen Cheat wirklich deaktivieren?';
+  SCheatDisabled = 'Dieser Cheat wurde deakiviert!';
 begin
   if not CheatBox.items.IndexOf(Cheat1Text) = -1 then
   begin
     if CheatBox.Selected[CheatBox.items.IndexOf(Cheat1Text)] then
     begin
-      if MessageDlg('Diesen Cheat wirklich deaktivieren?', mtConfirmation, mbYesNoCancel, 0) = mrYes then
+      if MessageDlg(SDisableCheat, mtConfirmation, mbYesNoCancel, 0) = mrYes then
       begin
         mainform.FCheat := false;
-        showmessage('Dieser Cheat wurde deakiviert!');
+        showmessage(SCheatDisabled);
         SearchCheats;
       end;
     end;
@@ -125,7 +134,7 @@ end;
 
 procedure TCheatForm.Label3Click(Sender: TObject);
 begin
-  shellexecute(handle, 'open', pchar('mailto:daniel-marschall@viathinksoft.de?subject=Cheats für SpaceMission '+ProgramVersion), '', '', 1);
+  shellexecute(handle, 'open', pchar('mailto:daniel-marschall@viathinksoft.de?subject=Cheats für SpaceMission '+ProgramVersion), '', '', 1); // do not localize
 end;
 
 end.

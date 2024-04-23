@@ -1,11 +1,15 @@
 
 # SpaceMission TODO
 
+## Geplant für 1.2.1
+
+- Registry individual Speed Setting
+
 ## Geplant für 1.3
 
 - Neue Einheit: Ufo, das im Kreis fliegt und nicht weggeht
 - Bei Pause => Entweder alles grau werden lassen, oder vielleicht ganz groß Pause in die Bildschirmmitte schreiben
-- Vorbereitung auf Multilingualität (all strings in resourcestrings), ggf. sogar schon auf Englisch übersetzen
+- Auf Englisch übersetzen
 - SplashScreens: als BMP
 
 ## Kleinigkeiten
@@ -22,14 +26,15 @@
 
 ## Ideen
 
-- Neue Einheit: 10 Sekunden unverwundbarkeit item
-- Neue Einheit: Geld Geschenk item
+- Neues Item: 10 Sekunden unverwundbarkeit item
+- Neues Item: Geld Geschenk item
 - Boss schwieriger machen: Er soll auch nach links und rechts gehen?
 - Spiellogik: Wenn man gegen einen gegner fliegt, soll er schaden haben!
 - Cooldown für Laser? Limitierung der Schüsse (Kanone wird heiß).
 - Highscore Liste
 - "Throwback" nach einem hit. Nach Treffer, zurückgeschleudert werden
-- "unsaubere" levels akzeptieren! komet mit 1+ leben, einheiten, die nicht auf der linie sind.
+- Anderer Soundeffekt, wenn man selbst getroffen ist
+- Leveleditor: "unsaubere" levels akzeptieren! komet mit 1+ leben, einheiten, die nicht auf der linie sind.
 - Netzwerkspiel?
 - Leveleditor: Ober - / Unterfelder? (was meinte ich damit?)
 - Leveleditor: Höchstens 9999 enemies?
@@ -38,17 +43,14 @@
 - Verschiedene Dinge bei schnelligkeit anders?! z.B. Boss-Explore, Schießende  Einheiten (Tamas)
 - Tama 1 must damage PL. Sprite!
 - Tama 2 must damage EN. Sprite!
-- Tama 1 und Tama 2 müssten sich gegenseitig kaputt machen?
+- Tama 1 und Tama 2 könnten sich gegenseitig kaputt machen?
 - Speicherung: Umbenennen - Button?
 
 ## Repro, Unklar, Fragen
 
 - Was ist wenn man mission erfolgreich hatte und dann doch stirbt?
-- Kartengröße bleibt bei "Neu"
 - Que: Gibt es eine neuere Version des Shoot-Samples (nicht mehr vorhanden in aktueller DelphiX)
-- Tastenspeere bei runter+links+shot
-- "Beenden ohne Speichern?" bei leerem Level
-- Leveleditor performance oder deadlock probleme?
+- Leveleditor performance oder deadlock probleme? bei vielen einheiten wird das sehr langsam? algo verbessern?
 - Leveleditor Probleme mit Schiebebildchen...  (was meinte ich damit?)
 - Leveleditor Wenn Level gelöscht, dass gerade geladen ist, dann LevChanged = true!
 - Leveleditor Boss überschneidet Einheiten ?
@@ -62,10 +64,8 @@
 - Dec(live) bei attacker1 manchmal kein Ton?
 - Sequences (was meinte ich damit?)
 - Rnd: Soll Boss-Live auch RND?
-- leicht, mittel, schwer: falsche fps bei langsameren karten
-- auch mit einer symbolleiste mit ordnersymbol bei lev (oder sm)?
+- leicht, mittel, schwer: falsche fps bei langsameren grafikkarten?
 - lev: überall ok = focus!
-- lev: bei vielen einheiten wird das arsch-langsam? algo verbessern? 
 - systemmodus auswählen (move rechnungen ausführen?) oder ein rechenlabel mit dem status anzeigen
 - SM: Soll bei Verwaltung lieber statt dem ersten satz bei status was anderes hin? Levelart: Normales Level.
      Wenn es bleiben soll, dann den satz verbessern. Das Level ist ein Zufallslevel

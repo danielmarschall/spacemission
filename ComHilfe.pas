@@ -34,7 +34,7 @@ var
   DOC: Variant;
 begin
   if not Assigned(WebBrowser1.Document) then
-    WebBrowser1.Navigate('about:blank');
+    WebBrowser1.Navigate('about:blank'); // do not localize
 
   DOC := WebBrowser1.Document;
   DOC.Clear;
@@ -53,22 +53,22 @@ begin
   slCss := TStringList.Create();
   try
     slHtml.LoadFromFile(AMarkDownFile);
-    cssFile := IncludeTrailingPathDelimiter(FDirectory) + 'Style.css';
+    cssFile := IncludeTrailingPathDelimiter(FDirectory) + 'Style.css'; // do not localize
     if FileExists(cssFile) then
       slCss.LoadFromFile(cssFile);
     md := TMarkdownProcessor.CreateDialect(mdCommonMark);
     try
       //md.AllowUnsafe := true;
       ShowHTMLHelp(
-        '<html>'+
-        '<head>'+
-        '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'+
-        '<style>'+slCss.Text+'</style>'+
-        '</head>'+
-        '<body>'+
+        '<html>'+                                                                // do not localize
+        '<head>'+                                                                // do not localize
+        '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'+   // do not localize
+        '<style>'+slCss.Text+'</style>'+                                         // do not localize
+        '</head>'+                                                               // do not localize
+        '<body>'+                                                                // do not localize
         md.process(UTF8ToString(RawByteString(slHtml.Text)))+
-        '</body>'+
-        '</html>');
+        '</body>'+                                                               // do not localize
+        '</html>');                                                              // do not localize
     finally
       FreeAndNil(md);
     end;
@@ -82,17 +82,17 @@ procedure THilfeForm.WebBrowser1BeforeNavigate2(ASender: TObject;
   const pDisp: IDispatch; const URL, Flags, TargetFrameName, PostData,
   Headers: OleVariant; var Cancel: WordBool);
 begin
-  if SameText(Copy(URL,1,7),'http://') or
-     SameText(Copy(URL,1,8),'https://') or
-     SameText(Copy(URL,1,7),'mailto:') then
+  if SameText(Copy(URL,1,7),'http://') or      // do not localize
+     SameText(Copy(URL,1,8),'https://') or     // do not localize
+     SameText(Copy(URL,1,7),'mailto:') then    // do not localize
   begin
     // Links in default Browser anzeigen
-    ShellExecute(handle, 'open', PChar(string(URL)), '', '', SW_NORMAL);
+    ShellExecute(handle, 'open', PChar(string(URL)), '', '', SW_NORMAL);  // do not localize
     Cancel := true;
   end
-  else if SameText(ExtractFileExt(URL), '.md') then
+  else if SameText(ExtractFileExt(URL), '.md') then // do not localize
   begin
-    if SameText(Copy(URL,1,6), 'about:') then
+    if SameText(Copy(URL,1,6), 'about:') then // do not localize
       ShowMarkDownHelp(IncludeTrailingPathDelimiter(FDirectory) + Copy(URL,7,Length(URL)))
     else
       ShowMarkDownHelp(URL);

@@ -59,6 +59,7 @@ uses
 resourcestring
   SLevelListBox = 'Level %d';
   SSelbsterstellt = 'Selbsterstellt';
+  SLevelFileNotFound = 'Leveldatei nicht gefunden';
 
 procedure TSpeicherungForm.SearchLevels;
 var
@@ -92,12 +93,14 @@ begin
 end;
 
 procedure TSpeicherungForm.LoeschenBtnClick(Sender: TObject);
+resourcestring
+  SReallyDeleteLevel = 'Dieses Level wirklich löschen?';
 var
   fil: TLevelFile;
 begin
   if LevelListBox.ItemIndex = -1 then exit;
 
-  if MessageDlg('Dieses Level wirklich löschen?', mtConfirmation, mbYesNoCancel, 0) = mrYes then
+  if MessageDlg(SReallyDeleteLevel, mtConfirmation, mbYesNoCancel, 0) = mrYes then
   begin
     li1a.visible := false;
     li2a.visible := false;
@@ -111,13 +114,15 @@ begin
     LadenBtn.enabled := false;
     LoeschenBtn.enabled := false;
     fil := GetLevelFileName(GetListBoxSelectedLevelNumber,false);
-    if not fil.found then raise Exception.Create('Leveldatei nicht gefunden');
+    if not fil.found then raise Exception.Create(SLevelFileNotFound);
     deletefile(fil.fileLocation);
     SearchLevels;
   end;
 end;
 
 procedure TSpeicherungForm.LadenBtnClick(Sender: TObject);
+resourcestring
+  SLoadNewLevelAndDiscardChanges = 'Neues Level laden und Änderungen verwerfen?';
 var
   fil: TLevelFile;
 begin
@@ -125,7 +130,7 @@ begin
 
   if MainForm.LevChanged and (MainForm.LevData.CountEnemies>0) then
   begin
-    if MessageDlg('Neues Level laden und Änderungen verwerfen?', mtConfirmation, mbYesNoCancel, 0) <> mrYes then exit;
+    if MessageDlg(SLoadNewLevelAndDiscardChanges, mtConfirmation, mbYesNoCancel, 0) <> mrYes then exit;
   end;
 
   // Da Button bei ungültigen Level deaktiviert wird, ist das nicht mehr nötig.
@@ -135,7 +140,7 @@ begin
   MainForm.DestroyLevel;
   MainForm.LevData.RasterErzwingen := true;
   fil := GetLevelFileName(GetListBoxSelectedLevelNumber,false);
-  if not fil.found then raise Exception.Create('Leveldatei nicht gefunden');
+  if not fil.found then raise Exception.Create(SLevelFileNotFound);
   MainForm.LevData.LoadFromFile(fil.fileLocation);
   MainForm.RefreshFromLevData;
   MainForm.LevChanged := false;
@@ -144,10 +149,14 @@ begin
 end;
 
 procedure TSpeicherungForm.SpeichernBtnClick(Sender: TObject);
+resourcestring
+  SLevelIsEmpty = 'Das Level ist leer!';
+  SLevelAlreadyExists = 'Level ist bereits vorhanden. Ersetzen?';
+  SNoValidLevelName = 'Dies ist kein gültiger Levelname!';
 begin
   if MainForm.LevData.CountEnemies = 0 then
   begin
-    MessageDlg('Das Level ist leer!', mtError, [mbOK], 0);
+    MessageDlg(SLevelIsEmpty, mtError, [mbOK], 0);
     LevelNumber.SetFocus;
     exit;
   end;
@@ -163,7 +172,7 @@ begin
       (copy(LevelName.text, i, 1) = '>') or
       (copy(LevelName.text, i, 1) = '|') then
     begin
-      MessageDlg('Dies ist kein gültiger Levelname!', mtError, [mbOK], 0);
+      MessageDlg(SNoValidLevelName, mtError, [mbOK], 0);
       LevelName.SetFocus;
       exit;
     end;
@@ -171,7 +180,7 @@ begin
   if (LevelListBox.items.IndexOf(Format(SLevelListBox, [LevelNumber.Value])) > -1) or
      (LevelListBox.items.IndexOf(Format(SLevelListBox, [LevelNumber.Value])+' ('+SSelbsterstellt+')') > -1) then
   begin
-    if MessageDlg('Level ist bereits vorhanden. Ersetzen?', mtConfirmation, mbYesNoCancel, 0) <> mrYes then
+    if MessageDlg(SLevelAlreadyExists, mtConfirmation, mbYesNoCancel, 0) <> mrYes then
       exit;
   end;
 
@@ -186,6 +195,11 @@ begin
 end;
 
 procedure TSpeicherungForm.LevelListBoxClick(Sender: TObject);
+resourcestring
+  SYes = 'Ja';
+  SNo = 'Nein';
+  SFields = '%d Felder';
+  SXbyY = '%s von %s';
 var
   LevelData: TLevelData;
   boss: boolean;
@@ -217,7 +231,7 @@ begin
       LevelData.RasterErzwingen := true;
 
       fil := GetLevelFileName(GetListBoxSelectedLevelNumber,false);
-      if not fil.found then raise Exception.Create('Leveldatei nicht gefunden');
+      if not fil.found then raise Exception.Create(SLevelFileNotFound);
       LevelData.LoadFromFile(fil.fileLocation);
 
       boss := false;
@@ -241,11 +255,11 @@ begin
       LoeschenBtn.enabled := true;
       li1b.caption := inttostr(anzahlEinheiten);
       if boss then
-        li2b.caption := 'Ja'
+        li2b.caption := SYes
       else
-        li2b.caption := 'Nein';
-      li3b.caption := IntToStr(LevelData.LevelEditorLength) + ' Felder';
-      li4.Caption := Trim(LevelData.LevelName + ' von ' + LevelData.LevelAuthor);
+        li2b.caption := SNo;
+      li3b.caption := Format(SFields, [LevelData.LevelEditorLength]);
+      li4.Caption := Trim(Format(SXbyY, [LevelData.LevelName, LevelData.LevelAuthor]));
     finally
       FreeAndNil(LevelData);
     end;

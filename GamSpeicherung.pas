@@ -58,6 +58,12 @@ uses
 
 {$R *.DFM}
 
+resourcestring
+  SSaveGameFileNotFound = 'Spielstandsdatei nicht gefunden';
+  SNa = 'n/a';
+  SSaveGameFolder = 'Spielstände';
+  SSaveGameSubFolder = 'SpaceMission';
+
 { TSpeicherungForm }
 
 procedure TSpeicherungForm.SearchSaves;
@@ -76,10 +82,10 @@ begin
   li4b.visible := false;
   liu.visible := false;
   liw.visible := true;
-  li1.caption := 'n/a';
-  li2b.caption := 'n/a';
-  li3b.caption := 'n/a';
-  li4b.caption := 'n/a';
+  li1.caption := SNa;
+  li2b.caption := SNa;
+  li3b.caption := SNa;
+  li4b.caption := SNa;
   LadenBtn.enabled := false;
   LoeschenBtn.enabled := false;
   res := FindFirst(IncludeTrailingPathDelimiter(GetSpielstandVerzeichnisSystem)+'*.sav', 0, sr);
@@ -109,12 +115,14 @@ begin
 end;
 
 procedure TSpeicherungForm.LoeschenBtnClick(Sender: TObject);
+resourcestring
+  SDeleteSaveGame = 'Diesen Spielstand wirklich löschen?';
 var
   fil: string;
 begin
   if LevelListBox.ItemIndex = -1 then exit;
 
-  if MessageDlg('Diesen Spielstand wirklich löschen?', mtConfirmation, mbYesNoCancel, 0) = mrYes then
+  if MessageDlg(SDeleteSaveGame, mtConfirmation, mbYesNoCancel, 0) = mrYes then
   begin
     li1.visible := false;
     li2a.visible := false;
@@ -125,14 +133,14 @@ begin
     li4b.visible := false;
     liu.visible := false;
     liw.visible := false;
-    li1.caption := 'n/a';
-    li2b.caption := 'n/a';
-    li3b.caption := 'n/a';
-    li4b.caption := 'n/a';
+    li1.caption := SNa;
+    li2b.caption := SNa;
+    li3b.caption := SNa;
+    li4b.caption := SNa;
     LadenBtn.enabled := false;
     LoeschenBtn.enabled := false;
     fil := GetSaveGameFileName(LevelListBox.Items.strings[LevelListBox.itemindex], false);
-    if not fileexists(fil) then raise Exception.Create('Spielstandsdatei nicht gefunden');
+    if not fileexists(fil) then raise Exception.Create(SSaveGameFileNotFound);
     deletefile(fil);
     searchsaves;
   end;
@@ -142,8 +150,8 @@ function TSpeicherungForm.GetSaveGameFileName(SpielstandName: string; forceuserd
 var
   usr, sys: string;
 begin
-  usr := IncludeTrailingPathDelimiter(GetSpielstandVerzeichnisUser) + SpielstandName + '.sav'; // ab SpaceMission 1.2+
-  sys := IncludeTrailingPathDelimiter(GetSpielstandVerzeichnisSystem) + SpielstandName + '.sav'; // alte Versionen von SpaceMission <1.2
+  usr := IncludeTrailingPathDelimiter(GetSpielstandVerzeichnisUser) + SpielstandName + '.sav'; // ab SpaceMission 1.2+ // do not localize
+  sys := IncludeTrailingPathDelimiter(GetSpielstandVerzeichnisSystem) + SpielstandName + '.sav'; // alte Versionen von SpaceMission <1.2 // do not localize
   if fileexists(usr) or forceuserdir then exit(usr);
   if fileexists(sys) then exit(sys);
   exit(usr);
@@ -167,10 +175,10 @@ begin
     li4b.visible := false;
     liu.visible := false;
     liw.visible := false;
-    li1.caption := 'n/a';
-    li2b.caption := 'n/a';
-    li3b.caption := 'n/a';
-    li4b.caption := 'n/a';
+    li1.caption := SNa;
+    li2b.caption := SNa;
+    li3b.caption := SNa;
+    li4b.caption := SNa;
     LadenBtn.enabled := false;
     LoeschenBtn.enabled := false;
   end;
@@ -179,7 +187,7 @@ begin
   SavGame := TSaveData.Create;
   try
     fil := GetSaveGameFileName(LevelListBox.Items.strings[LevelListBox.itemindex], false);
-    if not fileexists(fil) then raise Exception.Create('Spielstandsdatei nicht gefunden');
+    if not fileexists(fil) then raise Exception.Create(SSaveGameFileNotFound);
     SavGame.LoadFromFile(fil);
     mainform.FScore := SavGame.Score;
     mainform.FLife := SavGame.Life;
@@ -200,13 +208,17 @@ begin
 end;
 
 procedure TSpeicherungForm.SpeichernBtnClick(Sender: TObject);
+resourcestring
+  SNoValidSaveGameName = 'Dies ist kein gültiger Spielstandname!';
+  SEmptySaveGameName = 'Bitte geben Sie einen Namen für den Spielstand ein';
+  SReplaceSaveGame = 'Spielstand ist bereits vorhanden. Ersetzen?';
 var
   SavGame: TSaveData;
   i: integer;
 begin
   if Levelname.text = '' then
   begin
-    MessageDlg('Dies ist kein gültiger Spielstandname!', mtError, [mbOK], 0);
+    MessageDlg(SEmptySaveGameName, mtError, [mbOK], 0);
     LevelName.setfocus;
     exit;
   end;
@@ -222,14 +234,14 @@ begin
       (copy(LevelName.text, i, 1) = '>') or
       (copy(LevelName.text, i, 1) = '|') then
     begin
-      MessageDlg('Dies ist kein gültiger Spielstandname!', mtError, [mbOK], 0);
+      MessageDlg(SNoValidSaveGameName, mtError, [mbOK], 0);
       LevelName.setfocus;
       exit;
     end;
   end;
   if LevelListBox.items.IndexOf(LevelName.text) > -1 then
   begin
-    if MessageDlg('Spielstand ist bereits vorhanden. Ersetzen?', mtConfirmation, mbYesNoCancel, 0) <> mrYes then
+    if MessageDlg(SReplaceSaveGame, mtConfirmation, mbYesNoCancel, 0) <> mrYes then
       exit;
   end;
 
@@ -250,6 +262,11 @@ begin
 end;
 
 procedure TSpeicherungForm.LevelListBoxClick(Sender: TObject);
+resourcestring
+  SNoNA = 'n/a';
+  SIsNormalLevel = 'Das Level ist ein norm. Level';
+  SIsRandomLevel = 'Das Level ist ein Zufallslevel';
+  SHasAttachedLevel = '%s mit Karte';
 var
   SavGame: TSaveData;
   Punkte, Leben, Level: integer;
@@ -268,10 +285,10 @@ begin
   li4b.visible := false;
   liu.visible := false;
   liw.visible := false;
-  li1.caption := 'n/a';
-  li2b.caption := 'n/a';
-  li3b.caption := 'n/a';
-  li4b.caption := 'n/a';
+  li1.caption := SNoNA;
+  li2b.caption := SNoNA;
+  li3b.caption := SNoNA;
+  li4b.caption := SNoNA;
   if (LevelListBox.items.count=0) or (LevelListBox.itemindex = -1) then
   begin
     ladenbtn.enabled := false;
@@ -285,7 +302,7 @@ begin
   try
     try
       fil := GetSaveGameFileName(LevelListBox.Items.strings[LevelListBox.itemindex], false);
-      if not fileexists(fil) then raise Exception.Create('Spielstandsdatei nicht gefunden');
+      if not fileexists(fil) then raise Exception.Create(SSaveGameFileNotFound);
       SavGame.LoadFromFile(fil);
       Punkte := SavGame.Score;
       Leben := SavGame.Life;
@@ -308,11 +325,11 @@ begin
   li4a.visible := true;
   li4b.visible := true;
   if Art = gmLevels then
-    li1.caption := 'Das Level ist ein norm. Level'
+    li1.caption := SIsNormalLevel
   else
-    li1.caption := 'Das Level ist ein Zufallslevel';
+    li1.caption := SIsRandomLevel;
   if BeinhaltetLevelDaten then
-    li1.Caption := li1.Caption + ' mit Karte';
+    li1.Caption := Format(SHasAttachedLevel, [li1.Caption]);
   li3b.caption := inttostr(Level);
   li4b.caption := inttostr(Leben);
   li2b.caption := inttostr(Punkte);
@@ -350,7 +367,7 @@ end;
 function TSpeicherungForm.GetSpielstandVerzeichnisSystem: string;
 begin
   // nicht mehr verwendet seit version 1.2
-  result := OwnDirectory + 'Spielstände';
+  result := OwnDirectory + SSaveGameFolder;
 end;
 
 function TSpeicherungForm.GetSpielstandVerzeichnisUser: string;
@@ -363,12 +380,12 @@ begin
   if result = '' then
   begin
     // Pre Vista
-    result := OwnDirectory + 'Spielstände';
+    result := OwnDirectory + SSaveGameFolder;
   end
   else
   begin
     result := IncludeTrailingPathDelimiter(result);
-    result := result + 'SpaceMission';
+    result := result + SSaveGameSubFolder;
   end;
   result := IncludeTrailingPathDelimiter(result);
   ForceDirectories(result);

@@ -128,7 +128,7 @@ type
     procedure DoMove(MoveCount: Integer); override;
   end;
 
-  TEnemy = class(TImageSprite)
+  TEnemyOrItem = class(TImageSprite)
   strict private
     FLives: integer;
     FEnemyType: TEnemyType;
@@ -144,33 +144,33 @@ type
 
 procedure TBackground.DoMove(MoveCount: Integer);
 begin
-  X := -(MainForm.ScrollP * RasterW);
+  X := -(MainForm.ScrollP * LevEditRasterW);
 end;
 
 { TEnemy }
 
-procedure TEnemy.DoMove(MoveCount: Integer);
+procedure TEnemyOrItem.DoMove(MoveCount: Integer);
 begin
   if not FCorInit then
   begin
-    FXCor := trunc(x) + (MainForm.ScrollP * RasterW);
+    FXCor := trunc(x) + (MainForm.ScrollP * LevEditRasterW);
     FCorInit := true;
   end;
   if MainForm.LevData.IndexOfEnemy(FXCor, integer(round(Y)), FEnemyType, FLives) = -1 then dead;
-  X := FXCor - (MainForm.ScrollP * RasterW);
+  X := FXCor - (MainForm.ScrollP * LevEditRasterW);
 end;
 
-constructor TEnemy.Create(AParent: TSprite; AEnemyType: TEnemyType; ALives: Integer);
+constructor TEnemyOrItem.Create(AParent: TSprite; AEnemyType: TEnemyType; ALives: Integer);
 begin
   inherited Create(AParent);
-  if AEnemyType = etEnemyAttacker then Image := MainForm.GetSpriteGraphic(smgEnemyAttacker);
+  if AEnemyType = etEnemyAttacker  then Image := MainForm.GetSpriteGraphic(smgEnemyAttacker);
   if AEnemyType = etEnemyAttacker2 then Image := MainForm.GetSpriteGraphic(smgEnemyAttacker2);
   if AEnemyType = etEnemyAttacker3 then Image := MainForm.GetSpriteGraphic(smgEnemyAttacker3);
-  if AEnemyType = etEnemyMeteor then Image := MainForm.GetSpriteGraphic(smgEnemyMeteor);
-  if AEnemyType = etEnemyUFO then Image := MainForm.GetSpriteGraphic(smgEnemyDisk);
-  if AEnemyType = etEnemyUFO2 then Image := MainForm.GetSpriteGraphic(smgEnemyDisk2);
-  if AEnemyType = etEnemyBoss then Image := MainForm.GetSpriteGraphic(smgEnemyBoss);
-  if AEnemyType = etItemMedikit then Image := MainForm.GetSpriteGraphic(smgItemMedikit);
+  if AEnemyType = etEnemyMeteor    then Image := MainForm.GetSpriteGraphic(smgEnemyMeteor);
+  if AEnemyType = etEnemyUFO       then Image := MainForm.GetSpriteGraphic(smgEnemyDisk);
+  if AEnemyType = etEnemyUFO2      then Image := MainForm.GetSpriteGraphic(smgEnemyDisk2);
+  if AEnemyType = etEnemyBoss      then Image := MainForm.GetSpriteGraphic(smgEnemyBoss);
+  if AEnemyType = etItemMedikit    then Image := MainForm.GetSpriteGraphic(smgItemMedikit);
 
   if not EnemyTypeHasLives(AEnemyType) then
     FLives := 0
@@ -186,7 +186,7 @@ end;
 
 procedure TMainForm.DXInit;
 begin
-  Imagelist.Items.LoadFromFile(OwnDirectory+'DirectX\Graphics.dxg');
+  Imagelist.Items.LoadFromFile(OwnDirectory+'DirectX\Graphics.dxg'); // do not localize
   ImageList.Items.MakeColorTable;
   DXDraw.ColorTable := ImageList.Items.ColorTable;
   DXDraw.DefColorTable := ImageList.Items.ColorTable;
@@ -197,6 +197,7 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 resourcestring
   SFileError = 'Die Datei kann von SpaceMission nicht geöffnet werden!';
+  SCaption = 'SpaceMission %s - Leveleditor';
 begin
   { VCL-Ersatz start }
   dxtimer := tdxtimer.create(self);
@@ -248,8 +249,8 @@ begin
   // Leeres Level am Anfang braucht keine Beenden-Bestätigung.
   // LevChanged := true;
 
-  //Application.Title := 'SpaceMission '+ProgramVersion+' - Leveleditor';
-  Caption := 'SpaceMission '+ProgramVersion+' - Leveleditor';
+  //Application.Title := Format(SCaption, [ProgramVersion]);
+  Caption := Format(SCaption, [ProgramVersion]);
   DXInit;
   LevData := TLevelData.create;
   ProgramInit;
@@ -481,7 +482,7 @@ var
   sav: TSaveData;
   tmp: string;
 begin
-  KillTask('SpaceMission.exe');
+  KillTask(SpaceMissionExe);
 
   sav := TSaveData.Create;
   try
@@ -496,7 +497,7 @@ begin
     sav.LevelData.Assign(LevData);
     tmp := GetTestlevelFilename;
     sav.SaveToFile(tmp);
-    ShellExecute(Handle, 'open', PChar(OwnDirectory+'SpaceMission.exe'), PChar('"'+tmp+'"'), PChar(OwnDirectory), SW_NORMAL);
+    ShellExecute(Handle, 'open', PChar(OwnDirectory+SpaceMissionExe), PChar('"'+tmp+'"'), PChar(OwnDirectory), SW_NORMAL); // do not localize
   finally
     FreeAndNil(sav);
   end;
@@ -525,7 +526,7 @@ end;
 
 function TMainForm.GetTestlevelFilename: string;
 begin
-  result := IncludeTrailingPathDelimiter(TPath.GetTempPath) + 'SpaceMissionTest.sav';
+  result := IncludeTrailingPathDelimiter(TPath.GetTempPath) + 'SpaceMissionTest.sav'; // do not localize
 end;
 
 procedure TMainForm.HilfeTopicClick(Sender: TObject);
@@ -567,8 +568,8 @@ var
   j, k, l, ex, ey: integer;
   ok, breaked: boolean;
 begin
-  ex := trunc(x/RasterW) * RasterW;
-  ey := trunc(y/RasterH) * RasterH;
+  ex := trunc(x/LevEditRasterW) * LevEditRasterW;
+  ey := trunc(y/LevEditRasterH) * LevEditRasterH;
   EnemyCreateSprite(ex, ey, SelectedEnemyType, LivesEdit.Value);
   breaked := false;
   { Setzen }
@@ -585,11 +586,11 @@ begin
         begin
           if boss then
           begin
-            for k := 0 to 3 do
+            for k := 0 to BossWidth-1 do
             begin
-              for l := 0 to 1 do
+              for l := 0 to BossHeight-2 do
               begin
-                if LevData.IndexOfEnemy(ex + ((ScrollP - k) * RasterW), ey - (RasterH * l), etEnemyBoss, j) <> -1 then
+                if LevData.IndexOfEnemy(ex + ((ScrollP - k) * LevEditRasterW), ey - (LevEditRasterH * l), etEnemyBoss, j) <> -1 then
                 begin
                   ok := false;
                   break;
@@ -599,7 +600,7 @@ begin
             end;
             if not ok then break;
           end;
-          if LevData.IndexOfEnemy(ex + (ScrollP * RasterW), ey, i, j) <> -1 then
+          if LevData.IndexOfEnemy(ex + (ScrollP * LevEditRasterW), ey, i, j) <> -1 then
           begin
             ok := false;
             break;
@@ -611,9 +612,9 @@ begin
     if ok then
     begin
       if EnemyTypeHasLives(SelectedEnemyType) then
-        LevData.AddEnemy(ex + (ScrollP * RasterW), ey, SelectedEnemyType, LivesEdit.Value)
+        LevData.AddEnemy(ex + (ScrollP * LevEditRasterW), ey, SelectedEnemyType, LivesEdit.Value)
       else
-        LevData.AddEnemy(ex + (ScrollP * RasterW), ey, SelectedEnemyType, 0);
+        LevData.AddEnemy(ex + (ScrollP * LevEditRasterW), ey, SelectedEnemyType, 0);
       inc(NumEnemys);
       if SelectedEnemyType = etEnemyBoss then boss := true;
     end
@@ -628,13 +629,13 @@ begin
       begin
         if boss and (i = etEnemyBoss) then
         begin
-          for k := 0 to 3 do
+          for k := 0 to BossWidth - 1 do
           begin
-            for l := 0 to 1 do
+            for l := 0 to BossHeight - 1 do
             begin
-              if LevData.IndexOfEnemy(ex + ((ScrollP - k) * RasterW), ey - (RasterH * l), i, j) <> -1 then
+              if LevData.IndexOfEnemy(ex + ((ScrollP - k) * LevEditRasterW), ey - (LevEditRasterH * l), i, j) <> -1 then
               begin
-                LevData.DeleteEnemy(ex + ((ScrollP - k) * RasterW), ey - (RasterH * l), i, j);
+                LevData.DeleteEnemy(ex + ((ScrollP - k) * LevEditRasterW), ey - (LevEditRasterH * l), i, j);
                 Boss := false;
                 dec(NumEnemys);
                 breaked := true;
@@ -644,9 +645,9 @@ begin
             if breaked then break;
           end;
         end;
-        if LevData.IndexOfEnemy(ex + (ScrollP * RasterW), ey, i, j) <> -1 then
+        if LevData.IndexOfEnemy(ex + (ScrollP * LevEditRasterW), ey, i, j) <> -1 then
         begin
-          LevData.DeleteEnemy(ex + (ScrollP * RasterW), ey, i, j);
+          LevData.DeleteEnemy(ex + (ScrollP * LevEditRasterW), ey, i, j);
           if i = etEnemyBoss then Boss := false;
           dec(NumEnemys);
           breaked := true;
@@ -674,7 +675,7 @@ procedure TMainForm.EnemyCreateSprite(x, y: integer; AEnemyType: TEnemyType; ALi
 var
   Enemy: TSprite;
 begin
-  Enemy := TEnemy.Create(SpriteEngine.Engine, AEnemyType, ALives);
+  Enemy := TEnemyOrItem.Create(SpriteEngine.Engine, AEnemyType, ALives);
   Enemy.x := x;
   Enemy.y := y;
 end;
@@ -711,32 +712,37 @@ begin
 end;
 
 procedure TMainForm.AnzeigeAct;
+resourcestring
+  SYes = 'Ja';
+  SNo = 'Nein';
 begin
   SLabel1b.Caption := inttostr(NumEnemys);
-  if Boss then SLabel2b.Caption := 'Ja' else SLabel2b.Caption := 'Nein';
+  if Boss then SLabel2b.Caption := SYes else SLabel2b.Caption := SNo;
   SLabel3b.Caption := inttostr(ScrollBar.Max);
   if LevChanged then
   begin
     SLabel4a.Font.Color := $00000096;
     SLabel4b.Font.Color := $00000096;
-    SLabel4b.Caption := 'Nein';
+    SLabel4b.Caption := SNo;
   end
   else
   begin
     SLabel4a.Font.Color := $00009600;
     SLabel4b.Font.Color := $00009600;
-    SLabel4b.Caption := 'Ja';
+    SLabel4b.Caption := SYes;
   end;
 end;
 
 procedure TMainForm.AufUpdatesprfen1Click(Sender: TObject);
 begin
-  CheckForUpdates('spacemission', ProgramVersion);
+  CheckForUpdates('spacemission', ProgramVersion); // do not localize
 end;
 
 procedure TMainForm.NeuClick(Sender: TObject);
+resourcestring
+  SReallyDeleteLevel = 'Level wirklich löschen?';
 begin
-  if MessageDlg('Level wirklich löschen?', mtConfirmation, mbYesNoCancel, 0) = mrYes then
+  if MessageDlg(SReallyDeleteLevel, mtConfirmation, mbYesNoCancel, 0) = mrYes then
     DestroyLevel;
 end;
 
@@ -746,6 +752,7 @@ resourcestring
   status_info = 'Zeigen Sie mit dem Mauszeiger auf eine Einheit, um deren Eigenschaften anzuzeigen...';
   status_lives = 'Leben: ';
   status_nolives = 'Einheit hat keine Lebensangabe';
+  SUnknownEnemyType = '???';
 var
   i: TEnemyType;
   ex, ey, j, k, l: integer;
@@ -759,8 +766,8 @@ begin
     StatusBar.SimpleText := ' ' + status_info;
     exit;
   end;
-  ex := trunc(x/RasterW) * RasterW;
-  ey := trunc(y/RasterH) * RasterH;
+  ex := trunc(x/LevEditRasterW) * LevEditRasterW;
+  ey := trunc(y/LevEditRasterH) * LevEditRasterH;
   lifes := -1;
   enemyType := etUnknown;
   breaked := false;
@@ -770,11 +777,11 @@ begin
     begin
       if boss and (i = etEnemyBoss) then
       begin
-        for k := 0 to 3 do
+        for k := 0 to BossWidth - 1 do
         begin
-          for l := 0 to 1 do
+          for l := 0 to BossHeight - 1 do
           begin
-            if LevData.IndexOfEnemy(ex + ((ScrollP - k) * RasterW), ey - (RasterH * l), i, j) <> -1 then
+            if LevData.IndexOfEnemy(ex + ((ScrollP - k) * LevEditRasterW), ey - (LevEditRasterH * l), i, j) <> -1 then
             begin
               lifes := j;
               breaked := true;
@@ -784,7 +791,7 @@ begin
           if breaked then break;
         end;
       end;
-      if (breaked = false) and (LevData.IndexOfEnemy(ex + (ScrollP * RasterW), ey, i, j) <> -1) then
+      if (breaked = false) and (LevData.IndexOfEnemy(ex + (ScrollP * LevEditRasterW), ey, i, j) <> -1) then
       begin
         lifes := j;
         enemyType := i;
@@ -804,7 +811,7 @@ begin
     else if Ord(enemyType) = 6 then enemyName := Enemy6.Caption
     else if Ord(enemyType) = 7 then enemyName := Enemy7.Caption
     else if Ord(enemyType) = 8 then enemyName := Enemy8.Caption
-    else enemyName := '???';
+    else enemyName := SUnknownEnemyType;
     if lifes > 0 then
       StatusBar.SimpleText := ' ' + enemyName + ' - ' + status_lives + inttostr(lifes)
     else
@@ -815,9 +822,11 @@ begin
 end;
 
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+resourcestring
+  SExitWithoutSave = 'Beenden ohne abspeichern?';
 begin
   if Assigned(LevData) and LevChanged and (LevData.CountEnemies>0) then
-    CanClose := MessageDlg('Beenden ohne abspeichern?', mtConfirmation, mbYesNoCancel, 0) = mrYes;
+    CanClose := MessageDlg(SExitWithoutSave, mtConfirmation, mbYesNoCancel, 0) = mrYes;
 end;
 
 procedure TMainForm.Spielfelderweitern1Click(Sender: TObject);

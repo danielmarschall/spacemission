@@ -35,6 +35,7 @@ object CheatForm: TCheatForm
     Font.Name = 'MS Sans Serif'
     Font.Style = [fsUnderline]
     ParentFont = False
+    Visible = False
     OnClick = Label3Click
   end
   object CheatEdit: TEdit

@@ -42,18 +42,20 @@ begin
 end;
 
 procedure TInfoForm.FormCreate(Sender: TObject);
+resourcestring
+  SVersion = 'Version %s';
 begin
-  VersionLbl.caption := 'Version ' + ProgramVersion;
+  VersionLbl.caption := Format(SVersion, [ProgramVersion]);
 end;
 
 procedure TInfoForm.WebsiteClick(Sender: TObject);
 begin
-  ShellExecute(application.Handle, 'open', pchar('https://'+url2.caption+'/'), nil, nil, SW_SHOW);
+  ShellExecute(application.Handle, 'open', pchar('https://'+url2.caption+'/'), nil, nil, SW_SHOW); // do not localize
 end;
 
 procedure TInfoForm.EMailClick(Sender: TObject);
 begin
-  ShellExecute(application.Handle, 'open', pchar('mailto:'+url1.Caption+'?subject=SpaceMission ' + ProgramVersion), nil, nil, SW_SHOW);
+  ShellExecute(application.Handle, 'open', pchar('mailto:'+url1.Caption+'?subject=SpaceMission ' + ProgramVersion), nil, nil, SW_SHOW); // do not localize
 end;
 
 end.
