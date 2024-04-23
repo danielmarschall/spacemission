@@ -172,7 +172,7 @@ object SpeicherungForm: TSpeicherungForm
       Top = 8
       Width = 104
       Height = 13
-      Caption = 'W'#228'hlen Sie ein Level.'
+      Caption = 'Bitte w'#228'hlen Sie ein Level.'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clNavy
       Font.Height = -11

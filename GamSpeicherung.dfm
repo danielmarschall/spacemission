@@ -175,7 +175,7 @@ object SpeicherungForm: TSpeicherungForm
       Top = 8
       Width = 139
       Height = 13
-      Caption = 'W'#228'hlen Sie einen Spielstand.'
+      Caption = 'Bitte w'#228'hlen Sie einen Spielstand.'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clNavy
       Font.Height = -11
