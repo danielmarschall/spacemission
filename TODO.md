@@ -1,11 +1,14 @@
 
 # SpaceMission TODO
 
+## Geplant für 1.2.2
+
+- Auf Englisch übersetzen
+
 ## Geplant für 1.3
 
 - Neue Einheit: Ufo, das im Kreis fliegt und nicht weggeht
 - Bei Pause => Entweder alles grau werden lassen, oder vielleicht ganz groß Pause in die Bildschirmmitte schreiben
-- Auf Englisch übersetzen
 - SplashScreens: als BMP
 
 ## Kleinigkeiten
@@ -41,6 +44,7 @@
 - Tama 2 must damage EN. Sprite!
 - Tama 1 und Tama 2 könnten sich gegenseitig kaputt machen?
 - Speicherung: Umbenennen - Button?
+- Multiplayer (2 Spieler fliegen durch eine Map)
 
 ## Repro, Unklar, Fragen
 
