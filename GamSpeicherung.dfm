@@ -173,7 +173,7 @@ object SpeicherungForm: TSpeicherungForm
     object liw: TLabel
       Left = 8
       Top = 8
-      Width = 139
+      Width = 160
       Height = 13
       Caption = 'Bitte w'#228'hlen Sie einen Spielstand.'
       Font.Charset = DEFAULT_CHARSET

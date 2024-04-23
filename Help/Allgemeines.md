@@ -26,6 +26,13 @@ der Linken Maustaste eine Einheit auf das Spielfeld. Klicken Sie mit der rechten
 Maustaste auf eine Einheit, um sie zu löschen. Wenn Sie die Leben einer Einheit löschen
 möchten, müssen Sie sie löschen und wieder neu setzen.
 
+## Spielstände
+Vergessen Sie nicht, Ihren Spielstand zu sichern.
+Sie können das Spiel sichern, sobald ein Level gestartet hat.
+Im Spielstand sind Punktestand und Leben sowie eine Kopie des Levels gespeichert.
+Punktestand und Leben beziehen sich auf den **Anfang** des Levels. Sie können
+nicht in der Mitte eines Levels sichern.
+
 ## Quelltext
 Der Quelltext des Spiels ist öffentlich. SpaceMission kann von jedem verändert
 oder weiterentwickelt werden. Voraussetzung ist die Programmier-Umgebung Embarcadero Delphi.

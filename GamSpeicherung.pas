@@ -330,9 +330,9 @@ begin
     li1.caption := SIsRandomLevel;
   if BeinhaltetLevelDaten then
     li1.Caption := Format(SHasAttachedLevel, [li1.Caption]);
+  li2b.caption := FloatToStrF(Punkte,ffNumber,14,0);
   li3b.caption := inttostr(Level);
   li4b.caption := inttostr(Leben);
-  li2b.caption := inttostr(Punkte);
 end;
 
 procedure TSpeicherungForm.LevelNameChange(Sender: TObject);

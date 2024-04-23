@@ -170,7 +170,7 @@ object SpeicherungForm: TSpeicherungForm
     object liw: TLabel
       Left = 8
       Top = 8
-      Width = 104
+      Width = 125
       Height = 13
       Caption = 'Bitte w'#228'hlen Sie ein Level.'
       Font.Charset = DEFAULT_CHARSET
