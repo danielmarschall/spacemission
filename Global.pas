@@ -6,6 +6,8 @@ const
   ProgramVersion = '1.2.1';
   LevEditRasterW = 48;
   LevEditRasterH = 32;
+  LevEditRows = 15; // Attention: if you change this, you also need to change the LevEditor GUI!
+  LevEditCols = 13; // Attention: if you change this, you also need to change the LevEditor GUI!
   MaxPossibleEnemyLives = 999;
   MaxPossibleLevels = 999;
   RegistrySettingsKey = 'SOFTWARE\ViaThinkSoft\SpaceMission\Settings'; // do not localize
@@ -14,12 +16,11 @@ const
   SpeedSettingKey = 'GameSpeed'; // do not localize
   DefaultLevelLength = 1200;
   StartLives = 6;
-  conleicht =  650 div 60; // 10
-  conmittel = 1000 div 60; // 16
-  conschwer = 1350 div 60; // 22
-  conmaster = 2000 div 60; // 33
+  SpeedEasy = 650 div 60; // 10
+  SpeedMedium = 1000 div 60; // 16
+  SpeedHard = 1350 div 60; // 22
+  SpeedMaster = 2000 div 60; // 33
   DEFAULT_ANIMSPEED = 15/1000;
-  ADDITIONAL_ENEMIES_PER_LEVEL = 75; // Zufalls-Level
   BossWidth = 4;
   BossHeight = 2;
   SpaceMissionExe = 'SpaceMission.exe'; // do not localize
@@ -27,6 +28,9 @@ const
   DxgFile = 'DirectX\Graphics.dxg'; // do not localize
   DxwFile = 'DirectX\Sound.dxw'; // do not localize
   DxmFile = 'DirectX\Music.dxm'; // do not localize
+  RandomLevelMaxEnemyLives = 10;
+  RandomLevelMedikitEveryX = 250;
+  RandomLevelAdditionalEnemiesPerLevel = 75; // Zufalls-Level
 
 type
   // DirectX\Music.dxm

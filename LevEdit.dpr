@@ -8,7 +8,6 @@ uses
   Forms,
   Dialogs,
   SysUtils,
-  MMSystem,
   LevMain in 'LevMain.pas' {MainForm},
   LevSplash in 'LevSplash.pas' {SplashForm},
   LevSpeicherung in 'LevSpeicherung.pas' {SpeicherungForm},

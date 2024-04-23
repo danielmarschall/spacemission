@@ -1568,12 +1568,12 @@ begin
       if Reg.ValueExists(SpeedSettingKey) then
         FSpeed := Reg.ReadInteger(SpeedSettingKey)
       else
-        FSpeed := conmittel; // default
+        FSpeed := SpeedMedium; // default
 
-      Leicht.Checked := FSpeed = conleicht;
-      Mittel.Checked := FSpeed = conmittel;
-      Schwer.Checked := FSpeed = conschwer;
-      Master.Checked := FSpeed = conmaster;
+      Leicht.Checked := FSpeed = SpeedEasy;
+      Mittel.Checked := FSpeed = SpeedMedium;
+      Schwer.Checked := FSpeed = SpeedHard;
+      Master.Checked := FSpeed = SpeedMaster;
 
       Reg.CloseKey;
     end;
@@ -1857,8 +1857,6 @@ end;
 procedure TMainForm.NewLevel(lev: integer);
 resourcestring
   SLevelInvalid = 'Das Level Nr. %d ist ungültig!'+#13#10+'Das Programm wird beendet.';
-const
-  RandomLevelMaxEnemyLives = 10;
 var
   act: integer;
   Enemies: array[1..32] of TEnemyType;
@@ -1903,7 +1901,7 @@ begin
     Enemies[30] := etEnemyAttacker3;   // ab Lev 28
     Enemies[31] := etEnemyUFO;         // ab Lev 29
     Enemies[32] := etEnemyUFO2;        // ab Lev 30
-    numEnemies := lev*ADDITIONAL_ENEMIES_PER_LEVEL;
+    numEnemies := lev*RandomLevelAdditionalEnemiesPerLevel;
     SetLength(LevelData.EnemyAdventTable, numEnemies);
     for act := 0 to numEnemies-1 do
     begin
@@ -1916,7 +1914,7 @@ begin
       e.x := 85-(lev+(random(lev))*2){O_o};
       if e.x < 1 then e.x := 1; // passiert bei großen Levels
       e.x := act*30 + random(e.x);
-      e.y := random(dxdraw.surfaceheight);
+      e.y := random((LevEditRows-1)*LevEditRasterH);
       if e.enemyType = etEnemyAttacker2 then
       begin
         e.lifes := random(6)+1{O_o};
@@ -1933,7 +1931,7 @@ begin
         end;
       end;
 
-      if (act-1) mod 200 = 0 then
+      if (act-1) mod RandomLevelMedikitEveryX = 0 then
       begin
         e.enemyType := etItemMedikit;
         e.lifes := 0;
@@ -2174,7 +2172,7 @@ begin
         Enemy.x := dxdraw.surfacewidth;
         //Enemy.y := y;
         if y <> 0 then
-          Enemy.y := dxdraw.surfaceheight / (480{maximale Bandbreite im alten Format} / y)
+          Enemy.y := dxdraw.surfaceheight / ((LevEditRows*LevEditRasterH) / y)
         else
           Enemy.y := 0;
       end;
@@ -2476,28 +2474,28 @@ end;
 procedure TMainForm.LeichtClick(Sender: TObject);
 begin
   leicht.checked := true;
-  FSpeed := conleicht;
+  FSpeed := SpeedEasy;
   writeoptions;
 end;
 
 procedure TMainForm.MittelClick(Sender: TObject);
 begin
   mittel.checked := true;
-  FSpeed := conmittel;
+  FSpeed := SpeedMedium;
   writeoptions;
 end;
 
 procedure TMainForm.SchwerClick(Sender: TObject);
 begin
   schwer.checked := true;
-  FSpeed := conschwer;
+  FSpeed := SpeedHard;
   writeoptions;
 end;
 
 procedure TMainForm.MasterClick(Sender: TObject);
 begin
   master.checked := true;
-  FSpeed := conmaster;
+  FSpeed := SpeedMaster;
   writeoptions;
 end;
 
