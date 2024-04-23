@@ -6121,7 +6121,7 @@ object MainForm: TMainForm
         GroupIndex = 1
       end
       object AufUpdatesprfen1: TMenuItem
-        Caption = 'Auf Updates pr'#252'fen...'
+        Caption = 'Auf Updates pr'#252'fen'
         GroupIndex = 1
         OnClick = AufUpdatesprfen1Click
       end
