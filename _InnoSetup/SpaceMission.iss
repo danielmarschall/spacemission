@@ -5,8 +5,8 @@
 
 [Setup]
 AppName=SpaceMission
-AppVerName=SpaceMission 1.2
-AppVersion=1.2       
+AppVerName=SpaceMission 1.2.1
+AppVersion=1.2.1
 AppCopyright=© Copyright 2001 - 2024 ViaThinkSoft
 AppPublisher=ViaThinkSoft
 AppPublisherURL=https://www.viathinksoft.de/
@@ -18,7 +18,7 @@ VersionInfoCompany=ViaThinkSoft
 VersionInfoCopyright=© Copyright 2001 - 2024 ViaThinkSoft
 VersionInfoDescription=SpraceMission Setup
 VersionInfoTextVersion=1.0.0.0
-VersionInfoVersion=1.2
+VersionInfoVersion=1.2.1
 OutputBaseFilename=SpaceMission_Setup
 OutputDir=.
 ; Configure Sign Tool in InnoSetup at "Tools => Configure Sign Tools" (adjust the path to your SVN repository location)
