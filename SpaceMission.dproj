@@ -54,6 +54,7 @@
         <VerInfo_Locale>1031</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0</VerInfo_Keys>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <DCC_OutputDRCFile>true</DCC_OutputDRCFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -155,6 +156,22 @@
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k290.bpl">Microsoft Office 2000 Beispiele für gekapselte Komponenten für Automatisierungsserver</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp290.bpl">Microsoft Office XP Beispiele für gekapselte Komponenten für Automation Server</Excluded_Packages>
                 </Excluded_Packages>
+                <Language>
+                    <Language Name="ProjectLang">$00000407</Language>
+                    <Language Name="ActiveLang">ENU</Language>
+                </Language>
+                <Resource_DLL_Projects>
+                    <Resource_DLL_Projects Name="Item0">Englisch (Vereinigte Staaten)*$00000409*ENU*ENU</Resource_DLL_Projects>
+                </Resource_DLL_Projects>
+                <RDP_Source_Files>
+                    <RDP_Source_Files Name="Item0">GamMain.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item1">GamSplash.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item2">GamSpeicherung.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item3">ComInfo.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item4">GamCheat.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item5">ComHilfe.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item6">SpaceMission.drc</RDP_Source_Files>
+                </RDP_Source_Files>
             </Delphi.Personality>
             <Platforms>
                 <Platform value="Win32">True</Platform>

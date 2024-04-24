@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 117
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
-  Caption = 'Leveleditor'
+  Caption = 'Level Editor'
   ClientHeight = 517
   ClientWidth = 741
   Color = clBtnFace
@@ -76,7 +76,7 @@ object MainForm: TMainForm
       Top = 332
       Width = 33
       Height = 13
-      Caption = 'Leben:'
+      Caption = 'Lifes:'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -12
@@ -90,7 +90,7 @@ object MainForm: TMainForm
       Top = 4
       Width = 43
       Height = 13
-      Caption = 'Auswahl:'
+      Caption = 'Selection:'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -12
@@ -104,7 +104,7 @@ object MainForm: TMainForm
       Top = 400
       Width = 84
       Height = 13
-      Caption = 'Level-Information:'
+      Caption = 'Level information:'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -12
@@ -118,7 +118,7 @@ object MainForm: TMainForm
       Top = 424
       Width = 47
       Height = 13
-      Caption = 'Einheiten:'
+      Caption = 'Units:'
       OnMouseMove = DXDrawMouseMove
     end
     object SLabel1b: TLabel
@@ -142,7 +142,7 @@ object MainForm: TMainForm
       Top = 440
       Width = 22
       Height = 13
-      Caption = 'Nein'
+      Caption = 'No'
       OnMouseMove = DXDrawMouseMove
     end
     object SLabel3a: TLabel
@@ -150,7 +150,7 @@ object MainForm: TMainForm
       Top = 456
       Width = 32
       Height = 13
-      Caption = 'Gr'#246#223'e:'
+      Caption = 'Size:'
       OnMouseMove = DXDrawMouseMove
     end
     object SLabel3b: TLabel
@@ -166,7 +166,7 @@ object MainForm: TMainForm
       Top = 480
       Width = 60
       Height = 13
-      Caption = 'Gespeichert:'
+      Caption = 'Saved:'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = 150
       Font.Height = -12
@@ -180,7 +180,7 @@ object MainForm: TMainForm
       Top = 480
       Width = 22
       Height = 13
-      Caption = 'Nein'
+      Caption = 'No'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = 150
       Font.Height = -12
@@ -194,7 +194,7 @@ object MainForm: TMainForm
       Top = 24
       Width = 93
       Height = 17
-      Caption = 'Angreifer Typ 1'
+      Caption = 'Attacker type 1'
       Checked = True
       TabOrder = 0
       TabStop = True
@@ -206,7 +206,7 @@ object MainForm: TMainForm
       Top = 44
       Width = 93
       Height = 17
-      Caption = 'Angreifer Typ 2'
+      Caption = 'Attacker type 2'
       TabOrder = 1
       OnClick = EnemyClick
       OnMouseMove = DXDrawMouseMove
@@ -216,7 +216,7 @@ object MainForm: TMainForm
       Top = 64
       Width = 93
       Height = 17
-      Caption = 'Angreifer Typ 3'
+      Caption = 'Attacker type 3'
       TabOrder = 2
       OnClick = EnemyClick
       OnMouseMove = DXDrawMouseMove
@@ -6060,9 +6060,9 @@ object MainForm: TMainForm
     Left = 32
     Top = 16
     object Spiel: TMenuItem
-      Caption = '&Datei'
+      Caption = '&File'
       object Neu: TMenuItem
-        Caption = '&Neu'
+        Caption = '&New'
         ShortCut = 16462
         OnClick = NeuClick
       end
@@ -6070,47 +6070,47 @@ object MainForm: TMainForm
         Caption = '-'
       end
       object Level: TMenuItem
-        Caption = '&Laden/Speichern...'
+        Caption = '&Load/Save...'
         ShortCut = 16463
         OnClick = LevelClick
       end
       object AlleLeveldateienaktualisieren1: TMenuItem
-        Caption = 'Alle Leveldateien aktualisieren'
+        Caption = 'Rewrite all level files'
         Visible = False
         OnClick = AlleLeveldateienaktualisieren1Click
       end
       object Leveltesten1: TMenuItem
-        Caption = 'Level testen'
+        Caption = 'Test level'
         OnClick = Leveltesten1Click
       end
       object N1: TMenuItem
         Caption = '-'
       end
       object Spielfelderweitern1: TMenuItem
-        Caption = 'Leveleigenschaften...'
+        Caption = 'Level properties...'
         OnClick = Spielfelderweitern1Click
       end
       object Leer1: TMenuItem
         Caption = '-'
       end
       object Beenden: TMenuItem
-        Caption = '&Beenden'
+        Caption = '&Exit'
         ShortCut = 32883
         OnClick = BeendenClick
       end
     end
     object Hilfe: TMenuItem
-      Caption = '&Hilfe'
+      Caption = '&Help'
       object Hilfe1: TMenuItem
-        Caption = 'Allgemeines'
+        Caption = 'General topics'
         GroupIndex = 1
-        Hint = 'Help\DE_General.md'
+        Hint = 'Help\EN_General.md'
         OnClick = HilfeTopicClick
       end
       object WasgibtesNeues1: TMenuItem
-        Caption = 'Was gibt es Neues?'
+        Caption = 'What'#39's new?'
         GroupIndex = 1
-        Hint = 'Help\DE_Changelog.md'
+        Hint = 'Help\EN_Changelog.md'
         OnClick = HilfeTopicClick
       end
       object N4: TMenuItem
@@ -6118,7 +6118,7 @@ object MainForm: TMainForm
         GroupIndex = 1
       end
       object AufUpdatesprfen1: TMenuItem
-        Caption = 'Auf Updates pr'#252'fen'
+        Caption = 'Check for updates'
         GroupIndex = 1
         OnClick = AufUpdatesprfen1Click
       end
@@ -6127,7 +6127,7 @@ object MainForm: TMainForm
         GroupIndex = 1
       end
       object Informationen: TMenuItem
-        Caption = '&Informationen...'
+        Caption = '&About...'
         GroupIndex = 1
         OnClick = InformationenClick
       end

@@ -122,6 +122,9 @@ uses
 
 {$R *.DFM}
 
+resourcestring
+  status_info = 'Zeigen Sie mit dem Mauszeiger auf eine Einheit, um deren Eigenschaften anzuzeigen...';
+
 type
   TBackground = class(TBackgroundSprite)
   strict protected
@@ -239,6 +242,8 @@ begin
   imagelist.DXDraw := dxdraw;
 
   { VCL-Ersatz ende }
+
+  StatusBar.SimpleText := ' ' + status_info;
 
   LivesEdit.MinValue := 1;
   LivesEdit.MaxValue := MaxPossibleEnemyLives;
@@ -749,7 +754,6 @@ end;
 procedure TMainForm.DXDrawMouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
 resourcestring
-  status_info = 'Zeigen Sie mit dem Mauszeiger auf eine Einheit, um deren Eigenschaften anzuzeigen...';
   status_lives = 'Leben: ';
   status_nolives = 'Einheit hat keine Lebensangabe';
   SUnknownEnemyType = '???';

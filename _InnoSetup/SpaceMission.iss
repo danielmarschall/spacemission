@@ -28,6 +28,7 @@ SignTool=sign_single
 SignedUninstaller=yes
 
 [Languages]
+Name: en; MessagesFile: "compiler:Default.isl"
 Name: de; MessagesFile: "compiler:Languages\German.isl"
 
 [LangOptions]
@@ -40,6 +41,8 @@ Name: "desktopicon"; Description: "Erstelle eine Verknüpfung auf dem &Desktop"; 
 [Files]
 Source: "..\SpaceMission.exe"; DestDir: "{app}"; Flags: ignoreversion signonce
 Source: "..\LevEdit.exe"; DestDir: "{app}"; Flags: ignoreversion signonce
+Source: "..\SpaceMission.enu"; DestDir: "{app}"; Flags: ignoreversion signonce
+Source: "..\LevEdit.enu"; DestDir: "{app}"; Flags: ignoreversion signonce
 Source: "..\Help\*.md"; DestDir: "{app}\Help"; Flags: ignoreversion
 Source: "..\Help\*.css"; DestDir: "{app}\Help"; Flags: ignoreversion
 Source: "..\DirectX\Graphics.dxg"; DestDir: "{app}\DirectX"; Flags: ignoreversion
@@ -61,6 +64,13 @@ Name: "{autodesktop}\SpaceMission Level Editor"; Filename: "{app}\LevEdit.exe"; 
 
 [Run]
 Filename: "{app}\SpaceMission.exe"; Description: "SpaceMission starten"; Flags: nowait postinstall skipifsilent
+
+[Registry]
+; TODO: Also do this to the "Jumper" game
+Root: HKCU; Subkey: "Software\Embarcadero\Locales"; ValueType: string; ValueName: "{app}\SpaceMission.exe"; ValueData: "ENU"; Languages: en
+Root: HKCU; Subkey: "Software\Embarcadero\Locales"; ValueType: string; ValueName: "{app}\SpaceMission.exe"; ValueData: "DE"; Languages: de
+Root: HKCU; Subkey: "Software\Embarcadero\Locales"; ValueType: string; ValueName: "{app}\LevEdit.exe"; ValueData: "ENU"; Languages: en
+Root: HKCU; Subkey: "Software\Embarcadero\Locales"; ValueType: string; ValueName: "{app}\LevEdit.exe"; ValueData: "DE"; Languages: de
 
 [Code]
 function InitializeSetup(): Boolean;

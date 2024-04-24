@@ -329,7 +329,7 @@ end;
 procedure TLevelData.LoadFromStrings(sl: TStrings);
 resourcestring
   SInvalidLevelFile = 'Level-Format nicht unterstützt oder Datei ist beschädigt';
-  SEnemyTypeNotImplemented = 'Enemy Type %d not implemented';
+  SEnemyTypeNotImplemented = 'Gegner-Typ %d wird nicht unterstützt (Alte Spielversion?)';
 var
   curline: integer;
   z, act: integer;

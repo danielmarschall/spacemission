@@ -26,15 +26,15 @@ object MainForm: TMainForm
     Left = 24
     Top = 8
     object Spiel: TMenuItem
-      Caption = '&Spiel'
+      Caption = '&Game'
       object GameStart: TMenuItem
-        Caption = '&Zur'#252'ck zum Hauptmen'#252
+        Caption = 'Back to &main menu'
         Enabled = False
         ShortCut = 112
         OnClick = GameStartClick
       end
       object Neustart: TMenuItem
-        Caption = '&Neustart'
+        Caption = '&Restart'
         Enabled = False
         ShortCut = 113
         OnClick = NeustartClick
@@ -49,12 +49,12 @@ object MainForm: TMainForm
         Caption = '-'
       end
       object Spielstand: TMenuItem
-        Caption = '&Spielst'#228'nde...'
+        Caption = '&Savegames...'
         ShortCut = 115
         OnClick = SpielstandClick
       end
       object Cheat: TMenuItem
-        Caption = '&Cheatverwaltung...'
+        Caption = '&Cheats...'
         Enabled = False
         ShortCut = 116
         OnClick = CheatClick
@@ -63,21 +63,21 @@ object MainForm: TMainForm
         Caption = '-'
       end
       object Beenden: TMenuItem
-        Caption = '&Beenden'
+        Caption = '&Exit'
         ShortCut = 32883
         OnClick = BeendenClick
       end
     end
     object Einstellungen: TMenuItem
-      Caption = '&Einstellungen'
+      Caption = '&Settings'
       object OptionSound: TMenuItem
-        Caption = '&Soundeffekte'
+        Caption = '&Sound effects'
         Checked = True
         GroupIndex = 1
         OnClick = OptionSoundClick
       end
       object OptionMusic: TMenuItem
-        Caption = '&Hintergrundmusik'
+        Caption = '&Music'
         Checked = True
         GroupIndex = 1
         OnClick = OptionMusicClick
@@ -87,30 +87,30 @@ object MainForm: TMainForm
         GroupIndex = 1
       end
       object Spielgeschwindigkeit: TMenuItem
-        Caption = '&Spielgeschwindigkeit'
+        Caption = '&Speed'
         Enabled = False
         GroupIndex = 1
         object Leicht: TMenuItem
-          Caption = '&Leicht'
+          Caption = '&Easy'
           RadioItem = True
           ShortCut = 49
           OnClick = LeichtClick
         end
         object Mittel: TMenuItem
-          Caption = '&Mittel'
+          Caption = '&Medium'
           Checked = True
           RadioItem = True
           ShortCut = 50
           OnClick = MittelClick
         end
         object Schwer: TMenuItem
-          Caption = '&Schwer'
+          Caption = '&Hard'
           RadioItem = True
           ShortCut = 51
           OnClick = SchwerClick
         end
         object Master: TMenuItem
-          Caption = 'Meist&er'
+          Caption = '&Master'
           RadioItem = True
           ShortCut = 52
           OnClick = MasterClick
@@ -118,17 +118,17 @@ object MainForm: TMainForm
       end
     end
     object Hilfe: TMenuItem
-      Caption = '&Hilfe'
+      Caption = '&Help'
       object Hilfe1: TMenuItem
-        Caption = 'Allgemeines'
+        Caption = 'General topics'
         GroupIndex = 1
-        Hint = 'Help\DE_General.md'
+        Hint = 'Help\EN_General.md'
         OnClick = HilfeTopicClick
       end
       object Wasgibtesneues1: TMenuItem
-        Caption = 'Was gibt es Neues?'
+        Caption = 'What'#39's new?'
         GroupIndex = 1
-        Hint = 'Help\DE_Changelog.md'
+        Hint = 'Help\EN_Changelog.md'
         OnClick = HilfeTopicClick
       end
       object N1: TMenuItem
@@ -136,7 +136,7 @@ object MainForm: TMainForm
         GroupIndex = 1
       end
       object CheckUpdates: TMenuItem
-        Caption = 'Auf Updates pr'#252'fen'
+        Caption = 'Check for updates'
         GroupIndex = 1
         OnClick = CheckUpdatesClick
       end
@@ -145,7 +145,7 @@ object MainForm: TMainForm
         GroupIndex = 1
       end
       object Informationen: TMenuItem
-        Caption = '&Informationen...'
+        Caption = '&About this game...'
         GroupIndex = 1
         OnClick = InformationenClick
       end

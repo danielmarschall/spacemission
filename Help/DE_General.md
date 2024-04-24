@@ -1,6 +1,6 @@
 # SpaceMission 1.2.1 Dokumentation
 
-Bitte auch lesen: [Was ist neu in Version 1.2.1?](Neuerungen.md)
+Bitte auch lesen: [Was ist neu in Version 1.2.2?](DE_Changelog.md)
 
 ## Beschreibung
 SpaceMission ist ein klassisches Weltraumspiel, beidem Sie durch einen Kometenhagel fliegen,
@@ -66,12 +66,12 @@ Anmerkungen:
 - Das Schlüsselwort `Enemy` gilt sowohl für Gegner als auch für Items.
 - `<Typ>` = Gegner Typ
 
-			* 1=Attacker (blau)
-			* 2=Attacker2 (braun)
-			* 3=Attacker3 (rot)
+			* 1=Attackierer typ 1 (blau)
+			* 2=Attackierer typ 2 (braun)
+			* 3=Attackierer typ 3 (rot)
 			* 4=Meteor
-			* 5=UFO (grün)
-			* 6=UFO2 (orange)
+			* 5=UFO typ 1 (grün)
+			* 6=UFO typ 2 (orange)
 			* 7=Boss
 			* 8=Medikit
 

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\SVN\SpaceMission\ComHilfe.dfm" source-language="de-DE" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="C:\SVN\SpaceMission\ComHilfe.dfm">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45406.0334722222</prop>
+        <prop prop-type="OrigDateTime">45403.0229398148</prop>
+        <prop prop-type="XlatDateTime">45403.0229398148</prop>
+        <prop prop-type="Translated">0</prop>
+        <prop prop-type="UnTranslated">20</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="O:HilfeForm.Left" resname="O:HilfeForm.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.0334932176</prop><prop prop-type="Status">0</prop><prop prop-type="Order">0</prop><prop prop-type="Type">THilfeForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:HilfeForm.Top" resname="O:HilfeForm.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.0334932176</prop><prop prop-type="Status">0</prop><prop prop-type="Order">1</prop><prop prop-type="Type">THilfeForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:HilfeForm.ClientHeight" resname="O:HilfeForm.ClientHeight">
+        <source>484</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.0334932176</prop><prop prop-type="Status">0</prop><prop prop-type="Order">2</prop><prop prop-type="Type">THilfeForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:HilfeForm.ClientWidth" resname="O:HilfeForm.ClientWidth">
+        <source>730</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.0334932176</prop><prop prop-type="Status">0</prop><prop prop-type="Order">3</prop><prop prop-type="Type">THilfeForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:HilfeForm.Color" resname="O:HilfeForm.Color">
+        <source>clBtnFace</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.0334932176</prop><prop prop-type="Status">0</prop><prop prop-type="Order">4</prop><prop prop-type="Type">THilfeForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:HilfeForm.Font.Charset" resname="O:HilfeForm.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.0334932176</prop><prop prop-type="Status">0</prop><prop prop-type="Order">5</prop><prop prop-type="Type">THilfeForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:HilfeForm.Font.Color" resname="O:HilfeForm.Font.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.0334932176</prop><prop prop-type="Status">0</prop><prop prop-type="Order">6</prop><prop prop-type="Type">THilfeForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:HilfeForm.Font.Height" resname="O:HilfeForm.Font.Height">
+        <source>-12</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.0334932176</prop><prop prop-type="Status">0</prop><prop prop-type="Order">7</prop><prop prop-type="Type">THilfeForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:HilfeForm.Font.Name" resname="O:HilfeForm.Font.Name">
+        <source>'Segoe UI'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.0334932176</prop><prop prop-type="Status">0</prop><prop prop-type="Order">8</prop><prop prop-type="Type">THilfeForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:HilfeForm.Font.Style" resname="O:HilfeForm.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.0334932176</prop><prop prop-type="Status">0</prop><prop prop-type="Order">9</prop><prop prop-type="Type">THilfeForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:HilfeForm.Position" resname="O:HilfeForm.Position">
+        <source>poMainFormCenter</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.0334932176</prop><prop prop-type="Status">0</prop><prop prop-type="Order">10</prop><prop prop-type="Type">THilfeForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:HilfeForm.TextHeight" resname="O:HilfeForm.TextHeight">
+        <source>15</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.0334932176</prop><prop prop-type="Status">0</prop><prop prop-type="Order">11</prop><prop prop-type="Type">THilfeForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:HilfeForm.O:WebBrowser1.Left" resname="O:HilfeForm.O:WebBrowser1.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.0334932176</prop><prop prop-type="Status">0</prop><prop prop-type="Order">12</prop><prop prop-type="Type">TWebBrowser</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:HilfeForm.O:WebBrowser1.Top" resname="O:HilfeForm.O:WebBrowser1.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.0334932176</prop><prop prop-type="Status">0</prop><prop prop-type="Order">13</prop><prop prop-type="Type">TWebBrowser</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:HilfeForm.O:WebBrowser1.Width" resname="O:HilfeForm.O:WebBrowser1.Width">
+        <source>730</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.0334932176</prop><prop prop-type="Status">0</prop><prop prop-type="Order">14</prop><prop prop-type="Type">TWebBrowser</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:HilfeForm.O:WebBrowser1.Height" resname="O:HilfeForm.O:WebBrowser1.Height">
+        <source>484</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.0334932176</prop><prop prop-type="Status">0</prop><prop prop-type="Order">15</prop><prop prop-type="Type">TWebBrowser</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:HilfeForm.O:WebBrowser1.Align" resname="O:HilfeForm.O:WebBrowser1.Align">
+        <source>alClient</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.0334932176</prop><prop prop-type="Status">0</prop><prop prop-type="Order">16</prop><prop prop-type="Type">TWebBrowser</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:HilfeForm.O:WebBrowser1.TabOrder" resname="O:HilfeForm.O:WebBrowser1.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.0334932176</prop><prop prop-type="Status">0</prop><prop prop-type="Order">17</prop><prop prop-type="Type">TWebBrowser</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:HilfeForm.O:WebBrowser1.OnBeforeNavigate2" resname="O:HilfeForm.O:WebBrowser1.OnBeforeNavigate2">
+        <source>WebBrowser1BeforeNavigate2</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.0334932176</prop><prop prop-type="Status">0</prop><prop prop-type="Order">18</prop><prop prop-type="Type">TWebBrowser</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:HilfeForm.O:WebBrowser1.ControlData" resname="O:HilfeForm.O:WebBrowser1.ControlData">
+        <source>4C000000734B0000063200000000000000000000000000000000000000000000000000004C000000000000000000000001000000E0D057007335CF11AE6908002B2E126208000000000000004C0000000114020000000000C000000000000046800000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.0334932176</prop><prop prop-type="Status">0</prop><prop prop-type="Order">19</prop><prop prop-type="Type">TWebBrowser</prop><prop prop-type="Localize">1</prop><prop prop-type="Open">{</prop><prop prop-type="Close">}</prop></prop-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -2,7 +2,7 @@ object InfoForm: TInfoForm
   Left = 289
   Top = 184
   BorderStyle = bsDialog
-  Caption = 'Informationen'
+  Caption = 'About this game'
   ClientHeight = 343
   ClientWidth = 384
   Color = clBtnFace
@@ -22,7 +22,7 @@ object InfoForm: TInfoForm
     Top = 136
     Width = 48
     Height = 13
-    Caption = 'Webseite:'
+    Caption = 'Website:'
     Transparent = True
   end
   object Image: TImage
@@ -106,7 +106,7 @@ object InfoForm: TInfoForm
     Top = 96
     Width = 117
     Height = 13
-    Caption = 'Alle Rechte vorbehalten!'
+    Caption = 'All rights reserved'
     Transparent = True
   end
   object URL2: TLabel
@@ -161,27 +161,27 @@ object InfoForm: TInfoForm
     Anchors = [akLeft, akTop, akRight, akBottom]
     Lines.Strings = (
       
-        'SpaceMission wurde von Daniel Marschall auf Basis eines Codebeis' +
-        'piels '
-      'von Hiroyuki Hori f'#252'r DelphiX 2000 entwickelt.'
+        'SpaceMission was created by Daniel Marschall based on a code exa' +
+        'mple '
+      'by Hiroyuki Hori for DelphiX 2000.'
       ''
-      'Entwickelt mit Embarcadero Delphi.'
-      'Setup erstellt mit InnoSetup.'
-      'Sicherheitszertifikat von HickelSOFT Huth GmbH.'
+      'Developed with Embarcadero Delphi.'
+      'Setup created with InnoSetup.'
+      'Security certificate by HickelSOFT Huth GmbH.'
       ''
-      'Verwendete Komponenten: (un)DelphiX'
-      'Quellcode: http://www.micrel.cz/Dx/'
+      'Used components: (un)DelphiX'
+      'Source code: http://www.micrel.cz/Dx/'
       '(C) Copyright 1996-2000 by Hiroyuki Hori'
       '(C) Copyright 2004-2023 by Jaro Benes.'
       ''
-      'sowie Delphi MarkDown'
-      'Quellcode: https://github.com/grahamegrieve/delphi-markdown'
+      'as well as Delphi MarkDown'
+      'Source code: https://github.com/grahamegrieve/delphi-markdown'
       '(c) 2011+, Health Intersections Pty Ltd'
-      'Apache 2.0 Lizenz'
+      'Apache 2.0 License'
       ''
-      'Musik von Savage Peachers Software.'
-      'Sound- und Grafikquellen unbekannt.'
-      'Levels von Daniel Marschall, Patrick B'#252'ssecker und Andreas '
+      'Music by Savage Peachers Software.'
+      'Sources of sounds and graphics are unknown.'
+      'Levels by Daniel Marschall, Patrick B'#252'ssecker and Andreas '
       'K'#252'belsbeck.')
     ReadOnly = True
     ScrollBars = ssVertical

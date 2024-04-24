@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<PersonalityInfo>
+		<Option>
+			<Option Name="Personality">W32ResourceDLL.Personality</Option>
+			<Option Name="ProjectType">ResourceDLL</Option>
+			<Option Name="Version">1.0</Option>
+			<Option Name="GUID">{B04A6309-AA15-4241-9786-4590C5C6B408}</Option>
+		</Option>
+	</PersonalityInfo>
+	<W32ResourceDLL.Personality>
+		<Source>
+			<Source Name="MainSource">LevEdit.dpr</Source>
+		</Source>
+		<Options>
+			<Options Name="BaseLang">1031</Options>
+			<Options Name="TargetName">..\LevEdit.ENU</Options>
+			<Options Name="BRCC_IncludePath"></Options>
+			<Options Name="Company"></Options>
+			<Options Name="Configuration"></Options>
+			<Options Name="Copyright"></Options>
+			<Options Name="Description"></Options>
+			<Options Name="Trademark"></Options>
+			<Options Name="Product"></Options>
+			<Options Name="ProductVersion"></Options>
+			<Options Name="Title"></Options>
+			<Options Name="FileVersion"></Options>
+			<Options Name="Evidence"></Options>
+			<Options Name="KeyFile"></Options>
+			<Options Name="KeyName"></Options>
+		</Options>
+		<FileList><File FileName="ComHilfe.dfm" ContainerId="W32Form" ModuleName="ComHilfe.dfm"/><File FileName="ComInfo.dfm" ContainerId="W32Form" ModuleName="ComInfo.dfm"/><File FileName="LevMain.dfm" ContainerId="W32Form" ModuleName="LevMain.dfm"/><File FileName="LevOptions.dfm" ContainerId="W32Form" ModuleName="LevOptions.dfm"/><File FileName="LevSpeicherung.dfm" ContainerId="W32Form" ModuleName="LevSpeicherung.dfm"/><File FileName="LevSplash.dfm" ContainerId="W32Form" ModuleName="LevSplash.dfm"/><File FileName="LevEdit_DRC.rc" ContainerId="W32RC" ModuleName="LevEdit_DRC.rc"/></FileList></W32ResourceDLL.Personality>
+</BorlandProject>

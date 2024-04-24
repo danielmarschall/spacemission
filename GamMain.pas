@@ -192,6 +192,7 @@ type
     procedure HitEnemy(ADead: Boolean); override;
   public
     constructor Create(AParent: TSprite; ALifes: integer); override;
+    destructor Destroy; override;
   end;
 
   TItemClass = class of TItem;
@@ -295,12 +296,12 @@ type
     { Diverse temporäre Variablen }
     Crash2: integer;
     EnemyCounter: integer;
-    FBoss: TEnemyBoss;
     Crash: boolean;
     crashsound: boolean;
   public
     FNextScene: TGameScene;
     FScore: Integer;
+    FBoss: TEnemyBoss;
     FNotSave: boolean;
     FLife: integer;
     FLevel: integer;
@@ -1114,6 +1115,12 @@ begin
   end;
 end;
 
+destructor TEnemyBoss.Destroy;
+begin
+  MainForm.FBoss := nil;
+  inherited;
+end;
+
 procedure TEnemyBoss.DoMove(MoveCount: Integer);
 begin
   inherited DoMove(MoveCount);
@@ -1187,7 +1194,6 @@ begin
     if FCounter>4000 then
     begin
       FState := pesDeadVanished;
-      MainForm.FBoss := nil; // important because Dead will Free the object, so we cannot rely on FState
       Dead;
     end;
   end;
@@ -1856,7 +1862,7 @@ end;
 
 procedure TMainForm.NewLevel(lev: integer);
 resourcestring
-  SLevelInvalid = 'Das Level Nr. %d ist ungültig!'+#13#10+'Das Programm wird beendet.';
+  SLevelInvalid = 'Die Datei für Level %d ist ungültig. Level wird übersprungen!';
 var
   act: integer;
   Enemies: array[1..32] of TEnemyType;
@@ -1982,7 +1988,7 @@ begin
         LevelData.LoadFromFile(levFile.fileLocation);
       except
         showmessage(Format(SLevelInvalid, [lev]));
-        ResetLevelData;
+        ResetLevelData; // empty level = the player will continue with the next level
       end;
     end;
     {$ENDREGION}
@@ -1994,6 +2000,10 @@ var
   TitleWasPressed: TDxInputState = isButton32;
 
 procedure TMainForm.SceneTitle;
+resourcestring
+  SNormalGame = 'Normales Spiel';
+  SRandomGame = 'Zufalls-Level';
+  SLevelEditor = 'Level-Editor';
 var
   Logo: TPictureCollectionItem;
   colo1, colo2: TColor;
@@ -2039,11 +2049,11 @@ begin
     colo2 := clYellow;
   end;
   DXDraw.Surface.Canvas.Font.Color := colo1;
-  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)-52, 'Normales Spiel');
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)-52, SNormalGame);
   if FGameMode = gmLevels then
     DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, (dxdraw.surfaceheight div 2)-52, '>');
   DXDraw.Surface.Canvas.Font.Color := colo2;
-  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2)-50, 'Normales Spiel');
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2)-50, SNormalGame);
   if FGameMode = gmLevels then
     DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, (dxdraw.surfaceheight div 2)-50, '>');
   {$ENDREGION}
@@ -2060,11 +2070,11 @@ begin
     colo2 := clYellow;
   end;
   DXDraw.Surface.Canvas.Font.Color := colo1;
-  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)-2, 'Zufallslevel');
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)-2, SRandomGame);
   if FGameMode = gmRandom then
     DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-187, (dxdraw.surfaceheight div 2)-2, '>');
   DXDraw.Surface.Canvas.Font.Color := colo2;
-  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2), 'Zufallslevel');
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2), SRandomGame);
   if FGameMode = gmRandom then
     DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, (dxdraw.surfaceheight div 2), '>');
   {$ENDREGION}
@@ -2081,11 +2091,11 @@ begin
     colo2 := clYellow;
   end;
   DXDraw.Surface.Canvas.Font.Color := colo1;
-  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)+48, 'Level-Editor');
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-152, (dxdraw.surfaceheight div 2)+48, SLevelEditor);
   if FGameMode = gmEditor then
     DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, (dxdraw.surfaceheight div 2)+48, '>');
   DXDraw.Surface.Canvas.Font.Color := colo2;
-  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2)+50, 'Level-Editor');
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-150, (dxdraw.surfaceheight div 2)+50, SLevelEditor);
   if FGameMode = gmEditor then
     DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, (dxdraw.surfaceheight div 2)+50, '>');
   {$ENDREGION}
@@ -2093,9 +2103,9 @@ begin
   { if (FBlink div 300) mod 2=0 then
   begin
     DXDraw.Surface.Canvas.Font.Color := clGreen;
-    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-187, dxdraw.surfaceheight-117, 'Weiter mit Leertaste');
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-187, dxdraw.surfaceheight-117, SWeiterMitLeertaste);
     DXDraw.Surface.Canvas.Font.Color := clLime;
-    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, dxdraw.surfaceheight-115, 'Weiter mit Leertaste');
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, dxdraw.surfaceheight-115, SWeiterMitLeertaste);
   end; }
   BlinkUpdate;
   DXDraw.Surface.Canvas.Release;
@@ -2227,7 +2237,7 @@ begin
       {$REGION 'Anzeige Einheiten und Boss Leben'}
 
       tmpEnemyAnzeige := EnemyCounter{Auf Bildschirm} + FRestEnemies{In der Warteschlange};
-      if Assigned(FBoss) then Dec(tmpEnemyAnzeige);
+      if Assigned(FBoss) and (FBoss.State<>pesDeadVanished) then Dec(tmpEnemyAnzeige);
 
       if Assigned(FBoss) and (FBoss.Life>0) then
       begin
@@ -2386,22 +2396,24 @@ begin
 end;
 
 procedure TMainForm.SceneNewLevel;
+resourcestring
+  SLevelScene = 'Level %d';
 begin
   DXDraw.Surface.Fill(0);
 
   DXDraw.Surface.Canvas.Brush.Style := bsClear;
   DXDraw.Surface.Canvas.Font.Size := 40;
   DXDraw.Surface.Canvas.Font.Color := clMaroon;
-  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-(83+(length(inttostr(flevel))*22)), 98, 'Level '+inttostr(flevel));
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-(83+(length(inttostr(flevel))*22)), 98, Format(SLevelScene, [flevel]));
   DXDraw.Surface.Canvas.Font.Color := clRed;
-  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-(81+(length(inttostr(flevel))*22)), 100, 'Level '+inttostr(flevel));
+  DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-(81+(length(inttostr(flevel))*22)), 100, Format(SLevelScene, [flevel]));
   if (FBlink div 300) mod 2=0 then
   begin
     DXDraw.Surface.Canvas.Font.Size := 30;
     DXDraw.Surface.Canvas.Font.Color := clOlive;
-    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-187, dxdraw.surfaceheight-117, 'Weiter mit Leertaste');
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-187, dxdraw.surfaceheight-117, SWeiterMitLeertaste);
     DXDraw.Surface.Canvas.Font.Color := clYellow;
-    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, dxdraw.surfaceheight-115, 'Weiter mit Leertaste');
+    DXDraw.Surface.Canvas.Textout((dxdraw.surfaceWidth div 2)-185, dxdraw.surfaceheight-115, SWeiterMitLeertaste);
   end;
   BlinkUpdate;
   DXDraw.Surface.Canvas.Release;
