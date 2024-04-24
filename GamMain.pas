@@ -1188,6 +1188,7 @@ begin
     if FCounter>4000 then
     begin
       FState := pesDeadVanished;
+      MainForm.FBoss := nil; // important because Dead will Free the object, so we cannot rely on FState
       Dead;
     end;
   end;
@@ -2227,7 +2228,7 @@ begin
       {$REGION 'Anzeige Einheiten und Boss Leben'}
 
       tmpEnemyAnzeige := EnemyCounter{Auf Bildschirm} + FRestEnemies{In der Warteschlange};
-      if Assigned(FBoss) and (FBoss.State<>pesDeadVanished) then Dec(tmpEnemyAnzeige);
+      if Assigned(FBoss) then Dec(tmpEnemyAnzeige);
 
       if Assigned(FBoss) and (FBoss.Life>0) then
       begin
