@@ -32,7 +32,17 @@ const
   RandomLevelMedikitEveryX = 250;
   RandomLevelAdditionalEnemiesPerLevel = 75; // Zufalls-Level
 
+const
+  // Cheat1 = 'Kmkjk'+#39+'Khyc';
+  Cheat1 = #75+#109+#107+#106+#107+#127+#39+#75+#104+#121+#99; {Johnny Cash}
+
+resourcestring
+  Cheat1Text = 'Unendlich Leben!';
+
 type
+  TCheat = (ctUnknown, ctInfiniteLives);
+  TCheatSet = set of TCheat;
+
   // DirectX\Music.dxm
   TSpaceMissionMusicTrack = (
     smmNone,

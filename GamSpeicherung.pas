@@ -203,7 +203,7 @@ begin
   end;
   mainform.playsound(smsSceneMov, false);
   mainform.FNextScene := gsNewLevel;
-  mainform.FCheat := false;
+  mainform.FCheats := [];
   close;
 end;
 

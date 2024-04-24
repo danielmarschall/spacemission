@@ -1,5 +1,9 @@
 # Changelog
 
+SpaceMission 1.2.2:
+- BUGFIX: Items können nun auch eingesammelt werden, wenn man einen infinite lives Cheat aktiviert hat
+- BUGFIX: Fehlerkorrektur bei der Anzeige der restlichen Einheiten bei Missionsende
+
 SpaceMission 1.2.1:
 - Neue Einheit: Medikit Item
 - Zufallslevel:

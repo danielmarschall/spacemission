@@ -309,7 +309,7 @@ type
     FScoreAtLevelStart: integer;
     FLevelDataAlreadyLoaded: boolean;
     FRestEnemies: integer;
-    FCheat: boolean;
+    FCheats: TCheatSet;
     { VCL-Ersatz }
     dxdraw: TDxDraw;
     imagelist: TDxImageList;
@@ -490,12 +490,11 @@ end;
 
 procedure TPlayerSprite.DoCollision(Sprite: TSprite; var Done: Boolean);
 begin
-  if mainform.FCheat then exit;
   if (Sprite is TItem) then
   begin
     TItem(Sprite).Collected;
   end
-  else if (Sprite is TEnemy) or (Sprite is TEnemyTama) then
+  else if ((Sprite is TEnemy) or (Sprite is TEnemyTama)) and not (ctInfiniteLives in mainform.FCheats) then
   begin
     if not mainform.crash then
     begin
@@ -1684,7 +1683,7 @@ end;
 procedure TMainForm.StartSceneTitle;
 begin
   sleep(500);
-  FCheat := false;
+  FCheats := [];
   FLife := StartLives;
   FLevel := 0;
   FScore := 0;
@@ -2205,7 +2204,7 @@ begin
 
       {$REGION 'Lebensanzeige'}
       if FLife<0 then FLife := 0;
-      if FCheat then
+      if ctInfiniteLives in FCheats then
       begin
         DXDraw.Surface.Canvas.Font.Color := clPurple;
         DXDraw.Surface.Canvas.Textout(9, dxdraw.surfaceheight-41, SInfLifes);

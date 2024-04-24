@@ -37,13 +37,6 @@ uses
 
 {$R *.DFM}
 
-const
-  // Cheat1 = 'Kmkjk'+#39+'Khyc'; {Johnny Cash}
-  Cheat1 = #75+#109+#107+#106+#107+#127+#39+#75+#104+#121+#99;
-
-resourcestring
-  Cheat1Text = 'Unendlich Leben!';
-
 procedure TCheatForm.AbbBtnClick(Sender: TObject);
 begin
   close;
@@ -52,7 +45,7 @@ end;
 procedure TCheatForm.SearchCheats;
 begin
   Cheatbox.Items.Clear;
-  if mainform.FCheat then Cheatbox.Items.Append(Cheat1Text);
+  if ctInfiniteLives in mainform.FCheats then Cheatbox.Items.Append(Cheat1Text);
 end;
 
 procedure TCheatForm.OKBtnClick(Sender: TObject);
@@ -66,23 +59,32 @@ var
 begin
   temp := '';
   j := 0;
+
+  if CheatEdit.text = '' then
+  begin
+    Close;
+    Exit;
+  end;
+
   for i := 1 to length(CheatEdit.text) do
   begin
     inc(j);
     temp := temp + chr(byte(copy(CheatEdit.text, i, 1)[1]) xor j);
   end;
+  {$REGION 'Check and unlock Cheat 1 (Infinite lives)'}
   if lowercase(temp) = lowercase(Cheat1) then
   begin
-    if mainform.FCheat then
+    if ctInfiniteLives in mainform.FCheats then
       showmessage(SCheckAlreadyUnlocked)
     else
     begin
       showmessage(SCheatUnlocked);
-      mainform.FCheat := true;
+      Include(mainform.FCheats, ctInfiniteLives);
       SearchCheats;
     end;
     close;
   end
+  {$ENDREGION}
   else
   begin
     showmessage(SNoCheat);
@@ -116,20 +118,22 @@ end;
 procedure TCheatForm.Label2Click(Sender: TObject);
 resourcestring
   SDisableCheat = 'Diesen Cheat wirklich deaktivieren?';
-  SCheatDisabled = 'Dieser Cheat wurde deakiviert!';
+  SCheatDisabled = 'Dieser Cheat wurde deaktiviert!';
 begin
+  {$REGION 'Disable Cheat 1 (Infinite lives)'}
   if not CheatBox.items.IndexOf(Cheat1Text) = -1 then
   begin
     if CheatBox.Selected[CheatBox.items.IndexOf(Cheat1Text)] then
     begin
       if MessageDlg(SDisableCheat, mtConfirmation, mbYesNoCancel, 0) = mrYes then
       begin
-        mainform.FCheat := false;
+        Exclude(mainform.FCheats, ctInfiniteLives);
         showmessage(SCheatDisabled);
         SearchCheats;
       end;
     end;
   end;
+  {$ENDREGION}
 end;
 
 procedure TCheatForm.Label3Click(Sender: TObject);

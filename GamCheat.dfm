@@ -80,10 +80,10 @@ object CheatForm: TCheatForm
     object Label2: TLabel
       Left = 8
       Top = 104
-      Width = 83
+      Width = 89
       Height = 13
       Cursor = crHandPoint
-      Caption = 'Cheat deaktiviren'
+      Caption = 'Cheat deaktivieren'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlue
       Font.Height = -11
