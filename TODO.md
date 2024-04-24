@@ -1,10 +1,6 @@
 
 # SpaceMission TODO
 
-## Geplant für 1.2.2
-
-- Auf Englisch übersetzen
-
 ## Geplant für 1.3
 
 - Neue Einheit: Ufo, das im Kreis fliegt und nicht weggeht
