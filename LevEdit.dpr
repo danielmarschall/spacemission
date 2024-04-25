@@ -24,13 +24,14 @@ var
 
 resourcestring
   SAlreadyStarted = 'Der Editor wurde bereits gestartet.';
-  STitel = 'SpaceMission Leveleditor';
+  STitel = 'SpaceMission Level-Editor';
   SFileMissing = '%s fehlt. Bitte installieren Sie SpaceMission erneut.';
 
 const
-  SemaphoreName = 'SpaceMission Leveleditor';
+  SemaphoreName = 'SpaceMission Level Editor';
 
 begin
+  SpaceMission_SwitchLanguage;
   { Programm schon gestartet? }
   Sem := CreateSemaphore(nil, 0, 1, SemaphoreName);
   if (Sem <> 0) and (GetLastError = ERROR_ALREADY_EXISTS) then

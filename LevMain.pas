@@ -200,7 +200,7 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 resourcestring
   SFileError = 'Die Datei kann von SpaceMission nicht geöffnet werden!';
-  SCaption = 'SpaceMission %s - Leveleditor';
+  SCaption = 'SpaceMission %s - Level-Editor';
 begin
   { VCL-Ersatz start }
   dxtimer := tdxtimer.create(self);

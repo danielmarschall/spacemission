@@ -95,6 +95,7 @@ const
   FOLDERID_SavedGames: TGuid = '{4C5C32FF-BB9D-43b0-B5B4-2D72E54EAAA4}'; // do not localize
 
 // Useful functions
+procedure SpaceMission_SwitchLanguage;
 function GetKnownFolderPath(const rfid: TGUID): string;
 function KillTask(ExeFileName: string): Integer;
 procedure CheckForUpdates(ViaThinkSoftProjectName: string; AVersion: string);
@@ -104,6 +105,36 @@ implementation
 uses
   Windows, SysUtils, Dialogs, ActiveX, ShlObj, TlHelp32, wininet, Forms, ShellAPI,
   System.UITypes;
+
+procedure SwitchLanguage(newLang: string);
+var
+  bakHInst: hInst;
+  modFileName: string;
+begin
+  SetLocaleOverride(newLang);
+
+  // Note: SetLocaleOverride() does not work, because LibModuleList.ResInstance
+  // is already set and won't be re-set by the FindResourceHInstance()!
+  bakHInst := LibModuleList.ResInstance;
+  modFileName := ChangeFileExt(ParamStr(0),'.'+GetLocaleOverride(ParamStr(0)));
+  LibModuleList.ResInstance := LoadResourceModule(PChar(modFileName));
+  if LibModuleList.ResInstance = 0 then
+    LibModuleList.ResInstance := LibModuleList.Instance;
+  FreeLibrary(bakHInst);
+end;
+
+function GetUserDefaultUILanguage: LANGID; stdcall; external 'kernel32';
+
+procedure SpaceMission_SwitchLanguage;
+begin
+  // We need this because of a tricky problem...
+  // Our base language is German (DE), and we have a translation for English USA (ENU)
+  // If the system locale is not exactly ENU (even ENG is not accepted), then the base language (German) will be used.
+  // But much more people are speaking English than German. So we need to force the system to use ENU instead of DE.
+  // This decision if we choose DE or ENU is done by the language selected during setup.
+  if (GetUserDefaultUILanguage and $FF) <> LANG_GERMAN then
+    SwitchLanguage('ENU');
+end;
 
 function GetKnownFolderPath(const rfid: TGUID): string;
 var

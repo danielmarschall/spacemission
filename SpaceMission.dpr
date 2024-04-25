@@ -22,7 +22,6 @@ uses
 var
   Sem: THandle;
 
-
 resourcestring
   SAlreadyStarted = 'Das Spiel wurde bereits gestartet.';
   STitel = 'SpaceMission';
@@ -32,6 +31,7 @@ const
   SemaphoreName = 'SpaceMission';
 
 begin
+  SpaceMission_SwitchLanguage;
   { Programm schon gestartet? }
   Sem := CreateSemaphore(nil, 0, 1, SemaphoreName);
   if (Sem <> 0) and (GetLastError = ERROR_ALREADY_EXISTS) then

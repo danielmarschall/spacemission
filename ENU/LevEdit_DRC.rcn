@@ -5,11 +5,11 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">45407.6656481481</prop>
-        <prop prop-type="OrigDateTime">45407.5728472222</prop>
+        <prop prop-type="SelfDateTime">45407.9441666667</prop>
+        <prop prop-type="OrigDateTime">45407.9319675926</prop>
         <prop prop-type="XlatDateTime">45406.0334953704</prop>
-        <prop prop-type="Translated">410</prop>
-        <prop prop-type="UnTranslated">77</prop>
+        <prop prop-type="Translated">451</prop>
+        <prop prop-type="UnTranslated">36</prop>
       </prop-group>
     </header>
     <body>
@@ -53,11 +53,19 @@
         <target>"The editor is already open"</target>
       </trans-unit>
       <trans-unit id="LevEdit_STitel" resname="LevEdit_STitel">
-        <source>"SpaceMission Leveleditor"</source>
+        <source>"SpaceMission Level-Editor"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334983218</prop>
           <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"SpaceMission Level Editor"</target>
+        <alt-trans>
+          <source>"SpaceMission Leveleditor"</source>
+          <target>"SpaceMission Leveleditor"</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">45407.8486206481</prop>
+          </prop-group>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="LevEdit_SFileMissing" resname="LevEdit_SFileMissing">
         <source>"%s fehlt. Bitte installieren Sie SpaceMission erneut."</source>
@@ -156,12 +164,19 @@
         <target>"File cannot be opened by SpaceMission"</target>
       </trans-unit>
       <trans-unit id="LevMain_SCaption" resname="LevMain_SCaption">
-        <source>"SpaceMission %s - Leveleditor"</source>
+        <source>"SpaceMission %s - Level-Editor"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334983218</prop>
           <prop prop-type="Status">1</prop>
         </prop-group>
         <target>"SpaceMission %s - Level Editor"</target>
+        <alt-trans>
+          <source>"SpaceMission %s - Leveleditor"</source>
+          <target>"SpaceMission %s - Level Editor"</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">45407.8486262847</prop>
+          </prop-group>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="LevMain_SYes" resname="LevMain_SYes">
         <source>"Ja"</source>
@@ -1105,15 +1120,17 @@
         <source>"Aktuell ist kein Standarddrucker ausgewählt"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Currently no default printer is selected"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SDuplicateMenus" resname="Vcl_Consts_SDuplicateMenus">
         <source>"Menü '%s' wird bereits von einem anderen Formular verwendet"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Menü '%s' is already used for a different form"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SDockedCtlNeedsName" resname="Vcl_Consts_SDockedCtlNeedsName">
         <source>"Angedocktes Steuerelement muss einen Namen haben."</source>
@@ -1166,29 +1183,33 @@
         <source>"Prompt-Array darf nicht leer sein"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Prompt array must not be empty"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SUsername" resname="Vcl_Consts_SUsername">
         <source>"&amp;Benutzername"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"&amp;Username"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SPassword" resname="Vcl_Consts_SPassword">
         <source>"&amp;Passwort"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"&amp;Password"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SmkcSpace" resname="Vcl_Consts_SmkcSpace">
         <source>"Leer"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Space"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SmkcPgUp" resname="Vcl_Consts_SmkcPgUp">
         <source>"BildAuf"</source>
@@ -1518,15 +1539,16 @@
         <source>"Bitmaps"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SVTIFFImages" resname="Vcl_Consts_SVTIFFImages">
         <source>"TIFF-Grafiken"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"TIFF graphics"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SMsgDlgWarning" resname="Vcl_Consts_SMsgDlgWarning">
         <source>"Warnung"</source>
@@ -1604,8 +1626,9 @@
         <source>"Ausgewählter Drucker ist ungültig"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Selected printer is invalid"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SDeviceOnPort" resname="Vcl_Consts_SDeviceOnPort">
         <source>"%s an %s"</source>
@@ -1619,22 +1642,25 @@
         <source>"GroupIndex darf nicht kleiner sein als der GroupIndex eines vorherigen Menüelements"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"GroupIndex must not be smaller than the GroupIndex of a previous menu item"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SNoMDIForm" resname="Vcl_Consts_SNoMDIForm">
         <source>"Formular kann nicht erstellt werden. Aktuell sind keine MDI-Formulare aktiv"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Form cannot be created. Currently no MDI forms are active"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SImageCanvasNeedsBitmap" resname="Vcl_Consts_SImageCanvasNeedsBitmap">
         <source>"Ein Bild kann nur geändert werden, wenn es ein Bitmap enthält"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"A picture can only be changed if it contains a bitmap"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SControlParentSetToSelf" resname="Vcl_Consts_SControlParentSetToSelf">
         <source>"Steuerelement kann nicht sich selbst als Vorfahr haben"</source>
@@ -1648,8 +1674,9 @@
         <source>"Steuerelement '%s' wird nicht für einen Haupt-Thread verwendet"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Control '%s' is not used for a main thread"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SOKButton" resname="Vcl_Consts_SOKButton">
         <source>"OK"</source>
@@ -1686,8 +1713,9 @@
         <source>"Ungültiger ImageList-Index"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Invalid ImageList index"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SImageReadFail" resname="Vcl_Consts_SImageReadFail">
         <source>"ImageList-Daten konnten nicht aus dem Stream gelesen werden"</source>
@@ -1858,43 +1886,49 @@
         <source>"Nicht unterstütztes Zwischenablagenformat"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Clipboard format not supported"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SUnknownStreamFormat" resname="Vcl_Consts_SUnknownStreamFormat">
         <source>"Nicht unterstütztes Stream-Format"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Stream format not supported"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SOutOfResources" resname="Vcl_Consts_SOutOfResources">
         <source>"Systemressourcen erschöpft"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"System resources are exhausted"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SNoCanvasHandle" resname="Vcl_Consts_SNoCanvasHandle">
         <source>"Canvas erlaubt kein Zeichnen"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Canvas does not allow characters"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SInvalidTextFormatFlag" resname="Vcl_Consts_SInvalidTextFormatFlag">
         <source>"Das Textformat-Flag '%s' wird nicht unterstützt"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Text format flag '%s' is not supported"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SInvalidFrameIndex" resname="Vcl_Consts_SInvalidFrameIndex">
         <source>"Ungültiger Bild-Frame-Index %d: es sind %d Frames vorhanden (0-%d)"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Invalid picture frame index %d: there are %d frames available (0-%d)"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SInvalidImageSize" resname="Vcl_Consts_SInvalidImageSize">
         <source>"Ungültige Bildgröße"</source>
@@ -1924,22 +1958,25 @@
         <source>"Bild kann nicht eingefügt werden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Picture cannot be inserted"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SWinRTInstanceError" resname="System_RTLConsts_SWinRTInstanceError">
         <source>"Instanz der Klasse %s kann nicht erstellt werden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Instance of class %s cannot be created"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sObserverUnsupported" resname="System_RTLConsts_sObserverUnsupported">
         <source>"Observer wird nicht unterstützt"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Observer is not supported"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sObserverMultipleSingleCast" resname="System_RTLConsts_sObserverMultipleSingleCast">
         <source>"Der Observer-Kollektion können nicht mehrere Einfach-Typumwandlungs-Observer hinzugefügt werden"</source>
@@ -1973,8 +2010,9 @@
         <source>"Observer ist nicht verfügbar"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Observer is not available"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SInvalidDateString" resname="System_RTLConsts_SInvalidDateString">
         <source>"Ungültiger Datums-String: %s"</source>
@@ -1996,22 +2034,25 @@
         <source>"Ungültiger Zeit-Offset-String: %s"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Invalid time offset string: %s"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sMustWaitOnOneEvent" resname="System_RTLConsts_sMustWaitOnOneEvent">
         <source>"Es muss auf mindestens ein Ereignis gewartet werden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Waiting for at least one event"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sBeginInvokeDestroying" resname="System_RTLConsts_sBeginInvokeDestroying">
         <source>"BeginInvoke kann bei der Freigabe für TComponent nicht aufgerufen werden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"BeginInvoke cannot be called to free TComponent"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SInvalidBitmap" resname="Vcl_Consts_SInvalidBitmap">
         <source>"Bitmap ist ungültig"</source>
@@ -2247,15 +2288,17 @@
         <source>"32-Bit-Edition"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"32 bit edition"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SVersion64" resname="System_RTLConsts_SVersion64">
         <source>"64-Bit-Edition"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"64 bit edition"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SWindows" resname="System_RTLConsts_SWindows">
         <source>"Windows"</source>
@@ -2282,8 +2325,9 @@
         <source>"TimeSpan zu lang"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"TimeSpan too long"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sInvalidTimespanDuration" resname="System_RTLConsts_sInvalidTimespanDuration">
         <source>"Die Dauer kann nicht zurückgegeben werden, weil der absolute Wert den Wert von TTimeSpan.MaxValue überschreitet"</source>
@@ -2296,8 +2340,9 @@
         <source>"Wert darf nicht NaN"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Wert must not be NaN"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sCannotNegateTimespan" resname="System_RTLConsts_sCannotNegateTimespan">
         <source>"Negation des Minimalwertes einer Zeitspanne ist ungültig"</source>
@@ -2310,8 +2355,9 @@
         <source>"Ungültiges TimeSpan-Format"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334984722</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Invalid TimeSpan format"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sTimespanElementTooLong" resname="System_RTLConsts_sTimespanElementTooLong">
         <source>"TimeSpan-Element zu lang"</source>
@@ -2332,8 +2378,9 @@
         <source>"Keine Hilfe für Kontext %d gefunden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334987037</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"No help available for context %d"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SNoIndex" resname="System_RTLConsts_SNoIndex">
         <source>"Index kann nicht geöffnet werden"</source>
@@ -2379,15 +2426,17 @@
         <source>"Argument außerhalb des Bereichs"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334987037</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Argument outside of valid range"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SArgumentNil" resname="System_RTLConsts_SArgumentNil">
         <source>"Argument darf nicht nil sein"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334987037</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Argument must not be Nil"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SThreadExternalCheckTerminated" resname="System_RTLConsts_SThreadExternalCheckTerminated">
         <source>"CheckTerminated kann nicht für einen extern erstellten Thread aufgerufen werden"</source>
@@ -2428,29 +2477,33 @@
         <source>"Ungültige Zeichen im Pfad"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334987037</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Invalid character in file path"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SInvalidCharsInFileName" resname="System_RTLConsts_SInvalidCharsInFileName">
         <source>"Ungültige Zeichen im Dateinamen"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334987037</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Invalid character in file name"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SEmptyFileName" resname="System_RTLConsts_SEmptyFileName">
         <source>"Dateiname ist leer"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334987037</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Filename is empty"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SPathTooLong" resname="System_RTLConsts_SPathTooLong">
         <source>"Der angegebene Pfad ist zu lang"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334987037</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"The path is too long"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SDriveNotFound" resname="System_RTLConsts_SDriveNotFound">
         <source>"Das Laufwerk wurde nicht gefunden"</source>
@@ -2501,8 +2554,9 @@
         <source>"Ungültiger Wert für Zeitüberschreitung: %s"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334987037</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Invalid value for timeout: %s"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SReadError" resname="System_RTLConsts_SReadError">
         <source>"Stream-Lesefehler"</source>
@@ -2795,8 +2849,9 @@
         <source>"Keine Zuordnung für Unicode-Zeichen in der Multibyte-Zielcodeseite vorhanden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0334987037</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"No mapping for Unicode character in the target Multibyte code page found"</target>
       </trans-unit>
       <trans-unit id="System_SysConst_SInvalidStringBaseIndex" resname="System_SysConst_SInvalidStringBaseIndex">
         <source>"Ungültiger StringBaseIndex"</source>

@@ -5,11 +5,11 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">45407.6121990741</prop>
-        <prop prop-type="OrigDateTime">45407.572962963</prop>
+        <prop prop-type="SelfDateTime">45407.9461574074</prop>
+        <prop prop-type="OrigDateTime">45407.9321527778</prop>
         <prop prop-type="XlatDateTime">45406.0335416667</prop>
-        <prop prop-type="Translated">453</prop>
-        <prop prop-type="UnTranslated">62</prop>
+        <prop prop-type="Translated">490</prop>
+        <prop prop-type="UnTranslated">25</prop>
       </prop-group>
     </header>
     <body>
@@ -722,8 +722,9 @@
         <source>"Dieses PNG-Bild (Portable Network Graphics) wird nicht unterstützt, weil die Breite oder Höhe die maximale Größe von 65535 Pixel überschreitet."</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335376389</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"This PNG image (Portable Network Graphics) is not supported because width or height exceeds 65535 pixels."</target>
       </trans-unit>
       <trans-unit id="Vcl_Imaging_pnglang_EPNGUnknownPalEntryText" resname="Vcl_Imaging_pnglang_EPNGUnknownPalEntryText">
         <source>"Es gibt keinen solchen Palettenwert."</source>
@@ -761,8 +762,9 @@
         <source>"Dieses PNG-Bild (Portable Network Graphics) verwendet einen unbekannten Farbtyp, der nicht decodiert werden konnte."</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335376389</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"This PNG image (Portable Network Graphics) contains an unknown color type which cannot be decoded."</target>
       </trans-unit>
       <trans-unit id="DXConsts_SListIndexError" resname="DXConsts_SListIndexError">
         <source>"Index of the list exceeds the range. (%d)"</source>
@@ -1040,8 +1042,9 @@
         <source>"Die Registrierung des Systemstils kann nicht aufgehoben werden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335376389</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"The registry of the system style cannot be removed"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SStyleNotRegisteredNoName" resname="Vcl_Consts_SStyleNotRegisteredNoName">
         <source>"Stil nicht registriert"</source>
@@ -1055,8 +1058,9 @@
         <source>"BeginInvoke kann nicht ohne übergeordnetes Element oder Fenster-Handle aufgerufen werden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335377431</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"BeginInvoke cannot be called without superior window or window handle"</target>
       </trans-unit>
       <trans-unit id="System_Win_ComConst_SOleError" resname="System_Win_ComConst_SOleError">
         <source>"OLE-Fehler %.8x"</source>
@@ -1290,8 +1294,9 @@
         <source>"Menü '%s' wird bereits von einem anderen Formular verwendet"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335377431</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Menu '%s' is already used by another form"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SDockedCtlNeedsName" resname="Vcl_Consts_SDockedCtlNeedsName">
         <source>"Angedocktes Steuerelement muss einen Namen haben."</source>
@@ -1337,8 +1342,9 @@
         <source>"Länge des Werte-Arrays muss &gt;= der Länge des Prompt-Arrays sein"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335377431</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Length of the value array must &gt;= length of prompt array"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SPromptArrayEmpty" resname="Vcl_Consts_SPromptArrayEmpty">
         <source>"Prompt-Array darf nicht leer sein"</source>
@@ -1803,22 +1809,25 @@
         <source>"GroupIndex darf nicht kleiner sein als der GroupIndex eines vorherigen Menüelements"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335377431</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"GroupIndex must not be smaller than the GroupIndex of a previous menu item"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SNoMDIForm" resname="Vcl_Consts_SNoMDIForm">
         <source>"Formular kann nicht erstellt werden. Aktuell sind keine MDI-Formulare aktiv"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335377431</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Form cannot be created. Currently no MDI forms are active"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SImageCanvasNeedsBitmap" resname="Vcl_Consts_SImageCanvasNeedsBitmap">
         <source>"Ein Bild kann nur geändert werden, wenn es ein Bitmap enthält"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335377431</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"A picture can only be changed if it contains a bitmap"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SControlParentSetToSelf" resname="Vcl_Consts_SControlParentSetToSelf">
         <source>"Steuerelement kann nicht sich selbst als Vorfahr haben"</source>
@@ -2023,8 +2032,9 @@
         <source>"Die Größe einer WIC-Grafik kann nicht verändert werden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378472</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"The size of a WIC graphic cannot be changed"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SOleGraphic" resname="Vcl_Consts_SOleGraphic">
         <source>"Ungültige Operation für TOleGraphic"</source>
@@ -2046,43 +2056,49 @@
         <source>"Nicht unterstütztes Zwischenablagenformat"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378472</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Clipboard format not supported"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SUnknownStreamFormat" resname="Vcl_Consts_SUnknownStreamFormat">
         <source>"Nicht unterstütztes Stream-Format"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378472</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Stream format not supported"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SOutOfResources" resname="Vcl_Consts_SOutOfResources">
         <source>"Systemressourcen erschöpft"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378472</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"System resources exhausted"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SNoCanvasHandle" resname="Vcl_Consts_SNoCanvasHandle">
         <source>"Canvas erlaubt kein Zeichnen"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378472</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Canvas does not allow characters"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SInvalidTextFormatFlag" resname="Vcl_Consts_SInvalidTextFormatFlag">
         <source>"Das Textformat-Flag '%s' wird nicht unterstützt"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378472</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"The text format flag '%s' is not supported"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SInvalidFrameIndex" resname="Vcl_Consts_SInvalidFrameIndex">
         <source>"Ungültiger Bild-Frame-Index %d: es sind %d Frames vorhanden (0-%d)"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378472</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Invalid picture frame index %d: there are %d frames available (0-%d)"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SInvalidImageSize" resname="Vcl_Consts_SInvalidImageSize">
         <source>"Ungültige Bildgröße"</source>
@@ -2112,22 +2128,25 @@
         <source>"Bild kann nicht eingefügt werden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378472</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Image cannot be inserted"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SWinRTInstanceError" resname="System_RTLConsts_SWinRTInstanceError">
         <source>"Instanz der Klasse %s kann nicht erstellt werden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378472</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Instance of class %s cannot be created"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sObserverUnsupported" resname="System_RTLConsts_sObserverUnsupported">
         <source>"Observer wird nicht unterstützt"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378472</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Observer is not supported"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sObserverMultipleSingleCast" resname="System_RTLConsts_sObserverMultipleSingleCast">
         <source>"Der Observer-Kollektion können nicht mehrere Einfach-Typumwandlungs-Observer hinzugefügt werden"</source>
@@ -2184,15 +2203,17 @@
         <source>"Ungültiger Zeit-Offset-String: %s"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Invalid time offset string: %s"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sMustWaitOnOneEvent" resname="System_RTLConsts_sMustWaitOnOneEvent">
         <source>"Es muss auf mindestens ein Ereignis gewartet werden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Waiting for at least one event"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sBeginInvokeDestroying" resname="System_RTLConsts_sBeginInvokeDestroying">
         <source>"BeginInvoke kann bei der Freigabe für TComponent nicht aufgerufen werden"</source>
@@ -2506,8 +2527,9 @@
         <source>"TimeSpan-Element zu lang"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"TimeSpan element too long"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SNoContext" resname="System_RTLConsts_SNoContext">
         <source>"Keine kontextsensitive Hilfe installiert"</source>
@@ -2521,8 +2543,9 @@
         <source>"Keine Hilfe für Kontext %d gefunden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"No help available for context %d"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SNoIndex" resname="System_RTLConsts_SNoIndex">
         <source>"Index kann nicht geöffnet werden"</source>
@@ -2578,42 +2601,47 @@
           <prop prop-type="Created">45406.0335378935</prop>
           <prop prop-type="Status">1</prop>
         </prop-group>
-        <target>"Argument may not be nil"</target>
+        <target>"Argument may not be Nil"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SThreadExternalCheckTerminated" resname="System_RTLConsts_SThreadExternalCheckTerminated">
         <source>"CheckTerminated kann nicht für einen extern erstellten Thread aufgerufen werden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"CheckTerminated cannot be called for an external created thread"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SThreadExternalSetReturnValue" resname="System_RTLConsts_SThreadExternalSetReturnValue">
         <source>"SetReturnValue kann nicht für einen extern erstellten Thread aufgerufen werden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"SetReturnValue cannot be called for an external created thread"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SParamIsNil" resname="System_RTLConsts_SParamIsNil">
         <source>"Parameter %s darf nicht Nil sein"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Parameter %s must not be Nil"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SParamIsNegative" resname="System_RTLConsts_SParamIsNegative">
         <source>"Parameter %s darf kein negativer Wert sein"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Parameter %s must not be a negative value"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SInputBufferExceed" resname="System_RTLConsts_SInputBufferExceed">
         <source>"Eingabepuffer für %s = %d, %s = %d überschritten"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Input buffer for %s = %d, %s = %d exceeded"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SInvalidCharsInPath" resname="System_RTLConsts_SInvalidCharsInPath">
         <source>"Ungültige Zeichen im Pfad"</source>
@@ -2675,15 +2703,17 @@
         <source>"Die Länge von String- und Objekt-Arrays muss gleich sein"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"The length of string and object arrays must be equal"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sSameArrays" resname="System_RTLConsts_sSameArrays">
         <source>"Quell- und Ziel-Arrays dürfen nicht gleich sein"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Source and target arrays must not be equal"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sNoConstruct" resname="System_RTLConsts_sNoConstruct">
         <source>"Klasse %s soll nicht erzeugt werden"</source>
@@ -2697,8 +2727,9 @@
         <source>"Ungültiger Wert für Zeitüberschreitung: %s"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Invalid value for timeout: %s"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SReadError" resname="System_RTLConsts_SReadError">
         <source>"Stream-Lesefehler"</source>
@@ -2824,8 +2855,9 @@
         <source>"Start kann für einen laufenden oder unterbrochenen Thread nicht aufgerufen werden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Start cannot be called for a running or paused thread"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SFCreateErrorEx" resname="System_RTLConsts_SFCreateErrorEx">
         <source>"Datei \"%s\" kann nicht erstellt werden. %s"</source>
@@ -2911,8 +2943,9 @@
         <source>"Listenindex außerhalb des gültigen Bereichs (%d)"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335379861</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"List index outside valid range (%d)"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SListIndexErrorRangeReason" resname="System_RTLConsts_SListIndexErrorRangeReason">
         <source>". %s-Bereich ist 0..%d"</source>
@@ -2990,8 +3023,9 @@
         <source>"Keine Zuordnung für Unicode-Zeichen in der Multibyte-Zielcodeseite vorhanden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335379861</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"No mapping for Unicode character in the target Multibyte code page found"</target>
       </trans-unit>
       <trans-unit id="System_SysConst_SInvalidStringBaseIndex" resname="System_SysConst_SInvalidStringBaseIndex">
         <source>"Ungültiger StringBaseIndex"</source>
@@ -3077,8 +3111,9 @@
         <source>"In der String-Liste sind Duplikate nicht zulässig"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335379861</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Duplicates are not allowed in string list"</target>
       </trans-unit>
       <trans-unit id="System_SysConst_SShortDayNameWed" resname="System_SysConst_SShortDayNameWed">
         <source>"Mi"</source>
@@ -3576,8 +3611,9 @@
         <source>"Methode für freigegebenes Objekt aufgerufen"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335380671</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Method called at freed object"</target>
       </trans-unit>
       <trans-unit id="System_SysConst_SArgumentMissing" resname="System_SysConst_SArgumentMissing">
         <source>"Kein Argument für Format '%s'"</source>
@@ -3815,8 +3851,9 @@
         <source>"Exception %s in Modul %s bei %p.\r\n%s%s\r\n"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.033538125</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Exception %s in module %s at %p.\r\n%s%s\r\n"</target>
       </trans-unit>
       <trans-unit id="System_SysConst_SExceptTitle" resname="System_SysConst_SExceptTitle">
         <source>"Anwendungsfehler"</source>

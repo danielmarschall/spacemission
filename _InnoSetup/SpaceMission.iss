@@ -61,17 +61,6 @@ Name: "{autodesktop}\SpaceMission Level Editor"; Filename: "{app}\LevEdit.exe"; 
 [Run]
 Filename: "{app}\SpaceMission.exe"; Description: "SpaceMission starten"; Flags: nowait postinstall skipifsilent
 
-[Registry]
-; We need this because of a tricky problem...
-; Our base language is German (DE), and we have a translation for English USA (ENU)
-; If the system locale is not exactly ENU (even ENG is not accepted), then the base language DE will be used.
-; But much more people are speaking English than German. So we need to force the system to use ENU instead of DE.
-; This decision if we choose DE or ENU is done by the language selected during setup.
-Root: HKA; Subkey: "Software\Embarcadero\Locales"; ValueType: string; ValueName: "{app}\SpaceMission.exe"; ValueData: "ENU"; Languages: en
-Root: HKA; Subkey: "Software\Embarcadero\Locales"; ValueType: string; ValueName: "{app}\SpaceMission.exe"; ValueData: "DE"; Languages: de
-Root: HKA; Subkey: "Software\Embarcadero\Locales"; ValueType: string; ValueName: "{app}\LevEdit.exe"; ValueData: "ENU"; Languages: en
-Root: HKA; Subkey: "Software\Embarcadero\Locales"; ValueType: string; ValueName: "{app}\LevEdit.exe"; ValueData: "DE"; Languages: de
-
 [Code]
 function InitializeSetup(): Boolean;
 begin
