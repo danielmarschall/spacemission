@@ -5,11 +5,11 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">45407.9461574074</prop>
+        <prop prop-type="SelfDateTime">45407.9617824074</prop>
         <prop prop-type="OrigDateTime">45407.9321527778</prop>
         <prop prop-type="XlatDateTime">45406.0335416667</prop>
-        <prop prop-type="Translated">490</prop>
-        <prop prop-type="UnTranslated">25</prop>
+        <prop prop-type="Translated">515</prop>
+        <prop prop-type="UnTranslated">0</prop>
       </prop-group>
     </header>
     <body>
@@ -195,8 +195,9 @@
         <source>"Ein in RegEx angegebener regulärer Ausdruck ist erforderlich"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335376042</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"A regular expression is required in RegEx"</target>
       </trans-unit>
       <trans-unit id="System_RegularExpressionsConsts_SRegExExpressionError" resname="System_RegularExpressionsConsts_SRegExExpressionError">
         <source>"Fehler in regulärem Ausdruck bei Offset %d: %s"</source>
@@ -608,8 +609,9 @@
         <source>"Das PNG-Bild (Portable Network Graphics) konnte nicht geladen werden, weil das Bild eine ungültige Bit-Tiefe verwendet."</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335376389</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"The PNG image (Portable Network Graphics) could not be loaded because the picture contains an invalid bit depth."</target>
       </trans-unit>
       <trans-unit id="Vcl_Imaging_JConsts_sChangeJPGSize" resname="Vcl_Imaging_JConsts_sChangeJPGSize">
         <source>"Die Größe einer JPEG-Grafik kann nicht verändert werden"</source>
@@ -692,8 +694,9 @@
         <source>"Die Grafik konnte nicht entpackt werden, weil Teile der komprimierten Daten fehlerhaft sind. \r\nBeschreibung: "</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335376389</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"The graphic could not be decompressed because part of the compressed data is invalid. \r\nDescription: "</target>
       </trans-unit>
       <trans-unit id="Vcl_Imaging_pnglang_EPNGInvalidPaletteText" resname="Vcl_Imaging_pnglang_EPNGInvalidPaletteText">
         <source>"Das \"Portable Network Graphics\" Bild enthält eine ungültige Palette."</source>
@@ -707,8 +710,9 @@
         <source>"Die gerade gelesene Datei ist kein gültiges PNG-Bild (\"Portable Network Graphics\"), weil sie keinen gültigen Header enthält. Diese Datei ist möglicherweise beschädigt. Versuchen Sie, eine neue Version davon zu bekommen"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335376389</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"The read file is not a valid PNG picture (\"Portable Network Graphics\"), because it does not contain a valid header. The file is probably corrupt. Please try to receive a newer version of the file."</target>
       </trans-unit>
       <trans-unit id="Vcl_Imaging_pnglang_EPNGIHDRNotFirstText" resname="Vcl_Imaging_pnglang_EPNGIHDRNotFirstText">
         <source>"Dieses \"Portable Network Graphics\" Bild wird nicht unterstützt oder ist ungültig.\r\n(Der IHDR-Abschnitt ist nicht der erste Abschnitt in der Datei)."</source>
@@ -2152,36 +2156,41 @@
         <source>"Der Observer-Kollektion können nicht mehrere Einfach-Typumwandlungs-Observer hinzugefügt werden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378472</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Multiple single cast observers cannot be added to observer collection"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sObserverNoInterface" resname="System_RTLConsts_sObserverNoInterface">
         <source>"Das Objekt implementiert das Observer-Interface nicht"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378472</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Object does not implement the Observer interface"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sObserverNoSinglecastFound" resname="System_RTLConsts_sObserverNoSinglecastFound">
         <source>"Der Observer-Kollektion wurde kein Einfach-Typumwandlungs-Observer mit der ID %d hinzugefügt"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378472</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"No single cast observer with ID %d found in Observer collection"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sObserverNoMulticastFound" resname="System_RTLConsts_sObserverNoMulticastFound">
         <source>"Der Observer-Kollektion wurde kein Mehrfach-Typumwandlungs-Observer mit der ID %d hinzugefügt"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378472</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"No multi cast observer with ID %d found in Observer collection"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sObserverNotAvailable" resname="System_RTLConsts_sObserverNotAvailable">
         <source>"Observer ist nicht verfügbar"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Observer not available"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SInvalidDateString" resname="System_RTLConsts_SInvalidDateString">
         <source>"Ungültiger Datums-String: %s"</source>
@@ -2219,8 +2228,9 @@
         <source>"BeginInvoke kann bei der Freigabe für TComponent nicht aufgerufen werden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"BeginInvoke cannot be called for freeing TComponent"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SInvalidBitmap" resname="Vcl_Consts_SInvalidBitmap">
         <source>"Bitmap ist ungültig"</source>
@@ -2378,64 +2388,73 @@
         <source>"Duplikate nicht zulässig"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Duplicates are not allowed"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SInsufficientRtti" resname="System_RTLConsts_SInsufficientRtti">
         <source>"Unzureichende RTTI zur Unterstützung dieser Operation verfügbar"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Not enough RTTI for this operation"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SParameterCountMismatch" resname="System_RTLConsts_SParameterCountMismatch">
         <source>"Parameteranzahl stimmt nicht überein"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Paramter count must match"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SNonPublicType" resname="System_RTLConsts_SNonPublicType">
         <source>"Typ '%s' ist im interface-Abschnitt einer Unit nicht deklariert"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Type '%s' is not delcared in the interface setion of a unit"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SByRefArgMismatch" resname="System_RTLConsts_SByRefArgMismatch">
         <source>"VAR- und OUT-Argumente müssen exakt mit dem Parametertyp übereinstimmen"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"VAR- und OUT- arguments must match the paramter type"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SPropIsReadOnly" resname="System_RTLConsts_SPropIsReadOnly">
         <source>"Eigenschaft '%s' ist schreibgeschützt"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Property '%s' is write-proteted"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SPropIsWriteOnly" resname="System_RTLConsts_SPropIsWriteOnly">
         <source>"Eigenschaft '%s' kann nur geschrieben werden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Property '%s' can only be written"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SInvalidRttiDestroy" resname="System_RTLConsts_SInvalidRttiDestroy">
         <source>"RTTI-Objekte können nicht manuell vom Anwendungscode freigegeben werden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"RTTI objects cannot be manually freed using application code"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SServiceNotFound" resname="System_RTLConsts_SServiceNotFound">
         <source>"Angegebener Dienst für die Anmeldeinformationen nicht gefunden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Service for login information not found"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SVersionStr" resname="System_RTLConsts_SVersionStr">
         <source>"%s (Version %d.%d, Build %d, %5:s)"</source>
@@ -2485,43 +2504,49 @@
         <source>"SpinCount außerhalb des Bereichs. Muss zwischen 0 und %d liegen"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"SpinCount outside range. It must be between 0 and %d"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sTimespanTooLong" resname="System_RTLConsts_sTimespanTooLong">
         <source>"TimeSpan zu lang"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"TimeSpan too long"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sInvalidTimespanDuration" resname="System_RTLConsts_sInvalidTimespanDuration">
         <source>"Die Dauer kann nicht zurückgegeben werden, weil der absolute Wert den Wert von TTimeSpan.MaxValue überschreitet"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"The duration cannot be returned, because the absolute value is exceeding TTimeSpan.MaxValue"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sTimespanValueCannotBeNan" resname="System_RTLConsts_sTimespanValueCannotBeNan">
         <source>"Wert darf nicht NaN"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Value must not be NaN"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sCannotNegateTimespan" resname="System_RTLConsts_sCannotNegateTimespan">
         <source>"Negation des Minimalwertes einer Zeitspanne ist ungültig"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Negation of minimum value of a time range is invalid"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sInvalidTimespanFormat" resname="System_RTLConsts_sInvalidTimespanFormat">
         <source>"Ungültiges TimeSpan-Format"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Invalid TimeSpam format"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sTimespanElementTooLong" resname="System_RTLConsts_sTimespanElementTooLong">
         <source>"TimeSpan-Element zu lang"</source>
