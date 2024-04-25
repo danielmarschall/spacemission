@@ -108,32 +108,49 @@ uses
 
 procedure SwitchLanguage(newLang: string);
 var
-  bakHInst: hInst;
-  modFileName: string;
+  oldHInst: hInst;
+  newHInst: hInst;
+  bakOverride: string;
+  FileName: array [0..MAX_PATH] of Char;
+  Module: PLibModule;
 begin
-  SetLocaleOverride(newLang);
+  Module := LibModuleList;
+  GetModuleFileName(Module.Instance, FileName, Length(FileName));
 
-  // Note: SetLocaleOverride() does not work, because LibModuleList.ResInstance
-  // is already set and won't be re-set by the FindResourceHInstance()!
-  bakHInst := LibModuleList.ResInstance;
-  modFileName := ChangeFileExt(ParamStr(0),'.'+GetLocaleOverride(ParamStr(0)));
-  LibModuleList.ResInstance := LoadResourceModule(PChar(modFileName));
-  if LibModuleList.ResInstance = 0 then
-    LibModuleList.ResInstance := LibModuleList.Instance;
-  FreeLibrary(bakHInst);
+  bakOverride := GetLocaleOverride('');
+  try
+    SetLocaleOverride(newLang);
+
+    // Note: SetLocaleOverride() alone does not work, because LibModuleList.ResInstance
+    // is already set and won't be re-set by the FindResourceHInstance()!
+    newHInst := LoadResourceModule(FileName);
+    if newHInst = 0 then newHInst := Module.Instance;
+
+    oldHInst := Module.ResInstance;
+    Module.ResInstance := newHInst;
+    FreeLibrary(oldHInst);
+  except
+    SetLocaleOverride(bakOverride);
+  end;
 end;
 
 function GetUserDefaultUILanguage: LANGID; stdcall; external 'kernel32';
 
 procedure SpaceMission_SwitchLanguage;
+const
+  BaseLanguage = LANG_GERMAN;
+  DesiredFallbackLanguage = 'ENU'; // English USA
 begin
   // We need this because of a tricky problem...
   // Our base language is German (DE), and we have a translation for English USA (ENU)
   // If the system locale is not exactly ENU (even ENG is not accepted), then the base language (German) will be used.
   // But much more people are speaking English than German. So we need to force the system to use ENU instead of DE.
   // This decision if we choose DE or ENU is done by the language selected during setup.
-  if (GetUserDefaultUILanguage and $FF) <> LANG_GERMAN then
-    SwitchLanguage('ENU');
+  if (GetLocaleOverride('') = '') and
+     ((GetUserDefaultUILanguage and $FF) <> BaseLanguage) then
+  begin
+    SwitchLanguage(DesiredFallbackLanguage);
+  end;
 end;
 
 function GetKnownFolderPath(const rfid: TGUID): string;
