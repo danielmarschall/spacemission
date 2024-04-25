@@ -5,8 +5,8 @@
 
 [Setup]
 AppName=SpaceMission
-AppVerName=SpaceMission 1.2.1
-AppVersion=1.2.1
+AppVerName=SpaceMission 1.2.2
+AppVersion=1.2.2
 AppCopyright=© Copyright 2001 - 2024 ViaThinkSoft
 AppPublisher=ViaThinkSoft
 AppPublisherURL=https://www.viathinksoft.de/
@@ -18,7 +18,7 @@ VersionInfoCompany=ViaThinkSoft
 VersionInfoCopyright=© Copyright 2001 - 2024 ViaThinkSoft
 VersionInfoDescription=SpraceMission Setup
 VersionInfoTextVersion=1.0.0.0
-VersionInfoVersion=1.2.1
+VersionInfoVersion=1.2.2
 OutputBaseFilename=SpaceMission_Setup
 OutputDir=.
 ; Configure Sign Tool in InnoSetup at "Tools => Configure Sign Tools" (adjust the path to your SVN repository location)
@@ -66,7 +66,11 @@ Name: "{autodesktop}\SpaceMission Level Editor"; Filename: "{app}\LevEdit.exe"; 
 Filename: "{app}\SpaceMission.exe"; Description: "SpaceMission starten"; Flags: nowait postinstall skipifsilent
 
 [Registry]
-; TODO: Also do this to the "Jumper" game
+; We need this because of a tricky problem...
+; Our base language is German (DE), and we have a translation for English USA (ENU)
+; If the system locale is not exactly ENU (even ENG is not accepted), then the base language DE will be used.
+; But much more people are speaking English than German. So we need to force the system to use ENU instead of DE.
+; This decision if we choose DE or ENU is done by the language selected during setup.
 Root: HKCU; Subkey: "Software\Embarcadero\Locales"; ValueType: string; ValueName: "{app}\SpaceMission.exe"; ValueData: "ENU"; Languages: en
 Root: HKCU; Subkey: "Software\Embarcadero\Locales"; ValueType: string; ValueName: "{app}\SpaceMission.exe"; ValueData: "DE"; Languages: de
 Root: HKCU; Subkey: "Software\Embarcadero\Locales"; ValueType: string; ValueName: "{app}\LevEdit.exe"; ValueData: "ENU"; Languages: en

@@ -91,8 +91,8 @@
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <VerInfo_MinorVer>2</VerInfo_MinorVer>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=ViaThinkSoft;FileDescription=SpaceMission;FileVersion=1.2.1.0;InternalName=SpaceMission;LegalCopyright=(C) 2001-2024 Daniel Marschall, ViaThinkSoft;LegalTrademarks=;OriginalFilename=SpaceMission.exe;ProductName=SpaceMission;ProductVersion=1.2.1;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
-        <VerInfo_Release>1</VerInfo_Release>
+        <VerInfo_Keys>CompanyName=ViaThinkSoft;FileDescription=SpaceMission;FileVersion=1.2.2.0;InternalName=SpaceMission;LegalCopyright=(C) 2001-2024 Daniel Marschall, ViaThinkSoft;LegalTrademarks=;OriginalFilename=SpaceMission.exe;ProductName=SpaceMission;ProductVersion=1.2.2;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Release>2</VerInfo_Release>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <Version>7.0</Version>

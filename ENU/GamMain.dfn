@@ -5,11 +5,11 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">45407.0137962963</prop>
+        <prop prop-type="SelfDateTime">45407.5102546296</prop>
         <prop prop-type="OrigDateTime">45407.0116435185</prop>
         <prop prop-type="XlatDateTime">45405.6852083333</prop>
-        <prop prop-type="Translated">29</prop>
-        <prop prop-type="UnTranslated">71</prop>
+        <prop prop-type="Translated">100</prop>
+        <prop prop-type="UnTranslated">0</prop>
       </prop-group>
     </header>
     <body>
@@ -17,7 +17,7 @@
         <source>320</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">0</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -27,7 +27,7 @@
         <source>196</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">1</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -37,7 +37,7 @@
         <source>[biSystemMenu, biMinimize]</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">2</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -47,7 +47,7 @@
         <source>bsSingle</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">3</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -67,7 +67,7 @@
         <source>561</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">5</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -77,7 +77,7 @@
         <source>636</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">6</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -87,7 +87,7 @@
         <source>clBlack</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">7</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -97,7 +97,7 @@
         <source>DEFAULT_CHARSET</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">8</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -107,7 +107,7 @@
         <source>clYellow</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">9</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -117,7 +117,7 @@
         <source>-12</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">10</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -137,7 +137,7 @@
         <source>[]</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">12</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -147,7 +147,7 @@
         <source>True</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">13</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -157,7 +157,7 @@
         <source>MainMenu</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">14</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -167,7 +167,7 @@
         <source>poScreenCenter</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">15</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -177,7 +177,7 @@
         <source>False</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">16</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -187,7 +187,7 @@
         <source>FormClose</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">17</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -197,7 +197,7 @@
         <source>FormCreate</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">18</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -207,7 +207,7 @@
         <source>FormDestroy</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">19</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -217,7 +217,7 @@
         <source>FormKeyDown</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">20</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -227,7 +227,7 @@
         <source>FormShow</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">21</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -237,7 +237,7 @@
         <source>13</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">22</prop>
           <prop prop-type="Type">TMainForm</prop>
           <prop prop-type="Localize">1</prop>
@@ -247,7 +247,7 @@
         <source>24</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">23</prop>
           <prop prop-type="Type">TMainMenu</prop>
           <prop prop-type="Localize">1</prop>
@@ -257,7 +257,7 @@
         <source>8</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">24</prop>
           <prop prop-type="Type">TMainMenu</prop>
           <prop prop-type="Localize">1</prop>
@@ -289,7 +289,7 @@
         <source>False</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">27</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -299,7 +299,7 @@
         <source>112</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">28</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -309,7 +309,7 @@
         <source>GameStartClick</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">29</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -330,7 +330,7 @@
         <source>False</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">31</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -340,7 +340,7 @@
         <source>113</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">32</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -350,7 +350,7 @@
         <source>NeustartClick</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">33</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -370,7 +370,7 @@
         <source>False</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">35</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -380,7 +380,7 @@
         <source>114</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">36</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -390,7 +390,7 @@
         <source>GamePauseClick</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">37</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -421,7 +421,7 @@
         <source>115</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">40</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -431,7 +431,7 @@
         <source>SpielstandClick</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">41</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -452,7 +452,7 @@
         <source>False</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">43</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -462,7 +462,7 @@
         <source>116</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">44</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -472,7 +472,7 @@
         <source>CheatClick</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">45</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -503,7 +503,7 @@
         <source>32883</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">48</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -513,7 +513,7 @@
         <source>BeendenClick</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">49</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -545,7 +545,7 @@
         <source>True</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">52</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -555,7 +555,7 @@
         <source>1</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">53</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -565,7 +565,7 @@
         <source>OptionSoundClick</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">54</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -586,7 +586,7 @@
         <source>True</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360185</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">56</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -596,7 +596,7 @@
         <source>1</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360764</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">57</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -606,7 +606,7 @@
         <source>OptionMusicClick</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360764</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">58</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -626,7 +626,7 @@
         <source>1</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360764</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">60</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -647,7 +647,7 @@
         <source>False</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">62</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -657,7 +657,7 @@
         <source>1</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">63</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -678,7 +678,7 @@
         <source>True</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">65</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -688,7 +688,7 @@
         <source>49</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">66</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -698,7 +698,7 @@
         <source>LeichtClick</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">67</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -719,7 +719,7 @@
         <source>True</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">69</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -729,7 +729,7 @@
         <source>True</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">70</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -739,7 +739,7 @@
         <source>50</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">71</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -749,7 +749,7 @@
         <source>MittelClick</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">72</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -770,7 +770,7 @@
         <source>True</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">74</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -780,7 +780,7 @@
         <source>51</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">75</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -790,7 +790,7 @@
         <source>SchwerClick</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">76</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -811,7 +811,7 @@
         <source>True</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">78</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -821,7 +821,7 @@
         <source>52</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">79</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -831,7 +831,7 @@
         <source>MasterClick</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">80</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -863,7 +863,7 @@
         <source>1</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">83</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -891,7 +891,7 @@
         <source>HilfeTopicClick</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">85</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -912,7 +912,7 @@
         <source>1</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">87</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -940,7 +940,7 @@
         <source>HilfeTopicClick</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">89</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -960,7 +960,7 @@
         <source>1</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">91</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -981,7 +981,7 @@
         <source>1</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">93</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -991,7 +991,7 @@
         <source>CheckUpdatesClick</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">94</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -1011,7 +1011,7 @@
         <source>1</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">96</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -1032,7 +1032,7 @@
         <source>1</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">98</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
@@ -1042,7 +1042,7 @@
         <source>InformationenClick</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335360995</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">6</prop>
           <prop prop-type="Order">99</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>

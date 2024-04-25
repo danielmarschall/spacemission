@@ -5,11 +5,11 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">45407.0205092593</prop>
-        <prop prop-type="OrigDateTime">45407.0205324074</prop>
+        <prop prop-type="SelfDateTime">45407.6121990741</prop>
+        <prop prop-type="OrigDateTime">45407.572962963</prop>
         <prop prop-type="XlatDateTime">45406.0335416667</prop>
-        <prop prop-type="Translated">439</prop>
-        <prop prop-type="UnTranslated">76</prop>
+        <prop prop-type="Translated">453</prop>
+        <prop prop-type="UnTranslated">62</prop>
       </prop-group>
     </header>
     <body>
@@ -171,22 +171,25 @@
         <source>"Edge-Browser-Steuerelement konnte nicht erstellt werden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335376042</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Edge-Browser control cannot be created"</target>
       </trans-unit>
       <trans-unit id="Vcl_EdgeConst_SNoWebView" resname="Vcl_EdgeConst_SNoWebView">
         <source>"Das zugrunde liegende WebView2-Steuerelement ist nicht initialisiert"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335376042</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"WebView2 control is not initialized"</target>
       </trans-unit>
       <trans-unit id="IEConst_sNotSupportedByEdge" resname="IEConst_sNotSupportedByEdge">
         <source>"Vorgang wird vom Edge WebView2-Steuerelement nicht unterstützt"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335376042</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Action not supported by Edge WebView2 control"</target>
       </trans-unit>
       <trans-unit id="System_RegularExpressionsConsts_SRegExMissingExpression" resname="System_RegularExpressionsConsts_SRegExMissingExpression">
         <source>"Ein in RegEx angegebener regulärer Ausdruck ist erforderlich"</source>
@@ -199,36 +202,41 @@
         <source>"Fehler in regulärem Ausdruck bei Offset %d: %s"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335376042</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Error with regular expression at offset %d: %s"</target>
       </trans-unit>
       <trans-unit id="System_RegularExpressionsConsts_SRegExStudyError" resname="System_RegularExpressionsConsts_SRegExStudyError">
         <source>"Fehler beim Untersuchen von regex: %s"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335376042</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Error while evaluating: %s"</target>
       </trans-unit>
       <trans-unit id="System_RegularExpressionsConsts_SRegExMatchRequired" resname="System_RegularExpressionsConsts_SRegExMatchRequired">
         <source>"Übereinstimmung erforderlich"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335376042</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Match required"</target>
       </trans-unit>
       <trans-unit id="System_RegularExpressionsConsts_SRegExStringsRequired" resname="System_RegularExpressionsConsts_SRegExStringsRequired">
         <source>"Strings-Parameter darf nicht Nil sein"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335376042</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Strings parameter must not be nil"</target>
       </trans-unit>
       <trans-unit id="System_RegularExpressionsConsts_SRegExIndexOutOfBounds" resname="System_RegularExpressionsConsts_SRegExIndexOutOfBounds">
         <source>"Index überschreitet das Maximum (%d)"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335376389</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Index exceeds maximum (%d)"</target>
       </trans-unit>
       <trans-unit id="GamMain_SWeiterMitLeertaste" resname="GamMain_SWeiterMitLeertaste">
         <source>"Weiter mit Leertaste"</source>
@@ -984,8 +992,9 @@
         <source>"Ungültiges Stilformat"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335376389</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Invalid style format"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SStyleHookClassRegistered" resname="Vcl_Consts_SStyleHookClassRegistered">
         <source>"Klasse '%s' ist für '%s' bereits registriert"</source>
@@ -1015,8 +1024,9 @@
         <source>"Funktion wird von diesem Stil nicht unterstützt"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335376389</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Function is not supported by this style"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SStyleNotRegistered" resname="Vcl_Consts_SStyleNotRegistered">
         <source>"Der Stil '%s' ist nicht registriert"</source>
@@ -1697,8 +1707,9 @@
         <source>"TIFF-Grafiken"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335377431</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"TIFF graphics"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SMsgDlgWarning" resname="Vcl_Consts_SMsgDlgWarning">
         <source>"Warnung"</source>
@@ -1821,8 +1832,9 @@
         <source>"Steuerelement '%s' wird nicht für einen Haupt-Thread verwendet"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335377431</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Control '%s' cannot be used for a main thread"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SOKButton" resname="Vcl_Consts_SOKButton">
         <source>"OK"</source>
@@ -1947,8 +1959,9 @@
         <source>"Sichtbares Fenster kann nicht in modales geändert werden"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378472</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Visible form cannot be changed to a modal form"</target>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SScrollBarRange" resname="Vcl_Consts_SScrollBarRange">
         <source>"Eigenschaft Scrollbar außerhalb des zulässigen Bereichs"</source>
@@ -2437,7 +2450,7 @@
         <source>"Windows"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SWindowsVista" resname="System_RTLConsts_SWindowsVista">
