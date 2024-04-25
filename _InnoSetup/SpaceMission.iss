@@ -31,10 +31,6 @@ SignedUninstaller=yes
 Name: en; MessagesFile: "compiler:Default.isl"
 Name: de; MessagesFile: "compiler:Languages\German.isl"
 
-[LangOptions]
-LanguageName=Deutsch
-LanguageID=$0407
-
 [Tasks]
 Name: "desktopicon"; Description: "Erstelle eine Verknüpfung auf dem &Desktop"; GroupDescription: "Programmverknüpfungen:"; MinVersion: 4,4
 
@@ -71,10 +67,10 @@ Filename: "{app}\SpaceMission.exe"; Description: "SpaceMission starten"; Flags: 
 ; If the system locale is not exactly ENU (even ENG is not accepted), then the base language DE will be used.
 ; But much more people are speaking English than German. So we need to force the system to use ENU instead of DE.
 ; This decision if we choose DE or ENU is done by the language selected during setup.
-Root: HKCU; Subkey: "Software\Embarcadero\Locales"; ValueType: string; ValueName: "{app}\SpaceMission.exe"; ValueData: "ENU"; Languages: en
-Root: HKCU; Subkey: "Software\Embarcadero\Locales"; ValueType: string; ValueName: "{app}\SpaceMission.exe"; ValueData: "DE"; Languages: de
-Root: HKCU; Subkey: "Software\Embarcadero\Locales"; ValueType: string; ValueName: "{app}\LevEdit.exe"; ValueData: "ENU"; Languages: en
-Root: HKCU; Subkey: "Software\Embarcadero\Locales"; ValueType: string; ValueName: "{app}\LevEdit.exe"; ValueData: "DE"; Languages: de
+Root: HKA; Subkey: "Software\Embarcadero\Locales"; ValueType: string; ValueName: "{app}\SpaceMission.exe"; ValueData: "ENU"; Languages: en
+Root: HKA; Subkey: "Software\Embarcadero\Locales"; ValueType: string; ValueName: "{app}\SpaceMission.exe"; ValueData: "DE"; Languages: de
+Root: HKA; Subkey: "Software\Embarcadero\Locales"; ValueType: string; ValueName: "{app}\LevEdit.exe"; ValueData: "ENU"; Languages: en
+Root: HKA; Subkey: "Software\Embarcadero\Locales"; ValueType: string; ValueName: "{app}\LevEdit.exe"; ValueData: "DE"; Languages: de
 
 [Code]
 function InitializeSetup(): Boolean;
