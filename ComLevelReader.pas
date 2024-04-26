@@ -14,6 +14,7 @@ type
   //                 * TEnemyOrItem.Create
   //                 * TMainForm.DXDrawMouseMove
   //                 * TMainForm.DXDrawMouseDown
+  // - Add integer type to OIDplus: https://hosted.oidplus.com/viathinksoft/?goto=oid%3A1.3.6.1.4.1.37476.2.8.10
   TEnemyType = (
     etUnknown,
     etEnemyAttacker,

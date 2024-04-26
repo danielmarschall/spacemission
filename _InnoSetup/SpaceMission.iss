@@ -1,8 +1,6 @@
 ; SpaceMission Setup Script for InnoSetup
 ; by Daniel Marschall
 
-; Shut-Down Game?!
-
 [Setup]
 AppName=SpaceMission
 AppVerName=SpaceMission 1.2.2
@@ -19,6 +17,9 @@ VersionInfoCopyright=© Copyright 2001 - 2024 ViaThinkSoft
 VersionInfoDescription=SpraceMission Setup
 VersionInfoTextVersion=1.0.0.0
 VersionInfoVersion=1.2.2
+PrivilegesRequiredOverridesAllowed=dialog
+UsePreviousPrivileges=no
+ShowLanguageDialog=no
 OutputBaseFilename=SpaceMission_Setup
 OutputDir=.
 ; Configure Sign Tool in InnoSetup at "Tools => Configure Sign Tools" (adjust the path to your SVN repository location)

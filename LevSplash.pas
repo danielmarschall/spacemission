@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  jpeg, ExtCtrls, StdCtrls;
+  jpeg, ExtCtrls, StdCtrls, Vcl.Imaging.pngimage;
 
 type
   TSplashForm = class(TForm)

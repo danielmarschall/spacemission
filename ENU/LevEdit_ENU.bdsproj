@@ -28,14 +28,15 @@
 			<Options Name="Evidence"></Options>
 			<Options Name="KeyFile"></Options>
 			<Options Name="KeyName"></Options>
-		</Options>  <FileList>
-      <File FileName="ComHilfe.dfm" ContainerId="W32Form" ModuleName="ComHilfe.dfm"/>
-      <File FileName="ComInfo.dfm" ContainerId="W32Form" ModuleName="ComInfo.dfm"/>
-      <File FileName="LevMain.dfm" ContainerId="W32Form" ModuleName="LevMain.dfm"/>
-      <File FileName="LevOptions.dfm" ContainerId="W32Form" ModuleName="LevOptions.dfm"/>
-      <File FileName="LevSpeicherung.dfm" ContainerId="W32Form" ModuleName="LevSpeicherung.dfm"/>
-      <File FileName="LevSplash.dfm" ContainerId="W32Form" ModuleName="LevSplash.dfm"/>
-      <File FileName="LevEdit_DRC.rc" ContainerId="W32RC" ModuleName="LevEdit_DRC.rc"/>
-    </FileList>
-  </W32ResourceDLL.Personality>
+		</Options>
+		<FileList>
+			<File FileName="ComHilfe.dfm" ContainerId="W32Form" ModuleName="ComHilfe.dfm"/>
+			<File FileName="ComInfo.dfm" ContainerId="W32Form" ModuleName="ComInfo.dfm"/>
+			<File FileName="LevMain.dfm" ContainerId="W32Form" ModuleName="LevMain.dfm"/>
+			<File FileName="LevOptions.dfm" ContainerId="W32Form" ModuleName="LevOptions.dfm"/>
+			<File FileName="LevSpeicherung.dfm" ContainerId="W32Form" ModuleName="LevSpeicherung.dfm"/>
+			<File FileName="LevSplash.dfm" ContainerId="W32Form" ModuleName="LevSplash.dfm"/>
+			<File FileName="LevEdit_DRC.rc" ContainerId="W32RC" ModuleName="LevEdit_DRC.rc"/>
+		</FileList>
+	</W32ResourceDLL.Personality>
 </BorlandProject>

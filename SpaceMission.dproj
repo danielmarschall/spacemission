@@ -86,7 +86,6 @@
         <DCC_ObjPath>VCL_DELPHIX_D6;VCL_PJVERSIONINFO;$(DCC_ObjPath)</DCC_ObjPath>
         <DCC_IncludePath>VCL_DELPHIX_D6;VCL_PJVERSIONINFO;$(DCC_IncludePath)</DCC_IncludePath>
         <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
-        <DCC_Description>SpaceMission 1.1</DCC_Description>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
@@ -103,7 +102,6 @@
         <DCC_ObjPath>VCL_DELPHIX_D6;VCL_PJVERSIONINFO;$(DCC_ObjPath)</DCC_ObjPath>
         <DCC_IncludePath>VCL_DELPHIX_D6;VCL_PJVERSIONINFO;$(DCC_IncludePath)</DCC_IncludePath>
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
-        <DCC_Description>SpaceMission 1.1</DCC_Description>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
