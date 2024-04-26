@@ -5,9 +5,9 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">45407.9617824074</prop>
-        <prop prop-type="OrigDateTime">45407.9321527778</prop>
-        <prop prop-type="XlatDateTime">45406.0335416667</prop>
+        <prop prop-type="SelfDateTime">45408.430462963</prop>
+        <prop prop-type="OrigDateTime">45408.4304166667</prop>
+        <prop prop-type="XlatDateTime">45408.409537037</prop>
         <prop prop-type="Translated">515</prop>
         <prop prop-type="UnTranslated">0</prop>
       </prop-group>
@@ -329,7 +329,6 @@
           <prop prop-type="Created">45406.0335376389</prop>
           <prop prop-type="Status">3</prop>
         </prop-group>
-        <target>"Infinite lives"</target>
       </trans-unit>
       <trans-unit id="GamCheat_SCheatUnlocked" resname="GamCheat_SCheatUnlocked">
         <source>"Dieser Cheat wurde freigeschaltet!"</source>

@@ -1437,7 +1437,7 @@ begin
     begin
       if not dxmusic.Midis.Items[i].IsInitialized then
       begin
-        dxmusic.Midis.Items[i].Init;
+        dxmusic.Midis.Items[i].Init; // TODO: for some reason, AddPort is very slow!
         dxmusic.Midis.Items[i].Load;
       end;
     end;

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
 <xliff version="1.0">
-  <file original="C:\SVN\SpaceMission\GamCheat.dfm" source-language="de-DE" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="C:\SVN\SpaceMission\GamCheat.dfm">
+  <file original="D:\SVN\SpaceMission\GamCheat.dfm" source-language="de-DE" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="D:\SVN\SpaceMission\GamCheat.dfm">
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">45407.5111342593</prop>
-        <prop prop-type="OrigDateTime">45406.6982407407</prop>
-        <prop prop-type="XlatDateTime">45405.5273611111</prop>
+        <prop prop-type="SelfDateTime">45408.4205555556</prop>
+        <prop prop-type="OrigDateTime">45407.6943518519</prop>
+        <prop prop-type="XlatDateTime">45407.6943518519</prop>
         <prop prop-type="Translated">86</prop>
         <prop prop-type="UnTranslated">0</prop>
       </prop-group>
@@ -16,868 +16,438 @@
       <trans-unit id="O:CheatForm.Left" resname="O:CheatForm.Left">
         <source>275</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">0</prop>
-          <prop prop-type="Type">TCheatForm</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">0</prop><prop prop-type="Type">TCheatForm</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.Top" resname="O:CheatForm.Top">
         <source>165</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">1</prop>
-          <prop prop-type="Type">TCheatForm</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">1</prop><prop prop-type="Type">TCheatForm</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.BorderStyle" resname="O:CheatForm.BorderStyle">
         <source>bsDialog</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">2</prop>
-          <prop prop-type="Type">TCheatForm</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">2</prop><prop prop-type="Type">TCheatForm</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.Caption" resname="O:CheatForm.Caption">
         <source>'Cheatverwaltung'</source>
-        <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">3</prop>
-          <prop prop-type="Type">TCheatForm</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
         <target>'Cheats'</target>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">1</prop><prop prop-type="Order">3</prop><prop prop-type="Type">TCheatForm</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.ClientHeight" resname="O:CheatForm.ClientHeight">
         <source>233</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">4</prop>
-          <prop prop-type="Type">TCheatForm</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">4</prop><prop prop-type="Type">TCheatForm</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.ClientWidth" resname="O:CheatForm.ClientWidth">
         <source>313</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">5</prop>
-          <prop prop-type="Type">TCheatForm</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">5</prop><prop prop-type="Type">TCheatForm</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.Color" resname="O:CheatForm.Color">
         <source>clBtnFace</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">6</prop>
-          <prop prop-type="Type">TCheatForm</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">6</prop><prop prop-type="Type">TCheatForm</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.Font.Charset" resname="O:CheatForm.Font.Charset">
         <source>DEFAULT_CHARSET</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">7</prop>
-          <prop prop-type="Type">TCheatForm</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">7</prop><prop prop-type="Type">TCheatForm</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.Font.Color" resname="O:CheatForm.Font.Color">
         <source>clWindowText</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">8</prop>
-          <prop prop-type="Type">TCheatForm</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">8</prop><prop prop-type="Type">TCheatForm</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.Font.Height" resname="O:CheatForm.Font.Height">
         <source>-11</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">9</prop>
-          <prop prop-type="Type">TCheatForm</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">9</prop><prop prop-type="Type">TCheatForm</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.Font.Name" resname="O:CheatForm.Font.Name">
         <source>'MS Sans Serif'</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">10</prop>
-          <prop prop-type="Type">TCheatForm</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">10</prop><prop prop-type="Type">TCheatForm</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.Font.Style" resname="O:CheatForm.Font.Style">
         <source>[]</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">11</prop>
-          <prop prop-type="Type">TCheatForm</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">11</prop><prop prop-type="Type">TCheatForm</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.Position" resname="O:CheatForm.Position">
         <source>poMainFormCenter</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">12</prop>
-          <prop prop-type="Type">TCheatForm</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">12</prop><prop prop-type="Type">TCheatForm</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.OnHide" resname="O:CheatForm.OnHide">
         <source>FormHide</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">13</prop>
-          <prop prop-type="Type">TCheatForm</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">13</prop><prop prop-type="Type">TCheatForm</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.OnShow" resname="O:CheatForm.OnShow">
         <source>FormShow</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">14</prop>
-          <prop prop-type="Type">TCheatForm</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">14</prop><prop prop-type="Type">TCheatForm</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.TextHeight" resname="O:CheatForm.TextHeight">
         <source>13</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">15</prop>
-          <prop prop-type="Type">TCheatForm</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">15</prop><prop prop-type="Type">TCheatForm</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:Label1.Left" resname="O:CheatForm.O:Label1.Left">
         <source>8</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">16</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">16</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:Label1.Top" resname="O:CheatForm.O:Label1.Top">
         <source>8</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">17</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">17</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:Label1.Width" resname="O:CheatForm.O:Label1.Width">
         <source>152</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">18</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">18</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:Label1.Height" resname="O:CheatForm.O:Label1.Height">
         <source>13</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">19</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">19</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:Label1.Caption" resname="O:CheatForm.O:Label1.Caption">
         <source>'Bitte geben Sie einen Cheat ein!'</source>
-        <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">20</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
         <target>'Please enter a cheat code'</target>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">1</prop><prop prop-type="Order">20</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:Label3.Left" resname="O:CheatForm.O:Label3.Left">
         <source>200</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">21</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">21</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:Label3.Top" resname="O:CheatForm.O:Label3.Top">
         <source>8</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">22</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">22</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:Label3.Width" resname="O:CheatForm.O:Label3.Width">
         <source>106</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">23</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">23</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:Label3.Height" resname="O:CheatForm.O:Label3.Height">
         <source>13</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">24</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">24</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:Label3.Cursor" resname="O:CheatForm.O:Label3.Cursor">
         <source>crHandPoint</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">25</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">25</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:Label3.Caption" resname="O:CheatForm.O:Label3.Caption">
         <source>'Herausgeber anfragen'</source>
-        <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">26</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
         <target>'Ask author'</target>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">1</prop><prop prop-type="Order">26</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:Label3.Font.Charset" resname="O:CheatForm.O:Label3.Font.Charset">
         <source>DEFAULT_CHARSET</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">27</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">27</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:Label3.Font.Color" resname="O:CheatForm.O:Label3.Font.Color">
         <source>clBlue</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">28</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">28</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:Label3.Font.Height" resname="O:CheatForm.O:Label3.Font.Height">
         <source>-11</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">29</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">29</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:Label3.Font.Name" resname="O:CheatForm.O:Label3.Font.Name">
         <source>'MS Sans Serif'</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">30</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">30</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:Label3.Font.Style" resname="O:CheatForm.O:Label3.Font.Style">
         <source>[fsUnderline]</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">31</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">31</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:Label3.ParentFont" resname="O:CheatForm.O:Label3.ParentFont">
         <source>False</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">32</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">32</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:Label3.Visible" resname="O:CheatForm.O:Label3.Visible">
         <source>False</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">33</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">33</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:Label3.OnClick" resname="O:CheatForm.O:Label3.OnClick">
         <source>Label3Click</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">34</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">34</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:CheatEdit.Left" resname="O:CheatForm.O:CheatEdit.Left">
         <source>8</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">35</prop>
-          <prop prop-type="Type">TEdit</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">35</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:CheatEdit.Top" resname="O:CheatForm.O:CheatEdit.Top">
         <source>32</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">36</prop>
-          <prop prop-type="Type">TEdit</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">36</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:CheatEdit.Width" resname="O:CheatForm.O:CheatEdit.Width">
         <source>297</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">37</prop>
-          <prop prop-type="Type">TEdit</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">37</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:CheatEdit.Height" resname="O:CheatForm.O:CheatEdit.Height">
         <source>21</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">38</prop>
-          <prop prop-type="Type">TEdit</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">38</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:CheatEdit.Cursor" resname="O:CheatForm.O:CheatEdit.Cursor">
         <source>crIBeam</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">39</prop>
-          <prop prop-type="Type">TEdit</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">39</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:CheatEdit.Ctl3D" resname="O:CheatForm.O:CheatEdit.Ctl3D">
         <source>True</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">40</prop>
-          <prop prop-type="Type">TEdit</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">40</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:CheatEdit.ParentCtl3D" resname="O:CheatForm.O:CheatEdit.ParentCtl3D">
         <source>False</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">41</prop>
-          <prop prop-type="Type">TEdit</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">41</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:CheatEdit.PasswordChar" resname="O:CheatForm.O:CheatEdit.PasswordChar">
         <source>'*'</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">42</prop>
-          <prop prop-type="Type">TEdit</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">42</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:CheatEdit.TabOrder" resname="O:CheatForm.O:CheatEdit.TabOrder">
         <source>0</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">43</prop>
-          <prop prop-type="Type">TEdit</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">43</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:CheatEdit.OnKeyPress" resname="O:CheatForm.O:CheatEdit.OnKeyPress">
         <source>CheatEditKeyPress</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">44</prop>
-          <prop prop-type="Type">TEdit</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">44</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:OKBtn.Left" resname="O:CheatForm.O:OKBtn.Left">
         <source>192</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">45</prop>
-          <prop prop-type="Type">TButton</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">45</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:OKBtn.Top" resname="O:CheatForm.O:OKBtn.Top">
         <source>200</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">46</prop>
-          <prop prop-type="Type">TButton</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">46</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:OKBtn.Width" resname="O:CheatForm.O:OKBtn.Width">
         <source>115</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">47</prop>
-          <prop prop-type="Type">TButton</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">1</prop><prop prop-type="Order">47</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:OKBtn.Height" resname="O:CheatForm.O:OKBtn.Height">
         <source>25</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">48</prop>
-          <prop prop-type="Type">TButton</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">48</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:OKBtn.Caption" resname="O:CheatForm.O:OKBtn.Caption">
         <source>'OK'</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">49</prop>
-          <prop prop-type="Type">TButton</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">1</prop><prop prop-type="Order">49</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:OKBtn.Default" resname="O:CheatForm.O:OKBtn.Default">
         <source>True</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">50</prop>
-          <prop prop-type="Type">TButton</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">50</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:OKBtn.TabOrder" resname="O:CheatForm.O:OKBtn.TabOrder">
         <source>1</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">51</prop>
-          <prop prop-type="Type">TButton</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">51</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:OKBtn.OnClick" resname="O:CheatForm.O:OKBtn.OnClick">
         <source>OKBtnClick</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">52</prop>
-          <prop prop-type="Type">TButton</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">52</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:AbbBtn.Left" resname="O:CheatForm.O:AbbBtn.Left">
         <source>8</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">53</prop>
-          <prop prop-type="Type">TButton</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">53</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:AbbBtn.Top" resname="O:CheatForm.O:AbbBtn.Top">
         <source>200</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">54</prop>
-          <prop prop-type="Type">TButton</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">54</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:AbbBtn.Width" resname="O:CheatForm.O:AbbBtn.Width">
         <source>113</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">55</prop>
-          <prop prop-type="Type">TButton</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">55</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:AbbBtn.Height" resname="O:CheatForm.O:AbbBtn.Height">
         <source>25</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">56</prop>
-          <prop prop-type="Type">TButton</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">56</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:AbbBtn.Cancel" resname="O:CheatForm.O:AbbBtn.Cancel">
         <source>True</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">57</prop>
-          <prop prop-type="Type">TButton</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">57</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:AbbBtn.Caption" resname="O:CheatForm.O:AbbBtn.Caption">
         <source>'Abbrechen'</source>
-        <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">58</prop>
-          <prop prop-type="Type">TButton</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
         <target>'Cancel'</target>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">1</prop><prop prop-type="Order">58</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:AbbBtn.TabOrder" resname="O:CheatForm.O:AbbBtn.TabOrder">
         <source>2</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">59</prop>
-          <prop prop-type="Type">TButton</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">59</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:AbbBtn.OnClick" resname="O:CheatForm.O:AbbBtn.OnClick">
         <source>AbbBtnClick</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">60</prop>
-          <prop prop-type="Type">TButton</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">60</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.Left" resname="O:CheatForm.O:GroupBox1.Left">
         <source>8</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">61</prop>
-          <prop prop-type="Type">TGroupBox</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">61</prop><prop prop-type="Type">TGroupBox</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.Top" resname="O:CheatForm.O:GroupBox1.Top">
         <source>64</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">62</prop>
-          <prop prop-type="Type">TGroupBox</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">62</prop><prop prop-type="Type">TGroupBox</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.Width" resname="O:CheatForm.O:GroupBox1.Width">
         <source>297</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">63</prop>
-          <prop prop-type="Type">TGroupBox</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">63</prop><prop prop-type="Type">TGroupBox</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.Height" resname="O:CheatForm.O:GroupBox1.Height">
         <source>129</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">64</prop>
-          <prop prop-type="Type">TGroupBox</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">64</prop><prop prop-type="Type">TGroupBox</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.Caption" resname="O:CheatForm.O:GroupBox1.Caption">
         <source>'Aktivierte Cheats'</source>
-        <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">65</prop>
-          <prop prop-type="Type">TGroupBox</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
         <target>'Activated cheats'</target>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">1</prop><prop prop-type="Order">65</prop><prop prop-type="Type">TGroupBox</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.TabOrder" resname="O:CheatForm.O:GroupBox1.TabOrder">
         <source>3</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">66</prop>
-          <prop prop-type="Type">TGroupBox</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">66</prop><prop prop-type="Type">TGroupBox</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.O:Label2.Left" resname="O:CheatForm.O:GroupBox1.O:Label2.Left">
         <source>8</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">67</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">67</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.O:Label2.Top" resname="O:CheatForm.O:GroupBox1.O:Label2.Top">
         <source>104</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">68</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">68</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.O:Label2.Width" resname="O:CheatForm.O:GroupBox1.O:Label2.Width">
         <source>89</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">69</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">69</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.O:Label2.Height" resname="O:CheatForm.O:GroupBox1.O:Label2.Height">
         <source>13</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">70</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">70</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.O:Label2.Cursor" resname="O:CheatForm.O:GroupBox1.O:Label2.Cursor">
         <source>crHandPoint</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">71</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">71</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.O:Label2.Caption" resname="O:CheatForm.O:GroupBox1.O:Label2.Caption">
         <source>'Cheat deaktivieren'</source>
-        <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">72</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
         <target>'Disable cheat'</target>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">1</prop><prop prop-type="Order">72</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.O:Label2.Font.Charset" resname="O:CheatForm.O:GroupBox1.O:Label2.Font.Charset">
         <source>DEFAULT_CHARSET</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">73</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">73</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.O:Label2.Font.Color" resname="O:CheatForm.O:GroupBox1.O:Label2.Font.Color">
         <source>clBlue</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">74</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">74</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.O:Label2.Font.Height" resname="O:CheatForm.O:GroupBox1.O:Label2.Font.Height">
         <source>-11</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">75</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">75</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.O:Label2.Font.Name" resname="O:CheatForm.O:GroupBox1.O:Label2.Font.Name">
         <source>'MS Sans Serif'</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">76</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">76</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.O:Label2.Font.Style" resname="O:CheatForm.O:GroupBox1.O:Label2.Font.Style">
         <source>[fsUnderline]</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">77</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">77</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.O:Label2.ParentFont" resname="O:CheatForm.O:GroupBox1.O:Label2.ParentFont">
         <source>False</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">78</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">78</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.O:Label2.OnClick" resname="O:CheatForm.O:GroupBox1.O:Label2.OnClick">
         <source>Label2Click</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">79</prop>
-          <prop prop-type="Type">TLabel</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">79</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.O:CheatBox.Left" resname="O:CheatForm.O:GroupBox1.O:CheatBox.Left">
         <source>8</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">80</prop>
-          <prop prop-type="Type">TListBox</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">80</prop><prop prop-type="Type">TListBox</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.O:CheatBox.Top" resname="O:CheatForm.O:GroupBox1.O:CheatBox.Top">
         <source>24</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">81</prop>
-          <prop prop-type="Type">TListBox</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">81</prop><prop prop-type="Type">TListBox</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.O:CheatBox.Width" resname="O:CheatForm.O:GroupBox1.O:CheatBox.Width">
         <source>281</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">82</prop>
-          <prop prop-type="Type">TListBox</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">82</prop><prop prop-type="Type">TListBox</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.O:CheatBox.Height" resname="O:CheatForm.O:GroupBox1.O:CheatBox.Height">
         <source>73</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">83</prop>
-          <prop prop-type="Type">TListBox</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">83</prop><prop prop-type="Type">TListBox</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.O:CheatBox.ItemHeight" resname="O:CheatForm.O:GroupBox1.O:CheatBox.ItemHeight">
         <source>13</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">84</prop>
-          <prop prop-type="Type">TListBox</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">84</prop><prop prop-type="Type">TListBox</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:CheatForm.O:GroupBox1.O:CheatBox.TabOrder" resname="O:CheatForm.O:GroupBox1.O:CheatBox.TabOrder">
         <source>0</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">45406.033535706</prop>
-          <prop prop-type="Status">6</prop>
-          <prop prop-type="Order">85</prop>
-          <prop prop-type="Type">TListBox</prop>
-          <prop prop-type="Localize">1</prop>
-        </prop-group>
+        <prop prop-type="Created">45406.033535706</prop><prop prop-type="Status">6</prop><prop prop-type="Order">85</prop><prop prop-type="Type">TListBox</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
     </body>
   </file>

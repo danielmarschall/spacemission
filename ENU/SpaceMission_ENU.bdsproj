@@ -28,15 +28,14 @@
 			<Options Name="Evidence"></Options>
 			<Options Name="KeyFile"></Options>
 			<Options Name="KeyName"></Options>
-		</Options>
-		<FileList>
-			<File FileName="ComHilfe.dfm" ContainerId="W32Form" ModuleName="ComHilfe.dfm"/>
-			<File FileName="ComInfo.dfm" ContainerId="W32Form" ModuleName="ComInfo.dfm"/>
-			<File FileName="GamCheat.dfm" ContainerId="W32Form" ModuleName="GamCheat.dfm"/>
-			<File FileName="GamMain.dfm" ContainerId="W32Form" ModuleName="GamMain.dfm"/>
-			<File FileName="GamSpeicherung.dfm" ContainerId="W32Form" ModuleName="GamSpeicherung.dfm"/>
-			<File FileName="GamSplash.dfm" ContainerId="W32Form" ModuleName="GamSplash.dfm"/>
-			<File FileName="SpaceMission_DRC.rc" ContainerId="W32RC" ModuleName="SpaceMission_DRC.rc"/>
-		</FileList>
-	</W32ResourceDLL.Personality>
+		</Options>  <FileList>
+      <File FileName="ComHilfe.dfm" ContainerId="W32Form" ModuleName="ComHilfe.dfm"/>
+      <File FileName="ComInfo.dfm" ContainerId="W32Form" ModuleName="ComInfo.dfm"/>
+      <File FileName="GamCheat.dfm" ContainerId="W32Form" ModuleName="GamCheat.dfm"/>
+      <File FileName="GamMain.dfm" ContainerId="W32Form" ModuleName="GamMain.dfm"/>
+      <File FileName="GamSpeicherung.dfm" ContainerId="W32Form" ModuleName="GamSpeicherung.dfm"/>
+      <File FileName="GamSplash.dfm" ContainerId="W32Form" ModuleName="GamSplash.dfm"/>
+      <File FileName="SpaceMission_DRC.rc" ContainerId="W32RC" ModuleName="SpaceMission_DRC.rc"/>
+    </FileList>
+  </W32ResourceDLL.Personality>
 </BorlandProject>

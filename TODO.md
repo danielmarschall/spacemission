@@ -1,12 +1,6 @@
 
 # SpaceMission TODO
 
-## Geplant für 1.3
-
-- Neue Einheit: Ufo, das im Kreis fliegt und nicht weggeht
-- Bei Pause => Entweder alles grau werden lassen, oder vielleicht ganz groß Pause in die Bildschirmmitte schreiben
-- SplashScreens: als BMP
-
 ## Kleinigkeiten
 
 - Es wäre schön, wenn die größe der Spezialhintergründe (Planeten) abhängig von wäre, wie weit entfernt sie ist (Layer 1,2,3)
@@ -18,9 +12,11 @@
 - Punkte: Integer-Höchstwert erkennen und dann nicht mehr weiterzählen!
 - lev: anzeige - welche datei offen ist!
 - punktegebung optimieren
+- Bei Pause => Entweder alles grau werden lassen, oder vielleicht ganz groß Pause in die Bildschirmmitte schreiben
 
 ## Ideen
 
+- Neue Einheit: Ufo, das im Kreis fliegt und nicht weggeht
 - Neues Item: 10 Sekunden unverwundbarkeit item
 - Neues Item: Geld Geschenk item
 - Boss schwieriger machen: Er soll auch nach links und rechts gehen?

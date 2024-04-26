@@ -9,6 +9,8 @@ uses
 type
   TSplashForm = class(TForm)
     SplashImage: TImage;
+    v: TLabel;
+    Label1: TLabel;
   end;
 
 var
