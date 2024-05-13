@@ -405,9 +405,12 @@ begin
     while curline < sl.Count do
     begin
       iEnemy := strtoint(sl.Strings[curline]);
-      if TEnemyType(iEnemy) = etUnknown then // <-- for some reason, etUnknown will also be set if iEnemy is too large. This is actually good!
+      if (iEnemy<Ord(Low(TEnemyType))) or (iEnemy>Ord(High(TEnemyType))) then
+        tmpEnemy := etUnknown
+      else
+        tmpEnemy := TEnemyType(iEnemy);
+      if tmpEnemy = etUnknown then
         raise Exception.CreateFmt(SEnemyTypeNotImplemented, [iEnemy]);
-      tmpEnemy := TEnemyType(iEnemy);
       Inc(curline);
       tmpX := strtoint(sl.Strings[curline]);
       Inc(curline);
@@ -444,9 +447,12 @@ begin
       else if SameText(ary[0], 'Enemy') then // do not localize
       begin
         iEnemy := strtoint(ary[1]);
-        if TEnemyType(iEnemy) = etUnknown then // <-- for some reason, etUnknown will also be set if iEnemy is too large. This is actually good!
+        if (iEnemy<Ord(Low(TEnemyType))) or (iEnemy>Ord(High(TEnemyType))) then
+          tmpEnemy := etUnknown
+        else
+          tmpEnemy := TEnemyType(iEnemy);
+        if tmpEnemy = etUnknown then
           raise Exception.CreateFmt(SEnemyTypeNotImplemented, [iEnemy]);
-        tmpEnemy := TEnemyType(iEnemy);
         tmpX     := strtoint(ary[2]);
         tmpY     := strtoint(ary[3]);
         tmpLifes := strtoint(ary[4]);
