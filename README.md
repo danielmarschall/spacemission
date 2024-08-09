@@ -6,3 +6,13 @@ The game SpaceMission developed by Daniel Marschall is a simple space game, simi
 SpaceMission, Version 1.0 was rated 90% by Gamer AG and was published in the magazines PC Games and Chip.
 
 Licensed under the terms of the Apache 2.0 license.
+
+## Screenshots
+
+### Gameplay
+
+![Command line tool](https://raw.githubusercontent.com/danielmarschall/spacemission/master/Screenshot1.png)
+
+### Level Editor
+
+![Command line tool](https://raw.githubusercontent.com/danielmarschall/spacemission/master/Screenshot2.png)
