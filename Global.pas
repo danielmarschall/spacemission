@@ -144,8 +144,8 @@ begin
   // We need this because of a tricky problem...
   // Our base language is German (DE), and we have a translation for English USA (ENU)
   // If the system locale is not exactly ENU (even ENG is not accepted), then the base language (German) will be used.
-  // But much more people are speaking English than German. So we need to force the system to use ENU instead of DE.
-  // This decision if we choose DE or ENU is done by the language selected during setup.
+  // But much more people are speaking English than German. So we need to force the system to use ENU instead of DE,
+  // if the system is not DE.
   if (GetLocaleOverride('') = '') and
      ((GetUserDefaultUILanguage and $FF) <> BaseLanguage) then
   begin
