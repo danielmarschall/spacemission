@@ -25,7 +25,7 @@ var
 implementation
 
 uses
-  MarkDownProcessor, ShellAPI, Global;
+  MarkDownProcessor, ShellAPI;
 
 {$R *.dfm}
 
@@ -49,6 +49,7 @@ var
   cssFile: string;
 begin
   FDirectory := ExtractFilePath(AMarkDownFile);
+  if FDirectory = '' then FDirectory := '.';
   slHtml := TStringList.Create();
   slCss := TStringList.Create();
   try
