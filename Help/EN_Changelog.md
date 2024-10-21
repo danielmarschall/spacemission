@@ -1,5 +1,8 @@
 # Changelog
 
+SpaceMission 1.2.3:
+- BUGFIX: A lot of texts were not displayed on English systems.
+
 SpaceMission 1.2.2:
 - BUGFIX: Items can now also be collected if you have activated an infinite lives cheat
 - BUGFIX: Bug fix when displaying remaining units at mission end

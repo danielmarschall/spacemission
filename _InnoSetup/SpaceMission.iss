@@ -3,8 +3,8 @@
 
 [Setup]
 AppName=SpaceMission
-AppVerName=SpaceMission 1.2.2
-AppVersion=1.2.2
+AppVerName=SpaceMission 1.2.3
+AppVersion=1.2.3
 AppCopyright=© Copyright 2001 - 2024 ViaThinkSoft
 AppPublisher=ViaThinkSoft
 AppPublisherURL=https://www.viathinksoft.de/
@@ -16,7 +16,7 @@ VersionInfoCompany=ViaThinkSoft
 VersionInfoCopyright=© Copyright 2001 - 2024 ViaThinkSoft
 VersionInfoDescription=SpraceMission Setup
 VersionInfoTextVersion=1.0.0.0
-VersionInfoVersion=1.2.2
+VersionInfoVersion=1.2.3
 PrivilegesRequiredOverridesAllowed=dialog
 UsePreviousPrivileges=no
 ShowLanguageDialog=no

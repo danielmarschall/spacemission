@@ -1,6 +1,6 @@
-# SpaceMission 1.2.1 documentation
+# SpaceMission 1.2.3 documentation
 
-Please also read: [What's new in version 1.2.2?](EN_Changelog.md)
+Please also read: [What's new in version 1.2.3?](EN_Changelog.md)
 
 ## Description
 SpaceMission is a classic space game where you fly through a hail of comets,

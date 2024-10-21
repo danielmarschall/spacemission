@@ -3,7 +3,7 @@ unit Global;
 interface
 
 const
-  ProgramVersion = '1.2.2';
+  ProgramVersion = '1.2.3';
   LevEditRasterW = 48;
   LevEditRasterH = 32;
   LevEditRows = 15; // Attention: if you change this, you also need to change the LevEditor GUI!
@@ -128,6 +128,7 @@ begin
 
     oldHInst := Module.ResInstance;
     Module.ResInstance := newHInst;
+    ResStringCleanupCache;
     FreeLibrary(oldHInst);
   except
     SetLocaleOverride(bakOverride);

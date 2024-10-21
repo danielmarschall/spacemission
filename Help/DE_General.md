@@ -1,6 +1,6 @@
-# SpaceMission 1.2.1 Dokumentation
+# SpaceMission 1.2.3 Dokumentation
 
-Bitte auch lesen: [Was ist neu in Version 1.2.2?](DE_Changelog.md)
+Bitte auch lesen: [Was ist neu in Version 1.2.3?](DE_Changelog.md)
 
 ## Beschreibung
 SpaceMission ist ein klassisches Weltraumspiel, beidem Sie durch einen Kometenhagel fliegen,
