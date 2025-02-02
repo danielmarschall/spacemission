@@ -5,10 +5,10 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">45586.7280787037</prop>
-        <prop prop-type="OrigDateTime">45586.7280555556</prop>
-        <prop prop-type="XlatDateTime">45586.7226388889</prop>
-        <prop prop-type="Translated">511</prop>
+        <prop prop-type="SelfDateTime">45690.0716898148</prop>
+        <prop prop-type="OrigDateTime">45690.0716898148</prop>
+        <prop prop-type="XlatDateTime">45586.839212963</prop>
+        <prop prop-type="Translated">514</prop>
         <prop prop-type="UnTranslated">1</prop>
       </prop-group>
     </header>
@@ -2196,7 +2196,7 @@
         <target>"Invalid date string: %s"</target>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">3</prop>
+          <prop prop-type="Status">2</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SInvalidTimeString" resname="System_RTLConsts_SInvalidTimeString">
@@ -2204,16 +2204,15 @@
         <target>"Invalid time string: %s"</target>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">3</prop>
+          <prop prop-type="Status">2</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SInvalidOffsetString" resname="System_RTLConsts_SInvalidOffsetString">
         <source>"Ungültiger Zeit-Offset-String: %s"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335378935</prop>
-          <prop prop-type="Status">3</prop>
+          <prop prop-type="Status">0</prop>
         </prop-group>
-        <target>"Invalid time offset string: %s"</target>
       </trans-unit>
       <trans-unit id="System_RTLConsts_sMustWaitOnOneEvent" resname="System_RTLConsts_sMustWaitOnOneEvent">
         <source>"Es muss auf mindestens ein Ereignis gewartet werden"</source>
@@ -3408,11 +3407,12 @@
         </prop-group>
       </trans-unit>
       <trans-unit id="System_SysConst_SModuleAccessViolation" resname="System_SysConst_SModuleAccessViolation">
-        <source>"Zugriffsverletzung bei Adresse %p in Modul '%s' (Offset %x). %s von Adresse %p"</source>
+        <source>"Zugriffsverletzung bei Adresse %p in Modul '%s'. %s von Adresse %p"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45406.0335379861</prop>
-          <prop prop-type="Status">0</prop>
+          <prop prop-type="Status">2</prop>
         </prop-group>
+        <target>"Access violation at address %p in module '%s'. %s of address %p"</target>
         <alt-trans>
           <source>"Zugriffsverletzung bei Adresse %p in Modul '%s'. %s von Adresse %p"</source>
           <target>"Access violation at address %p in module '%s'. %s of address %p"</target>

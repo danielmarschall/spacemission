@@ -161,13 +161,12 @@ object InfoForm: TInfoForm
     Anchors = [akLeft, akTop, akRight, akBottom]
     Lines.Strings = (
       
-        'SpaceMission wurde von Daniel Marschall auf Basis eines Codebeis' +
-        'piels '
+      'SpaceMission wurde von Daniel Marschall auf Basis eines Codebeis' +
+      'piels '
       'von Hiroyuki Hori f'#252'r DelphiX 2000 entwickelt.'
       ''
       'Entwickelt mit Embarcadero Delphi.'
       'Setup erstellt mit InnoSetup.'
-      'Sicherheitszertifikat von HickelSOFT Huth GmbH.'
       ''
       'Verwendete Komponenten: (un)DelphiX'
       'Quellcode: http://www.micrel.cz/Dx/'

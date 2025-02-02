@@ -11,8 +11,8 @@ Licensed under the terms of the Apache 2.0 license.
 
 ### Gameplay
 
-![Command line tool](https://raw.githubusercontent.com/danielmarschall/spacemission/master/Screenshot1.png)
+![Gameplay screenshot](Screenshot1.png)
 
 ### Level Editor
 
-![Command line tool](https://raw.githubusercontent.com/danielmarschall/spacemission/master/Screenshot2.png)
+![Level editor screenshot](Screenshot2.png)
