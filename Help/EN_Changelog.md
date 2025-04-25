@@ -1,6 +1,10 @@
 # Changelog
 
-SpaceMission 1.2.3:
+SpaceMission 1.2.3 (2025):
+- Internal change of translation tool
+- Codesigning
+
+SpaceMission 1.2.3 (2024):
 - BUGFIX: A lot of texts were not displayed on English systems.
 
 SpaceMission 1.2.2:
