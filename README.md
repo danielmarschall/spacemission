@@ -16,3 +16,9 @@ Licensed under the terms of the Apache 2.0 license.
 ### Level Editor
 
 ![Level editor screenshot](Screenshot2.png)
+
+## Tools required for editing source code
+
+* Embarcadero Delphi 12 (Community edition available for non-commercial use)
+
+* [Better Translation Manager](https://github.com/andersmelander/better-translation-manager/)

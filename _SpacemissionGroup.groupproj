@@ -9,12 +9,6 @@
         <Projects Include="SpaceMission.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="ENU\LevEdit_ENU.bdsproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="ENU\SpaceMission_ENU.bdsproj">
-            <Dependencies/>
-        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -41,32 +35,14 @@
     <Target Name="SpaceMission:Make">
         <MSBuild Projects="SpaceMission.dproj" Targets="Make"/>
     </Target>
-    <Target Name="LevEdit_ENU">
-        <MSBuild Projects="ENU\LevEdit_ENU.bdsproj"/>
-    </Target>
-    <Target Name="LevEdit_ENU:Clean">
-        <MSBuild Projects="ENU\LevEdit_ENU.bdsproj" Targets="Clean"/>
-    </Target>
-    <Target Name="LevEdit_ENU:Make">
-        <MSBuild Projects="ENU\LevEdit_ENU.bdsproj" Targets="Make"/>
-    </Target>
-    <Target Name="SpaceMission_ENU">
-        <MSBuild Projects="ENU\SpaceMission_ENU.bdsproj"/>
-    </Target>
-    <Target Name="SpaceMission_ENU:Clean">
-        <MSBuild Projects="ENU\SpaceMission_ENU.bdsproj" Targets="Clean"/>
-    </Target>
-    <Target Name="SpaceMission_ENU:Make">
-        <MSBuild Projects="ENU\SpaceMission_ENU.bdsproj" Targets="Make"/>
-    </Target>
     <Target Name="Build">
-        <CallTarget Targets="LevEdit;SpaceMission;LevEdit_ENU;SpaceMission_ENU"/>
+        <CallTarget Targets="LevEdit;SpaceMission"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="LevEdit:Clean;SpaceMission:Clean;LevEdit_ENU:Clean;SpaceMission_ENU:Clean"/>
+        <CallTarget Targets="LevEdit:Clean;SpaceMission:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="LevEdit:Make;SpaceMission:Make;LevEdit_ENU:Make;SpaceMission_ENU:Make"/>
+        <CallTarget Targets="LevEdit:Make;SpaceMission:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
