@@ -17,7 +17,7 @@ Licensed under the terms of the Apache 2.0 license.
 
 ![Level editor screenshot](Screenshot2.png)
 
-## Tools required for editing source code
+## Tools required for editing the source code
 
 * Embarcadero Delphi 12 (Community edition available for non-commercial use)
 
